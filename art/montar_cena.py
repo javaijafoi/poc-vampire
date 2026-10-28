@@ -3,8 +3,8 @@
 Uso: python3 art/montar_cena.py
 - art/fontes/fundo_porao_<n>.jpg -> art/cena/fundo.webp (escolha com FUNDO=fundo_porao_2.jpg)
 - moldura de pôster       -> art/cena/moldura.webp
-- art/fontes/rayo_recorte.png  -> art/cena/rayo_neutro.webp
-- art/fontes/rayo_<expr>.png   -> art/cena/rayo_<expr>.webp (expressões extras, quando existirem)
+- art/fontes/<personagem>_<expr>.png -> art/cena/<personagem>_<expr>.webp
+  (retrato com fundo recortado; "neutro" é obrigatório, as outras expressões são opcionais)
 """
 import glob
 import os
@@ -28,9 +28,9 @@ fundo.save(os.path.join(CENA, "fundo.webp"), quality=78)
 
 moldura().save(os.path.join(CENA, "moldura.webp"), quality=90)
 
-for f in sorted(glob.glob(os.path.join(FONTES, "rayo_*.png"))):
-    nome = os.path.basename(f)[5:-4]
-    nome = "neutro" if nome == "recorte" else nome
+# Personagens: art/fontes/<personagem>_<expressao>.png -> art/cena/<personagem>_<expressao>.webp
+for f in sorted(glob.glob(os.path.join(FONTES, "*_*.png"))):
+    nome = os.path.basename(f)[:-4]
     img = recorte(f, None, 900)
-    img.save(os.path.join(CENA, f"rayo_{nome}.webp"), quality=85)
-    print("rayo", nome, img.size)
+    img.save(os.path.join(CENA, f"{nome}.webp"), quality=85)
+    print(nome, img.size)

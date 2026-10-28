@@ -40,16 +40,25 @@ body {
 .reticula { position: absolute; inset: 0; pointer-events: none;
   background: radial-gradient(circle, rgb(0 0 0 / .35) 28%, transparent 30%) 0 0 / .55cqw .55cqw,
               radial-gradient(ellipse at 60% 40%, transparent 40%, rgb(10 4 8 / .75) 100%); mix-blend-mode: multiply; }
-/* o recorte fica "colado" na cena: leve giro e sombra de papel; trocar de expressão troca só a imagem */
-.rayo { right: 5%; bottom: -3%; height: 98%; opacity: 0; transform: rotate(-1.5deg) translateY(4%);
-  filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); transition: opacity .6s, transform .6s; }
-.rayo.on { opacity: 1; transform: rotate(-1.5deg); }
+/* Personagens: recortes "colados" na cena, um de cada lado. Rayo à direita, os outros à esquerda.
+   Quem não está falando escurece; trocar de expressão troca só a imagem. */
+.lado { position: absolute; bottom: -3%; height: 98%; margin: 0; opacity: 0; --giro: 1.5deg; transform: rotate(var(--giro)) translateY(4%);
+  transition: opacity .5s, transform .5s, filter .3s; filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); }
+.lado.esq { left: 4%; }
+.lado.dir { right: 4%; --giro: -1.5deg; }
+.lado.on { opacity: 1; transform: rotate(var(--giro)); }
+.lado.calado { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.5) saturate(.6); }
+.palco .lado img { position: static; display: block; height: 100%; width: auto; }
+/* nome embaixo do rosto, como legenda de revista */
+.legenda { position: absolute; left: 50%; bottom: 31%; transform: translateX(-50%) rotate(calc(var(--giro) * -1.4)); white-space: nowrap;
+  font-family: var(--f-tipo); font-size: max(12px, 1.7cqw); background: #8f1d26; color: #f4e7d2; padding: .2cqw 1.1cqw; box-shadow: .1cqw .3cqw .5cqw rgb(0 0 0 / .5); }
+.lado.calado .legenda { background: #3a2a26; color: #c9b998; }
 .moldura { inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
-.rayo.troca { animation: troca .25s; }
-@keyframes troca { 0% { transform: rotate(-1.5deg) translateY(0); } 40% { transform: rotate(-2.2deg) translateY(-1%); } 100% { transform: rotate(-1.5deg); } }
+.lado.troca { animation: troca .25s; }
+@keyframes troca { 40% { transform: rotate(calc(var(--giro) * 1.5)) translateY(-1%); } 100% { transform: rotate(var(--giro)); } }
 
 /* HUD */
-.hud { position: absolute; top: 4.2cqw; left: 4.6cqw; display: flex; gap: 1.2cqw; align-items: stretch; font-family: var(--f-tipo); z-index: 3; }
+.hud { position: absolute; top: 4.2cqw; left: 50%; transform: translateX(-50%); display: flex; gap: 1.2cqw; align-items: stretch; font-family: var(--f-tipo); z-index: 3; }
 .hud .bloco { background: var(--folha); color: var(--tinta); box-shadow: .15cqw .3cqw .6cqw rgb(0 0 0 / .5); padding: .7cqw 1.1cqw; display: grid; gap: .3cqw; }
 .hud .rotulo { font-size: max(10px, 1.15cqw); color: #6b5646; letter-spacing: .08em; text-transform: uppercase; }
 .hud .hora { font-size: max(16px, 2.6cqw); color: #8f1d26; font-variant-numeric: tabular-nums; line-height: 1; }
@@ -114,11 +123,19 @@ body {
 .dados .det { font-size: max(11px, 1.3cqw); color: #6b5646; }
 
 /* Toast e caderno */
-.toast { position: absolute; top: 4.2cqw; right: 4.6cqw; z-index: 6; background: #8f1d26; color: #f4e7d2; font-family: var(--f-tipo); font-size: max(12px, 1.5cqw);
+.toast { position: absolute; top: 11.5cqw; left: 50%; translate: -50% 0; z-index: 6; text-align: center; background: #8f1d26; color: #f4e7d2; font-family: var(--f-tipo); font-size: max(12px, 1.5cqw);
   padding: .6cqw 1.2cqw; max-width: 40%; opacity: 0; transform: translateY(-6px); transition: opacity .3s, transform .3s; pointer-events: none; }
 .toast.on { opacity: 1; transform: none; }
 .caderno { position: absolute; inset: 0; z-index: 7; background: rgb(12 6 9 / .9); display: grid; place-items: center; }
-.caderno .folha { width: min(88%, 720px); max-height: 86%; overflow: auto; background: #e9dcc4; color: #2a1810; padding: 2.4cqw 2.8cqw; border: 2px solid #8b6a44; }
+.caderno .bloco-folhas { width: min(88%, 720px); max-height: 88%; display: grid; grid-template-rows: auto 1fr; }
+.caderno .abas { display: flex; gap: .4cqw; padding-left: 1.6cqw; }
+.caderno .aba { font-family: var(--f-tipo); font-size: max(12px, 1.45cqw); border: 0; cursor: pointer; padding: .5cqw 1.3cqw .4cqw; background: #c9b998; color: #4a3828; }
+.caderno .aba[aria-selected="true"] { background: #e9dcc4; color: #8f1d26; }
+.caderno .aba:focus-visible { outline: 2px solid #8f1d26; }
+.caderno .folha { overflow: auto; background: #e9dcc4; color: #2a1810; padding: 2.4cqw 2.8cqw; box-shadow: .3cqw .6cqw 1.4cqw rgb(0 0 0 / .6); }
+.caderno textarea { width: 100%; min-height: 12em; resize: vertical; font-family: var(--f-tipo); font-size: max(14px, 1.7cqw); line-height: 1.6; color: #2a1810;
+  border: 0; padding: 0 .6em; background: repeating-linear-gradient(#e9dcc4 0 calc(1.6em - 1px), #c9b5a0 calc(1.6em - 1px) 1.6em) local; }
+.caderno textarea:focus { outline: 2px solid #8f1d26; }
 .caderno h2 { font-family: var(--f-tipo); font-weight: 600; font-size: max(16px, 2.2cqw); margin: 0 0 1cqw; }
 .caderno ol { margin: 0; padding-left: 1.4em; display: grid; gap: .6cqw; font-size: max(14px, 1.8cqw); line-height: 1.4; }
 .caderno .vazio { font-style: italic; color: #6d5440; }
@@ -135,20 +152,21 @@ body {
   .dados { top: 50%; }
   .hud .bloco, .caderno-btn { padding: 4px 6px; }
   .hud .barra { width: 40px; }
-  .hud { top: 5cqw; left: 5.5cqw; gap: 4px; }
+  .hud { top: 5cqw; gap: 4px; }
   .hud .rotulo { font-size: 8px; }
   .hud .hora, .caderno-btn b { font-size: 13px; }
   .fome i { width: 7px; }
-  .toast { top: auto; bottom: 8px; right: 8px; max-width: 70%; }
+  .toast { top: auto; bottom: 8px; max-width: 70%; }
 }
-@media (prefers-reduced-motion: reduce) { .rayo, .toast { transition: none; animation: none; } .seta { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .lado, .toast { transition: none; animation: none; } .seta { animation: none; } }
 </style>
 
 <div class="jogo">
   <div class="palco" id="palco">
     <img class="fundo" id="fundo" alt="O Porão do Vincenzo: balcão de madeira, prateleiras de garrafas e luminárias amareladas.">
     <div class="reticula"></div>
-    <img class="rayo" id="rayo" alt="Rayo, Gangrel barbudo de colete de couro e braço tatuado, recortado como foto de revista.">
+    <figure class="lado esq" id="esq"><img alt=""><figcaption class="legenda"></figcaption></figure>
+    <figure class="lado dir" id="dir"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <img class="moldura" id="moldura" alt="">
     <div class="hud">
       <div class="bloco"><span class="rotulo">Hora</span><span class="hora" id="hora">03h00</span><span class="barra"><i id="barra"></i></span></div>
@@ -168,14 +186,44 @@ body {
 <script>{{V5}}</script>
 <script>
 const HISTORIA = {{STORY}};
-const ARTE = { fundo: "{{BG}}", moldura: "{{MOLDURA}}", rayo: {{RAYO}} };  // rayo: uma imagem por expressão
+const ARTE = { fundo: "{{BG}}", moldura: "{{MOLDURA}}", personagens: {{PERSONAGENS}} };  // personagens: { rayo: { neutro, sorrindo... } }
 const $ = id => document.getElementById(id);
-$('fundo').src = ARTE.fundo; $('moldura').src = ARTE.moldura; $('rayo').src = ARTE.rayo.neutro;
-// "# expr: nome" no roteiro troca a imagem; expressão sem imagem cai na neutra
-function expressao(nome) {
-  const src = ARTE.rayo[nome] || ARTE.rayo.neutro, el = $('rayo');
-  if (el.src === src) return;
-  el.src = src; el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca');
+$('fundo').src = ARTE.fundo; $('moldura').src = ARTE.moldura;
+
+// Lados da cena: o Rayo (testemunha) fica à direita; quem mais falar entra à esquerda.
+const LADO = { Rayo: 'dir' };
+const DESCRICAO = { Rayo: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado', Vincenzo: 'Vincenzo, o dono do bar, de terno risca de giz' };
+const TESTEMUNHA = 'Rayo';  // as pistas sem aba vão para a folha dele no caderno
+let cena, exprPendente;
+
+function imagem(nome, expr) { const a = ARTE.personagens[nome.toLowerCase()]; return a && (a[expr] || a.neutro); }
+
+// Põe o personagem no lado dele (troca quem estava lá). Devolve false se ele não tem arte.
+function mostrarPersonagem(nome, expr) {
+  const src = imagem(nome, expr || cena.expr[nome] || 'neutro');
+  if (!src) return false;
+  const lado = LADO[nome] || 'esq', el = $(lado), img = el.querySelector('img');
+  if (cena[lado] !== nome) {
+    cena[lado] = nome; el.classList.remove('on'); void el.offsetWidth;
+    el.querySelector('.legenda').textContent = nome; img.alt = (DESCRICAO[nome] || nome) + ', recortado como foto de revista.';
+  }
+  if (expr) cena.expr[nome] = expr;
+  if (img.getAttribute('src') !== src) {
+    const trocou = img.getAttribute('src'); img.src = src;
+    if (trocou && el.classList.contains('on')) { el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca'); }
+  }
+  el.classList.add('on');
+  return true;
+}
+
+// Quem fala fica aceso; o outro lado escurece. Narração e falas suas acendem os dois.
+function falando(nome) {
+  for (const lado of ['esq', 'dir']) $(lado).classList.toggle('calado', !!nome && cena[lado] !== nome);
+}
+
+function limparCena() {
+  cena = { esq: null, dir: null, expr: {} }; exprPendente = null;
+  for (const lado of ['esq', 'dir']) { $(lado).classList.remove('on', 'calado', 'troca'); $(lado).querySelector('img').removeAttribute('src'); }
 }
 
 const FALANTES = ['Rayo', 'Vincenzo', 'Você'];
@@ -202,7 +250,7 @@ function iniciar() {
     if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
     fila.push({ tipo: 'despertar', ok });
   }, false);
-  $('rayo').classList.remove('on'); expressao('neutro');
+  limparCena();
   atualizarHud();
   avancar();
 }
@@ -224,9 +272,10 @@ function avancar() {
     const texto = story.Continue().trim();
     for (const tag of story.currentTags) {
       const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
-      if (k.trim() === 'entra' && val === 'rayo') $('rayo').classList.add('on');
-      if (k.trim() === 'expr') expressao(val);
-      if (k.trim() === 'pista') { pistas.push(val); toast('Nova pista no caderno'); }
+      const [chave, aba] = k.trim().split(/\s+/);
+      if (chave === 'entra') mostrarPersonagem(val.charAt(0).toUpperCase() + val.slice(1));
+      if (chave === 'expr') exprPendente = val;  // vale para quem fala nesta linha
+      if (chave === 'pista') { pistas.push({ aba: aba === 'dossie' ? 'Dossiê' : TESTEMUNHA, texto: val }); toast('Nova pista no caderno'); }
     }
     atualizarHud();
     if (fila.length) { fila.push({ tipo: 'linha', texto }); return avancar(); }
@@ -262,7 +311,11 @@ function mostrarLinha(texto) {
   const p = texto.match(/^(.+?) :: (.*)$/);
   if (!nome && p) { passiva = p[1]; corpo = p[2]; }
   if (/^FIM DA CENA/.test(texto)) return avancar();
-  $('nome').hidden = !nome; if (nome) $('nome').textContent = nome;
+  // personagem com arte: aparece no lado dele e o nome vai para a legenda; sem arte (você), o nome fica na caixa
+  const comArte = nome && m[1] !== 'Você' && mostrarPersonagem(m[1], exprPendente);
+  exprPendente = null;
+  falando(comArte ? m[1] : null);
+  $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
   const c = $('conteudo');
   c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva">${esc(passiva)}</span>` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
   if (!window.__primeiroTexto) window.__primeiroTexto = performance.now();
@@ -309,13 +362,36 @@ function mostrarFim() {
   $('conteudo').querySelector('[data-a=de-novo]').addEventListener('click', e => { e.stopPropagation(); iniciar(); });
 }
 
+// Caderno: uma folha por fonte (dossiê e cada testemunha) e uma folha livre para anotar.
+// As anotações ficam só neste navegador.
+const ABAS = ['Dossiê', TESTEMUNHA, 'Anotações'];
+let abaAtual = TESTEMUNHA, anotacoes = '';
+try { anotacoes = localStorage.getItem('porao-anotacoes') || ''; } catch (e) {}
+
 function abrirCaderno() {
   const el = document.createElement('div'); el.className = 'caderno';
-  el.innerHTML = `<div class="folha"><h2>Caderno do interrogatório</h2>${pistas.length ? `<ol>${pistas.map(p => `<li>${esc(p)}</li>`).join('')}</ol>` : '<p class="vazio">Nenhuma pista ainda.</p>'}<button class="fechar" type="button">Fechar</button></div>`;
+  el.innerHTML = `<div class="bloco-folhas"><div class="abas" role="tablist">${ABAS.map(a =>
+    `<button class="aba" role="tab" type="button" data-aba="${esc(a)}">${esc(a)}</button>`).join('')}</div><div class="folha" role="tabpanel"></div></div>`;
   $('palco').appendChild(el);
-  const fechar = () => el.remove();
-  el.querySelector('.fechar').addEventListener('click', fechar); el.addEventListener('click', e => { if (e.target === el) fechar(); });
-  el.querySelector('.fechar').focus();
+  const folha = el.querySelector('.folha');
+  const mostrar = aba => {
+    abaAtual = aba;
+    el.querySelectorAll('.aba').forEach(b => b.setAttribute('aria-selected', b.dataset.aba === aba));
+    if (aba === 'Anotações') {
+      folha.innerHTML = `<h2>Minhas anotações</h2><textarea aria-label="Minhas anotações" placeholder="Escreva aqui o que quiser lembrar."></textarea>`;
+      const t = folha.querySelector('textarea'); t.value = anotacoes;
+      t.addEventListener('input', () => { anotacoes = t.value; try { localStorage.setItem('porao-anotacoes', anotacoes); } catch (e) {} });
+    } else {
+      const lista = pistas.filter(p => p.aba === aba);
+      folha.innerHTML = `<h2>${aba === 'Dossiê' ? 'Dossiê do Príncipe' : 'O que descobri: ' + esc(aba)}</h2>${lista.length ? `<ol>${lista.map(p => `<li>${esc(p.texto)}</li>`).join('')}</ol>` : '<p class="vazio">Nada anotado ainda.</p>'}`;
+    }
+    folha.insertAdjacentHTML('beforeend', '<button class="fechar" type="button">Fechar</button>');
+    folha.querySelector('.fechar').addEventListener('click', () => el.remove());
+  };
+  el.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => mostrar(b.dataset.aba)));
+  el.addEventListener('click', e => { if (e.target === el) el.remove(); });
+  mostrar(abaAtual);
+  el.querySelector(`.aba[data-aba="${abaAtual}"]`).focus();
 }
 
 $('dialogo').addEventListener('click', clicarDialogo);

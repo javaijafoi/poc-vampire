@@ -4,7 +4,8 @@
 //   Rayo: texto       -> fala de um personagem (o nome antes dos dois pontos)
 //   texto sem nome    -> narração
 //   Gatilho :: texto   -> opção ou observação especial (skill, clã, prova, Disciplina)
-//   # pista: texto    -> a pista entra no caderno do jogador
+//   # pista: texto    -> a pista entra no caderno, na folha da testemunha
+//   # pista dossie: texto -> a pista entra na folha do dossiê do Príncipe
 //   # expr: nome      -> troca a expressão do Rayo (neutro, sorrindo, preocupado)
 //   ~ variavel = ...  -> muda o estado do jogo
 
@@ -67,7 +68,7 @@ Três da manhã no Porão do Vincenzo. A chuva escorre pela janela, e um rádio 
 Vincenzo: Seu próximo convidado, {cla == "Ventrue":signora|signore}. E lembre: aqui embaixo, nada de Disciplinas. Regra da casa.
 Rayo larga o capacete no balcão. A jaqueta de couro ainda pinga. Ele senta de lado, de olho na porta. # entra: rayo
 Rayo: Fala logo, forasteiro. Tenho estrada antes do sol. # expr: neutro
-Você tem uma cópia do dossiê do Príncipe: o relatório das concessionárias diz que o caminhão não passou em nenhum pedágio da Anchieta nem da Imigrantes. # pista: Dossiê: o caminhão não passou em pedágio nenhum na descida da Serra.
+Você tem uma cópia do dossiê do Príncipe: o relatório das concessionárias diz que o caminhão não passou em nenhum pedágio da Anchieta nem da Imigrantes. # pista dossie: O caminhão não passou em pedágio nenhum na descida da Serra.
 -> perguntas
 
 === perguntas ===
