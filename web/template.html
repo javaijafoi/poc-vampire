@@ -31,7 +31,7 @@ body {
 .jogo { width: min(100%, calc((100vh - 32px) * 16 / 9), 1280px); position: relative; }
 .palco {
   position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
-  border: 2px solid var(--borda); background: #1a0d12;
+  background: #1a0d12;
   container-type: inline-size;
 }
 .palco img { position: absolute; user-select: none; -webkit-user-drag: none; }
@@ -44,22 +44,23 @@ body {
 .rayo { right: 5%; bottom: -3%; height: 98%; opacity: 0; transform: rotate(-1.5deg) translateY(4%);
   filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); transition: opacity .6s, transform .6s; }
 .rayo.on { opacity: 1; transform: rotate(-1.5deg); }
+.moldura { inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
 .rayo.troca { animation: troca .25s; }
 @keyframes troca { 0% { transform: rotate(-1.5deg) translateY(0); } 40% { transform: rotate(-2.2deg) translateY(-1%); } 100% { transform: rotate(-1.5deg); } }
 
 /* HUD */
-.hud { position: absolute; top: 2.5cqw; left: 2.5cqw; display: flex; gap: 1.2cqw; align-items: stretch; font-family: var(--f-tipo); z-index: 3; }
-.hud .bloco { background: rgb(18 10 14 / .82); border: 1px solid var(--borda); padding: .8cqw 1.2cqw; display: grid; gap: .3cqw; }
-.hud .rotulo { font-size: max(10px, 1.15cqw); color: var(--papel-fraco); letter-spacing: .08em; text-transform: uppercase; }
-.hud .hora { font-size: max(16px, 2.6cqw); color: var(--ambar); font-variant-numeric: tabular-nums; line-height: 1; }
-.hud .barra { height: 4px; background: var(--vinho-claro); width: max(80px, 11cqw); }
-.hud .barra i { display: block; height: 100%; background: var(--ambar); transition: width .4s; }
+.hud { position: absolute; top: 4.2cqw; left: 4.6cqw; display: flex; gap: 1.2cqw; align-items: stretch; font-family: var(--f-tipo); z-index: 3; }
+.hud .bloco { background: var(--folha); color: var(--tinta); box-shadow: .15cqw .3cqw .6cqw rgb(0 0 0 / .5); padding: .7cqw 1.1cqw; display: grid; gap: .3cqw; }
+.hud .rotulo { font-size: max(10px, 1.15cqw); color: #6b5646; letter-spacing: .08em; text-transform: uppercase; }
+.hud .hora { font-size: max(16px, 2.6cqw); color: #8f1d26; font-variant-numeric: tabular-nums; line-height: 1; }
+.hud .barra { height: 4px; background: #cdbd9e; width: max(80px, 11cqw); }
+.hud .barra i { display: block; height: 100%; background: #8f1d26; transition: width .4s; }
 .fome { display: flex; gap: 4px; }
 .fome i { width: max(9px, 1.3cqw); aspect-ratio: 1; border: 1px solid var(--sangue); }
 .fome i.cheio { background: var(--sangue); }
-.caderno-btn { font: inherit; color: var(--papel); background: rgb(18 10 14 / .82); border: 1px solid var(--borda); padding: .8cqw 1.2cqw; cursor: pointer; text-align: left; }
-.caderno-btn:hover, .caderno-btn:focus-visible { border-color: var(--ambar); outline: none; }
-.caderno-btn b { color: var(--ambar); font-size: max(16px, 2.6cqw); display: block; line-height: 1; }
+.caderno-btn { font: inherit; color: var(--tinta); background: var(--folha); border: 1px solid transparent; box-shadow: .15cqw .3cqw .6cqw rgb(0 0 0 / .5); padding: .7cqw 1.1cqw; cursor: pointer; text-align: left; }
+.caderno-btn:hover, .caderno-btn:focus-visible { border-color: #8f1d26; outline: none; }
+.caderno-btn b { color: #8f1d26; font-size: max(16px, 2.6cqw); display: block; line-height: 1; }
 
 /* Diálogo */
 .dialogo {
@@ -102,18 +103,18 @@ body {
 .titulo { font-family: var(--f-tipo); font-size: max(13px, 1.6cqw); color: #6b5646; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1.2cqw; }
 
 /* Dados */
-.dados { position: absolute; left: 50%; top: 34%; transform: translate(-50%, -50%); z-index: 5; background: rgb(18 10 14 / .95); border: 2px solid var(--borda);
+.dados { position: absolute; left: 50%; top: 34%; transform: translate(-50%, -50%) rotate(-.6deg); z-index: 5; background: var(--folha); color: var(--tinta); box-shadow: .3cqw .6cqw 1.4cqw rgb(0 0 0 / .6);
   padding: 1.6cqw 2cqw; display: grid; gap: 1cqw; justify-items: center; font-family: var(--f-tipo); min-width: 38%; }
 .dados .linha { display: flex; gap: .8cqw; flex-wrap: wrap; justify-content: center; }
-.dado { width: max(28px, 4.2cqw); aspect-ratio: 1; display: grid; place-items: center; font-size: max(14px, 2cqw); border: 2px solid var(--papel); color: var(--papel); }
-.dado.fomed { border-color: var(--sangue); color: #ffb3bb; background: rgb(200 49 63 / .15); }
-.dado.ok { background: var(--papel); color: #1d0e08; }
+.dado { width: max(28px, 4.2cqw); aspect-ratio: 1; display: grid; place-items: center; font-size: max(14px, 2cqw); border: 2px solid var(--tinta); color: var(--tinta); }
+.dado.fomed { border-color: var(--sangue); color: var(--sangue); background: rgb(200 49 63 / .1); }
+.dado.ok { background: var(--tinta); color: var(--folha); }
 .dado.fomed.ok { background: var(--sangue); color: #fff; }
-.dados .res { font-size: max(15px, 2.2cqw); color: var(--ambar); }
-.dados .det { font-size: max(11px, 1.3cqw); color: var(--papel-fraco); }
+.dados .res { font-size: max(15px, 2.2cqw); color: #8f1d26; }
+.dados .det { font-size: max(11px, 1.3cqw); color: #6b5646; }
 
 /* Toast e caderno */
-.toast { position: absolute; top: 2.5cqw; right: 2.5cqw; z-index: 6; background: #6a4a12; color: #f8dfa5; font-family: var(--f-tipo); font-size: max(12px, 1.5cqw);
+.toast { position: absolute; top: 4.2cqw; right: 4.6cqw; z-index: 6; background: #8f1d26; color: #f4e7d2; font-family: var(--f-tipo); font-size: max(12px, 1.5cqw);
   padding: .6cqw 1.2cqw; max-width: 40%; opacity: 0; transform: translateY(-6px); transition: opacity .3s, transform .3s; pointer-events: none; }
 .toast.on { opacity: 1; transform: none; }
 .caderno { position: absolute; inset: 0; z-index: 7; background: rgb(12 6 9 / .9); display: grid; place-items: center; }
@@ -133,7 +134,11 @@ body {
   .hud { gap: 6px; }
   .dados { top: 50%; }
   .hud .bloco, .caderno-btn { padding: 4px 6px; }
-  .hud .barra { width: 56px; }
+  .hud .barra { width: 40px; }
+  .hud { top: 5cqw; left: 5.5cqw; gap: 4px; }
+  .hud .rotulo { font-size: 8px; }
+  .hud .hora, .caderno-btn b { font-size: 13px; }
+  .fome i { width: 7px; }
   .toast { top: auto; bottom: 8px; right: 8px; max-width: 70%; }
 }
 @media (prefers-reduced-motion: reduce) { .rayo, .toast { transition: none; animation: none; } .seta { animation: none; } }
@@ -144,6 +149,7 @@ body {
     <img class="fundo" id="fundo" alt="Sala escura com janela de vidro para uma avenida movimentada à noite.">
     <div class="reticula"></div>
     <img class="rayo" id="rayo" alt="Rayo, Gangrel barbudo de colete de couro e braço tatuado, recortado como foto de revista.">
+    <img class="moldura" id="moldura" alt="">
     <div class="hud">
       <div class="bloco"><span class="rotulo">Hora</span><span class="hora" id="hora">03h00</span><span class="barra"><i id="barra"></i></span></div>
       <div class="bloco"><span class="rotulo">Fome</span><span class="fome" id="fome"></span></div>
@@ -162,9 +168,9 @@ body {
 <script>{{V5}}</script>
 <script>
 const HISTORIA = {{STORY}};
-const ARTE = { fundo: "{{BG}}", rayo: {{RAYO}} };  // rayo: uma imagem por expressão
+const ARTE = { fundo: "{{BG}}", moldura: "{{MOLDURA}}", rayo: {{RAYO}} };  // rayo: uma imagem por expressão
 const $ = id => document.getElementById(id);
-$('fundo').src = ARTE.fundo; $('rayo').src = ARTE.rayo.neutro;
+$('fundo').src = ARTE.fundo; $('moldura').src = ARTE.moldura; $('rayo').src = ARTE.rayo.neutro;
 // "# expr: nome" no roteiro troca a imagem; expressão sem imagem cai na neutra
 function expressao(nome) {
   const src = ARTE.rayo[nome] || ARTE.rayo.neutro, el = $('rayo');

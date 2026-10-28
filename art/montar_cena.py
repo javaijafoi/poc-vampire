@@ -2,6 +2,7 @@
 
 Uso: python3 art/montar_cena.py
 - art/fontes/fundo_*.jpg       -> art/cena/fundo.webp (dessaturado e escurecido, para o personagem saltar)
+- moldura de pôster       -> art/cena/moldura.webp
 - art/fontes/rayo_recorte.png  -> art/cena/rayo_neutro.webp
 - art/fontes/rayo_<expr>.png   -> art/cena/rayo_<expr>.webp (expressões extras, quando existirem)
 """
@@ -12,6 +13,7 @@ import sys
 from PIL import Image, ImageEnhance
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from moldura import moldura
 from recorte import recorte
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -24,6 +26,8 @@ fundo = fundo.resize((1600, 900), Image.LANCZOS)
 fundo = ImageEnhance.Color(fundo).enhance(0.7)
 fundo = ImageEnhance.Brightness(fundo).enhance(0.8)
 fundo.save(os.path.join(CENA, "fundo.webp"), quality=78)
+
+moldura().save(os.path.join(CENA, "moldura.webp"), quality=90)
 
 for f in sorted(glob.glob(os.path.join(FONTES, "rayo_*.png"))):
     nome = os.path.basename(f)[5:-4]
