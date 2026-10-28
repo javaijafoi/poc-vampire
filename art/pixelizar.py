@@ -7,8 +7,14 @@ import sys
 from PIL import Image, ImageEnhance, ImageFilter
 
 
-def pixelizar(entrada, saida, largura, cores=40):
-    im = Image.open(entrada).convert("RGBA")
+def pixelizar(entrada, saida, largura, cores=40, suavizar=0):
+    """suavizar: tamanho do filtro de mediana aplicado antes de reduzir (tira a textura de retícula)."""
+    im = entrada if isinstance(entrada, Image.Image) else Image.open(entrada)
+    im = im.convert("RGBA")
+    if suavizar:
+        a = im.getchannel("A")
+        im = im.convert("RGB").filter(ImageFilter.MedianFilter(suavizar)).convert("RGBA")
+        im.putalpha(a)
     altura = round(im.height * largura / im.width)
 
     # Reduz com o alfa pré-multiplicado, para a borda não puxar a cor do fundo.
@@ -39,7 +45,8 @@ def pixelizar(entrada, saida, largura, cores=40):
                 px[x, y] = escuro + (255,)
             else:
                 px[x, y] = (0, 0, 0, 0)
-    out.save(saida)
+    if saida:
+        out.save(saida)
     return out
 
 
