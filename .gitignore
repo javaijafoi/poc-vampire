@@ -1,0 +1,6 @@
+node_modules/
+dist/local.html
+dist/ink.js
+ink/rayo.json
+*.rpyc
+renpy/game/cache/
