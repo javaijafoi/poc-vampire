@@ -1,0 +1,340 @@
+<title>Porão do Vincenzo</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400;600&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: palco 16:9 em pixel art, HUD no canto, caixa de diálogo sobre o balcão (abaixo do palco no celular) */
+:root {
+  --noite: #120a0e;        /* fundo da página */
+  --vinho: #2a1219;        /* painéis */
+  --vinho-claro: #3d1b24;
+  --papel: #efe3d2;        /* texto principal */
+  --papel-fraco: #b9a594;
+  --ambar: #e0a54a;        /* destaque quente da luminária */
+  --sangue: #c8313f;       /* Fome */
+  --borda: #5a2c35;
+  --f-pixel: "Pixelify Sans", "Courier New", monospace;
+  --f-texto: "Spectral", Georgia, "Times New Roman", serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  background: var(--noite); color: var(--papel); font-family: var(--f-texto);
+  display: grid; place-items: center;
+  padding-block: 16px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.jogo { width: min(100%, calc((100vh - 32px) * 16 / 9), 1280px); position: relative; }
+.palco {
+  position: relative; width: 100%; aspect-ratio: 16 / 9; overflow: hidden;
+  border: 2px solid var(--borda); background: #1a0d12;
+  container-type: inline-size;
+}
+.palco img { position: absolute; image-rendering: pixelated; user-select: none; -webkit-user-drag: none; }
+.fundo { inset: 0; width: 100%; height: 100%; }
+.rayo { left: 56.25%; top: 8.9%; width: 37.5%; opacity: 0; transform: translateY(3%); transition: opacity .6s, transform .6s; }
+.rayo.on { opacity: 1; transform: none; }
+.balcao { left: 0; top: 72.2%; width: 100%; height: 27.8%; object-fit: cover; object-position: bottom; }
+.capacete { left: 40%; top: 59.5%; width: 9%; opacity: 0; transition: opacity .6s; }
+.capacete.on { opacity: 1; }
+
+/* HUD */
+.hud { position: absolute; top: 2.5cqw; left: 2.5cqw; display: flex; gap: 1.2cqw; align-items: stretch; font-family: var(--f-pixel); z-index: 3; }
+.hud .bloco { background: rgb(18 10 14 / .82); border: 1px solid var(--borda); padding: .8cqw 1.2cqw; display: grid; gap: .3cqw; }
+.hud .rotulo { font-size: max(10px, 1.15cqw); color: var(--papel-fraco); letter-spacing: .08em; text-transform: uppercase; }
+.hud .hora { font-size: max(16px, 2.6cqw); color: var(--ambar); font-variant-numeric: tabular-nums; line-height: 1; }
+.hud .barra { height: 4px; background: var(--vinho-claro); width: max(80px, 11cqw); }
+.hud .barra i { display: block; height: 100%; background: var(--ambar); transition: width .4s; }
+.fome { display: flex; gap: 4px; }
+.fome i { width: max(9px, 1.3cqw); aspect-ratio: 1; border: 1px solid var(--sangue); }
+.fome i.cheio { background: var(--sangue); }
+.caderno-btn { font: inherit; color: var(--papel); background: rgb(18 10 14 / .82); border: 1px solid var(--borda); padding: .8cqw 1.2cqw; cursor: pointer; text-align: left; }
+.caderno-btn:hover, .caderno-btn:focus-visible { border-color: var(--ambar); outline: none; }
+.caderno-btn b { color: var(--ambar); font-size: max(16px, 2.6cqw); display: block; line-height: 1; }
+
+/* Diálogo */
+.dialogo {
+  position: absolute; left: 3%; right: 3%; bottom: 3.5%; min-height: 25%;
+  background: rgb(26 12 17 / .94); border: 2px solid var(--borda); box-shadow: 0 0 0 4px rgb(18 10 14 / .6);
+  padding: 2.2cqw 2.6cqw; z-index: 4; cursor: pointer;
+}
+.nome { position: absolute; top: 0; left: 2.4cqw; transform: translateY(-60%); font-family: var(--f-pixel); font-weight: 600;
+  background: var(--ambar); color: #1d0e08; padding: .25cqw 1.2cqw; font-size: max(13px, 1.7cqw); letter-spacing: .04em; }
+.nome[hidden] { display: none; }
+.fala { font-size: max(15px, 2.05cqw); line-height: 1.45; max-width: 70ch; min-height: 2.9em; text-wrap: pretty; }
+.fala.narracao { font-style: italic; color: var(--papel-fraco); }
+.fala.voce { color: #f6d9a8; }
+.seta { position: absolute; right: 1.6cqw; bottom: 1.2cqw; font-family: var(--f-pixel); color: var(--ambar); font-size: max(12px, 1.5cqw); animation: pisca 1s steps(2) infinite; }
+@keyframes pisca { 50% { opacity: 0; } }
+.passiva { display: inline-block; font-family: var(--f-pixel); font-style: normal; font-size: .72em; padding: .05em .5em; margin-right: .5em;
+  background: #1d3550; color: #bcd9f5; vertical-align: .12em; }
+
+.escolhas { display: grid; gap: .15cqw; margin: 0; padding: 0; list-style: none; }
+.escolhas button {
+  width: 100%; text-align: left; font: inherit; font-size: max(14px, 1.6cqw); line-height: 1.3; color: var(--papel);
+  background: transparent; border: 1px solid transparent; padding: .3cqw .8cqw; cursor: pointer; display: flex; gap: .8cqw; align-items: baseline;
+}
+.escolhas button:hover, .escolhas button:focus-visible { background: var(--vinho-claro); border-color: var(--borda); outline: none; }
+.escolhas .num { font-family: var(--f-pixel); color: var(--papel-fraco); min-width: 1.2em; }
+.badge { font-family: var(--f-pixel); font-size: .72em; padding: .1em .5em; white-space: nowrap; flex: none; }
+.badge.cla { background: #4b2a6b; color: #e2cdf7; }
+.badge.atrib { background: #1d3550; color: #bcd9f5; }
+.badge.prova { background: #6a4a12; color: #f8dfa5; }
+.badge.teste { background: #2e4a2c; color: #cdeec8; }
+.badge.disc { background: #6b1622; color: #ffc9cf; }
+
+/* Escolha de personagem */
+.cartas { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
+.carta { text-align: left; font: inherit; color: var(--papel); background: var(--vinho); border: 1px solid var(--borda); padding: 1.4cqw; cursor: pointer; display: grid; gap: .4cqw; }
+.carta:hover, .carta:focus-visible { border-color: var(--ambar); outline: none; }
+.carta b { font-family: var(--f-pixel); font-size: max(16px, 2.2cqw); color: var(--ambar); font-weight: 600; }
+.carta span { font-size: max(13px, 1.6cqw); color: var(--papel-fraco); }
+.carta small { font-family: var(--f-pixel); font-size: max(11px, 1.3cqw); color: var(--papel); }
+.titulo { font-family: var(--f-pixel); font-size: max(13px, 1.6cqw); color: var(--papel-fraco); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1.2cqw; }
+
+/* Dados */
+.dados { position: absolute; left: 50%; top: 34%; transform: translate(-50%, -50%); z-index: 5; background: rgb(18 10 14 / .95); border: 2px solid var(--borda);
+  padding: 1.6cqw 2cqw; display: grid; gap: 1cqw; justify-items: center; font-family: var(--f-pixel); min-width: 38%; }
+.dados .linha { display: flex; gap: .8cqw; flex-wrap: wrap; justify-content: center; }
+.dado { width: max(28px, 4.2cqw); aspect-ratio: 1; display: grid; place-items: center; font-size: max(14px, 2cqw); border: 2px solid var(--papel); color: var(--papel); }
+.dado.fomed { border-color: var(--sangue); color: #ffb3bb; background: rgb(200 49 63 / .15); }
+.dado.ok { background: var(--papel); color: #1d0e08; }
+.dado.fomed.ok { background: var(--sangue); color: #fff; }
+.dados .res { font-size: max(15px, 2.2cqw); color: var(--ambar); }
+.dados .det { font-size: max(11px, 1.3cqw); color: var(--papel-fraco); }
+
+/* Toast e caderno */
+.toast { position: absolute; top: 2.5cqw; right: 2.5cqw; z-index: 6; background: #6a4a12; color: #f8dfa5; font-family: var(--f-pixel); font-size: max(12px, 1.5cqw);
+  padding: .6cqw 1.2cqw; max-width: 40%; opacity: 0; transform: translateY(-6px); transition: opacity .3s, transform .3s; pointer-events: none; }
+.toast.on { opacity: 1; transform: none; }
+.caderno { position: absolute; inset: 0; z-index: 7; background: rgb(12 6 9 / .9); display: grid; place-items: center; }
+.caderno .folha { width: min(88%, 720px); max-height: 86%; overflow: auto; background: #e9dcc4; color: #2a1810; padding: 2.4cqw 2.8cqw; border: 2px solid #8b6a44; }
+.caderno h2 { font-family: var(--f-pixel); font-weight: 600; font-size: max(16px, 2.2cqw); margin: 0 0 1cqw; }
+.caderno ol { margin: 0; padding-left: 1.4em; display: grid; gap: .6cqw; font-size: max(14px, 1.8cqw); line-height: 1.4; }
+.caderno .vazio { font-style: italic; color: #6d5440; }
+.caderno .fechar { margin-top: 1.6cqw; font-family: var(--f-pixel); background: #2a1810; color: #e9dcc4; border: 0; padding: .6cqw 1.4cqw; cursor: pointer; font-size: max(13px, 1.5cqw); }
+
+.rodape { margin-top: 10px; font-family: var(--f-pixel); font-size: 12px; color: var(--papel-fraco); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.rodape button { font: inherit; color: var(--papel-fraco); background: none; border: 1px solid var(--borda); padding: 2px 8px; cursor: pointer; }
+
+@media (max-width: 640px) {
+  .dialogo { position: relative; left: auto; right: auto; bottom: auto; margin-top: 18px; min-height: 9em; padding: 18px 16px 16px; }
+  .nome { left: 12px; }
+  .cartas { grid-template-columns: 1fr; }
+  .hud { gap: 6px; }
+  .dados { top: 50%; }
+  .hud .bloco, .caderno-btn { padding: 4px 6px; }
+  .hud .barra { width: 56px; }
+  .toast { top: auto; bottom: 8px; right: 8px; max-width: 70%; }
+}
+@media (prefers-reduced-motion: reduce) { .rayo, .capacete, .toast { transition: none; } .seta { animation: none; } }
+</style>
+
+<div class="jogo">
+  <div class="palco" id="palco">
+    <img class="fundo" id="fundo" alt="O Porão do Vincenzo: balcão, prateleiras de garrafas e uma janela com chuva sobre a cidade.">
+    <img class="rayo" id="rayo" alt="Rayo, Gangrel de jaqueta de couro, sentado ao balcão.">
+    <img class="balcao" id="balcao" alt="">
+    <img class="capacete" id="capacete" alt="">
+    <div class="hud">
+      <div class="bloco"><span class="rotulo">Hora</span><span class="hora" id="hora">03h00</span><span class="barra"><i id="barra"></i></span></div>
+      <div class="bloco"><span class="rotulo">Fome</span><span class="fome" id="fome"></span></div>
+      <button class="caderno-btn" id="abrir-caderno" type="button"><span class="rotulo">Caderno</span><b id="n-pistas">0</b></button>
+    </div>
+    <div class="toast" id="toast" role="status"></div>
+  </div>
+  <div class="dialogo" id="dialogo" aria-live="polite">
+    <span class="nome" id="nome" hidden></span>
+    <div id="conteudo"></div>
+  </div>
+  <div class="rodape"><span>Cena de teste · roteiro em Ink · arte provisória</span><button type="button" id="reiniciar">Recomeçar</button></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/ink.js"></script>
+<script>// Regras de dados de Vampiro V5, usadas pelo jogo web e pelos testes.
+// Resultado: 0 falha, 1 sucesso, 2 crítico, 3 crítico bagunçado, 4 falha bestial
+(function (root) {
+  function rolarV5(parada, fome, dificuldade, rng) {
+    rng = rng || Math.random;
+    const d10 = () => 1 + Math.floor(rng() * 10);
+    const nFome = Math.min(fome, parada);
+    const dados = [];
+    for (let i = 0; i < parada; i++) dados.push({ valor: d10(), fome: i < nFome });
+    let sucessos = dados.filter(d => d.valor >= 6).length;
+    const dezes = dados.filter(d => d.valor === 10);
+    const pares = Math.floor(dezes.length / 2);
+    sucessos += pares * 2; // cada par de 10 vale 4 sucessos no total
+    const passou = sucessos >= dificuldade;
+    let resultado;
+    if (passou && pares > 0 && dezes.some(d => d.fome)) resultado = 3;
+    else if (passou && pares > 0) resultado = 2;
+    else if (passou) resultado = 1;
+    else if (dados.some(d => d.fome && d.valor === 1)) resultado = 4;
+    else resultado = 0;
+    return { resultado, sucessos, dados, dificuldade };
+  }
+  function despertarV5(rng) { return 1 + Math.floor((rng || Math.random)() * 10) >= 6; }
+  root.V5 = { rolarV5, despertarV5 };
+})(typeof window !== 'undefined' ? window : globalThis);
+</script>
+<script>
+const HISTORIA = {"inkVersion":21,"root":[[{"->":"escolha_personagem"},["done",{"#n":"g-0"}],null],"done",{"escolha_personagem":[["^Quem vai interrogar o Rayo?","\n","ev","str","^Tomás, Gangrel. Rude, com faro de bicho.","/str","/ev",{"*":".^.c-0","flg":20},"ev","str","^Helena, Ventrue. Fala mansa, sangue azul.","/str","/ev",{"*":".^.c-1","flg":20},{"c-0":["\n","ev","str","^Tomás","/str","/ev",{"VAR=":"nome","re":true},"ev","str","^Gangrel","/str","/ev",{"VAR=":"cla","re":true},"ev",2,"/ev",{"VAR=":"carisma","re":true},"ev",3,"/ev",{"VAR=":"raciocinio","re":true},"ev",2,"/ev",{"VAR=":"manipulacao","re":true},"ev",2,"/ev",{"VAR=":"subterfugio","re":true},"ev","str","^Animalismo","/str","/ev",{"VAR=":"disciplina","re":true},{"->":".^.^.g-0"},{"#f":5}],"c-1":["\n","ev","str","^Helena","/str","/ev",{"VAR=":"nome","re":true},"ev","str","^Ventrue","/str","/ev",{"VAR=":"cla","re":true},"ev",3,"/ev",{"VAR=":"carisma","re":true},"ev",2,"/ev",{"VAR=":"raciocinio","re":true},"ev",3,"/ev",{"VAR=":"manipulacao","re":true},"ev",3,"/ev",{"VAR=":"subterfugio","re":true},"ev","str","^Dominação","/str","/ev",{"VAR=":"disciplina","re":true},{"->":".^.^.g-0"},{"#f":5}],"g-0":[{"->":"abertura"},null]}],null],"abertura":["^Três da manhã no Porão do Vincenzo. A chuva escorre pela janela, e um rádio toca samba velho, baixinho.","\n","^Vincenzo: Seu próximo convidado, ","ev",{"VAR?":"cla"},"str","^Ventrue","/str","==","/ev",[{"->":".^.b","c":true},{"b":["^signora",{"->":".^.^.^.12"},null]}],[{"->":".^.b"},{"b":["^signore",{"->":".^.^.^.12"},null]}],"nop","^. E lembre: aqui embaixo, nada de Disciplinas. Regra da casa.","\n","^Rayo larga o capacete no balcão. A jaqueta de couro ainda pinga. Ele senta de lado, de olho na porta. ","#","^entra: rayo","/#","\n","^Rayo: Fala logo, forasteiro. Tenho estrada antes do sol.","\n","^Você tem uma cópia do dossiê do Príncipe: o relatório das concessionárias diz que o caminhão não passou em nenhum pedágio da Anchieta nem da Imigrantes. ","#","^pista: Dossiê: o caminhão não passou em pedágio nenhum na descida da Serra.","/#","\n",{"->":"perguntas"},null],"perguntas":[["ev",{"VAR?":"minutos"},{"VAR?":"limite"},">=","/ev",[{"->":".^.b","c":true},{"b":["^ ",{"->":"fim_tempo"},{"->":".^.^.^.6"},null]}],"nop","\n","ev","str","^O que aconteceu na Serra?","/str",{"VAR?":"pista_versao"},"!","/ev",{"*":".^.c-0","flg":5},"ev","str","^Que horas você entregou a carga?","/str",{"VAR?":"pista_horario"},"!","/ev",{"*":".^.c-1","flg":5},"ev","str","^Como estava o caixão quando você entregou?","/str",{"VAR?":"pista_versao"},{"VAR?":"pista_queimadura"},"!","&&",{"VAR?":"confessou"},"!","&&","/ev",{"*":".^.c-2","flg":5},"ev","str","^Gangrel :: Lobisomem? Eu sentiria o cheiro em você. Você fede a sombra fria.","/str",{"VAR?":"pista_versao"},{"VAR?":"confessou"},"!","&&",{"VAR?":"cla"},"str","^Gangrel","/str","==","&&","/ev",{"*":".^.c-3","flg":5},"ev","str","^Carisma 3 :: Eu não trabalho pro Dante. O que você contar fica neste balcão.","/str",{"VAR?":"pista_versao"},{"VAR?":"confessou"},"!","&&",{"VAR?":"carisma"},3,">=","&&","/ev",{"*":".^.c-4","flg":5},"ev","str","^Prova :: Dossiê: seu caminhão não passou em pedágio nenhum.","/str",{"VAR?":"pista_versao"},{"VAR?":"confessou"},"!","&&",{"VAR?":"usou_pedagio"},"!","&&","/ev",{"*":".^.c-5","flg":5},"ev","str","^Prova :: Queimadura: isso nos seus dedos é marca de selo Tremere.","/str",{"VAR?":"pista_queimadura"},{"VAR?":"confessou"},"!","&&",{"VAR?":"usou_queimadura"},"!","&&","/ev",{"*":".^.c-6","flg":5},"ev","str","^Teste: Manipulação + Subterfúgio, dif. 3 :: Blefar: \"A Constance já me contou tudo.\"","/str",{"VAR?":"pista_versao"},{"VAR?":"confessou"},"!","&&",{"VAR?":"rayo_fechado"},"!","&&","/ev",{"*":".^.c-7","flg":5},"ev","str","^Disciplina: Dominação :: Olhe nos meus olhos. Conte a verdade.","/str",{"VAR?":"pista_versao"},{"VAR?":"confessou"},"!","&&",{"VAR?":"disciplina"},"str","^Dominação","/str","==","&&","/ev",{"*":".^.c-8","flg":5},"ev","str","^Disciplina: Animalismo :: Sentir a Besta dele.","/str",{"VAR?":"pista_versao"},{"VAR?":"confessou"},"!","&&",{"VAR?":"disciplina"},"str","^Animalismo","/str","==","&&",{"VAR?":"sentiu_besta"},"!","&&","/ev",{"*":".^.c-9","flg":5},"ev","str","^Encerrar o depoimento","/str","/ev",{"*":".^.c-10","flg":4},{"c-0":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n",{"->":"serra"},null],"c-1":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n",{"->":"entrega"},null],"c-2":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n",{"->":"caixao"},null],"c-3":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n","^Você: Lobisomem? Eu sentiria o cheiro em você, irmão. Você não fede a mato. Fede a sombra fria.","\n","^Rayo fica imóvel. Entre dois Gangrel, a mentira não dura muito.","\n",{"->":"confissao"},null],"c-4":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n","^Você: Eu não devo nada a essa Corte. O que você contar fica neste balcão.","\n","^Rayo olha para o Vincenzo, depois para você, e solta o ar que não precisa respirar.","\n",{"->":"confissao"},null],"c-5":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n","ev",true,"/ev",{"VAR=":"usou_pedagio","re":true},{"->":"prova_pedagio"},null],"c-6":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n","ev",true,"/ev",{"VAR=":"usou_queimadura","re":true},{"->":"prova_queimadura"},null],"c-7":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n",{"->":"blefe"},null],"c-8":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n",{"->":"dominacao"},null],"c-9":["\n","ev",20,{"f()":"passar"},"pop","/ev","\n",{"->":"animalismo"},null],"c-10":["\n",{"->":"fim"},null]}],null],"serra":["^Rayo: Neblina grossa, daquelas que você não enxerga o próprio farol.","\n","^Rayo: Na curva da Onça, uns vultos atravessaram a pista. Grandes demais pra cachorro. Lupinos.","\n","^Rayo: Joguei o caminhão no acostamento, apaguei tudo e esperei passar. Perdi uns quarenta minutos ali. ","#","^pista: Versão do Rayo: lobisomens na neblina, 40 minutos parado.","/#","\n","ev",true,"/ev",{"VAR=":"pista_versao","re":true},{"->":"perguntas"},null],"entrega":["^Rayo: Duas e quarenta. Deixei o caminhão no portão do túnel, na Vila Sônia, com o Zé Carlos de olho na carga.","\n","^Rayo: O Cão tava lá esperando. Eu não fico perto daquele bicho mais do que precisa.","\n","^Você: E o Zé?","\n","^Rayo: Ficou. Nunca mais atendeu o telefone. ","#","^pista: Rayo entregou às 02h40 no portão da Vila Sônia. O Cão disse ao Príncipe 03h30.","/#","\n","ev",true,"/ev",{"VAR=":"pista_horario","re":true},{"->":"perguntas"},null],"caixao":["^Rayo: Inteiro. Caixão lacrado, os selos da Senescal no lugar. Ninguém mexeu.","\n","ev",{"VAR?":"raciocinio"},3,">=","/ev",[{"->":".^.b","c":true},{"b":["\n","^Raciocínio 3 :: Quando ele diz \"selos\", esfrega a ponta dos dedos. A pele está empolada, como queimadura recente. ","#","^pista: O Rayo tem queimaduras frescas nos dedos.","/#","\n","ev",true,"/ev",{"VAR=":"pista_queimadura","re":true},{"->":"caixao.9"},null]}],[{"->":".^.b"},{"b":["\n","^Ele parece sincero. Ou é bom nisso.","\n",{"->":"caixao.9"},null]}],"nop","\n",{"->":"perguntas"},null],"prova_pedagio":["^Você: Seu caminhão não passou em pedágio nenhum, Rayo. Nem Anchieta, nem Imigrantes. Que estrada você pegou?","\n","^Rayo: ...A Estrada Velha. É fechada pra carro, ninguém olha. Atalho de quem conhece. ","#","^pista: O Rayo desviou pela Estrada Velha do Mar.","/#","\n","ev",true,"/ev",{"VAR=":"pista_estrada","re":true},{"->":"pressionar"},null],"prova_queimadura":["^Você: Escapamento não deixa marca assim. Isso é selo Tremere. Você encostou no caixão.","\n","^Rayo esconde a mão no bolso da jaqueta, tarde demais.","\n",{"->":"pressionar"},null],"pressionar":["ev",{"VAR?":"pressao"},1,"+",{"VAR=":"pressao","re":true},"/ev","ev",{"VAR?":"pressao"},2,">=","/ev",[{"->":".^.b","c":true},{"b":["\n","^Rayo: Tá bom. Tá bom, porra.","\n",{"->":"confissao"},{"->":".^.^.^.13"},null]}],[{"->":".^.b"},{"b":["\n","^Rayo: Isso não prova nada. Eu entreguei a carga inteira.","\n",{"->":"perguntas"},{"->":".^.^.^.13"},null]}],"nop","\n",null],"blefe":["^Você: A Constance já me contou tudo, Rayo. Só quero ouvir a sua parte.","\n","ev",{"VAR?":"manipulacao"},{"VAR?":"subterfugio"},"+",{"VAR?":"fome"},3,{"x()":"rolar","exArgs":3},"/ev",{"temp=":"resultado"},"\n","ev",{"VAR?":"resultado"},"/ev",["du","ev",4,"==","/ev",{"->":".^.b","c":true},{"b":["pop","\n","^A Besta sobe pela sua garganta e você rosna no meio da frase. As presas aparecem.","\n","^Rayo: Vocês são todos iguais.","\n","^Ele pega o capacete e sobe a escada. O depoimento acabou.","\n","ev",true,"/ev",{"VAR=":"quebrou_regra","re":true},{"->":"fim"},{"->":"blefe.19"},null]}],["du","ev",0,"==","/ev",{"->":".^.b","c":true},{"b":["pop","\n","^Rayo: A Constance? Ela não fala com gente como você. Boa tentativa.","\n","ev",true,"/ev",{"VAR=":"rayo_fechado","re":true},{"->":"perguntas"},{"->":"blefe.19"},null]}],["du","ev",3,"==","/ev",{"->":".^.b","c":true},{"b":["pop","\n","^Funciona, mas a Fome aparece no seu rosto: você encara a veia do pescoço dele por tempo demais. O Vincenzo para de secar o copo.","\n",{"->":"confissao"},{"->":"blefe.19"},null]}],[{"->":".^.b"},{"b":["pop","\n","^Rayo: ...Ela te contou? Então você sabe que eu não toquei no caixão.","\n",{"->":"confissao"},{"->":"blefe.19"},null]}],"nop","\n",null],"dominacao":["^Você: Olhe nos meus olhos, Rayo.","\n","ev",{"x()":"despertar"},"pop","/ev","\n","^Sua vontade entra na cabeça dele como uma chave. Ele começa a falar com a voz plana de quem está dormindo.","\n","^Vincenzo: Signora. Regra da casa. Isso vai chegar ao Príncipe.","\n","ev",true,"/ev",{"VAR=":"quebrou_regra","re":true},{"->":"confissao"},null],"animalismo":["ev",{"x()":"despertar"},"pop","/ev","\n","^Você deixa a sua Besta farejar a dele. Não tem medo de lobisomem ali. Tem medo de outra coisa: alguém que paga bem e cobra caro.","\n","^Vincenzo pigarreia do outro lado do balcão. Ele percebeu. ","#","^pista: A Besta do Rayo tem medo de quem o contratou, não de lobisomens.","/#","\n","ev",true,"/ev",{"VAR=":"quebrou_regra","re":true},"ev",true,"/ev",{"VAR=":"sentiu_besta","re":true},{"->":"pressionar"},null],"confissao":["ev",true,"/ev",{"VAR=":"confessou","re":true},"ev",true,"/ev",{"VAR=":"pista_estrada","re":true},"^Rayo: Não teve lobisomem nenhum. A Constance me pagou pra descer pela Estrada Velha.","\n","^Rayo: Os homens dela abriram o baú no meio do mato. Tentaram abrir o caixão também, mas os selos da bruxa queimaram a mão de um deles. Um selo ficou preto, chamuscado.","\n","^Rayo: Eu entrei em pânico e meti o pé. A carga chegou inteira no túnel, eu juro. Duas e quarenta. ","#","^pista: Constance pagou o desvio. Um dos selos Tremere ficou queimado na tentativa de roubo.","/#","\n","^Rayo: Se o Dante souber da Constance, eu tô morto. Se ela souber que eu falei, também.","\n",{"->":"fim"},null],"fim_tempo":["^Vincenzo: Tempo, ","ev",{"VAR?":"cla"},"str","^Ventrue","/str","==","/ev",[{"->":".^.b","c":true},{"b":["^signora",{"->":".^.^.^.10"},null]}],[{"->":".^.b"},{"b":["^signore",{"->":".^.^.^.10"},null]}],"nop","^. O Paizão está esperando lá em cima.","\n",{"->":"fim"},null],"fim":["ev",{"VAR?":"confessou"},"/ev",[{"->":".^.b","c":true},{"b":["\n","^Você guarda a pista mais importante da noite: quem viu a carga depois do desvio sabe que um selo estava queimado.","\n",{"->":"fim.5"},null]}],[{"->":".^.b"},{"b":["\n","^Você fica com a versão do Rayo e a sensação de que faltou alguma coisa.","\n",{"->":"fim.5"},null]}],"nop","\n","ev",{"VAR?":"quebrou_regra"},"/ev",[{"->":".^.b","c":true},{"b":["^ O Vincenzo anota alguma coisa num caderninho. A regra da casa foi quebrada, e o Príncipe vai saber. ",{"->":"fim.11"},null]}],"nop","\n","^FIM DA CENA DE TESTE ","#","^fim","/#","\n","end",null],"passar":[{"temp=":"m"},"ev",{"VAR?":"minutos"},{"VAR?":"m"},"+","/ev",{"VAR=":"minutos","re":true},null],"rolar":[{"temp=":"dificuldade"},{"temp=":"fome_atual"},{"temp=":"parada"},"ev",0,{"VAR?":"parada"},"rnd","/ev",{"temp=":"sucessos"},"\n","ev",{"VAR?":"sucessos"},{"VAR?":"dificuldade"},">=","/ev",[{"->":".^.b","c":true},{"b":["\n","ev",1,"/ev","~ret",{"->":"rolar.17"},null]}],[{"->":".^.b"},{"b":["\n","ev",0,"/ev","~ret",{"->":"rolar.17"},null]}],"nop","\n",null],"despertar":["ev",1,10,"rnd",6,"<","/ev",[{"->":".^.b","c":true},{"b":["\n","ev",{"VAR?":"fome"},1,"+","/ev",{"VAR=":"fome","re":true},{"->":".^.^.^.8"},null]}],"nop","\n",null],"global decl":["ev","str","^","/str",{"VAR=":"nome"},"str","^","/str",{"VAR=":"cla"},0,{"VAR=":"carisma"},0,{"VAR=":"raciocinio"},0,{"VAR=":"manipulacao"},0,{"VAR=":"subterfugio"},"str","^","/str",{"VAR=":"disciplina"},2,{"VAR=":"fome"},240,{"VAR=":"minutos"},340,{"VAR=":"limite"},false,{"VAR=":"pista_versao"},false,{"VAR=":"pista_horario"},false,{"VAR=":"pista_queimadura"},false,{"VAR=":"pista_estrada"},false,{"VAR=":"confessou"},0,{"VAR=":"pressao"},false,{"VAR=":"rayo_fechado"},false,{"VAR=":"usou_pedagio"},false,{"VAR=":"usou_queimadura"},false,{"VAR=":"sentiu_besta"},false,{"VAR=":"quebrou_regra"},"/ev","end",null]}],"listDefs":{}};
+const ARTE = { bar: "data:image/png;base64,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", rayo: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAACCCAYAAACNbQytAAAEs0lEQVR4nO2av2sUQRTH38mBnVhICCmOEFKkSCkWFhKstbSz9E9I4Z9g4Z9gmc5S6xAsLMQyxRUhhCsOCSJiJxzEas1ms5ub2Zk378d8P+XB7b2bz37fvJs9IgAAAAAAAAAAAAAALDCRLoCLRw8fXMW+5+fvP+7Ww8UXGiMzFOvSzRbPKXUIi7LNFSwhtosl0eoL1SB0HZqF35MuAPACwc5RLdhCeybSXadawZoXrQ+t9aoVDPIAwc6BYOdAsHPUCtZ8eNCH1nrVCibSu2hdNNepWjBIB4KdA8HOgWDnqB0O+nj/+nnvceC7z9/ZPvPti8e9rx8eHZtYOxNFEg3LHWKM9CGZQ1iQPJUugItYWV7BHuwcE4Jj23MptNbVxmyL7u6xHC25xGdwY1Zwd7FzyPAgtIv6KdBCG9Q8TZtNMBHRy1d/e1//9PG+qmtKYmLIAuOBYOeYbtEcbdNqKx4CCXaOe8Fny1/SJYjiXnDtmNmDP3yZJ73/5OwyUyXXvHm2l/2auUGCnQPBzlEvuDkGTGmHJ2eXdLC7ka0mout6NB9TEhkQDNKoRjDHkGUBE1P04dHxZN1TpdwtmGj9TaG9PRMZS7CWnyVa6gjBlGAQj4kWTbS+TZfeYy20ZyID/+josjfbEv+Hx3yxNLNuaNHOMSdYOj3Snx+LOcEgDgh2DgQ7x6RgqX3Q2v5LZFQwCAeCnWOu5XQpcfBhsTU3mE/wfLGczBfLSe6nSQe7G/+vnfXChTFzFh1CIznlXJrjsaMkrgQ3jBHtTWyDS8ENbWl9sr1KbeNacJt2qmsQ22B+yIqlJrlEChO8tTkTf97bMLaW5Y+FmslbVYI1yU1B0/dQIXhrc3bVLMr2bCfqvfurFe2vVix1jbl2U3/7O0kiLri7CBeL8yjJp1PeXSbm+tuzHbpYnN94TVqy2B4s/cVL0nxXib1ZZBgIkduXhrvgaNOp6e2jtGS2Fv30ycEtiTH7UmyrliTmZhxag771ygGb4K/fTm7cqdwtOfdezL23d9eju165KDJkjZVrIcWxW0mbEnMI621aepA6nU6z7MXc6W3DPYCxJTiXXM0pTklvF64wZL9ruAqNWcyUFIemN6fcLjnTnDXBNf225STnOma5U0qJ5U6xhvR2SU1zcoJLplbDflxSLlH6+rINWdIiYifhkpNzH1zrxSaY6y6XTDFnermuK/40iZPQVEqnl5MkwVJTs0SKS++9bVLW2WyCQyWvS2dIeiXlpmJWMAjDtODUFHtPL5FxwUS8+7F1uUQOBIfSTavnybmNi4MOjhSXTi/XeiWdc2p7uBAiZX+1Wpteja157Jn06ARrk+udsevtag8OadUW05uCK8HgNu4Epwxc3tJL5FAw0TjJHuUSORUMrnErOCbFXtNL5OSgY4gQyVrkqvpHR8hvMg2LZomQ9RrzW9hti264K8Va0suJe8G1U4XgvhTXkF6iSgQT3ZRci1yiigTXSlWCmxTXkl6iEc+D8ZhQnphnw64POiyh5h8dSLA8KhIMdADBzoFg50CwcyDYOVGCMUHrIMYDEuwcHHQoQcVBB1q0HkIPO9CinQPBzoFg50Cwc4IFY8DSRagPJNg5EOycf/bZxfpIJCDdAAAAAElFTkSuQmCC", capacete: "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACIAAAAYCAYAAACfpi8JAAAAr0lEQVR4nGNgGCSAkRxNPXIq/wmpKXl0hySziVZMjOW4ADGOYqK1I4jVj9ellDoAG8AVOjhDhBaOwGcuC7GKA6JCGDYsW4Ohdo6IEumOYWD4jx4yGCGCy8XYHEEJQLeHCZ8krQGyfUTlGnoAuEPoHRro9g6uEBmo0ICBHjmV/4MmRLCWI6SAlDf3qOGOwZNGMEJkEh0tz0NiD5oQwagJ5eiYgx4h1TeDJkRGwSggBADALjRSgzxDMwAAAABJRU5ErkJggg==" };
+const $ = id => document.getElementById(id);
+$('fundo').src = ARTE.bar; $('rayo').src = ARTE.rayo; $('capacete').src = ARTE.capacete;
+// o balcão é um recorte do próprio fundo, desenhado por cima do Rayo
+(() => { const img = new Image(); img.onload = () => { const c = document.createElement('canvas'); c.width = 320; c.height = 50;
+  c.getContext('2d').drawImage(img, 0, 130, 320, 50, 0, 0, 320, 50); $('balcao').src = c.toDataURL(); }; img.src = ARTE.bar; })();
+
+const FALANTES = ['Rayo', 'Vincenzo', 'Você'];
+const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
+let story, fila, pistas, digitando, alvoTexto, fimTimer;
+
+function tipoBadge(g) {
+  if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra)/.test(g)) return 'cla';
+  if (/^Prova/.test(g)) return 'prova';
+  if (/^Teste/.test(g)) return 'teste';
+  if (/^Disciplina/.test(g)) return 'disc';
+  return 'atrib';
+}
+const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+function iniciar() {
+  story = new inkjs.Story(HISTORIA);
+  fila = []; pistas = [];
+  story.BindExternalFunction('rolar', (parada, fome, dif) => {
+    const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
+  }, false);
+  story.BindExternalFunction('despertar', () => {
+    const ok = V5.despertarV5();
+    if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
+    fila.push({ tipo: 'despertar', ok });
+  }, false);
+  $('rayo').classList.remove('on'); $('capacete').classList.remove('on');
+  atualizarHud();
+  avancar();
+}
+
+function atualizarHud() {
+  const v = story.variablesState, min = v['minutos'], h = (23 + Math.floor(min / 60)) % 24, m = min % 60;
+  $('hora').textContent = `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`;
+  $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / 100)) + '%';
+  $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
+  $('n-pistas').textContent = pistas.length;
+}
+
+function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(fimTimer); fimTimer = setTimeout(() => t.classList.remove('on'), 2600); }
+
+// Puxa a próxima linha do roteiro e trata efeitos (dados, tags) antes de mostrar.
+function avancar() {
+  if (fila.length) return mostrarEvento(fila.shift());
+  if (story.canContinue) {
+    const texto = story.Continue().trim();
+    for (const tag of story.currentTags) {
+      const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
+      if (k.trim() === 'entra' && val === 'rayo') { $('rayo').classList.add('on'); $('capacete').classList.add('on'); }
+      if (k.trim() === 'pista') { pistas.push(val); toast('Nova pista no caderno'); }
+    }
+    atualizarHud();
+    if (fila.length) { fila.push({ tipo: 'linha', texto }); return avancar(); }
+    if (!texto) return avancar();
+    return mostrarLinha(texto);
+  }
+  if (story.currentChoices.length) return mostrarEscolhas();
+  mostrarFim();
+}
+
+function mostrarEvento(ev) {
+  if (ev.tipo === 'linha') return ev.texto ? mostrarLinha(ev.texto) : avancar();
+  if (ev.tipo === 'dados') return mostrarDados(ev.r);
+  if (ev.tipo === 'despertar') { atualizarHud(); toast(ev.ok ? 'Teste de Despertar: a Fome se manteve' : 'Teste de Despertar: a Fome subiu'); return avancar(); }
+}
+
+function mostrarDados(r) {
+  const el = document.createElement('div'); el.className = 'dados'; el.setAttribute('role', 'dialog');
+  el.innerHTML = `<div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
+    <div class="linha">${r.dados.map(d => `<span class="dado ${d.fome ? 'fomed' : ''} ${d.valor >= 6 ? 'ok' : ''}">${d.valor}</span>`).join('')}</div>
+    <div class="res">${RESULTADOS[r.resultado]} · ${r.sucessos} sucesso${r.sucessos === 1 ? '' : 's'}</div>
+    <div class="det">Dados vermelhos são de Fome. Clique para continuar.</div>`;
+  $('palco').appendChild(el);
+  const fechar = () => { el.remove(); document.removeEventListener('keydown', tecla); avancar(); };
+  const tecla = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); fechar(); } };
+  el.addEventListener('click', fechar); setTimeout(() => document.addEventListener('keydown', tecla), 50);
+}
+
+function mostrarLinha(texto) {
+  const v = story.variablesState; let nome = null, corpo = texto, classe = 'narracao', passiva = null;
+  const m = texto.match(/^([A-Za-zÀ-ú]+): (.*)$/);
+  if (m && FALANTES.includes(m[1])) { nome = m[1] === 'Você' ? v['nome'] : m[1]; corpo = m[2]; classe = m[1] === 'Você' ? 'voce' : ''; }
+  const p = texto.match(/^(.+?) :: (.*)$/);
+  if (!nome && p) { passiva = p[1]; corpo = p[2]; }
+  if (/^FIM DA CENA/.test(texto)) return avancar();
+  $('nome').hidden = !nome; if (nome) $('nome').textContent = nome;
+  const c = $('conteudo');
+  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva">${esc(passiva)}</span>` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
+  if (!window.__primeiroTexto) window.__primeiroTexto = performance.now();
+  digitar(corpo);
+}
+
+function digitar(t) {
+  const alvo = $('txt'); alvoTexto = t; let i = 0; clearInterval(digitando);
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; return; }
+  digitando = setInterval(() => { i += 2; alvo.textContent = t.slice(0, i); if (i >= t.length) clearInterval(digitando); }, 16);
+}
+
+function clicarDialogo() {
+  if (story.currentChoices.length && !story.canContinue && !fila.length && !$('txt')) return;
+  const alvo = $('txt'); if (!alvo) return;
+  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; return; }
+  avancar();
+}
+
+function mostrarEscolhas() {
+  $('nome').hidden = true; const c = $('conteudo');
+  if (story.variablesState['nome'] === '') {
+    const fichas = ['Carisma 2 · Raciocínio 3 · Manipulação 2 · Animalismo', 'Carisma 3 · Raciocínio 2 · Manipulação 3 · Dominação'];
+    c.innerHTML = `<div class="titulo">${esc(story.currentText.trim() || 'Quem vai interrogar o Rayo?')}</div><div class="cartas">${story.currentChoices.map((ch, i) => {
+      const [nome, ...desc] = ch.text.split('. ');
+      return `<button class="carta" data-i="${i}" type="button"><b>${esc(nome)}</b><span>${esc(desc.join('. '))}</span><small>${fichas[i] || ''}</small></button>`; }).join('')}</div>`;
+  } else {
+    c.innerHTML = `<ul class="escolhas">${story.currentChoices.map((ch, i) => {
+      const p = ch.text.match(/^(.+?) :: (.*)$/);
+      const badge = p ? `<span class="badge ${tipoBadge(p[1])}">${esc(p[1])}</span>` : '';
+      return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span>${badge}<span>${esc(p ? p[2] : ch.text)}</span></button></li>`; }).join('')}</ul>`;
+  }
+  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); escolher(+b.dataset.i); }));
+  const primeiro = c.querySelector('[data-i]'); if (primeiro) primeiro.focus({ preventScroll: true });
+}
+
+function escolher(i) { story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
+
+function mostrarFim() {
+  $('nome').hidden = true;
+  $('conteudo').innerHTML = `<div class="titulo">Fim da cena de teste</div><div class="fala">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}${story.variablesState['confessou'] ? ', incluindo o selo queimado' : ''}.</div>
+    <ul class="escolhas"><li><button type="button" data-a="caderno"><span class="num">1</span><span>Ver o caderno</span></button></li><li><button type="button" data-a="de-novo"><span class="num">2</span><span>Jogar de novo com outro personagem</span></button></li></ul>`;
+  $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
+  $('conteudo').querySelector('[data-a=de-novo]').addEventListener('click', e => { e.stopPropagation(); iniciar(); });
+}
+
+function abrirCaderno() {
+  const el = document.createElement('div'); el.className = 'caderno';
+  el.innerHTML = `<div class="folha"><h2>Caderno do interrogatório</h2>${pistas.length ? `<ol>${pistas.map(p => `<li>${esc(p)}</li>`).join('')}</ol>` : '<p class="vazio">Nenhuma pista ainda.</p>'}<button class="fechar" type="button">Fechar</button></div>`;
+  $('palco').appendChild(el);
+  const fechar = () => el.remove();
+  el.querySelector('.fechar').addEventListener('click', fechar); el.addEventListener('click', e => { if (e.target === el) fechar(); });
+  el.querySelector('.fechar').focus();
+}
+
+$('dialogo').addEventListener('click', clicarDialogo);
+$('abrir-caderno').addEventListener('click', abrirCaderno);
+$('reiniciar').addEventListener('click', iniciar);
+document.addEventListener('keydown', e => {
+  if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }
+  if (e.key === ' ' || e.key === 'Enter') { if ($('txt')) { e.preventDefault(); clicarDialogo(); } }
+  const n = parseInt(e.key, 10); const b = document.querySelector(`#conteudo [data-i="${n - 1}"]`);
+  if (b && !$('txt')) b.click();
+});
+iniciar();
+</script>
