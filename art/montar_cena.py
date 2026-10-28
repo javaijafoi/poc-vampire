@@ -18,7 +18,7 @@ from recorte import recorte
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 FONTES, CENA = os.path.join(AQUI, "fontes"), os.path.join(AQUI, "cena")
-FUNDO = os.environ.get("FUNDO", "fundo_porao_1.jpg")  # 4 opções geradas com sdxl-turbo; o Peter escolhe
+FUNDO = os.environ.get("FUNDO", "fundo_porao_4.jpg")  # 4 opções geradas com sdxl-turbo; o Peter escolheu a 4
 
 fundo = Image.open(os.path.join(FONTES, FUNDO)).convert("RGB")
 fundo = fundo.resize((1600, 900), Image.LANCZOS)
