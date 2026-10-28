@@ -4,3 +4,5 @@ dist/ink.js
 ink/rayo.json
 *.rpyc
 renpy/game/cache/
+__pycache__/
+art/*@*.png

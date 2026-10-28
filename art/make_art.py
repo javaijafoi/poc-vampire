@@ -1,5 +1,5 @@
 # Gera a arte provisória em pixel art (320x180) usada nas duas versões.
-import random, sys
+import os, random, sys
 from PIL import Image, ImageDraw
 out = sys.argv[1]
 random.seed(7)
@@ -64,24 +64,11 @@ d.rectangle([42, 120, 48, 123], fill=(230, 190, 90))
 bg.save(f'{out}/bar.png')
 bg.resize((1280, 720), Image.NEAREST).save(f'{out}/bar@4x.png')
 
-# Rayo: Gangrel do motoclube, atrás do balcão
-S = Image.new('RGBA', (120, 130), (0, 0, 0, 0)); s = ImageDraw.Draw(S)
-jacket, jhi = (26, 24, 30, 255), (58, 54, 64, 255)
-skin, skin_d = (140, 92, 66, 255), (104, 66, 48, 255)
-s.polygon([(10, 130), (16, 84), (36, 70), (84, 70), (104, 84), (110, 130)], fill=jacket)
-s.line([(36, 72), (60, 110)], fill=jhi); s.line([(84, 72), (60, 110)], fill=jhi)
-s.polygon([(48, 72), (72, 72), (60, 96)], fill=(70, 20, 26, 255))  # camiseta
-s.rectangle([50, 58, 70, 74], fill=skin_d)  # pescoço
-s.ellipse([40, 18, 80, 64], fill=skin)
-s.rectangle([40, 14, 80, 28], fill=(20, 16, 14, 255)); s.ellipse([38, 10, 82, 30], fill=(20, 16, 14, 255))
-s.polygon([(42, 44), (78, 44), (74, 62), (60, 68), (46, 62)], fill=(40, 30, 26, 255))  # barba
-s.rectangle([50, 50, 70, 52], fill=skin_d)
-s.rectangle([47, 37, 52, 39], fill=(217, 177, 59, 255)); s.rectangle([68, 37, 73, 39], fill=(217, 177, 59, 255))  # olhos de lobo
-s.line([(46, 34), (53, 35)], fill=(20, 16, 14, 255)); s.line([(67, 35), (74, 34)], fill=(20, 16, 14, 255))
-s.line([(56, 42), (58, 48)], fill=skin_d)
-for y in range(76, 130, 9): s.point((22, y), fill=jhi); s.point((98, y), fill=jhi)
-S.save(f'{out}/rayo.png')
-S.resize((480, 520), Image.NEAREST).save(f'{out}/rayo@4x.png')
+# Rayo: pixel art da arte do Trello (fundo recortado em art/fontes/rayo_recorte.png)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pixelizar import pixelizar
+S = pixelizar(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'fontes/rayo_recorte.png'), f'{out}/rayo.png', 240, 48)
+S.resize((480, 552), Image.NEAREST).save(f'{out}/rayo@2x.png')
 
 # capacete no balcão
 C = Image.new('RGBA', (34, 24), (0, 0, 0, 0)); c = ImageDraw.Draw(C)
