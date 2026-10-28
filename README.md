@@ -34,3 +34,12 @@ Para editar o roteiro e jogar o texto na hora, use o editor Inky (github.com/ink
 1. Baixe o Ren'Py 8 em renpy.org.
 2. Copie a pasta `renpy/` para a pasta de projetos do Ren'Py e renomeie para `PoraoDoVincenzo`.
 3. No launcher, clique em "Refresh", escolha o projeto e clique em "Launch Project".
+
+Para medir a versão Ren'Py (no Linux, com o SDK 8.5.3 e o suporte web descompactado dentro dele):
+
+```
+RENPY_SDK=~/renpy-8.5.3-sdk bench/renpy/medir.sh 300    # lint, tempo até a primeira tela e 300 partidas automáticas
+RENPY_SDK=~/renpy-8.5.3-sdk bench/renpy/medir_web.sh 5  # build web e carregamento no Chromium
+```
+
+Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `bench/renpy/zz_bench.rpy`, que nunca entra no jogo.

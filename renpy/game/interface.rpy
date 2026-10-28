@@ -9,6 +9,8 @@ define config.save_directory = "PoraoDoVincenzo-poc"
 define config.default_text_cps = 60
 define build.name = "PoraoDoVincenzo"
 define _game_menu_screen = None
+# Sem as telas padrão do Ren'Py não existe a caixa "Quer mesmo sair?": fechar a janela sai direto.
+define config.quit_action = Quit(confirm=False)
 
 define COR_PAPEL = "#efe3d2"
 define COR_PAPEL_FRACO = "#b9a594"
@@ -144,7 +146,8 @@ screen say_passiva(who, what):
 screen choice(items):
     window:
         background COR_PAINEL
-        xalign 0.5 yalign 0.97 xsize 1200 padding (30, 24)
+        # Na escolha de personagem, os cartões ficam no meio da tela para não cobrir a pergunta.
+        xalign 0.5 yalign (0.5 if nome == "" else 0.97) xsize 1200 padding (30, 24)
         if nome == "":
             hbox spacing 24:
                 for n, i in enumerate(items, 1):
