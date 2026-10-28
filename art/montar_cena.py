@@ -1,7 +1,7 @@
 """Gera a arte da cena no estilo recorte de revista.
 
 Uso: python3 art/montar_cena.py
-- art/fontes/fundo_*.jpg       -> art/cena/fundo.webp (dessaturado e escurecido, para o personagem saltar)
+- art/fontes/fundo_porao_<n>.jpg -> art/cena/fundo.webp (escolha com FUNDO=fundo_porao_2.jpg)
 - moldura de pôster       -> art/cena/moldura.webp
 - art/fontes/rayo_recorte.png  -> art/cena/rayo_neutro.webp
 - art/fontes/rayo_<expr>.png   -> art/cena/rayo_<expr>.webp (expressões extras, quando existirem)
@@ -18,13 +18,12 @@ from recorte import recorte
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
 FONTES, CENA = os.path.join(AQUI, "fontes"), os.path.join(AQUI, "cena")
-FUNDO = "fundo_loft.jpg"  # provisório até chegar a arte do Porão do Vincenzo
+FUNDO = os.environ.get("FUNDO", "fundo_porao_1.jpg")  # 4 opções geradas com sdxl-turbo; o Peter escolhe
 
 fundo = Image.open(os.path.join(FONTES, FUNDO)).convert("RGB")
-fundo = fundo.crop((0, 0, round(fundo.width * .95), round(fundo.height * .95)))  # tira a marca do Gemini no canto
 fundo = fundo.resize((1600, 900), Image.LANCZOS)
-fundo = ImageEnhance.Color(fundo).enhance(0.7)
-fundo = ImageEnhance.Brightness(fundo).enhance(0.8)
+fundo = ImageEnhance.Color(fundo).enhance(0.85)
+fundo = ImageEnhance.Brightness(fundo).enhance(1.05)
 fundo.save(os.path.join(CENA, "fundo.webp"), quality=78)
 
 moldura().save(os.path.join(CENA, "moldura.webp"), quality=90)
