@@ -7,7 +7,7 @@
     "build": "npm run compilar && node build_web.cjs cdn && node build_web.cjs local",
     "testar": "npm run compilar && node test_ink.cjs 10000",
     "bench": "npm run build && node bench/bench.cjs",
-    "arte": "python3 art/make_art.py art"
+    "arte": "python3 art/montar_cena.py"
   },
   "dependencies": {
     "inkjs": "2.2.3"

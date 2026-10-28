@@ -10,7 +10,7 @@ Esta primeira cena (o depoimento do Rayo) existe em duas versões, para comparar
 | `web/` | Interface web estilo Coffee Talk que roda o roteiro Ink |
 | `dist/index.html` | Jogo web pronto. Abra no navegador (precisa de internet para carregar o motor Ink) |
 | `renpy/game/` | A mesma cena em Ren'Py |
-| `art/` | Arte provisória em pixel art e o script que a gera |
+| `art/` | Arte da cena: `montar_cena.py` faz o fundo e o recorte de revista dos personagens (`npm run arte`). A versão Ren'Py ainda usa a pixel art antiga (`make_art.py`) |
 | `bench/` | Medição de tempo de carregamento |
 
 ## Convenções do roteiro

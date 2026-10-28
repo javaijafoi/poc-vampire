@@ -5,6 +5,7 @@
 //   texto sem nome    -> narração
 //   Gatilho :: texto   -> opção ou observação especial (skill, clã, prova, Disciplina)
 //   # pista: texto    -> a pista entra no caderno do jogador
+//   # expr: nome      -> troca a expressão do Rayo (neutro, sorrindo, preocupado)
 //   ~ variavel = ...  -> muda o estado do jogo
 
 EXTERNAL rolar(parada, nivel_fome, dificuldade)
@@ -65,7 +66,7 @@ Quem vai interrogar o Rayo?
 Três da manhã no Porão do Vincenzo. A chuva escorre pela janela, e um rádio toca samba velho, baixinho.
 Vincenzo: Seu próximo convidado, {cla == "Ventrue":signora|signore}. E lembre: aqui embaixo, nada de Disciplinas. Regra da casa.
 Rayo larga o capacete no balcão. A jaqueta de couro ainda pinga. Ele senta de lado, de olho na porta. # entra: rayo
-Rayo: Fala logo, forasteiro. Tenho estrada antes do sol.
+Rayo: Fala logo, forasteiro. Tenho estrada antes do sol. # expr: neutro
 Você tem uma cópia do dossiê do Príncipe: o relatório das concessionárias diz que o caminhão não passou em nenhum pedágio da Anchieta nem da Imigrantes. # pista: Dossiê: o caminhão não passou em pedágio nenhum na descida da Serra.
 -> perguntas
 
@@ -113,14 +114,14 @@ Você tem uma cópia do dossiê do Príncipe: o relatório das concessionárias 
     -> fim
 
 === serra ===
-Rayo: Neblina grossa, daquelas que você não enxerga o próprio farol.
+Rayo: Neblina grossa, daquelas que você não enxerga o próprio farol. # expr: sorrindo
 Rayo: Na curva da Onça, uns vultos atravessaram a pista. Grandes demais pra cachorro. Lupinos.
 Rayo: Joguei o caminhão no acostamento, apaguei tudo e esperei passar. Perdi uns quarenta minutos ali. # pista: Versão do Rayo: lobisomens na neblina, 40 minutos parado.
 ~ pista_versao = true
 -> perguntas
 
 === entrega ===
-Rayo: Duas e quarenta. Deixei o caminhão no portão do túnel, na Vila Sônia, com o Zé Carlos de olho na carga.
+Rayo: Duas e quarenta. Deixei o caminhão no portão do túnel, na Vila Sônia, com o Zé Carlos de olho na carga. # expr: neutro
 Rayo: O Cão tava lá esperando. Eu não fico perto daquele bicho mais do que precisa.
 Você: E o Zé?
 Rayo: Ficou. Nunca mais atendeu o telefone. # pista: Rayo entregou às 02h40 no portão da Vila Sônia. O Cão disse ao Príncipe 03h30.
@@ -128,7 +129,7 @@ Rayo: Ficou. Nunca mais atendeu o telefone. # pista: Rayo entregou às 02h40 no 
 -> perguntas
 
 === caixao ===
-Rayo: Inteiro. Caixão lacrado, os selos da Senescal no lugar. Ninguém mexeu.
+Rayo: Inteiro. Caixão lacrado, os selos da Senescal no lugar. Ninguém mexeu. # expr: sorrindo
 { raciocinio >= 3:
     Raciocínio 3 :: Quando ele diz "selos", esfrega a ponta dos dedos. A pele está empolada, como queimadura recente. # pista: O Rayo tem queimaduras frescas nos dedos.
     ~ pista_queimadura = true
@@ -139,7 +140,7 @@ Rayo: Inteiro. Caixão lacrado, os selos da Senescal no lugar. Ninguém mexeu.
 
 === prova_pedagio ===
 Você: Seu caminhão não passou em pedágio nenhum, Rayo. Nem Anchieta, nem Imigrantes. Que estrada você pegou?
-Rayo: ...A Estrada Velha. É fechada pra carro, ninguém olha. Atalho de quem conhece. # pista: O Rayo desviou pela Estrada Velha do Mar.
+Rayo: ...A Estrada Velha. É fechada pra carro, ninguém olha. Atalho de quem conhece. # pista: O Rayo desviou pela Estrada Velha do Mar. # expr: preocupado
 ~ pista_estrada = true
 -> pressionar
 
@@ -151,10 +152,10 @@ Rayo esconde a mão no bolso da jaqueta, tarde demais.
 === pressionar ===
 ~ pressao += 1
 { pressao >= 2:
-    Rayo: Tá bom. Tá bom, porra.
+    Rayo: Tá bom. Tá bom, porra. # expr: preocupado
     -> confissao
 - else:
-    Rayo: Isso não prova nada. Eu entreguei a carga inteira.
+    Rayo: Isso não prova nada. Eu entreguei a carga inteira. # expr: neutro
     -> perguntas
 }
 
@@ -165,19 +166,19 @@ Você: A Constance já me contou tudo, Rayo. Só quero ouvir a sua parte.
 { resultado:
 - 4:
     A Besta sobe pela sua garganta e você rosna no meio da frase. As presas aparecem.
-    Rayo: Vocês são todos iguais.
+    Rayo: Vocês são todos iguais. # expr: neutro
     Ele pega o capacete e sobe a escada. O depoimento acabou.
     ~ quebrou_regra = true
     -> fim
 - 0:
-    Rayo: A Constance? Ela não fala com gente como você. Boa tentativa.
+    Rayo: A Constance? Ela não fala com gente como você. Boa tentativa. # expr: sorrindo
     ~ rayo_fechado = true
     -> perguntas
 - 3:
     Funciona, mas a Fome aparece no seu rosto: você encara a veia do pescoço dele por tempo demais. O Vincenzo para de secar o copo.
     -> confissao
 - else:
-    Rayo: ...Ela te contou? Então você sabe que eu não toquei no caixão.
+    Rayo: ...Ela te contou? Então você sabe que eu não toquei no caixão. # expr: preocupado
     -> confissao
 }
 
@@ -200,7 +201,7 @@ Vincenzo pigarreia do outro lado do balcão. Ele percebeu. # pista: A Besta do R
 === confissao ===
 ~ confessou = true
 ~ pista_estrada = true
-Rayo: Não teve lobisomem nenhum. A Constance me pagou pra descer pela Estrada Velha.
+Rayo: Não teve lobisomem nenhum. A Constance me pagou pra descer pela Estrada Velha. # expr: preocupado
 Rayo: Os homens dela abriram o baú no meio do mato. Tentaram abrir o caixão também, mas os selos da bruxa queimaram a mão de um deles. Um selo ficou preto, chamuscado.
 Rayo: Eu entrei em pânico e meti o pé. A carga chegou inteira no túnel, eu juro. Duas e quarenta. # pista: Constance pagou o desvio. Um dos selos Tremere ficou queimado na tentativa de roubo.
 Rayo: Se o Dante souber da Constance, eu tô morto. Se ela souber que eu falei, também.
