@@ -75,6 +75,12 @@ body {
 .hud { position: absolute; top: .8cqw; right: 1.6cqw; display: flex; gap: 1.1cqw; align-items: center; z-index: 1;
   font-family: var(--f-tipo); font-size: max(11px, 1.05cqw); color: var(--tinta-fraca); letter-spacing: .04em; }
 .hud .hora { color: var(--acento); font-variant-numeric: tabular-nums; }
+/* Tempo acabando: na última hora e meia a hora pulsa, e a luz do amanhecer vai entrando pela cena */
+.hud .hora.urgente { font-weight: 700; animation: urgente 1.2s ease-in-out infinite; }
+@keyframes urgente { 50% { color: #d8452f; text-shadow: 0 0 6px rgb(216 69 47 / .5); } }
+.sol { position: absolute; inset: 0; pointer-events: none; opacity: var(--sol, 0); transition: opacity 1.5s;
+  background: linear-gradient(180deg, rgb(255 175 95 / .8), rgb(255 130 70 / .25) 45%, transparent 80%); mix-blend-mode: screen; }
+@media (prefers-reduced-motion: reduce) { .hud .hora.urgente { animation: none; color: #d8452f; } }
 .hud .barra { height: 3px; background: color-mix(in srgb, var(--tinta-fraca) 30%, transparent); width: max(36px, 4.5cqw); }
 .hud .barra i { display: block; height: 100%; background: var(--acento); transition: width .4s; }
 .hud .grupo { display: flex; gap: .5cqw; align-items: center; }
@@ -313,6 +319,7 @@ body {
     <figure class="lado esq" id="esq"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <figure class="lado dir" id="dir"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <div class="ilustracao" id="ilustracao"><img alt=""></div>
+    <div class="sol" id="sol" aria-hidden="true"></div>
     <img class="moldura" id="moldura" alt="">
   </div>
   <div class="dialogo" id="dialogo" aria-live="polite">
@@ -385,8 +392,8 @@ const PERS = {
 };
 const CHAVE = Object.fromEntries(Object.entries(PERS).map(([k, p]) => [p.nome, k]));
 // folhas do caderno: chave da tag "# pista <aba>:" -> título da aba
-const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', harumi: 'Harumi', biel: 'Biel', bar: 'Vincenzo' };
-const FINAIS = ['A', 'B', 'C', 'D'];
+const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', harumi: 'Harumi', biel: 'Biel', constance: 'Constance', bar: 'Vincenzo' };
+const FINAIS = ['A', 'B', 'C', 'D', 'E'];
 let cena;
 
 // Põe o personagem no lado dele (troca quem estava lá). Devolve false se ele não tem arte.
@@ -511,6 +518,8 @@ function continuar() {
 function atualizarHud() {
   const v = story.variablesState, min = v['minutos'];
   $('hora').textContent = horaDe(min);
+  $('hora').classList.toggle('urgente', min >= v['limite'] - 100);
+  $('sol').style.setProperty('--sol', Math.max(0, Math.min(1, (min - (v['limite'] - 160)) / 160)).toFixed(2));
   $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
   $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
   $('n-pistas').textContent = pistas.length;
@@ -644,7 +653,7 @@ function mostrarFim() {
   $('nome').hidden = true; falando(null); apagarSave();
   if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {} }
   const vistos = finaisVistos().length;
-  $('conteudo').innerHTML = `<div class="titulo">Fim da primeira versão</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
+  $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo 1</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
     <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados: ${vistos} de ${FINAIS.length}.</p>
     <ul class="escolhas"><li><button type="button" data-a="caderno"><span class="num">1</span><span>Ver o caderno</span></button></li><li><button type="button" data-a="de-novo"><span class="num">2</span><span>Jogar de novo com outro personagem</span></button></li><li><button type="button" data-a="menu"><span class="num">3</span><span>Voltar ao menu</span></button></li></ul>`;
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });

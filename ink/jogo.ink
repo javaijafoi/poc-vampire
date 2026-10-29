@@ -71,7 +71,22 @@ VAR usou_frasco_rayo = false
 VAR usou_dedos = false
 VAR sessao_feita = false
 VAR biel_perguntas = 0
+VAR biel_hora_feita = false
+VAR biel_doeu = false
+VAR biel_luz = false
 VAR vincenzo_falou = false
+VAR rayo_serra = 0            // quantas vezes você perguntou da Serra (ele desconversa antes de contar)
+VAR aviso_tempo = 0           // avisos do Vincenzo já dados: 1 = 03h, 2 = 04h, 3 = 05h
+VAR constance_chegou = false
+VAR constance_fechada = false
+VAR constance_aliada = false  // viu o carimbo do BOES e ficou do seu lado
+VAR constance_hostil = false  // percebeu que você a ameaçou ou usou Disciplina nela
+VAR p_envelope = false        // Constance: envelope para "a Doutora" preso ao sarcófago
+VAR p_constance_ordem = false // Constance mandou "resolver" você se chegar nela
+VAR p_constance_cao = false   // Constance: "o Dante desconfia de todo mundo, menos do cachorro dele"
+VAR c_veio = false
+VAR c_rayo = false
+VAR c_animal = false
 VAR quebrou_regra = 0
 
 -> escolha_personagem
@@ -141,7 +156,24 @@ Vincenzo: Onze e meia, forasteir{o}. O relógio corre. # limpa
 # fundo: salao
 # limpa
 { minutos >= limite: -> amanhecer }
-{ minutos >= limite - 60 and minutos < limite: Vincenzo olha o relógio na parede. Falta menos de uma hora para o sol. }
+{ minutos >= 240 and aviso_tempo < 1:
+    ~ aviso_tempo = 1
+    Vincenzo: Três da manhã, forasteir{o}. Metade da noite já foi. Eu, no seu lugar, parava de conversar e começava a escolher.
+}
+{ minutos >= 300 and aviso_tempo < 2:
+    ~ aviso_tempo = 2
+    Vincenzo: Quatro horas. Daqui a pouco o Príncipe desce essa escada, com ou sem resposta sua.
+}
+{ minutos >= 360 and aviso_tempo < 3:
+    ~ aviso_tempo = 3
+    Pela fresta da porta lá em cima, o céu do Bixiga já não é preto. É azul-escuro.
+    Vincenzo: Cinco horas. Quarenta minutos de noite. Use bem.
+}
+{ minutos >= 150 and not constance_chegou:
+    ~ constance_chegou = true
+    A porta lá de cima bate. Um terno rosa desce a escada de pedra, devagar, com dois carniçais atrás.
+    Constance, a Primogênita Lasombra, senta na mesa reservada e pede uma taça. As sombras da sala parecem se inclinar na direção dela. # pista dossie: À 01h30 a Constance, Primogênita Lasombra, chegou ao bar. Ninguém a chamou.
+}
 Para onde você vai?
 + [Rayo, debruçado no balcão]
     -> rayo
@@ -151,6 +183,8 @@ Para onde você vai?
     -> harumi
 + [Nonna Benedetta, na mesa do fundo]
     -> nonna
++ {constance_chegou} [Constance, na mesa reservada]
+    -> constance
 + {not vincenzo_falou} [Vincenzo, o dono do bar]
     -> vincenzo
 + [Chamar o Príncipe e fazer a acusação]
@@ -173,13 +207,33 @@ Para onde você vai?
 
 === rayo_perguntas ===
 { minutos >= limite: -> amanhecer }
-+ {not p_rayo_versao} [O que aconteceu na Serra?]
++ {not p_rayo_versao} {rayo_serra == 0} [O que aconteceu na Serra?]
     ~ passar(20)
-    Rayo: Neblina grossa, daquelas que você não enxerga o próprio farol.
-    Rayo: Na curva da Onça, uns vultos atravessaram a pista. Grandes demais pra cachorro. Lupinos.
-    Rayo: Joguei o caminhão no acostamento, apaguei tudo e esperei passar. Perdi uns quarenta minutos ali. # pista rayo: Versão do Rayo: lobisomens na neblina, 40 minutos parado.
-    ~ p_rayo_versao = true
+    ~ rayo_serra = 1
+    Rayo: Choveu. Teve neblina. Atrasei um pouco e entreguei. Próxima pergunta.
+    Ele vira o copo e olha para a televisão desligada.
     -> rayo_perguntas
++ {not p_rayo_versao} {rayo_serra == 1} [Insistir: "Atrasou quanto? Por quê?"]
+    ~ passar(20)
+    ~ rayo_serra = 2
+    Rayo: Você é surd{o}? Neblina. Na Serra tem neblina. Vai perguntar do tempo pro meteorologista.
+    -> rayo_perguntas
++ {not p_rayo_versao} {rayo_serra == 2} [Insistir mais uma vez: "Ninguém atrasa por neblina e esconde o rosto, Rayo."]
+    ~ passar(20)
+    Rayo: ...Tá. Tá bom. Mas você não vai acreditar.
+    -> rayo_lobisomens
++ {not p_rayo_versao} {rayo_serra >= 1} {not rayo_fechado} [Teste: Carisma + Persuasão, dif. 2 :: Pagar uma dose e deixar ele falar.]
+    ~ passar(20)
+    Você empurra um copo para o lado dele do balcão.
+    ~ temp dose = rolar(carisma + 1, fome, 2)
+    { dose == 1 or dose == 2 or dose == 3:
+        Rayo: ...Valeu. Olha, eu não conto isso pra ninguém, porque ninguém acredita.
+        -> rayo_lobisomens
+    - else:
+        Rayo: Não bebo com quem eu não conheço.
+        ~ rayo_serra += 1
+        -> rayo_perguntas
+    }
 + {not p_rayo_hora} [Que horas você entregou a carga?]
     ~ passar(20)
     Rayo: Duas e quarenta. Deixei o caminhão no portão do túnel, na Vila Sônia, com o Biel de olho na carga.
@@ -273,6 +327,13 @@ Para onde você vai?
     Rayo: Isso não prova nada. Eu entreguei a carga inteira.
     -> rayo_perguntas
 }
+
+=== rayo_lobisomens ===
+Rayo: Neblina grossa, daquelas que você não enxerga o próprio farol.
+Rayo: Na curva da Onça, uns vultos atravessaram a pista. Grandes demais pra cachorro. Lupinos.
+Rayo: Joguei o caminhão no acostamento, apaguei tudo e esperei passar. Perdi uns quarenta minutos ali. # pista rayo: Versão do Rayo, depois de muito insistir: lobisomens na neblina, 40 minutos parado.
+~ p_rayo_versao = true
+-> rayo_perguntas
 
 === rayo_confissao ===
 ~ rayo_confessou = true
@@ -532,11 +593,35 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
     Biel: Tava escuro... tinha eco. Pingava água do teto. Cheiro de esgoto e de trilho. A carga já tinha descido do caminhão.
     Na Serra não tem trilho nem esgoto. # pista biel: O fantasma morreu num lugar com eco, trilho e esgoto, depois que a carga desceu do caminhão: o túnel.
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {not p_biel_hora} [Que horas eram?]
++ {biel_perguntas < 3} {not biel_hora_feita} [Que horas você morreu?]
+    ~ passar(10)
+    ~ biel_perguntas += 1
+    ~ biel_hora_feita = true
+    Biel: Hora? Morto não tem hora, moço. É tudo uma noite só, comprida.
+    Biel: Eu lembro do escuro. Do frio. Do resto, não.
+    A vela mais próxima apaga. Uma pergunta a menos.
+    -> biel_perguntas_loop
++ {biel_perguntas < 3} {not biel_doeu} [Doeu?]
+    ~ passar(10)
+    ~ biel_perguntas += 1
+    ~ biel_doeu = true
+    Biel: Doeu, moço. Ainda dói. Dói o tempo todo.
+    Ele chora sem lágrima. A Nonna balança a cabeça para você, devagar.
+    -> biel_perguntas_loop
++ {biel_perguntas < 3} {not biel_luz} [Você viu alguma luz? Tem alguma coisa do outro lado?]
+    ~ passar(10)
+    ~ biel_perguntas += 1
+    ~ biel_luz = true
+    Biel: Luz? Tem uma luz, tem... Não, é a vela da senhora. Do outro lado não tem nada. Tem fila.
+    Nonna: Não gasta o menino com bobagem, filh{o}.
+    -> biel_perguntas_loop
++ {biel_perguntas < 3} {not p_biel_hora} [Quer deixar algum recado pra sua mãe?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ p_biel_hora = true
-    Biel: O relógio da guarita marcava duas e cinquenta. Eu lembro porque pensei: o patrão chega antes das três, tá tudo certo. # pista biel: O relógio da guarita do túnel marcava 02h50 quando o Biel morreu. O Cão disse 03h30.
+    Biel: A mãe... Fala pra ela que eu liguei. Eu liguei da guarita do túnel pra dizer que tava tudo certo, que o patrão chegava antes das três.
+    Biel: Ela nem atendeu. O relógio da guarita marcava duas e cinquenta. Depois disso... # pista biel: O Biel ligou para a mãe da guarita do túnel às 02h50. A carga já estava lá e ele ainda estava vivo. O Cão disse 03h30.
+    Ele se apaga um pouco, mais leve.
     -> biel_perguntas_loop
 + {biel_perguntas < 3} {p_boes} {not p_informante} [Prova :: Carimbo do BOES: quem te pagava, Biel?]
     ~ passar(10)
@@ -550,6 +635,95 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
 + [Deixar o fantasma descansar]
     Nonna: Vai em paz, filh{o}.
     ~ biel_perguntas = 3
+    -> salao
+
+// ------------------------------------------------------------------ CONSTANCE (chega à 01h30)
+=== constance ===
+# fundo: salao
+# entra: constance
+{ constance_fechada:
+    Constance: Eu já fui generosa com você, forasteir{o}. Não abuse.
+    -> salao
+}
+{ not c_veio: Constance gira a taça sem beber. O terno rosa é a única cor viva da sala, e as sombras em volta da mesa são mais escuras do que deviam. }
+-> constance_perguntas
+
+=== constance_perguntas ===
+{ minutos >= limite: -> amanhecer }
++ {not c_veio} [O que a senhora veio fazer aqui esta noite?]
+    ~ passar(20)
+    ~ c_veio = true
+    Constance: Beber. Ouvir. O Porão é o único lugar da cidade onde o Príncipe não manda.
+    Constance: E ver de perto quem o Dante escolheu pra fazer o trabalho do Xerife dele. # pista constance: A Constance chegou sem ser chamada e sabe que você investiga para o Príncipe.
+    -> constance_perguntas
++ {not c_rayo} [A senhora conhece o motoqueiro, o Rayo?]
+    ~ passar(20)
+    ~ c_rayo = true
+    Constance: Eu conheço todo mundo que tem preço, querid{o}. O dele é bem baixo.
+    Ela não nega. Também não confirma.
+    -> constance_perguntas
++ {p_constance} {not p_envelope} [Prova :: Desvio: o Rayo diz que a senhora pagou pra ele descer pela Estrada Velha.]
+    ~ passar(20)
+    ~ p_envelope = true
+    Constance: Aquele garoto fala demais.
+    Ela deixa o silêncio durar até ficar desconfortável. Depois sorri.
+    Constance: Paguei. Eu queria ver o que o Dante trazia escondido para a minha cidade. Uma Primogênita tem esse direito.
+    Constance: Meus homens não abriram o caixão. Os selos da bruxa queimaram a mão de um deles. Mas tinha um envelope preso ao sarcófago, por fora. Endereçado "À Doutora". Sem nome.
+    Constance: O caixão seguiu inteiro pela Serra. Se sumiu, sumiu depois. Procure quem recebeu. # pista constance: A Constance admitiu o desvio. O caixão seguiu inteiro, e tinha um envelope preso a ele endereçado "À Doutora".
+    -> constance_perguntas
++ {p_boes} {not constance_aliada} {not constance_hostil} [Prova :: Carimbo do BOES: mostrar o manifesto a ela, em voz baixa.]
+    ~ passar(20)
+    ~ constance_aliada = true
+    Constance para a taça no meio do caminho. Pela primeira vez na noite, ela parece ter a idade que tem.
+    Constance: Guarde isso. Não mostre a ninguém antes da hora. Quando a hora chegar, eu fico do seu lado na Corte. # pista constance: A Constance viu o carimbo do BOES e prometeu ficar do seu lado na Corte.
+    -> constance_perguntas
++ {not p_constance_cao} {not constance_hostil} [Teste: Manipulação + Subterfúgio, dif. 4 :: Insinuar que o Príncipe já desconfia dela.]
+    ~ passar(20)
+    Você: O Príncipe sabe que a senhora tem interesse nessa carga.
+    ~ temp r = rolar(manipulacao + subterfugio, fome, 4)
+    { r:
+    - 4:
+        A Besta escapa e você bate a mão na mesa dela. A taça cai. As sombras da sala inteira se levantam do chão, e os carniçais dela dão um passo à frente.
+        Constance: Vincenzo. O seu convidado esqueceu onde está.
+        ~ quebrou_regra += 1
+        ~ constance_hostil = true
+        ~ constance_fechada = true
+        -> salao
+    - 0:
+        Constance: Ameaça de forasteir{o} é como garoa em São Paulo. Molha, mas ninguém lembra.
+        ~ constance_hostil = true
+        -> constance_perguntas
+    - else:
+        ~ p_constance_cao = true
+        Constance: O Dante desconfia de todo mundo, querid{o}. Menos do cachorro dele. É por isso que ele nunca olha pra escada.
+        Ela olha para o canto escuro onde o Cão fuma, e volta a olhar para você. # pista constance: Constance: "O Dante desconfia de todo mundo, menos do cachorro dele." Ela olhou para o Cão.
+        -> constance_perguntas
+    }
++ {disciplina == "Ofuscação"} {not p_constance_ordem} [Disciplina: Ofuscação :: Sumir e escutar o que ela diz aos carniçais.]
+    ~ passar(20)
+    ~ despertar()
+    ~ quebrou_regra += 1
+    ~ p_constance_ordem = true
+    Você deixa de ser vista e para atrás da cadeira dela. Constance se inclina para o carniçal da esquerda.
+    Constance: Se o forasteir{o} chegar no Cão, deixa chegar. Se chegar em mim, resolve antes do sol. # pista constance: A Constance mandou o carniçal "resolver" você se a investigação chegar nela. Se chegar no Cão, ela deixa.
+    A sombra dela se estica pelo chão até o seu pé, e para ali. Talvez ela saiba que você está ouvindo. Talvez não.
+    -> constance_perguntas
++ {disciplina == "Presença"} {not constance_hostil} [Disciplina: Presença :: Encantar a Primogênita.]
+    ~ passar(20)
+    ~ despertar()
+    ~ quebrou_regra += 1
+    ~ constance_hostil = true
+    Constance ri, um riso curto e sem graça nenhuma.
+    Constance: Isso funciona com motoqueiro, pastora. Eu tenho trezentos anos. Não faça de novo.
+    -> constance_perguntas
++ {disciplina == "Animalismo"} {not c_animal} [Disciplina: Animalismo :: Farejar a Besta dela.]
+    ~ passar(20)
+    ~ despertar()
+    ~ quebrou_regra += 1
+    ~ c_animal = true
+    A Besta dela não tem medo de ninguém nesta sala. Mas está com fome. Não de sangue: de uma oportunidade. Ela espera alguém cair. # pista constance: A Besta da Constance espera uma oportunidade. Ela quer ver alguém cair, e não é o Rayo.
+    -> constance_perguntas
++ [Voltar para o salão]
     -> salao
 
 // ------------------------------------------------------------------ VINCENZO
@@ -589,6 +763,8 @@ Dante: Então, forasteir{o}. Quem me traiu?
     -> final_constance
 + [O Xerife, o Cão]
     -> acusa_cao
++ [Admitir que não sabe]
+    -> final_nao_sei
 
 === function provas_cao() ===
 ~ temp n = 0
@@ -635,6 +811,11 @@ O Cão olha para a escada. Dois carniçais do Príncipe já estão lá.
 Cão: Tá bom. Tá no bunker, embaixo da Linha Amarela. Intacto. Eu ia devolver quando a poeira baixasse.
 Cão: E o moleque viu o que não devia. Fiz o que um Xerife faz.
 Dante: Você fez o que um traidor faz.
+O Cão não espera os carniçais. Ele salta por cima da mesa, e em meio segundo as unhas dele estão na sua garganta. O seu sangue pinga no chão do Porão.
+Dante: Pare.
+Uma palavra só. O Cão congela no ar, como cachorro que ouviu o dono. Os carniçais o arrastam para longe de você.
+Dante: Ninguém toca em quem me serve. Pelo menos esta noite.
+Você leva a mão ao pescoço. Mais um segundo e não sobrava nada para o Príncipe proteger.
 { p_boes:
     Constance não tira os olhos de você. Ela percebe que você sabe mais do que disse.
     Você tem o carimbo do BOES no bolso. O Príncipe ia entregar o Matusalém para os caçadores. O que você faz?
@@ -657,7 +838,7 @@ Os carniçais arrastam o Rayo escada acima. A porta fica aberta. O céu está cl
 # musica: final_triste
 Ao amanhecer, o Rayo é amarrado no telhado da cantina. O sol faz o resto.
 Na noite seguinte, o motoclube dele declara guerra à Camarilla. A Augusta pega fogo.
--> final_a_epilogo
+-> morte_bode
 
 === final_harumi ===
 # entra: harumi
@@ -670,22 +851,33 @@ A Harumi é levada pela escada, ainda sorrindo, sem pressa nenhuma.
 # imagem: harumi_morto
 # musica: final_triste
 Na noite seguinte, o porto de Santos tem uma nova dona. A antiga foi encontrada numa câmara fria de contêiner, de olhos abertos.
--> final_a_epilogo
+-> morte_bode
 
 === final_constance ===
 Você: A Constance pagou o desvio do caminhão.
 Constance: Que acusação interessante, vinda de alguém que chegou na cidade há três noites.
+{ p_envelope: Você: Ela mesma admitiu. Os homens dela abriram o baú na Serra. }
+Constance: Abri, e o caixão seguiu inteiro. O forasteir{o} sabe disso. Só não sabe onde ele está.
 Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de um forasteir{o}. Ainda não.
 # musica: final_triste
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
-Constance sorri para você na saída. É o sorriso de quem vai lembrar do seu nome.
+Você não chega à próxima noite. Na escada da pensão, a sua própria sombra se levanta da parede e fecha a sua boca.
+# imagem: amanhecer
+Os Lasombra não deixam acusação sem resposta. De manhã, sobra uma mancha de cinza no degrau e um lenço cor-de-rosa.
+-> final_a_epilogo
+
+=== morte_bode ===
+Três noites depois, alguém bate na porta da sua pensão. É o Cão, com o cigarro que ele não traga.
+Cão: Bom trabalho, forasteir{o}. Bom até demais. Gente esperta não dura nesta cidade.
+# imagem: amanhecer
+Ninguém pergunta por você. Você não tinha amigos aqui, como o Príncipe disse.
 -> final_a_epilogo
 
 === final_a_epilogo ===
 # imagem: bunker
 # musica: final_triste
 Longe dali, embaixo dos trilhos da Linha Amarela, um sarcófago com um selo queimado espera no escuro. Só o Cão sabe onde ele está.
-FINAL A · O BODE EXPIATÓRIO # final: A
+FINAL A · O BODE EXPIATÓRIO. Você acusou a pessoa errada e pagou com a vida. # final: A
 -> END
 
 === final_sem_provas ===
@@ -697,7 +889,7 @@ Antes que você chegue à escada, as mãos do Cão estão nos seus ombros.
 # imagem: amanhecer
 # musica: final_triste
 Quando você abre os olhos, tem correntes nos pulsos, no telhado da cantina, olhando o céu do Bixiga ficar cor de laranja. É a última coisa que você vê.
-FINAL D · SEM PROVAS # final: D
+FINAL D · SEM PROVAS. Você acusou o culpado sem ter como provar. # final: D
 -> END
 
 === final_b ===
@@ -708,20 +900,31 @@ O Cão é levado escada acima. Ao amanhecer, a cidade tem um novo Xerife, e o an
 Os carniçais do Príncipe buscam o sarcófago no bunker antes do sol.
 # imagem: van
 Três noites depois, uma van preta sem placa estaciona no porto de Santos. Homens de terno e crachá carregam um sarcófago com um selo queimado.
-Você foi a ferramenta da traição, e nunca vai saber.
-FINAL B · A VERDADE PARA O PRÍNCIPE # final: B
+Você foi a ferramenta da traição, e ainda não sabe.
+Na saída, o Rayo segura o seu braço. Rayo: O Cão não fez isso sozinho, forasteir{o}. Alguém mandou ele esconder o caixão. Abre o olho.
+Continua no capítulo 2.
+FINAL B · A VERDADE PARA O PRÍNCIPE. Você acertou, quase morreu, e o Príncipe te protegeu. Por enquanto. # final: B
 -> END
 
 === final_c_corte ===
 Você: Antes, Príncipe, uma pergunta para a Corte. Por que a carga do Príncipe tinha carimbo do BOES no manifesto?
 O salão inteiro vira para Dante.
 { p_informante: Você: O Biel, que vigiava a carga, era pago pela Dra. Elisa, da Segunda Inquisição. Os caçadores sabiam da rota e não interceptaram. Porque eram eles que iam receber. }
+{ p_envelope: Você: E preso ao sarcófago tinha um envelope endereçado "À Doutora". A Dra. Elisa, da Segunda Inquisição. }
+{ constance_aliada: Constance se levanta antes que alguém mande você calar a boca. Como prometeu. }
 Constance: Príncipe. A Corte gostaria de ouvir a sua explicação.
 Dante não explica. Pela primeira vez em cem anos, o Príncipe de São Paulo não tem o que dizer.
 # imagem: trono_vazio
 # musica: final_verdade
 Antes do amanhecer, Constance convoca o Primogênito. Dante sai do Porão escoltado, pela escada dos fundos.
-Constance: Você tem faro, forasteir{o}. Fique na cidade. Eu vou precisar de gente que não tem amigos.
+{ constance_hostil:
+    Constance: Você tem faro, forasteir{o}. E pouco juízo. Não esqueci o que você tentou comigo esta noite.
+    Constance: Fique na cidade. Prefiro você onde eu possa ver.
+- else:
+    Constance: Você tem faro, forasteir{o}. Fique na cidade. Eu vou precisar de gente que não tem amigos.
+}
+Na escada dos fundos, Dante para e olha para você. Não tem raiva no olhar dele. Tem paciência.
+Continua no capítulo 2.
 FINAL C · A VERDADE CONTRA O PRÍNCIPE · CONSTANCE # final: C
 -> END
 
@@ -734,8 +937,22 @@ Rayo: Você é louc{o}, forasteir{o}. Gostei.
 # imagem: anarquistas
 # musica: final_verdade
 Na noite seguinte, cópias do manifesto com o carimbo do BOES aparecem coladas nos postes da Augusta. Os Anarquistas têm a prova de que o Príncipe negocia com caçadores.
-A guerra que vem aí é sua também.
+A guerra que vem aí é sua também. E o Príncipe, que salvou a sua vida ontem, vai querer saber quem colou aqueles papéis.
+Continua no capítulo 2.
 FINAL C · A VERDADE CONTRA O PRÍNCIPE · ANARQUISTAS # final: C
+-> END
+
+=== final_nao_sei ===
+Você: Eu não sei, Príncipe. Não tenho como afirmar quem foi.
+O salão inteiro prende a respiração que ninguém ali precisa.
+Dante: Uma resposta honesta. A primeira da noite.
+Dante: Mas a sua dívida continua. E eu vou cobrá-la do único jeito de que um devedor não foge.
+Ele corta o próprio pulso com a unha e estende o braço. Os carniçais seguram os seus ombros.
+# musica: final_triste
+Três noites, três goles. Na terceira, você já não lembra por que um dia quis ir embora de São Paulo. Você ama o Príncipe. Você sempre amou.
+Embaixo dos trilhos da Linha Amarela, o sarcófago continua no escuro. Você nunca vai procurar. Ele não deixaria.
+Continua no capítulo 2.
+FINAL E · O SERVO DO PRÍNCIPE. Você não acusou ninguém e virou servo do Príncipe pelo Laço de Sangue. # final: E
 -> END
 
 // Funções de apoio
