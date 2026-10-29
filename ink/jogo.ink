@@ -75,6 +75,8 @@ VAR biel_hora_feita = false
 VAR biel_doeu = false
 VAR biel_luz = false
 VAR vincenzo_falou = false
+VAR rayo_hora_vaga = false
+VAR v_neutro = false
 VAR rayo_serra = 0            // quantas vezes você perguntou da Serra (ele desconversa antes de contar)
 VAR aviso_tempo = 0           // avisos do Vincenzo já dados: 1 = 03h, 2 = 04h, 3 = 05h
 VAR constance_chegou = false
@@ -185,7 +187,7 @@ Para onde você vai?
     -> nonna
 + {constance_chegou} [Constance, na mesa reservada]
     -> constance
-+ {not vincenzo_falou} [Vincenzo, o dono do bar]
++ {not p_limpeza} [Vincenzo, o dono do bar]
     -> vincenzo
 + [Chamar o Príncipe e fazer a acusação]
     Você: Vincenzo, mande chamar o Príncipe. Eu já sei o que preciso.
@@ -234,13 +236,12 @@ Para onde você vai?
         ~ rayo_serra += 1
         -> rayo_perguntas
     }
-+ {not p_rayo_hora} [Que horas você entregou a carga?]
++ {not rayo_hora_vaga} [Que horas você entregou a carga?]
     ~ passar(20)
-    Rayo: Duas e quarenta. Deixei o caminhão no portão do túnel, na Vila Sônia, com o Biel de olho na carga.
-    Rayo: O Cão tava lá esperando. Eu não fico perto daquele bicho mais do que precisa.
+    ~ rayo_hora_vaga = true
+    Rayo: Antes das três. Sei lá. Eu não fico olhando relógio, fico olhando a estrada.
     Você: E o Biel?
-    Rayo: Ficou. Nunca mais atendeu o telefone. # pista rayo: Rayo entregou às 02h40 no portão da Vila Sônia, e o Cão estava lá. O Cão disse ao Príncipe 03h30.
-    ~ p_rayo_hora = true
+    Rayo: Ficou com a carga no portão do túnel. Nunca mais atendeu o telefone.
     -> rayo_perguntas
 + {not p_rayo_frasco} [Quem te entregou a carga no porto?]
     ~ passar(20)
@@ -341,7 +342,9 @@ Rayo: Joguei o caminhão no acostamento, apaguei tudo e esperei passar. Perdi un
 ~ p_constance = true
 Rayo: Não teve lobisomem nenhum. A Constance me pagou pra descer pela Estrada Velha.
 Rayo: Os homens dela abriram o baú no meio do mato. Tentaram abrir o caixão também, mas os selos da bruxa queimaram a mão de um deles. Um selo ficou preto, chamuscado.
-Rayo: Eu entrei em pânico e meti o pé. A carga chegou inteira no túnel, eu juro. Duas e quarenta. # pista rayo: Constance pagou o desvio. Na Estrada Velha um dos selos Tremere ficou queimado, e a carga seguiu inteira.
+Rayo: Eu entrei em pânico e meti o pé. A carga chegou inteira no túnel, eu juro. # pista rayo: Constance pagou o desvio. Na Estrada Velha um dos selos Tremere ficou queimado, e a carga seguiu inteira.
+~ p_rayo_hora = true
+Rayo: Duas e quarenta, eu olhei. Eu tava atrasado e com medo. O Cão tava esperando no portão, e eu deixei o Biel lá com ele. # pista rayo: Rayo entregou às 02h40 no portão da Vila Sônia, e o Cão estava lá. O Cão disse ao Príncipe 03h30.
 Rayo: Se o Dante souber da Constance, eu tô morto. Se ela souber que eu falei, também.
 Você guarda a pista mais importante da noite: só quem viu a carga depois do desvio sabe que um selo estava queimado.
 -> salao
@@ -387,6 +390,12 @@ Você guarda a pista mais importante da noite: só quem viu a carga depois do de
     Na barra da calça dele tem pó cinza, fino, de concreto novo. O mesmo que cobre as obras da Linha Amarela. # pista cao: Pó de concreto novo na roupa do Cão, como o das obras da Linha Amarela.
     Cão: Eu ando por onde quero. Sou o Xerife.
     ~ p_concreto = true
+    -> cao_perguntas
++ {p_limpeza} {not p_concreto} [Prova :: Lama: a equipe do Vincenzo voltou com lama de obra. Olhar as botas do Xerife.]
+    ~ passar(20)
+    ~ p_concreto = true
+    Você olha para baixo. Na barra da calça e nas botas do Cão tem pó cinza, fino, de concreto novo. O mesmo das obras da Linha Amarela. # pista cao: Pó de concreto novo nas botas do Cão, como o das obras da Linha Amarela. A mesma lama que voltou no carro da limpeza.
+    Cão: Tá olhando o quê? Eu ando por onde quero. Sou o Xerife.
     -> cao_perguntas
 + {disciplina == "Ofuscação"} {not p_bunker} [Disciplina: Ofuscação :: Sumir na sombra da escada e escutar.]
     ~ passar(20)
@@ -699,6 +708,12 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
         Ela olha para o canto escuro onde o Cão fuma, e volta a olhar para você. # pista constance: Constance: "O Dante desconfia de todo mundo, menos do cachorro dele." Ela olhou para o Cão.
         -> constance_perguntas
     }
++ {p_tunel} {not p_bunker} {not constance_hostil} [Prova :: Túnel: o Biel morreu embaixo da terra. Onde o Xerife esconde as coisas dele?]
+    ~ passar(20)
+    ~ p_bunker = true
+    Constance: As minhas sombras andam pela cidade inteira, querid{o}. Menos por um lugar.
+    Constance: Um buraco novo embaixo dos trilhos da Linha Amarela. Fechado com ferro e sal, do jeito que o Cão gosta. Faz um mês que eu não consigo ver o que tem lá dentro. # pista constance: Constance: o Cão tem um esconderijo novo embaixo da Linha Amarela, fechado com ferro e sal, onde as sombras dela não entram.
+    -> constance_perguntas
 + {disciplina == "Ofuscação"} {not p_constance_ordem} [Disciplina: Ofuscação :: Sumir e escutar o que ela diz aos carniçais.]
     ~ passar(20)
     ~ despertar()
@@ -729,14 +744,21 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
 // ------------------------------------------------------------------ VINCENZO
 === vincenzo ===
 # fundo: balcao
+{ not vincenzo_falou: Vincenzo: Um conselho, forasteir{o}? Ou só uma bebida? }
+{ vincenzo_falou: Vincenzo: De volta ao balcão, forasteir{o}. }
 ~ vincenzo_falou = true
-Vincenzo: Um conselho, forasteir{o}? Ou só uma bebida?
-+ [Alguém usou os seus serviços esta noite?]
++ {not v_neutro} [Alguém usou os seus serviços esta noite?]
     ~ passar(20)
+    ~ v_neutro = true
     Vincenzo: O Porão é neutro. Eu não pergunto, e não conto.
-    Vincenzo: Mas vou dizer uma coisa sem dizer nada. Minha equipe de limpeza trabalhou hoje, depois das três. O carro voltou com lama de obra nas rodas e cheiro de esgoto.
-    Vincenzo: Quem pagou? Alguém que tem a chave dos túneis. # pista bar: A equipe de limpeza do Vincenzo trabalhou depois das 3h para alguém com a chave dos túneis. O carro voltou com lama de obra e cheiro de esgoto.
+    Vincenzo: Volte quando souber o que perguntar. Pergunta vaga ganha resposta vaga. # pista bar: Vincenzo: "Volte quando souber o que perguntar." Ele sabe de alguma coisa.
+    -> salao
++ {v_neutro} {p_tunel or p_concreto} {not p_limpeza} [Prova :: Túnel: alguém morreu embaixo da terra esta noite. Quem pagou a limpeza?]
+    ~ passar(20)
     ~ p_limpeza = true
+    Vincenzo: Agora sim, uma pergunta.
+    Vincenzo: Minha equipe de limpeza trabalhou hoje, depois das três. O carro voltou com lama de obra nas rodas e cheiro de esgoto.
+    Vincenzo: Quem pagou? Alguém que tem a chave dos túneis. Eu não disse nome nenhum. # pista bar: A equipe de limpeza do Vincenzo trabalhou depois das 3h para alguém com a chave dos túneis. O carro voltou com lama de obra e cheiro de esgoto.
     -> salao
 + [Só uma bebida]
     Vincenzo: Sangue de porco com um pouco de vinho. Por conta da casa. A noite vai ser longa.
@@ -793,7 +815,7 @@ Cão: Isso é palavra de forasteir{o} contra a minha.
     Você: Ele disse que o caminhão chegou vazio. Mas sabia que um selo Tremere estava queimado. O selo só queimou na Estrada Velha. Ele viu o caixão.
     -> cao_desmorona
 }
-{ provas_cao() >= 3:
+{ provas_cao() >= 4:
     Você junta as peças diante da Corte, uma por uma.
     { p_biel_hora or p_rayo_hora: Você: A carga chegou antes das três. Ele disse três e meia ao senhor. }
     { p_tunel: Você: O Biel morreu no túnel, depois da entrega. O próprio morto disse. }
