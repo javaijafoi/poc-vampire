@@ -108,12 +108,13 @@ body {
 }
 .escolhas button:hover, .escolhas button:focus-visible { background: color-mix(in srgb, var(--acento) 12%, var(--folha)); border-color: color-mix(in srgb, var(--acento) 35%, var(--folha)); outline: none; }
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
-.badge { font-family: var(--f-tipo); font-size: .72em; padding: .1em .5em; white-space: nowrap; flex: none; }
-.badge.cla { background: #4b2a6b; color: #e2cdf7; }
-.badge.atrib { background: #1d3550; color: #bcd9f5; }
-.badge.prova { background: #6a4a12; color: #f8dfa5; }
-.badge.teste { background: #2e4a2c; color: #cdeec8; }
-.badge.disc { background: #6b1622; color: #ffc9cf; }
+/* O porquê da opção vem depois dela, no mesmo texto, entre parênteses e na cor do tipo. */
+.porque { font-family: var(--f-tipo); font-size: .78em; }
+.porque.cla { color: #5d2f86; }
+.porque.atrib { color: #24507a; }
+.porque.prova { color: #85590c; }
+.porque.teste { color: #2f6a2b; }
+.porque.disc { color: #8e1b2b; }
 
 /* Escolha de personagem */
 .cartas { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6cqw; }
@@ -408,8 +409,8 @@ function mostrarEscolhas() {
   } else {
     c.innerHTML = `<ul class="escolhas">${story.currentChoices.map((ch, i) => {
       const p = ch.text.match(/^(.+?) :: (.*)$/);
-      const badge = p ? `<span class="badge ${tipoBadge(p[1])}">${esc(p[1])}</span>` : '';
-      return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span>${badge}<span>${esc(p ? p[2] : ch.text)}</span></button></li>`; }).join('')}</ul>`;
+      const porque = p ? ` <span class="porque ${tipoBadge(p[1])}">(${esc(p[1])})</span>` : '';
+      return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
   }
   c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); escolher(+b.dataset.i); }));
   const primeiro = c.querySelector('[data-i]'); if (primeiro) primeiro.focus({ preventScroll: true });
