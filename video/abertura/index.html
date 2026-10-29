@@ -17,10 +17,13 @@
     padding: 20px 34px; box-shadow: 6px 10px 20px rgb(0 0 0 / .6); opacity: 0; rotate: -.8deg; }
   .recorte { position: absolute; bottom: -30px; right: 120px; height: 860px; opacity: 0; filter: drop-shadow(6px 16px 18px rgb(0 0 0 / .7)); }
   .carimbo { position: absolute; left: 50%; top: 40%; font: 170px "Special Elite", monospace; color: #c8313f; border: 12px solid #c8313f; padding: 0 40px; opacity: 0;
-    translate: -50% -50%; rotate: -12deg; mix-blend-mode: screen; }
+    translate: -50% -50%; rotate: -12deg; mix-blend-mode: screen; white-space: nowrap; }
   .bilhete { position: absolute; right: 170px; top: 190px; width: 640px; background: #efe6d0; color: #2a1d16; font: 42px/1.5 "Special Elite", monospace; padding: 42px 46px;
     box-shadow: 8px 16px 28px rgb(0 0 0 / .7); opacity: 0; rotate: 4deg; }
   .bilhete b { display: block; width: 64px; height: 64px; border-radius: 50%; background: #23407a; margin: 18px 0 0 auto; }
+  .quadro.escuro { filter: saturate(.5) brightness(.55); }
+  .quem { position: absolute; right: 130px; top: 130px; font: 40px "Special Elite", monospace; color: #f4e7d2; background: #8f1d26; padding: 6px 24px; rotate: 2deg;
+    box-shadow: 4px 8px 16px rgb(0 0 0 / .6); opacity: 0; z-index: 1; }
   .flash { position: absolute; inset: 0; background: #c8313f; opacity: 0; mix-blend-mode: multiply; }
   .titulo { position: absolute; inset: 0; display: grid; place-content: center; text-align: center; opacity: 0; background: #0b0608; }
   .titulo span { font: 120px "Special Elite", monospace; color: #ece4d2; letter-spacing: .04em; }
@@ -28,8 +31,9 @@
 </style>
 </head>
 <body>
-<div id="root" data-composition-id="root" data-width="1920" data-height="1080" data-start="0" data-duration="34">
-  <div class="clip" data-start="0" data-duration="34">
+<div id="root" data-composition-id="root" data-width="1920" data-height="1080" data-start="0" data-duration="39">
+  <div class="clip" data-start="0" data-duration="39">
+    <img class="quadro escuro" id="qb" src="img/fundo_bunker.webp" alt="">
     <img class="quadro" id="q0" src="img/fundo_porto.webp" alt="">
     <img class="quadro" id="q1" src="img/fundo_serra.webp" alt="">
     <img class="quadro" id="q2" src="img/fundo_tunel.webp" alt="">
@@ -41,27 +45,32 @@
     <img class="recorte" id="r1" src="img/rayo_neutro.webp" alt="">
     <img class="recorte" id="r2" src="img/cao_neutro.webp" alt="">
     <img class="recorte" id="r3" src="img/dante_neutro.webp" alt="">
+    <div class="quem" id="e0">HARUMI · Ministério, porto</div><div class="quem" id="e1">RAYO · Gangrel, motorista</div>
+    <div class="quem" id="e2">O CÃO · Xerife</div><div class="quem" id="e3">DANTE · Príncipe de São Paulo</div>
+    <div class="carimbo" id="cb">NÃO ABRIR</div>
     <div class="carimbo" id="carimbo">SUMIU</div>
     <div class="bilhete" id="bilhete">Porão do Vincenzo, Bixiga.<br>Onze horas.<br>Venha sem ninguém.<br>— D.<b></b></div>
     <div class="flash" id="flash"></div>
-    <div class="hora" id="h0">00h10</div><div class="hora" id="h1">01h00</div><div class="hora" id="h2">02h40</div>
-    <div class="hora" id="h3">03h30</div><div class="hora" id="h4">22h00</div><div class="hora" id="h5">22h30</div>
-    <div class="legenda" id="l0">Porto de Santos. Um sarcófago desembarca em segredo. Dentro dele dorme um Matusalém, mais velho que a cidade.</div>
-    <div class="legenda" id="l1">Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.</div>
-    <div class="legenda" id="l2">O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.</div>
-    <div class="legenda" id="l3">O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.</div>
-    <div class="legenda" id="l4">Na noite seguinte, o Príncipe Dante quer um nome antes do amanhecer.</div>
-    <div class="legenda" id="l5">E ele mandou chamar você.</div>
+    <div class="hora" id="h0">00h00</div><div class="hora" id="h1">00h10</div><div class="hora" id="h2">01h00</div><div class="hora" id="h3">02h40</div>
+    <div class="hora" id="h4">03h30</div><div class="hora" id="h5">22h00</div><div class="hora" id="h6">22h30</div>
+    <div class="legenda" id="l0">Um sarcófago lacrado atravessa o oceano. Dentro dele dorme um Matusalém, mais velho que a cidade.</div>
+    <div class="legenda" id="l1">No Porto de Santos, a Harumi libera a carga. E abre o que não devia.</div>
+    <div class="legenda" id="l2">Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.</div>
+    <div class="legenda" id="l3">O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.</div>
+    <div class="legenda" id="l4">O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.</div>
+    <div class="legenda" id="l5">Na noite seguinte, o Príncipe Dante quer um nome antes do amanhecer.</div>
+    <div class="legenda" id="l6">E ele mandou chamar você.</div>
     <div class="titulo" id="titulo"><span>O MATUSALÉM DESAPARECIDO</span><small>Vampiro: A Máscara · São Paulo</small></div>
   </div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
 <script>
   // Mesmos quadros da abertura do jogo (web/template.html, QUADROS): 5 s cada, com zoom lento no fundo.
+  // O Matusalém nunca tem rosto: só o sarcófago lacrado. Cada recorte entra com uma etiqueta de quem é.
   const tl = gsap.timeline({ paused: true });
   const Q = [
-    { q: 'q0', r: 'r0' }, { q: 'q1', r: 'r1' }, { q: 'q2', r: 'r2' },
-    { q: 'q2', carimbo: true }, { q: 'q3', r: 'r3' }, { q: 'q4', bilhete: true },
+    { q: 'qb', carimbo: 'cb' }, { q: 'q0', r: 0 }, { q: 'q1', r: 1 }, { q: 'q2', r: 2 },
+    { q: 'q2', carimbo: 'carimbo', flash: true }, { q: 'q3', r: 3 }, { q: 'q4', bilhete: true },
   ];
   Q.forEach((s, i) => {
     const t = i * 5, novo = !i || Q[i - 1].q !== s.q;
@@ -74,20 +83,24 @@
     tl.to('#h' + i, { opacity: 0, duration: .3 }, t + 4.7);
     tl.fromTo('#l' + i, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: .5 }, t + .7);
     tl.to('#l' + i, { opacity: 0, duration: .3 }, t + 4.7);
-    if (s.r) {
-      tl.fromTo('#' + s.r, { opacity: 0, x: 200, rotation: -2 }, { opacity: 1, x: 0, rotation: -1.5, duration: 1.4, ease: 'power3.out' }, t + .9);
-      tl.to('#' + s.r, { opacity: 0, duration: .4 }, t + 4.6);
+    if (s.r !== undefined) {
+      tl.fromTo('#r' + s.r, { opacity: 0, x: 200, rotation: -2 }, { opacity: 1, x: 0, rotation: -1.5, duration: 1.4, ease: 'power3.out' }, t + .9);
+      tl.to('#r' + s.r, { opacity: 0, duration: .4 }, t + 4.6);
+      tl.fromTo('#e' + s.r, { opacity: 0, y: -30 }, { opacity: 1, y: 0, duration: .4 }, t + 1.5);
+      tl.to('#e' + s.r, { opacity: 0, duration: .3 }, t + 4.6);
     }
     if (s.carimbo) {
-      tl.fromTo('#carimbo', { opacity: 0, scale: 2.2 }, { opacity: .9, scale: 1, duration: .35, ease: 'back.out(2)' }, t + 1.2);
+      tl.fromTo('#' + s.carimbo, { opacity: 0, scale: 2.2 }, { opacity: .9, scale: 1, duration: .35, ease: 'back.out(2)' }, t + 1.2);
+      tl.to('#' + s.carimbo, { opacity: 0, duration: .3 }, t + 4.7);
+    }
+    if (s.flash) {
       tl.fromTo('#flash', { opacity: 0 }, { opacity: .9, duration: .12 }, t + 1.2);
       tl.to('#flash', { opacity: 0, duration: 1 }, t + 1.32);
-      tl.to('#carimbo', { opacity: 0, duration: .3 }, t + 4.7);
     }
     if (s.bilhete) tl.fromTo('#bilhete', { opacity: 0, y: -120 }, { opacity: 1, y: 0, duration: 1, ease: 'power2.out' }, t + .9);
   });
-  tl.to('#titulo', { opacity: 1, duration: 1 }, 30.5);
-  tl.set({}, {}, 34);
+  tl.to('#titulo', { opacity: 1, duration: 1 }, 35.5);
+  tl.set({}, {}, 39);
   window.__timelines = window.__timelines || {};
   window.__timelines['root'] = tl;
 </script>

@@ -255,8 +255,13 @@ body {
 .abertura .recorte-ab.dir { right: 5%; transform: translateX(25%) rotate(-2deg); }
 .abertura .recorte-ab.esq { right: 8%; transform: translateX(-15%) rotate(2deg); }
 .abertura .recorte-ab.on { opacity: 1; transform: rotate(-1.5deg); }
-.abertura .carimbo { position: absolute; left: 50%; top: 40%; font-family: var(--f-tipo); font-size: 9cqw; color: #c8313f; border: .6cqw solid #c8313f; padding: 0 2cqw; opacity: 0;
+.abertura .carimbo { position: absolute; left: 50%; top: 40%; white-space: nowrap; font-family: var(--f-tipo); font-size: 9cqw; color: #c8313f; border: .6cqw solid #c8313f; padding: 0 2cqw; opacity: 0;
   transform: translate(-50%, -50%) rotate(-12deg) scale(2.2); transition: opacity .25s, transform .35s cubic-bezier(.3, 1.6, .5, 1); mix-blend-mode: screen; }
+.abertura .quadro.escuro { filter: saturate(.5) brightness(.55); }
+/* etiqueta de quem é quem, presa embaixo do recorte */
+.abertura .quem-ab { position: absolute; right: 7%; top: 12%; font-family: var(--f-tipo); font-size: 1.9cqw; color: #f4e7d2; background: #8f1d26; padding: .3cqw 1.2cqw; rotate: 2deg;
+  box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); opacity: 0; transform: translateY(-30%); transition: opacity .4s, transform .4s; z-index: 1; }
+.abertura .quem-ab.on { opacity: 1; transform: none; }
 .abertura .carimbo.on { opacity: .9; transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
 .abertura .bilhete { position: absolute; right: 9%; top: 18%; width: 34%; background: #efe6d0; color: #2a1d16; font-family: var(--f-tipo); font-size: 2.2cqw; line-height: 1.5; padding: 2.2cqw 2.4cqw;
   box-shadow: .4cqw .8cqw 1.4cqw rgb(0 0 0 / .7); opacity: 0; transform: rotate(4deg) translateY(-30%); transition: opacity .6s, transform 1s; }
@@ -306,6 +311,7 @@ body {
     <div class="vinheta"></div>
     <img class="recorte-ab" alt="">
     <div class="carimbo">SUMIU</div>
+    <div class="quem-ab"></div>
     <div class="bilhete">Porão do Vincenzo, Bixiga.<br>Onze horas.<br>Venha sem ninguém.<br>— D.<b></b></div>
     <div class="flash"></div>
     <div class="hora-ab"></div>
@@ -602,11 +608,13 @@ function mostrarCapa() {
 
 // ---------- Abertura animada (uns 30 segundos; dá para pular) ----------
 const QUADROS = [
-  { fundo: 'porto', hora: '00h10', txt: 'Porto de Santos. Um sarcófago desembarca em segredo. Dentro dele dorme um Matusalém, mais velho que a cidade.', rec: 'harumi' },
-  { fundo: 'serra', hora: '01h00', txt: 'Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.', rec: 'rayo' },
-  { fundo: 'tunel', hora: '02h40', txt: 'O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.', rec: 'cao' },
-  { fundo: 'tunel', hora: '03h30', txt: 'O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.', carimbo: true },
-  { fundo: 'corte', hora: '22h00', txt: 'Na noite seguinte, o Príncipe Dante quer um nome antes do amanhecer.', rec: 'dante' },
+  // o Matusalém nunca tem rosto: só o sarcófago lacrado, no escuro
+  { fundo: 'bunker', escuro: true, hora: '00h00', txt: 'Um sarcófago lacrado atravessa o oceano. Dentro dele dorme um Matusalém, mais velho que a cidade.', carimbo: 'NÃO ABRIR' },
+  { fundo: 'porto', hora: '00h10', txt: 'No Porto de Santos, a Harumi libera a carga. E abre o que não devia.', rec: 'harumi', quem: 'HARUMI · Ministério, porto' },
+  { fundo: 'serra', hora: '01h00', txt: 'Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.', rec: 'rayo', quem: 'RAYO · Gangrel, motorista' },
+  { fundo: 'tunel', hora: '02h40', txt: 'O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.', rec: 'cao', quem: 'O CÃO · Xerife' },
+  { fundo: 'tunel', hora: '03h30', txt: 'O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.', carimbo: 'SUMIU' },
+  { fundo: 'corte', hora: '22h00', txt: 'Na noite seguinte, o Príncipe Dante quer um nome antes do amanhecer.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
   { fundo: 'rua', hora: '22h30', txt: 'E ele mandou chamar você.', bilhete: true },
 ];
 let timersAbertura = [];
@@ -614,8 +622,8 @@ function pararAbertura() { timersAbertura.forEach(clearTimeout); timersAbertura 
 function tocarAbertura(depois) {
   pararAbertura();
   const ab = $('abertura'), qs = ab.querySelectorAll('.quadro'), rec = ab.querySelector('.recorte-ab');
-  const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash');
-  [rec, carimbo, bilhete].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
+  const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash'), quem = ab.querySelector('.quem-ab');
+  [rec, carimbo, bilhete, quem].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
   $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true }); tocarMusica('abertura', false);
   const fim = () => { pararAbertura(); ab.hidden = true; depois(); };
   ab.onclick = e => { if (e.target.id === 'pular') fim(); };
@@ -626,12 +634,13 @@ function tocarAbertura(depois) {
     const dur = q.bilhete ? 5200 : 5000;
     em(t, () => {
       const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
-      if (!i || QUADROS[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
-      hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on');
+      if (!i || QUADROS[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
+      hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
       em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
       em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
       if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec].neutro; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
-      if (q.carimbo) em(1200, () => { carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
+      if (q.quem) em(1500, () => { quem.textContent = q.quem; quem.classList.add('on'); });
+      if (q.carimbo) em(1200, () => { carimbo.textContent = q.carimbo; carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
       if (q.bilhete) em(900, () => bilhete.classList.add('on'));
     });
     t += dur;
