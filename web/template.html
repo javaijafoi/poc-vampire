@@ -196,8 +196,8 @@ body {
 /* escala por personagem, para os rostos ficarem de tamanho parecido */
 .lado[data-p="Nonna"] { height: 74%; bottom: 10%; }
 .lado[data-p="Dante"], .lado[data-p="Constance"] { height: 92%; bottom: 2%; }
-.lado[data-p="Harumi"] { height: 68%; bottom: 22%; }
-.lado[data-p="Harumi"] .legenda { bottom: 16%; }
+.lado[data-p="Harumi"] { height: 84%; bottom: 4%; }
+.lado[data-p="Harumi"] .legenda { bottom: 34%; }
 /* o Biel é um fantasma: azul, flutuando, com brilho frio */
 .lado[data-p="Biel"] img { animation: flutua 4.5s ease-in-out infinite; filter: drop-shadow(0 0 1.6cqw rgb(150 200 255 / .75)); opacity: .9; }
 @keyframes flutua { 50% { transform: translateY(-2.5%); } }
@@ -327,7 +327,7 @@ document.documentElement.dataset.tema = 'revista';
 const PERS = {
   rayo: { nome: 'Rayo', lado: 'dir', desc: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado' },
   cao: { nome: 'Cão', lado: 'dir', desc: 'O Cão, Xerife Nosferatu de capuz e jaqueta de couro, olhos amarelos' },
-  harumi: { nome: 'Harumi', lado: 'dir', desc: 'Harumi, mulher de cabelo preto liso e quimono preto, sorrindo com as presas à mostra' },
+  harumi: { nome: 'Harumi', lado: 'dir', desc: 'Harumi, mulher de cabelo preto liso e quimono preto com serpentes bordadas, sorriso de canto com uma presa à mostra' },
   biel: { nome: 'Biel', lado: 'dir', desc: 'O fantasma do Biel, rapaz magro de jaqueta de entregador, todo em azul e branco' },
   vincenzo: { nome: 'Vincenzo', lado: 'esq', desc: 'Vincenzo, o dono do bar, velho de cabelo branco e terno cinza risca de giz' },
   dante: { nome: 'Dante', lado: 'esq', desc: 'O Príncipe Dante, de barba grisalha e terno risca de giz azul-marinho' },
