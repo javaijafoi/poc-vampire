@@ -10,6 +10,7 @@
 //   # limpa                -> tira todo mundo de cena
 //   # imagem: nome         -> mostra uma ilustração de momento-chave por cima de tudo (some no próximo # fundo)
 //   # final: letra         -> marca o final alcançado (para a tela de fim e os testes)
+//   # musica: nome         -> troca a música (musica/<nome>.mp3); sem a tag, cada fundo já tem a sua faixa
 //   ~ variavel = ...       -> muda o estado do jogo
 
 EXTERNAL rolar(parada, nivel_fome, dificuldade)
@@ -653,6 +654,7 @@ Rayo: Eu? Eu entreguei aquela carga inteira!
 Dante: O motoqueiro desviou a rota. Isso basta para mim.
 Os carniçais arrastam o Rayo escada acima. A porta fica aberta. O céu está clareando.
 # imagem: rayo_morto
+# musica: final_triste
 Ao amanhecer, o Rayo é amarrado no telhado da cantina. O sol faz o resto.
 Na noite seguinte, o motoclube dele declara guerra à Camarilla. A Augusta pega fogo.
 -> final_a_epilogo
@@ -666,6 +668,7 @@ Harumi: Eu? Eu só cuido de mercadoria, Príncipe. O senhor sabe disso.
 }
 A Harumi é levada pela escada, ainda sorrindo, sem pressa nenhuma.
 # imagem: harumi_morto
+# musica: final_triste
 Na noite seguinte, o porto de Santos tem uma nova dona. A antiga foi encontrada numa câmara fria de contêiner, de olhos abertos.
 -> final_a_epilogo
 
@@ -673,12 +676,14 @@ Na noite seguinte, o porto de Santos tem uma nova dona. A antiga foi encontrada 
 Você: A Constance pagou o desvio do caminhão.
 Constance: Que acusação interessante, vinda de alguém que chegou na cidade há três noites.
 Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de um forasteir{o}. Ainda não.
+# musica: final_triste
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
 Constance sorri para você na saída. É o sorriso de quem vai lembrar do seu nome.
 -> final_a_epilogo
 
 === final_a_epilogo ===
 # imagem: bunker
+# musica: final_triste
 Longe dali, embaixo dos trilhos da Linha Amarela, um sarcófago com um selo queimado espera no escuro. Só o Cão sabe onde ele está.
 FINAL A · O BODE EXPIATÓRIO # final: A
 -> END
@@ -690,6 +695,7 @@ Cão: Príncipe, alguém de fora que acusa o Xerife sem prova é alguém que tra
 Dante: Concordo.
 Antes que você chegue à escada, as mãos do Cão estão nos seus ombros.
 # imagem: amanhecer
+# musica: final_triste
 Quando você abre os olhos, tem correntes nos pulsos, no telhado da cantina, olhando o céu do Bixiga ficar cor de laranja. É a última coisa que você vê.
 FINAL D · SEM PROVAS # final: D
 -> END
@@ -697,6 +703,7 @@ FINAL D · SEM PROVAS # final: D
 === final_b ===
 Dante: Você me serviu bem, forasteir{o}. Sua dívida está paga.
 # imagem: cao_morto
+# musica: final_verdade
 O Cão é levado escada acima. Ao amanhecer, a cidade tem um novo Xerife, e o antigo vira cinza no telhado.
 Os carniçais do Príncipe buscam o sarcófago no bunker antes do sol.
 # imagem: van
@@ -712,6 +719,7 @@ O salão inteiro vira para Dante.
 Constance: Príncipe. A Corte gostaria de ouvir a sua explicação.
 Dante não explica. Pela primeira vez em cem anos, o Príncipe de São Paulo não tem o que dizer.
 # imagem: trono_vazio
+# musica: final_verdade
 Antes do amanhecer, Constance convoca o Primogênito. Dante sai do Porão escoltado, pela escada dos fundos.
 Constance: Você tem faro, forasteir{o}. Fique na cidade. Eu vou precisar de gente que não tem amigos.
 FINAL C · A VERDADE CONTRA O PRÍNCIPE · CONSTANCE # final: C
@@ -724,6 +732,7 @@ Você: Me dá o telefone de quem manda no seu motoclube. Tenho uma coisa que vai
 { p_informante: Você: E diz pra eles que o Biel era pago pela Segunda Inquisição. Eles vão querer saber quem mais é. }
 Rayo: Você é louc{o}, forasteir{o}. Gostei.
 # imagem: anarquistas
+# musica: final_verdade
 Na noite seguinte, cópias do manifesto com o carimbo do BOES aparecem coladas nos postes da Augusta. Os Anarquistas têm a prova de que o Príncipe negocia com caçadores.
 A guerra que vem aí é sua também.
 FINAL C · A VERDADE CONTRA O PRÍNCIPE · ANARQUISTAS # final: C

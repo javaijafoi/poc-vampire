@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>O Matusalém Desaparecido</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -157,6 +158,10 @@ body {
 
 .rodape { margin-top: 10px; font-family: var(--f-tipo); font-size: 12px; color: var(--papel-fraco); display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .rodape button { font: inherit; color: var(--papel-fraco); background: none; border: 1px solid var(--borda); padding: 2px 8px; cursor: pointer; }
+.rodape .acoes { display: flex; align-items: center; gap: 10px; }
+.rodape .som { display: flex; align-items: center; gap: 6px; }
+.rodape .som button[aria-pressed="false"] { text-decoration: line-through; opacity: .7; }
+.rodape input[type=range] { width: 90px; accent-color: #c8313f; }
 
 @media (max-width: 640px) {
   .dialogo { position: relative; left: auto; right: auto; bottom: auto; margin-top: 18px; min-height: 9em; padding: 18px 16px 16px; }
@@ -308,7 +313,7 @@ body {
     <button class="pular" type="button" id="pular">Pular ▸</button>
   </section>
 </div>
-<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><button type="button" id="reiniciar">Menu inicial</button></div>
+<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="{{INKJS}}"></script>
 <script>{{V5}}</script>
@@ -372,6 +377,7 @@ function limparCena() {
 
 function trocarFundo(nome) {
   esconderIlustracao();
+  if (MUSICA_FUNDO[nome]) tocarMusica(MUSICA_FUNDO[nome]);
   const src = ARTE.fundos[nome]; if (!src || $('fundo').getAttribute('src') === src) return;
   const f = $('fundo'); f.classList.add('trocando');
   setTimeout(() => { f.src = src; f.alt = DESC_FUNDO[nome] || ''; f.classList.remove('trocando'); }, 200);
@@ -417,7 +423,7 @@ function iniciar() {
     fila.push({ tipo: 'despertar', ok });
   }, false);
   limparCena(); esconderIlustracao();
-  $('fundo').src = ARTE.fundos.salao;
+  $('fundo').src = ARTE.fundos.salao; tocarMusica('salao');
   atualizarHud();
   avancar();
 }
@@ -445,6 +451,7 @@ function avancar() {
       if (chave === 'imagem') mostrarIlustracao(val);
       if (chave === 'entra') mostrarPersonagem(val);
       if (chave === 'expr') exprPendente = val;  // vale para quem fala nesta linha
+      if (chave === 'musica') tocarMusica(val);
       if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
     }
@@ -588,7 +595,7 @@ $('capa-fundo').src = ARTE.fundos.rua;
   img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
 });
 function mostrarCapa() {
-  pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false;
+  pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
   const v = finaisVistos().length; $('finais').textContent = v ? `Finais encontrados: ${v} de ${FINAIS.length}` : '';
   $('novo-jogo').focus({ preventScroll: true });
 }
@@ -609,7 +616,7 @@ function tocarAbertura(depois) {
   const ab = $('abertura'), qs = ab.querySelectorAll('.quadro'), rec = ab.querySelector('.recorte-ab');
   const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash');
   [rec, carimbo, bilhete].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
-  $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true });
+  $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true }); tocarMusica('abertura', false);
   const fim = () => { pararAbertura(); ab.hidden = true; depois(); };
   ab.onclick = e => { if (e.target.id === 'pular') fim(); };
   $('pular').onclick = fim;
@@ -632,6 +639,40 @@ function tocarAbertura(depois) {
   em(t, fim);
 }
 
+// ---------- Música: uma faixa por cena (musica/<nome>.mp3), com fade na troca ----------
+// Todas CC0, do OpenGameArt (créditos em musica/CREDITOS.md). A tag "# musica: nome" do roteiro troca a faixa; sem ela, vale a do fundo.
+const MUSICA_FUNDO = { rua: 'rua', salao: 'salao', balcao: 'balcao', escada: 'escada', sinuca: 'sinuca', fundo_bar: 'sessao', corte: 'corte' };
+const som = { faixa: null, el: null, vol: .6, ligado: true, liberado: false };
+try { Object.assign(som, JSON.parse(localStorage.getItem('matusalem-som') || '{}')); } catch (e) {}
+const volumeAlvo = () => som.ligado ? som.vol : 0;
+function fade(el, para, ms, fim) {
+  cancelAnimationFrame(el._fade); const de = el.volume, t0 = performance.now();
+  const passo = t => { const k = Math.max(0, Math.min(1, (t - t0) / ms)); el.volume = de + (para - de) * k; if (k < 1) el._fade = requestAnimationFrame(passo); else fim?.(); };
+  el._fade = requestAnimationFrame(passo);
+}
+function tocarMusica(nome, loop = true) {
+  if (som.faixa === nome) return;
+  som.faixa = nome;
+  const velho = som.el; if (velho) fade(velho, 0, 1200, () => velho.pause());
+  const el = som.el = new Audio(`musica/${nome}.mp3`); el.loop = loop; el.volume = 0;
+  if (som.liberado && !document.hidden) el.play().then(() => fade(el, volumeAlvo(), 1500)).catch(() => {});
+}
+function ajustarSom() {
+  $('som').setAttribute('aria-pressed', som.ligado); $('volume').value = Math.round(som.vol * 100);
+  if (som.el) fade(som.el, volumeAlvo(), 300);
+  try { localStorage.setItem('matusalem-som', JSON.stringify({ vol: som.vol, ligado: som.ligado })); } catch (e) {}
+}
+// o navegador só deixa tocar som depois do primeiro clique ou tecla
+function liberarSom() {
+  if (som.liberado) return; som.liberado = true;
+  som.el?.play().then(() => fade(som.el, volumeAlvo(), 1500)).catch(() => {});
+}
+addEventListener('pointerdown', liberarSom, true); addEventListener('keydown', liberarSom, true);
+document.addEventListener('visibilitychange', () => { if (!som.el || !som.liberado) return; if (document.hidden) som.el.pause(); else som.el.play().catch(() => {}); });
+$('som').addEventListener('click', () => { som.ligado = !som.ligado; if (som.ligado && !som.vol) som.vol = .6; ajustarSom(); });
+$('volume').addEventListener('input', e => { som.vol = e.target.value / 100; som.ligado = som.vol > 0; ajustarSom(); });
+ajustarSom();
+
 // ---------- Ligações ----------
 $('novo-jogo').addEventListener('click', () => tocarAbertura(() => iniciar()));
 $('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
@@ -639,6 +680,7 @@ $('dialogo').addEventListener('click', clicarDialogo);
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
 $('reiniciar').addEventListener('click', mostrarCapa);
 document.addEventListener('keydown', e => {
+  if ((e.key === 'm' || e.key === 'M') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { som.ligado = !som.ligado; ajustarSom(); return; }
   if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
   if (!$('capa').hidden) return;
   if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }

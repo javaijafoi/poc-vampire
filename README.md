@@ -9,8 +9,9 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 | `ink/jogo.ink` | Roteiro completo em Ink |
 | `ink/rayo.ink` | A cena de teste antiga (só o Rayo), mantida para comparação com o Ren'Py |
 | `web/` | Interface web que roda o roteiro |
-| `dist/index.html` | Jogo web pronto, num arquivo só. Abra no navegador (precisa de internet para o motor Ink e as fontes) |
+| `dist/index.html` | Jogo web pronto, num arquivo só, com a música ao lado em `dist/musica/`. Abra no navegador (precisa de internet para o motor Ink e as fontes) |
 | `art/` | Arte: `recortar_personagens.py` tira o fundo das artes do Trello, `gerar_fundos.py` gera os fundos com sdxl-turbo, `montar_cena.py` faz o recorte de revista e os fundos finais (`npm run arte`) |
+| `musica/` | Trilha sonora: uma faixa por cena, todas CC0 (`CREDITOS.md` diz qual toca onde; `bash musica/preparar.sh` refaz os MP3) |
 | `video/` | A abertura como vídeo MP4, feita com HyperFrames (`bash video/renderizar.sh`) |
 | `renpy/game/` | A cena de teste em Ren'Py |
 | `bench/` | Medição de tempo de carregamento |
@@ -21,6 +22,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - `Gatilho :: texto` é uma opção ou observação especial (clã, atributo, prova, teste, Disciplina) e aparece com uma etiqueta colorida.
 - `# pista <aba>: texto` coloca a pista no caderno, na folha da aba (`dossie`, `rayo`, `cao`, `harumi`, `biel`, `bar`).
 - `# fundo: nome` troca o fundo (`art/cena/fundo_<nome>.webp`); `# entra: nome` põe a testemunha em cena; `# limpa` tira todo mundo.
+- `# musica: nome` troca a música (`musica/<nome>.mp3`). Sem a tag, cada fundo já tem a sua faixa (a tabela fica em `MUSICA_FUNDO`, no `web/template.html`).
 - `# imagem: nome` mostra uma ilustração de momento-chave por cima da cena; `# final: letra` marca o final.
 
 ## Versão Ink

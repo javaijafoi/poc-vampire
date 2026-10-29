@@ -21,4 +21,7 @@ fs.mkdirSync('dist', { recursive: true });
 const out = mode === 'cdn' ? 'dist/index.html' : 'dist/local.html';
 fs.writeFileSync(out, html);
 if (mode === 'local') fs.copyFileSync('node_modules/inkjs/dist/ink.js', 'dist/ink.js');
+// a música fica fora do HTML, em dist/musica/, e só carrega a faixa da cena atual
+fs.mkdirSync('dist/musica', { recursive: true });
+for (const f of fs.readdirSync('musica')) if (f.endsWith('.mp3')) fs.copyFileSync('musica/' + f, 'dist/musica/' + f);
 console.log(out, html.length, 'bytes');
