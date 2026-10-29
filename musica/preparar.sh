@@ -19,7 +19,7 @@ faixa() {
 }
 
 faixa capa         "$OGA/ambient_horror_track_01_0.zip"                    0 0 0
-faixa abertura     "$OGA/echoes_of_the_past.wav"                           0 34 4
+faixa abertura     "$OGA/echoes_of_the_past.wav"                           0 39 4
 faixa rua          "$OGA/012_Sirens_in_Darkness_0.mp3"                     2 120 8
 faixa salao        "$OGA/ruskerdax_-_moil.mp3"                             0 0 0
 faixa balcao       "$OGA/Jazz%20Take%202.wav"                              0 0 0
