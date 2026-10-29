@@ -932,8 +932,10 @@ function tocarMusica(nome, loop = true) {
   som.faixa = nome;
   const velho = som.el; if (velho) fade(velho, 0, 1200, () => velho.pause());
   const el = som.el = new Audio(`musica/${nome}.mp3`); el.loop = loop; el.volume = 0;
-  if (som.liberado && !document.hidden) el.play().then(() => fade(el, volumeAlvo(), 1500)).catch(() => {});
+  if (som.liberado && !document.hidden) entrar(el);
 }
+// o play() responde depois; se a faixa já foi trocada nesse meio-tempo, essa fica calada (antes ela tocava solta, sem obedecer ao botão nem ao volume)
+function entrar(el) { el.play().then(() => som.el === el ? fade(el, volumeAlvo(), 1500) : el.pause()).catch(() => {}); }
 function ajustarSom() {
   $('som').setAttribute('aria-pressed', som.ligado); $('volume').value = Math.round(som.vol * 100);
   if (som.el) fade(som.el, volumeAlvo(), 300);
@@ -942,7 +944,7 @@ function ajustarSom() {
 // o navegador só deixa tocar som depois do primeiro clique ou tecla
 function liberarSom() {
   if (som.liberado) return; som.liberado = true;
-  som.el?.play().then(() => fade(som.el, volumeAlvo(), 1500)).catch(() => {});
+  if (som.el) entrar(som.el);
 }
 addEventListener('pointerdown', liberarSom, true); addEventListener('keydown', liberarSom, true);
 document.addEventListener('visibilitychange', () => { if (!som.el || !som.liberado) return; if (document.hidden) som.el.pause(); else som.el.play().catch(() => {}); });
