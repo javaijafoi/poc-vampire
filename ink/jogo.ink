@@ -171,7 +171,7 @@ Vincenzo: Onze e meia, forasteir{o}. O relógio corre. # limpa
 }
 { minutos >= 150 and not constance_chegou:
     ~ constance_chegou = true
-    A porta lá de cima bate. Um terno rosa desce a escada de pedra, devagar, com dois carniçais atrás.
+    A porta lá de cima bate. Um terno rosa desce a escada de pedra, devagar, com dois carniçais atrás. # imagem: constance_chega
     Constance, a Primogênita Lasombra, senta na mesa reservada e pede uma taça. As sombras da sala parecem se inclinar na direção dela. # pista dossie: À 01h30 a Constance, Primogênita Lasombra, chegou ao bar. Ninguém a chamou.
 }
 Para onde você vai?
