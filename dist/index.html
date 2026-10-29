@@ -439,10 +439,9 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .letra { font-size: 6.6cqw; }
   .capa .logo { top: 8%; }
   .capa .sub { top: 31%; white-space: normal; width: 84%; text-align: center; font-size: 13px; padding: 4px 10px; }
-  .capa .elenco img { height: 36% !important; bottom: 16%; }
-  .capa .elenco img:nth-child(1) { left: -12% !important; }
-  .capa .elenco img:nth-child(2) { left: 20% !important; height: 40% !important; }
-  .capa .elenco img:nth-child(3) { left: auto !important; right: -10%; }
+  /* um recorte de cada vez, trocando com fade, em vez dos três empilhados */
+  .capa .elenco img { left: 50% !important; height: 46% !important; bottom: 15%; transform: translateX(-50%) rotate(-1.5deg) !important; opacity: 0; transition: opacity 1.4s; }
+  .capa .elenco img.on { opacity: 1; }
   .capa .menu { flex-direction: column; gap: 10px; bottom: 7%; width: 72%; }
   .capa .menu button { width: 100%; font-size: 18px; padding: 8px 12px; }
   .capa .menu button.sec { font-size: 15px; }
@@ -983,6 +982,9 @@ $('capa-fundo').src = ARTE.fundos.rua;
   const img = document.createElement('img'); img.src = src; img.alt = '';
   img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
 });
+// no celular em pé, a capa mostra um recorte de cada vez (o CSS só usa a classe "on" nesse caso)
+{ let i = 0; const elenco = [...$('elenco').children]; elenco[0]?.classList.add('on');
+  setInterval(() => { if ($('capa').hidden || !elenco.length) return; elenco[i].classList.remove('on'); i = (i + 1) % elenco.length; elenco[i].classList.add('on'); }, 4000); }
 function mostrarCapa() {
   document.querySelector('.mesa-dados')?.remove();
   pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
