@@ -184,11 +184,6 @@ Vincenzo: Onze e meia, forasteir{o}. O relógio corre. # limpa
 # limpa
 { minutos >= limite: -> amanhecer }
 -> avisos ->
-{ minutos >= 150 and not constance_chegou:
-    ~ constance_chegou = true
-    A porta lá de cima bate. Um terno rosa desce a escada de pedra, devagar, com dois carniçais atrás. # imagem: constance_chega
-    Constance, a Primogênita Lasombra, senta na mesa reservada e pede uma taça. As sombras da sala parecem se inclinar na direção dela. # pista dossie: À {hora_digital()} a Constance, Primogênita Lasombra, chegou ao bar. Ninguém a chamou.
-}
 { fome >= 4 and not besta_avisou:
     ~ besta_avisou = true
     Fome {fome} :: A Besta arranha a sua garganta por dentro. Você ouve cada coração que ainda bate neste bar: o dos carniçais, o do garçom, o do rapaz que lava os copos na adega.
@@ -224,7 +219,13 @@ Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois qu
     -> salao
 
 // Avisos do Vincenzo, com a hora que o relógio marca de verdade. Entram em qualquer conversa: -> avisos ->
+// A chegada da Constance também: à 01h30 ela desce a escada mesmo que você esteja no meio de uma conversa.
 === avisos ===
+{ minutos >= 150 and not constance_chegou:
+    ~ constance_chegou = true
+    A porta lá de cima bate. Um terno rosa desce a escada de pedra, devagar, com dois carniçais atrás. # imagem: constance_chega
+    Constance, a Primogênita Lasombra, senta na mesa reservada e pede uma taça. As sombras da sala parecem se inclinar na direção dela. # pista dossie: À {hora_digital()} a Constance, Primogênita Lasombra, chegou ao bar. Ninguém a chamou.
+}
 { minutos >= 240 and aviso_tempo < 1:
     ~ aviso_tempo = 1
     Vincenzo: {hora_falada()}, forasteir{o}. Metade da noite já foi. Eu, no seu lugar, parava de conversar e começava a escolher.

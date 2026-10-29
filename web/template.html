@@ -508,11 +508,20 @@ const DESC_FUNDO = {
 };
 function mostrarIlustracao(nome) {
   const src = ARTE.fundos[nome]; if (!src) return;
+  antesIlustracao = cena ? { esq: cena.esq, dir: cena.dir } : null;
   limparCena(); ilustracaoAtual = nome;
   const il = $('ilustracao'); il.querySelector('img').src = src; il.querySelector('img').alt = 'Ilustração provisória: ' + nome.replace(/_/g, ' ');
   il.classList.add('on');
 }
 function esconderIlustracao() { ilustracaoAtual = null; $('ilustracao').classList.remove('on'); }
+// A chegada da Constance pode interromper uma conversa: na escolha seguinte a ilustração sai e quem estava em cena volta.
+const ILUSTRACAO_DE_PASSAGEM = new Set(['constance_chega']);
+let antesIlustracao = null;
+function voltarDaIlustracao() {
+  esconderIlustracao();
+  for (const k of [antesIlustracao?.esq, antesIlustracao?.dir]) if (k) mostrarPersonagem(k);
+  antesIlustracao = null;
+}
 
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
@@ -764,6 +773,7 @@ const CONVERSAS = /^(rayo_perguntas|cao_perguntas|harumi_perguntas|constance_per
 function chaveEscolha(ch) { const p = String(ch.sourcePath || ''); return CONVERSAS.test(p) && !/Voltar|descansar/.test(ch.text) ? p.split('.')[0] + '|' + ch.text : null; }
 function escolher(i) {
   esconderDica(); const k = chaveEscolha(story.currentChoices[i]); if (k) feitas.add(k);
+  if (ILUSTRACAO_DE_PASSAGEM.has(ilustracaoAtual)) voltarDaIlustracao();
   story.ChooseChoiceIndex(i); atualizarHud(); avancar();
 }
 
