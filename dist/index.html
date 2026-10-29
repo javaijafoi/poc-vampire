@@ -1,4 +1,9 @@
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#120a0e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>O Matusalém Desaparecido</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -209,12 +214,6 @@ body {
 .rodape .som button[aria-pressed="false"] { text-decoration: line-through; opacity: .7; }
 .rodape input[type=range] { width: 90px; accent-color: #c8313f; }
 
-@media (max-width: 640px) {
-  .dialogo { position: relative; left: auto; right: auto; bottom: auto; margin-top: 18px; min-height: 9em; padding: 18px 16px 16px; }
-  .nome { left: 12px; }
-  .cartas { grid-template-columns: 1fr; }
-  .hud { top: 6px; right: 10px; }
-}
 /* Tema revista: caixa de texto em papel rasgado, legenda presa com fita */
 :root[data-tema="revista"] .dialogo { background: none; box-shadow: none; filter: drop-shadow(.3cqw .5cqw .8cqw rgb(0 0 0 / .55)); }
 :root[data-tema="revista"] .dialogo::before { content: ""; position: absolute; inset: -.8cqw -.6cqw; z-index: -1; background: var(--folha);
@@ -369,6 +368,118 @@ body {
 .caderno .passo { font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #6d5440; margin-left: auto; }
 .exemplos { display: grid; gap: .4cqw; margin: .4cqw 0 .8cqw; padding: 0; list-style: none; font-size: max(13px, 1.5cqw); }
 .exemplos .porque { margin-right: .4em; }
+
+/* ---------- Celular: retrato (cena em cima, texto embaixo) e paisagem (como no PC, mais justo) ---------- */
+body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
+.dialogo, .escolhas, .cartas { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+.rodape .tela-cheia[hidden] { display: none; }
+/* no toque não existe "passar o mouse": o realce não fica preso depois do toque */
+@media (hover: none) {
+  .escolhas button:hover:not(:focus-visible) { background: transparent; border-color: transparent; }
+  .carta:hover:not(:focus-visible) { border-color: #c9b998; }
+}
+@media (pointer: coarse) {
+  .ajuda-btn { width: 38px; font-size: 18px; }
+  .escolhas button { padding: 6px 8px; min-height: 36px; align-items: center; }
+  .rodape button { padding: 6px 10px; }
+  .caderno .aba { padding: 8px 12px 6px; }
+  .caderno .fechar, .dados .seguir, .capa .menu button { min-height: 40px; }
+}
+
+/* Retrato: a cena ocupa a metade de cima da tela, a caixa de texto o resto. Os dois recortes ficam menores e um pouco
+   sobrepostos; quem fala vem para a frente. */
+@media (max-aspect-ratio: 1/1) {
+  body { display: flex; flex-direction: column; height: 100vh; height: 100dvh; overflow: hidden;
+    padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px); }
+  .jogo { width: 100%; flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .palco { aspect-ratio: auto; flex: 0 0 auto; height: min(52%, 130vw); }
+  .palco .lado { scale: .78; transform-origin: 50% 100%; }
+  .lado.esq { left: -14%; }
+  .lado.dir { right: -14%; }
+  .lado:not(.calado) { z-index: 1; }
+  .legenda { font-size: 15px; padding: 3px 12px; }
+  .ilustracao img { width: 94%; margin-top: 4%; }
+  .carimbo-final b { font-size: 11cqw; }
+  .dialogo { position: relative; inset: auto; flex: 1; min-height: 0; margin: 22px 10px 10px; padding: 36px 16px 14px; transform: none; display: flex; flex-direction: column; }
+  #conteudo { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+  .nome { left: 12px; font-size: 15px; padding: 3px 12px; }
+  .hud { top: 12px; right: 14px; gap: 12px; font-size: 13px; }
+  .hud .amanhecer { display: none; }
+  .fala { font-size: 17px; }
+  .escolhas { gap: 2px; }
+  .escolhas button { font-size: 16px; }
+  .titulo { font-size: 13px; margin-bottom: 8px; }
+  .seta { right: 12px; bottom: 8px; font-size: 14px; }
+  .toast { max-width: 86%; font-size: 13px; padding: 4px 10px; }
+  .cartas, .cartas.tres { grid-template-columns: 1fr; gap: 8px; }
+  .carta { padding: 10px 12px; column-gap: 12px; }
+  .carta .emblema { width: 44px; font-size: 20px; }
+  .carta b { font-size: 18px; } .carta span { font-size: 14px; } .carta small { font-size: 12px; } .carta .ver { font-size: 12px; }
+  /* caderno, ficha, ajuda e tutorial: quase a tela toda */
+  .caderno .bloco-folhas, .caderno .bloco-folhas:has(.folha.longa) { width: 94%; max-height: 94%; }
+  .caderno .abas { overflow-x: auto; scrollbar-width: none; padding-left: 8px; gap: 4px; }
+  .caderno .aba { white-space: nowrap; font-size: 13px; }
+  .caderno .folha { padding: 16px 16px; }
+  .caderno .folha.longa .botoes { padding: 10px 0 14px; }
+  .caderno .folha p, .caderno ol { font-size: 15px; }
+  .caderno h2 { font-size: 19px; margin-bottom: 8px; }
+  .caderno .folha h3 { font-size: 15px; margin: 14px 0 4px; }
+  .caderno .botoes { gap: 8px; }
+  .caderno .fechar { font-size: 14px; padding: 8px 14px; }
+  .ficha-tab tr { display: grid; grid-template-columns: 1fr auto; }
+  .ficha-tab th, .ficha-tab td.pontos { border-bottom: 0; padding-top: 6px; }
+  .ficha-tab td:last-child { grid-column: 1 / -1; padding-bottom: 6px; font-size: 14px; }
+  .dica-pop { max-width: 92%; font-size: 14px; }
+  .dados { min-width: 0; max-width: 92%; padding: 16px 16px 14px; gap: 10px; }
+  .dados .linha { gap: 8px; }
+  .dados .res { font-size: 18px; }
+  .dados .det { font-size: 12px; }
+  .dados .seguir { font-size: 15px; padding: 8px 18px; }
+  /* capa */
+  .letra { font-size: 6.6cqw; }
+  .capa .logo { top: 8%; }
+  .capa .sub { top: 31%; white-space: normal; width: 84%; text-align: center; font-size: 13px; padding: 4px 10px; }
+  .capa .elenco img { height: 36% !important; bottom: 16%; }
+  .capa .elenco img:nth-child(1) { left: -12% !important; }
+  .capa .elenco img:nth-child(2) { left: 20% !important; height: 40% !important; }
+  .capa .elenco img:nth-child(3) { left: auto !important; right: -10%; }
+  .capa .menu { flex-direction: column; gap: 10px; bottom: 7%; width: 72%; }
+  .capa .menu button { width: 100%; font-size: 18px; padding: 8px 12px; }
+  .capa .menu button.sec { font-size: 15px; }
+  .capa .menu.confirma p { font-size: 14px; padding: 6px 10px; }
+  .capa .menu.confirma div { flex-direction: column; gap: 10px; }
+  .capa .salvo { bottom: 2.4%; font-size: 12px; }
+  .capa .finais { display: none; }
+  /* abertura */
+  .abertura .hora-ab { font-size: 7cqw; top: 6%; }
+  .abertura .legenda-ab { font-size: 17px; max-width: 92%; bottom: 6%; padding: 10px 14px; }
+  .abertura .recorte-ab { height: 46%; bottom: 24%; }
+  .abertura .recorte-ab.dir { right: -6%; }
+  .abertura .recorte-ab.esq { right: 10%; }
+  .abertura .quem-ab { font-size: 13px; top: 14%; padding: 3px 10px; }
+  .abertura .carimbo { font-size: 15cqw; }
+  .abertura .bilhete { width: 66%; font-size: 4.6cqw; top: 16%; padding: 16px 18px; }
+  .abertura .bilhete b { width: 7cqw; }
+  .abertura .pular { font-size: 14px; padding: 8px 14px; top: 12px; right: 12px; }
+  /* rodapé: só os botões, numa linha */
+  .rodape { margin: 0; padding: 0 10px 8px; justify-content: center; }
+  .rodape > span:first-child, .rodape input[type=range] { display: none; }
+  .rodape .acoes { flex-wrap: wrap; justify-content: center; gap: 6px; }
+}
+
+/* Paisagem no celular: a mesma tela do PC, com a cena usando toda a altura e o rodapé enxuto */
+@media (min-aspect-ratio: 1/1) and (max-height: 520px) {
+  body { padding: 4px max(8px, env(safe-area-inset-right, 0px)) 2px max(8px, env(safe-area-inset-left, 0px)); }
+  .jogo { width: min(100%, calc((100vh - 44px) * 16 / 9)); width: min(100%, calc((100dvh - 44px) * 16 / 9)); }
+  .rodape { margin-top: 4px; justify-content: center; }
+  .rodape > span:first-child, .rodape input[type=range] { display: none; }
+  .rodape button { padding: 3px 10px; }
+  .dialogo { min-height: 30%; padding: 22px 18px 12px; }
+  #conteudo { max-height: calc(100vh - 110px); max-height: calc(100dvh - 110px); overflow-y: auto; overscroll-behavior: contain; }
+  .escolhas button { min-height: 30px; padding: 3px 8px; }
+  .caderno .bloco-folhas, .caderno .bloco-folhas:has(.folha.longa) { width: 94%; max-height: 96%; }
+  .caderno .folha { padding: 12px 18px; }
+}
 </style>
 
 <div class="jogo">
@@ -426,7 +537,7 @@ body {
   </section>
   <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
-<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" id="reiniciar">Menu inicial</button></span></div>
+<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/ink.js"></script>
 <script>// Regras de dados de Vampiro V5, usadas pelo jogo web e pelos testes.
@@ -548,6 +659,9 @@ function voltarDaIlustracao() {
   antesIlustracao = null;
 }
 
+// celular e tablet: sem mouse nem teclado, os textos falam em tocar
+const TOQUE = matchMedia('(hover: none)').matches;
+const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
 let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
@@ -682,7 +796,7 @@ function mostrarDados(r) {
   mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
     <div class="linha">${r.dados.map((d, i) => `<span class="dado rolando ${d.fome ? 'fomed' : ''}" style="--atraso:${(i * 0.09).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}%;--giro0:${(Math.random() * 360 - 540).toFixed(0)}deg"><span class="face">${1 + Math.floor(Math.random() * 10)}</span></span>`).join('')}</div>
     <div class="res ${r.resultado === 1 || r.resultado === 2 ? 'bom' : ''}" aria-live="polite"></div>
-    <div class="det">Dados vermelhos são de Fome. Clique em qualquer lugar para continuar.</div>
+    <div class="det">Dados vermelhos são de Fome. ${CLIQUE} em qualquer lugar para continuar.</div>
     <button type="button" class="seguir">Continuar ▸</button></div>`;
   document.querySelector('.jogo').appendChild(mesa);
   const dados = [...mesa.querySelectorAll('.dado')];
@@ -831,7 +945,7 @@ function abrirCaderno() {
   const el = document.createElement('div'); el.className = 'caderno';
   el.innerHTML = `<div class="bloco-folhas"><div class="abas" role="tablist">${abas.map(a =>
     `<button class="aba" role="tab" type="button" data-aba="${esc(a)}">${esc(a)}</button>`).join('')}</div><div class="folha" role="tabpanel"></div></div>`;
-  $('palco').appendChild(el);
+  document.querySelector('.jogo').appendChild(el);
   const folha = el.querySelector('.folha');
   const mostrar = aba => {
     abaAtual = aba;
@@ -1017,7 +1131,7 @@ function abrirJanela(rotulo, abas, inicial, montar) {
   el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', rotulo);
   el.innerHTML = `<div class="bloco-folhas">${abas.length ? `<div class="abas" role="tablist">${abas.map(a =>
     `<button class="aba" role="tab" type="button" data-aba="${esc(a)}">${esc(a)}</button>`).join('')}</div>` : '<div></div>'}<div class="folha longa" tabindex="-1"></div></div>`;
-  $('palco').appendChild(el);
+  document.querySelector('.jogo').appendChild(el);
   const folha = el.querySelector('.folha'), fechar = () => el.remove();
   const mostrar = aba => {
     el.querySelectorAll('.aba').forEach(b => b.setAttribute('aria-selected', b.dataset.aba === aba));
@@ -1050,7 +1164,8 @@ const AJUDA = {
     <h3>O relógio corre</h3><p>Cada pergunta custa minutos, mesmo se você repetir uma que já fez: uns 20 com as testemunhas e 10 com o fantasma. A sessão da Nonna custa 1 hora. A hora fica no canto da caixa de texto e o sol nasce às 05h40. Quando a hora começar a piscar, falta pouco. Pergunta que você já fez aparece apagada.</p>
     <h3>Junte pistas</h3><p>Toda pista vai para o Caderno, numa folha para cada testemunha. Uma pista pode abrir uma pergunta nova com outra pessoa. A última folha é sua, para anotar o que quiser.</p>
     <h3>Acuse</h3><p>Quando achar que sabe, volte ao salão e mande chamar o Príncipe. Na Corte, nome não basta: você mostra três coisas do seu caderno. Prova fraca não convence ninguém, e errar custa caro.</p>
-    <h3>Teclado</h3><p>Clique ou Espaço avança. Segure Ctrl para passar rápido pelas falas. As teclas 1, 2, 3... escolhem uma opção. H mostra o histórico das falas. M liga e desliga a música. Esc fecha esta janela.</p>`,
+    ${TOQUE ? `<h3>No celular</h3><p>Toque na cena ou na caixa de texto para avançar. Toque numa etiqueta, na hora ou na Fome para ver o que é. Embaixo da tela ficam o Histórico, a música e o menu. O jogo funciona em pé ou deitado; deitado, a cena fica maior.</p>`
+      : `<h3>Teclado</h3><p>Clique ou Espaço avança. Segure Ctrl para passar rápido pelas falas. As teclas 1, 2, 3... escolhem uma opção. H mostra o histórico das falas. M liga e desliga a música. Esc fecha esta janela.</p>`}`,
   'Sua ficha': () => fichaHTML(story?.variablesState['nome']) + (FICHAS[story?.variablesState['nome']] ? `<p><b>Fome agora:</b> ${story.variablesState['fome']} de 5.</p>` : ''),
   'Dados e Fome': () => `<h2>Dados e Fome</h2>
     <h3>Testes</h3><p>Quando o resultado não é garantido, você faz um teste: rola dados de dez faces. Cada dado que der 6 ou mais é um sucesso. Juntou tantos sucessos quanto a dificuldade, passou.</p>
@@ -1061,7 +1176,7 @@ const AJUDA = {
     <p>Nos testes, um dado para cada ponto de Fome vira dado de Fome, vermelho. Se um dado vermelho der 1 e você falhar, é uma <b>falha bestial</b>: a Besta, o seu lado animal, escapa por um instante. Se um vermelho der 10 num crítico, é um <b>crítico bagunçado</b>: você consegue, mas de um jeito feio.</p>
     <p>Fome alta tem um lado bom: os sentidos de predador ficam mais aguçados.</p>`,
   'Etiquetas': () => `<h2>Etiquetas nas opções</h2>
-    <p>Algumas respostas terminam com uma etiqueta colorida entre parênteses. Ela diz por que a opção apareceu para você. Passe o mouse em cima da etiqueta para ver os detalhes.</p>
+    <p>Algumas respostas terminam com uma etiqueta colorida entre parênteses. Ela diz por que a opção apareceu para você. ${TOQUE ? 'Toque na etiqueta (ou segure o dedo na opção)' : 'Passe o mouse em cima da etiqueta'} para ver os detalhes.</p>
     <ul class="exemplos">
       <li><span class="porque cla">(Gangrel)</span> Clã: só aparece para quem é daquele clã.</li>
       <li><span class="porque atrib">(Carisma 3)</span> Nota da ficha: só aparece se a sua nota for alta o bastante.</li>
@@ -1085,10 +1200,10 @@ const TUTORIAL = [
     <p>O que você descobre vai sozinho para o <b>Caderno</b>, no canto da caixa de texto. Uma pista de uma testemunha pode abrir uma pergunta nova com outra.</p>`,
   `<h2>O relógio corre</h2><p>Cada pergunta custa minutos, mesmo repetida: uns 20 com as testemunhas. O sol nasce às 05h40 e você não vai conseguir falar de tudo com todos. Quando achar que sabe, chame o Príncipe e mostre a ele três provas do seu caderno.</p>`,
   `<h2>Opções especiais</h2><p>Algumas respostas têm uma etiqueta colorida no fim, como <span class="porque prova">(Prova)</span> ou <span class="porque disc">(Disciplina: Presença)</span>. Elas aparecem por causa do seu clã, das suas notas, das pistas que você achou ou dos seus poderes.</p>
-    <p>Passe o mouse em cima da etiqueta e o jogo explica, em uma linha, o que ela faz.</p>`,
+    <p>${TOQUE ? 'Toque na etiqueta (ou segure o dedo na opção)' : 'Passe o mouse em cima da etiqueta'} e o jogo explica, em uma linha, o que ela faz. O mesmo vale para a hora e a Fome.</p>`,
   `<h2>Dados e Fome</h2><p>Às vezes o resultado depende de sorte: você rola dados e precisa tirar 6 ou mais em alguns deles. Quanto melhor a sua nota, mais dados.</p>
     <p>Vampiro também sente <b>Fome</b>, os quadradinhos vermelhos. Usar seus poderes pode aumentar a Fome, e com muita Fome a sua Besta pode atrapalhar os testes.</p>
-    <p>Esqueceu alguma coisa? O botão <b>?</b> no canto da cena explica tudo de novo. Agora, escolha quem você é. Clique num personagem para ver a ficha dele.</p>`,
+    <p>Esqueceu alguma coisa? O botão <b>?</b> no canto da cena explica tudo de novo. Agora, escolha quem você é. ${CLIQUE} num personagem para ver a ficha dele.</p>`,
 ];
 const TUT = 'matusalem-tutorial';
 function mostrarTutorial() {
@@ -1163,11 +1278,32 @@ function mostrarDica(el) {
   pop.style.top = top + 'px';
 }
 function esconderDica() { $('dica-pop').classList.remove('on'); }
-document.querySelector('.jogo').addEventListener('mouseover', e => mostrarDica(e.target.closest('[data-dica]')));
+// no toque, o navegador também dispara mouseover e focusin: esses ficam de fora, e quem manda é o toque
+let ultimoToque = 0, segurou = false, seguraTimer;
+const tocouAgora = () => performance.now() - ultimoToque < 900;
+document.querySelector('.jogo').addEventListener('mouseover', e => { if (!tocouAgora()) mostrarDica(e.target.closest('[data-dica]')); });
 document.querySelector('.jogo').addEventListener('mouseleave', esconderDica);
 // teclado: com a opção em foco, mostra a dica da etiqueta dela
-document.querySelector('.jogo').addEventListener('focusin', e => { const el = e.target.closest?.('[data-dica]') || e.target.querySelector?.('[data-dica]'); el ? mostrarDica(el) : esconderDica(); });
+document.querySelector('.jogo').addEventListener('focusin', e => { if (tocouAgora()) return; const el = e.target.closest?.('[data-dica]') || e.target.querySelector?.('[data-dica]'); el ? mostrarDica(el) : esconderDica(); });
 addEventListener('pointerdown', esconderDica, true);
+const jogoEl = document.querySelector('.jogo');
+jogoEl.addEventListener('pointerdown', e => {
+  if (e.pointerType === 'mouse') return;
+  ultimoToque = performance.now(); segurou = false; clearTimeout(seguraTimer);
+  const op = e.target.closest('#conteudo button'), dica = op?.querySelector('[data-dica]');
+  if (dica) seguraTimer = setTimeout(() => { segurou = true; mostrarDica(dica); }, 450);
+});
+['pointerup', 'pointercancel', 'pointermove'].forEach(t => jogoEl.addEventListener(t, e => { if (t !== 'pointermove' || Math.abs(e.movementX) + Math.abs(e.movementY) > 6) clearTimeout(seguraTimer); }));
+jogoEl.addEventListener('click', e => {
+  if (!tocouAgora()) return;
+  const el = e.target.closest('[data-dica]');
+  if (segurou || (el && el.tagName !== 'BUTTON')) {
+    e.preventDefault(); e.stopPropagation();
+    if (!segurou) mostrarDica(el);
+    segurou = false;
+  }
+}, true);
+jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault(); });
 
 // ---------- Ligações ----------
 $('novo-jogo').addEventListener('click', novoJogo);
@@ -1176,6 +1312,11 @@ $('confirma-sim').addEventListener('click', () => { apagarSave(); tocarAbertura(
 $('confirma-nao').addEventListener('click', mostrarCapa);
 $('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
 $('dialogo').addEventListener('click', clicarDialogo);
+$('palco').addEventListener('click', e => { if (!e.target.closest('button') && $('txt')) clicarDialogo(); });
+// tela cheia: só onde o navegador deixa (Android); no iPhone, "Adicionar à Tela de Início" abre sem a barra
+if (TOQUE && document.fullscreenEnabled) $('tela-cheia').hidden = false;
+$('tela-cheia').addEventListener('click', () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch(() => {}));
+document.addEventListener('fullscreenchange', () => { $('tela-cheia').textContent = document.fullscreenElement ? 'Sair da tela cheia' : 'Tela cheia'; });
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
 $('ajuda-btn').addEventListener('click', e => { e.stopPropagation(); abrirAjuda(); });
 $('reiniciar').addEventListener('click', mostrarCapa);

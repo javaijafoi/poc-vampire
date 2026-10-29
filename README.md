@@ -24,6 +24,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - `# fundo: nome` troca o fundo (`art/cena/fundo_<nome>.webp`); `# entra: nome` põe a testemunha em cena; `# limpa` tira todo mundo.
 - `# musica: nome` troca a música (`musica/<nome>.mp3`). Sem a tag, cada fundo já tem a sua faixa (a tabela fica em `MUSICA_FUNDO`, no `web/template.html`).
 - As explicações para quem não joga Vampiro (ficha de cada personagem, botão "?", dica ao passar o mouse nas etiquetas e o tutorial do começo) ficam em `web/template.html`, no bloco "Ajuda para quem não joga Vampiro". As notas da ficha repetem as do roteiro: mudou uma, mude a outra.
+- Celular: o mesmo `web/template.html` serve em pé e deitado (bloco "Celular" no CSS). Em pé, a cena fica em cima e o texto embaixo; deitado, é a tela do PC. No toque, tocar numa etiqueta (ou segurar o dedo na opção) mostra a dica, e tocar na cena avança.
 - `# imagem: nome` mostra uma ilustração de momento-chave por cima da cena; `# final: letra` marca o final.
 - Hora falada e hora no caderno vêm do relógio do jogo: use `{hora_falada()}` ("Três e dez"), `{hora_digital()}` ("03h10") e `{tempo_falta()}` ("uma hora e vinte minutos"). Os avisos do Vincenzo entram em qualquer conversa com `-> avisos ->`.
 - Palavra com gênero falando com o protagonista: `forasteir{o}` ou `{o == "a":moça|moço}`. O `test_texto.cjs` joga com a Irene e a Joana e acusa masculino solto.
