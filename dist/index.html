@@ -208,7 +208,7 @@ body {
     <span class="nome" id="nome" hidden></span>
     <div id="conteudo"></div>
   </div>
-  <div class="rodape"><span>Cena de teste · roteiro em Ink</span><span><button type="button" id="tema">Estilo: livro</button> <button type="button" id="reiniciar">Recomeçar</button></span></div>
+  <div class="rodape"><span>Cena de teste · roteiro em Ink</span><button type="button" id="reiniciar">Recomeçar</button></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/ink.js"></script>
@@ -245,16 +245,9 @@ const $ = id => document.getElementById(id);
 $('fundo').src = ARTE.fundo; $('moldura').src = ARTE.moldura;
 document.documentElement.style.setProperty('--rasgo', `url(${ARTE.rasgo})`);
 
-// Tema visual: "livro" (padrão) ou "revista". A escolha fica só neste navegador.
-function aplicarTema(t) {
-  document.documentElement.dataset.tema = t;
-  $('tema').textContent = 'Estilo: ' + t + ' (trocar)';
-  try { localStorage.setItem('porao-tema', t); } catch (e) {}
-}
-let temaSalvo = 'livro';
-try { temaSalvo = localStorage.getItem('porao-tema') || 'livro'; } catch (e) {}
-aplicarTema(temaSalvo);
-$('tema').addEventListener('click', () => aplicarTema(document.documentElement.dataset.tema === 'livro' ? 'revista' : 'livro'));
+// Tema visual: o Peter escolheu "revista" em 2026-10-29. O tema "livro" (identidade dos livros de V5) fica no CSS
+// para comparar: troque aqui para 'livro'.
+document.documentElement.dataset.tema = 'revista';
 
 // Lados da cena: o Rayo (testemunha) fica à direita; quem mais falar entra à esquerda.
 const LADO = { Rayo: 'dir' };
