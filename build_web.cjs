@@ -14,7 +14,7 @@ const inkjs = mode === 'cdn' ? 'https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/in
 html = html.replace('{{INKJS}}', inkjs)
   .replace('{{V5}}', () => fs.readFileSync('web/v5.js', 'utf8'))
   .replace('{{STORY}}', () => fs.readFileSync('ink/rayo.json', 'utf8'))
-  .replace('{{BG}}', () => b64('art/cena/fundo.webp')).replace('{{MOLDURA}}', () => b64('art/cena/moldura.webp')).replace('{{PERSONAGENS}}', () => JSON.stringify(personagens));
+  .replace('{{BG}}', () => b64('art/cena/fundo.webp')).replace('{{MOLDURA}}', () => b64('art/cena/moldura.webp')).replace('{{RASGO}}', () => b64('art/cena/rasgo.png')).replace('{{PERSONAGENS}}', () => JSON.stringify(personagens));
 fs.mkdirSync('dist', { recursive: true });
 const out = mode === 'cdn' ? 'dist/index.html' : 'dist/local.html';
 fs.writeFileSync(out, html);

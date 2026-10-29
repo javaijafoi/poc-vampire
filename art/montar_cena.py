@@ -3,6 +3,7 @@
 Uso: python3 art/montar_cena.py
 - art/fontes/fundo_porao_<n>.jpg -> art/cena/fundo.webp (escolha com FUNDO=fundo_porao_2.jpg)
 - moldura de pôster       -> art/cena/moldura.webp
+- papel rasgado          -> art/cena/rasgo.png
 - art/fontes/<personagem>_<expr>.png -> art/cena/<personagem>_<expr>.webp
   (retrato com fundo recortado; "neutro" é obrigatório, as outras expressões são opcionais)
 """
@@ -14,6 +15,7 @@ from PIL import Image, ImageEnhance
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from moldura import moldura
+from rasgo import rasgo
 from recorte import recorte
 
 AQUI = os.path.dirname(os.path.abspath(__file__))
@@ -27,6 +29,7 @@ fundo = ImageEnhance.Brightness(fundo).enhance(1.05)
 fundo.save(os.path.join(CENA, "fundo.webp"), quality=78)
 
 moldura().save(os.path.join(CENA, "moldura.webp"), quality=90)
+rasgo().save(os.path.join(CENA, "rasgo.png"))  # borda rasgada da caixa de texto (tema revista)
 
 # Personagens: art/fontes/<personagem>_<expressao>.png -> art/cena/<personagem>_<expressao>.webp
 for f in sorted(glob.glob(os.path.join(FONTES, "*_*.png"))):
