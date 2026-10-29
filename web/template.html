@@ -47,7 +47,7 @@ body {
 .lado.esq { left: 4%; }
 .lado.dir { right: 4%; --giro: -1.5deg; }
 /* escala por personagem, para os rostos ficarem do mesmo tamanho (a arte do Vincenzo é um close) */
-.lado[data-p="Vincenzo"] { height: 64%; bottom: 12%; }
+.lado[data-p="Vincenzo"] { height: 90%; bottom: 4%; }
 .lado.on { opacity: 1; transform: rotate(var(--giro)); }
 .lado.calado { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.5) saturate(.6); }
 .palco .lado img { position: static; display: block; height: 100%; width: auto; }
@@ -194,7 +194,7 @@ $('fundo').src = ARTE.fundo; $('moldura').src = ARTE.moldura;
 
 // Lados da cena: o Rayo (testemunha) fica à direita; quem mais falar entra à esquerda.
 const LADO = { Rayo: 'dir' };
-const DESCRICAO = { Rayo: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado', Vincenzo: 'Vincenzo, o dono do bar, de terno risca de giz' };
+const DESCRICAO = { Rayo: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado', Vincenzo: 'Vincenzo, o dono do bar, velho de cabelo branco e terno cinza risca de giz' };
 const TESTEMUNHA = 'Rayo';  // as pistas sem aba vão para a folha dele no caderno
 let cena, exprPendente;
 
