@@ -1,4 +1,4 @@
-<title>Porão do Vincenzo</title>
+<title>O Matusalém Desaparecido</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Spectral:ital,wght@0,400;0,600;1,400&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&display=swap">
@@ -63,7 +63,7 @@ body {
 .lado.calado { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.5) saturate(.6); }
 .palco .lado img { position: static; display: block; height: 100%; width: auto; }
 /* nome embaixo do rosto, como legenda de revista */
-.legenda { position: absolute; left: 50%; bottom: 31%; transform: translateX(-50%) rotate(calc(var(--giro) * -1.4)); white-space: nowrap;
+.legenda { position: absolute; left: 50%; bottom: 36%; transform: translateX(-50%) rotate(calc(var(--giro) * -1.4)); white-space: nowrap;
   font-family: var(--f-nome); font-size: max(12px, 1.7cqw); background: var(--acento); color: #f4e7d2; padding: .2cqw 1.1cqw; box-shadow: .1cqw .3cqw .5cqw rgb(0 0 0 / .5); }
 .lado.calado .legenda { background: #3a2a26; color: #c9b998; }
 .moldura { inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
@@ -189,19 +189,92 @@ body {
 :root[data-tema="livro"] .caderno textarea { font-family: var(--f-texto); }
 
 @media (prefers-reduced-motion: reduce) { .lado, .toast { transition: none; animation: none; } .seta { animation: none; } }
+
+/* ---------- Primeira versão jogável: elenco, ilustrações, capa e abertura ---------- */
+.fundo { transition: opacity .4s; }
+.fundo.trocando { opacity: 0; }
+/* escala por personagem, para os rostos ficarem de tamanho parecido */
+.lado[data-p="Nonna"] { height: 74%; bottom: 10%; }
+.lado[data-p="Dante"], .lado[data-p="Constance"] { height: 92%; bottom: 2%; }
+.lado[data-p="Paizão"] { height: 94%; }
+/* o Biel é um fantasma: azul, flutuando, com brilho frio */
+.lado[data-p="Biel"] img { animation: flutua 4.5s ease-in-out infinite; filter: drop-shadow(0 0 1.6cqw rgb(150 200 255 / .75)); opacity: .9; }
+@keyframes flutua { 50% { transform: translateY(-2.5%); } }
+.lado[data-p="Biel"] .legenda { background: #2b4f7a; }
+
+/* ilustração de momento-chave: foto de jornal colada por cima da cena */
+.ilustracao { position: absolute; inset: 0; z-index: 3; display: grid; place-items: start center; padding-top: 3%; background: rgb(10 5 8 / .55); opacity: 0; pointer-events: none; transition: opacity .6s; }
+.ilustracao.on { opacity: 1; }
+.ilustracao img { position: static; width: 64%; aspect-ratio: 16 / 9; object-fit: cover; border: 1cqw solid #ece4d2; box-shadow: .4cqw .8cqw 1.6cqw rgb(0 0 0 / .7); transform: rotate(-1.2deg) scale(.96); transition: transform .8s; }
+.ilustracao.on img { transform: rotate(-1.2deg); }
+
+/* emblema do clã nas cartas de personagem */
+.carta { grid-template-columns: auto 1fr; column-gap: 1.2cqw; align-items: start; }
+.carta .emblema { grid-row: span 3; width: max(40px, 5.6cqw); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--acento); color: var(--acento);
+  font-family: var(--f-nome); font-size: max(18px, 2.8cqw); transform: rotate(-8deg); }
+.cartas.tres { grid-template-columns: repeat(3, 1fr); }
+
+/* Capa */
+.capa, .abertura { position: absolute; inset: 0; z-index: 20; overflow: hidden; background: #0b0608; container-type: inline-size; }
+.capa[hidden], .abertura[hidden] { display: none; }
+.capa .capa-fundo, .abertura .quadro { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.capa .capa-fundo { filter: brightness(.6) saturate(.8); animation: kb 30s ease-in-out infinite alternate; }
+.capa .elenco { position: absolute; inset: 0; pointer-events: none; }
+.capa .elenco img { position: absolute; bottom: -4%; height: 62%; filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .7)); }
+.capa .logo { position: absolute; left: 50%; top: 9%; transform: translateX(-50%); margin: 0; text-align: center; width: 92%; line-height: 1.25; }
+.capa .logo .palavra { display: inline-block; white-space: nowrap; margin: 0 .6cqw; }
+.letra { display: inline-block; font-family: var(--f-tipo); font-size: 4.6cqw; padding: .1em .18em; margin: 0 .06em; box-shadow: .15cqw .3cqw .5cqw rgb(0 0 0 / .55); }
+.letra.a { background: #ece4d2; color: #1d1412; }
+.letra.b { background: #1a1212; color: #ece4d2; font-family: var(--f-nome); }
+.letra.c { background: #8f1d26; color: #f4e7d2; }
+.letra.d { background: #d9c9a8; color: #5a1a1f; font-family: "Bodoni Moda", Georgia, serif; font-weight: 600; }
+.capa .sub { position: absolute; left: 50%; top: 37%; transform: translateX(-50%) rotate(-.6deg); margin: 0; white-space: nowrap; font-family: var(--f-tipo); font-size: max(12px, 1.45cqw);
+  background: #ece4d2; color: #2a1d16; padding: .4cqw 1.4cqw; }
+.capa .menu { position: absolute; left: 50%; top: 50%; transform: translateX(-50%); display: grid; gap: 1cqw; justify-items: center; }
+.capa .menu button { font-family: var(--f-tipo); font-size: max(15px, 2.1cqw); border: 0; cursor: pointer; padding: .6cqw 2.4cqw; background: #8f1d26; color: #f4e7d2; box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); transform: rotate(-1deg); }
+.capa .menu button.sec { background: #ece4d2; color: #2a1d16; font-size: max(13px, 1.6cqw); transform: rotate(.8deg); }
+.capa .menu button:hover, .capa .menu button:focus-visible { outline: 2px solid #ece4d2; outline-offset: 3px; }
+.capa .finais { position: absolute; right: 2.4cqw; bottom: 2cqw; margin: 0; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #c9b998; }
+
+/* Abertura animada: quadros com zoom lento, hora, legenda e recortes entrando */
+.abertura .quadro { opacity: 0; transition: opacity 1s; filter: saturate(.8); }
+.abertura .quadro.on { opacity: 1; animation: kb 7s ease-out forwards; }
+@keyframes kb { from { transform: scale(1.02); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
+.abertura .vinheta { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 35%, rgb(8 3 6 / .85) 100%); }
+.abertura .hora-ab { position: absolute; left: 4%; top: 7%; font-family: var(--f-tipo); font-size: 3.4cqw; color: #ece4d2; background: #8f1d26; padding: .2cqw 1.2cqw; opacity: 0; transform: translateX(-30%); transition: opacity .5s, transform .5s; }
+.abertura .legenda-ab { position: absolute; left: 4%; bottom: 9%; max-width: 62%; font-family: var(--f-texto); font-size: 2.5cqw; line-height: 1.35; color: #2a1d16; background: #ece4d2; padding: 1cqw 1.8cqw;
+  box-shadow: .3cqw .5cqw 1cqw rgb(0 0 0 / .6); opacity: 0; transform: translateY(20%) rotate(-.8deg); transition: opacity .5s, transform .5s; }
+.abertura .on-txt { opacity: 1 !important; transform: rotate(-.8deg) !important; }
+.abertura .recorte-ab { position: absolute; bottom: -3%; height: 82%; opacity: 0; transition: opacity .7s, transform 1.4s cubic-bezier(.2, .7, .2, 1); filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .7)); }
+.abertura .recorte-ab.dir { right: 5%; transform: translateX(25%) rotate(-2deg); }
+.abertura .recorte-ab.esq { right: 8%; transform: translateX(-15%) rotate(2deg); }
+.abertura .recorte-ab.on { opacity: 1; transform: rotate(-1.5deg); }
+.abertura .carimbo { position: absolute; left: 50%; top: 40%; font-family: var(--f-tipo); font-size: 9cqw; color: #c8313f; border: .6cqw solid #c8313f; padding: 0 2cqw; opacity: 0;
+  transform: translate(-50%, -50%) rotate(-12deg) scale(2.2); transition: opacity .25s, transform .35s cubic-bezier(.3, 1.6, .5, 1); mix-blend-mode: screen; }
+.abertura .carimbo.on { opacity: .9; transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
+.abertura .bilhete { position: absolute; right: 9%; top: 18%; width: 34%; background: #efe6d0; color: #2a1d16; font-family: var(--f-tipo); font-size: 2.2cqw; line-height: 1.5; padding: 2.2cqw 2.4cqw;
+  box-shadow: .4cqw .8cqw 1.4cqw rgb(0 0 0 / .7); opacity: 0; transform: rotate(4deg) translateY(-30%); transition: opacity .6s, transform 1s; }
+.abertura .bilhete b { display: block; width: 3.4cqw; aspect-ratio: 1; border-radius: 50%; background: #23407a; margin: 1cqw 0 0 auto; box-shadow: inset 0 0 .6cqw rgb(0 0 0 / .5); }
+.abertura .bilhete.on { opacity: 1; transform: rotate(4deg); }
+.abertura .flash { position: absolute; inset: 0; background: #c8313f; opacity: 0; mix-blend-mode: multiply; pointer-events: none; }
+.abertura .flash.on { animation: flash 1.2s; }
+@keyframes flash { 10% { opacity: .9; } 100% { opacity: 0; } }
+.abertura .pular { position: absolute; right: 2cqw; top: 2cqw; z-index: 2; font-family: var(--f-tipo); font-size: max(12px, 1.3cqw); background: rgb(236 228 210 / .85); color: #2a1d16; border: 0; padding: .4cqw 1.2cqw; cursor: pointer; }
+@media (prefers-reduced-motion: reduce) { .abertura .quadro.on, .capa .capa-fundo, .lado[data-p="Biel"] img { animation: none; } }
 </style>
 
 <div class="jogo">
   <div class="palco" id="palco">
-    <img class="fundo" id="fundo" alt="O Porão do Vincenzo: balcão de madeira, prateleiras de garrafas e luminárias amareladas.">
+    <img class="fundo" id="fundo" alt="">
     <div class="reticula"></div>
     <figure class="lado esq" id="esq"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <figure class="lado dir" id="dir"><img alt=""><figcaption class="legenda"></figcaption></figure>
+    <div class="ilustracao" id="ilustracao"><img alt=""></div>
     <img class="moldura" id="moldura" alt="">
   </div>
   <div class="dialogo" id="dialogo" aria-live="polite">
     <div class="hud">
-      <span class="grupo" title="Hora (o Vincenzo chama o próximo às 04h40)"><span class="hora" id="hora">03h00</span><span class="barra"><i id="barra"></i></span></span>
+      <span class="grupo" title="Hora (o sol nasce às 05h40)"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span></span>
       <span class="grupo" title="Fome"><span>Fome</span><span class="fome" id="fome"></span></span>
       <button class="caderno-btn" id="abrir-caderno" type="button">Caderno <b id="n-pistas">0</b></button>
     </div>
@@ -209,40 +282,74 @@ body {
     <span class="nome" id="nome" hidden></span>
     <div id="conteudo"></div>
   </div>
-  <div class="rodape"><span>Cena de teste · roteiro em Ink</span><button type="button" id="reiniciar">Recomeçar</button></div>
+
+  <section class="capa" id="capa" aria-label="Tela inicial">
+    <img class="capa-fundo" id="capa-fundo" alt="Rua do Bixiga à noite, na chuva, com a escada que desce para o Porão do Vincenzo.">
+    <div class="elenco" id="elenco"></div>
+    <h1 class="logo" id="logo" aria-label="O Matusalém Desaparecido"></h1>
+    <p class="sub">Vampiro: A Máscara · São Paulo · uma noite no Porão do Vincenzo</p>
+    <div class="menu">
+      <button type="button" id="novo-jogo">Novo jogo</button>
+      <button type="button" class="sec" id="ver-abertura">Ver a abertura</button>
+    </div>
+    <p class="finais" id="finais"></p>
+  </section>
+
+  <section class="abertura" id="abertura" aria-label="Abertura" hidden>
+    <img class="quadro" alt=""><img class="quadro" alt="">
+    <div class="vinheta"></div>
+    <img class="recorte-ab" alt="">
+    <div class="carimbo">SUMIU</div>
+    <div class="bilhete">Porão do Vincenzo, Bixiga.<br>Onze horas.<br>Venha sem ninguém.<br>— D.<b></b></div>
+    <div class="flash"></div>
+    <div class="hora-ab"></div>
+    <div class="legenda-ab" aria-live="polite"></div>
+    <button class="pular" type="button" id="pular">Pular ▸</button>
+  </section>
 </div>
+<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><button type="button" id="reiniciar">Menu inicial</button></div>
 
 <script src="{{INKJS}}"></script>
 <script>{{V5}}</script>
 <script>
 const HISTORIA = {{STORY}};
-const ARTE = { fundo: "{{BG}}", moldura: "{{MOLDURA}}", rasgo: "{{RASGO}}", personagens: {{PERSONAGENS}} };  // personagens: { rayo: { neutro, sorrindo... } }
+// fundos: { balcao, salao, ... }; personagens: { rayo: { neutro, ... } }
+const ARTE = { fundos: {{FUNDOS}}, moldura: "{{MOLDURA}}", rasgo: "{{RASGO}}", personagens: {{PERSONAGENS}} };
 const $ = id => document.getElementById(id);
-$('fundo').src = ARTE.fundo; $('moldura').src = ARTE.moldura;
+$('moldura').src = ARTE.moldura;
 document.documentElement.style.setProperty('--rasgo', `url(${ARTE.rasgo})`);
 
-// Tema visual: o Peter escolheu "revista" em 2026-10-29. O tema "livro" (identidade dos livros de V5) fica no CSS
-// para comparar: troque aqui para 'livro'.
+// Tema visual: o Peter escolheu "revista" em 2026-10-29. O tema "livro" (identidade dos livros de V5) fica no CSS.
 document.documentElement.dataset.tema = 'revista';
 
-// Lados da cena: o Rayo (testemunha) fica à direita; quem mais falar entra à esquerda.
-const LADO = { Rayo: 'dir' };
-const DESCRICAO = { Rayo: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado', Vincenzo: 'Vincenzo, o dono do bar, velho de cabelo branco e terno cinza risca de giz' };
-const TESTEMUNHA = 'Rayo';  // as pistas sem aba vão para a folha dele no caderno
-let cena, exprPendente;
-
-function imagem(nome, expr) { const a = ARTE.personagens[nome.toLowerCase()]; return a && (a[expr] || a.neutro); }
+// Elenco. Testemunhas ficam à direita; Vincenzo, Dante, Constance e Nonna entram à esquerda.
+const PERS = {
+  rayo: { nome: 'Rayo', lado: 'dir', desc: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado' },
+  cao: { nome: 'Cão', lado: 'dir', desc: 'O Cão, Xerife Nosferatu de capuz e jaqueta de couro, olhos amarelos' },
+  paizao: { nome: 'Paizão', lado: 'dir', desc: 'Paizão, homem sorridente de camisa estampada, com uma prancheta' },
+  biel: { nome: 'Biel', lado: 'dir', desc: 'O fantasma do Biel, rapaz magro de jaqueta de entregador, todo em azul e branco' },
+  vincenzo: { nome: 'Vincenzo', lado: 'esq', desc: 'Vincenzo, o dono do bar, velho de cabelo branco e terno cinza risca de giz' },
+  dante: { nome: 'Dante', lado: 'esq', desc: 'O Príncipe Dante, de barba grisalha e terno risca de giz azul-marinho' },
+  constance: { nome: 'Constance', lado: 'esq', desc: 'A Senescal Constance, de terno rosa' },
+  nonna: { nome: 'Nonna', lado: 'esq', desc: 'Nonna Benedetta, senhora muito velha de xale preto de renda' },
+};
+const CHAVE = Object.fromEntries(Object.entries(PERS).map(([k, p]) => [p.nome, k]));
+// folhas do caderno: chave da tag "# pista <aba>:" -> título da aba
+const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', paizao: 'Paizão', biel: 'Biel', bar: 'Vincenzo' };
+const FINAIS = ['A', 'B', 'C', 'D'];
+let cena;
 
 // Põe o personagem no lado dele (troca quem estava lá). Devolve false se ele não tem arte.
-function mostrarPersonagem(nome, expr) {
-  const src = imagem(nome, expr || cena.expr[nome] || 'neutro');
-  if (!src) return false;
-  const lado = LADO[nome] || 'esq', el = $(lado), img = el.querySelector('img');
-  if (cena[lado] !== nome) {
-    cena[lado] = nome; el.dataset.p = nome; el.classList.remove('on'); void el.offsetWidth;
-    el.querySelector('.legenda').textContent = nome; img.alt = (DESCRICAO[nome] || nome) + ', recortado como foto de revista.';
+function mostrarPersonagem(chave, expr) {
+  const p = PERS[chave], a = ARTE.personagens[chave];
+  if (!p || !a) return false;
+  const src = a[expr || cena.expr[chave] || 'neutro'] || a.neutro;
+  const lado = p.lado, el = $(lado), img = el.querySelector('img');
+  if (cena[lado] !== chave) {
+    cena[lado] = chave; el.dataset.p = p.nome; el.classList.remove('on'); void el.offsetWidth;
+    el.querySelector('.legenda').textContent = p.nome; img.alt = p.desc + ', recortado como foto de revista.';
   }
-  if (expr) cena.expr[nome] = expr;
+  if (expr) cena.expr[chave] = expr;
   if (img.getAttribute('src') !== src) {
     const trocou = img.getAttribute('src'); img.src = src;
     if (trocou && el.classList.contains('on')) { el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca'); }
@@ -251,26 +358,45 @@ function mostrarPersonagem(nome, expr) {
   return true;
 }
 
-// Quem fala fica aceso; o outro lado escurece.
-// O personagem da esquerda (Vincenzo e outros de passagem) só fica em cena enquanto conversa com a testemunha:
-// na narração, nas suas falas ou nas escolhas, ele sai.
-function falando(nome) {
-  if (cena.esq && nome !== cena.esq && nome !== cena.dir) tirar('esq');
-  for (const lado of ['esq', 'dir']) $(lado).classList.toggle('calado', !!nome && cena[lado] !== nome);
+// Quem fala fica aceso; o outro lado escurece. Quem está à esquerda só fica em cena enquanto fala ou é respondido.
+function falando(chave) {
+  if (cena.esq && chave !== cena.esq && chave !== cena.dir && cena.dir) tirar('esq');
+  for (const lado of ['esq', 'dir']) $(lado).classList.toggle('calado', !!chave && cena[lado] !== chave);
 }
 function tirar(lado) { cena[lado] = null; $(lado).classList.remove('on', 'calado'); }
-
 function limparCena() {
-  cena = { esq: null, dir: null, expr: {} }; exprPendente = null;
-  for (const lado of ['esq', 'dir']) { $(lado).classList.remove('on', 'calado', 'troca'); $(lado).querySelector('img').removeAttribute('src'); }
+  cena = cena || { expr: {} }; cena.esq = cena.dir = null;
+  for (const lado of ['esq', 'dir']) $(lado).classList.remove('on', 'calado', 'troca');
 }
 
-const FALANTES = ['Rayo', 'Vincenzo', 'Você'];
+function trocarFundo(nome) {
+  esconderIlustracao();
+  const src = ARTE.fundos[nome]; if (!src || $('fundo').getAttribute('src') === src) return;
+  const f = $('fundo'); f.classList.add('trocando');
+  setTimeout(() => { f.src = src; f.alt = DESC_FUNDO[nome] || ''; f.classList.remove('trocando'); }, 200);
+}
+const DESC_FUNDO = {
+  balcao: 'O balcão do Porão do Vincenzo, com prateleiras de garrafas e luminárias amareladas.',
+  salao: 'O salão do Porão: teto de tijolo em arco, mesinhas com toalha xadrez vermelha.',
+  escada: 'O canto escuro embaixo da escada de pedra, com uma lâmpada pendurada.',
+  sinuca: 'A mesa de sinuca de feltro verde, sob uma luminária baixa.',
+  fundo_bar: 'A mesa do fundo, com toalha de renda, velas acesas, terço e fotos antigas.',
+  corte: 'O salão arrumado para a Corte, com uma poltrona de veludo vermelho no centro.',
+  rua: 'Rua do Bixiga à noite, na chuva.',
+};
+function mostrarIlustracao(nome) {
+  const src = ARTE.fundos[nome]; if (!src) return;
+  limparCena();
+  const il = $('ilustracao'); il.querySelector('img').src = src; il.querySelector('img').alt = 'Ilustração provisória: ' + nome.replace(/_/g, ' ');
+  il.classList.add('on');
+}
+function esconderIlustracao() { $('ilustracao').classList.remove('on'); }
+
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
-let story, fila, pistas, digitando, alvoTexto, fimTimer;
+let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra;
 
 function tipoBadge(g) {
-  if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra)/.test(g)) return 'cla';
+  if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra|Ministério)/.test(g)) return 'cla';
   if (/^Prova/.test(g)) return 'prova';
   if (/^Teste/.test(g)) return 'teste';
   if (/^Disciplina/.test(g)) return 'disc';
@@ -280,7 +406,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&
 
 function iniciar() {
   story = new inkjs.Story(HISTORIA);
-  fila = []; pistas = [];
+  fila = []; pistas = []; finalTexto = finalLetra = null; cena = null;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
   }, false);
@@ -289,7 +415,8 @@ function iniciar() {
     if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
     fila.push({ tipo: 'despertar', ok });
   }, false);
-  limparCena();
+  limparCena(); esconderIlustracao();
+  $('fundo').src = ARTE.fundos.salao;
   atualizarHud();
   avancar();
 }
@@ -297,7 +424,7 @@ function iniciar() {
 function atualizarHud() {
   const v = story.variablesState, min = v['minutos'], h = (23 + Math.floor(min / 60)) % 24, m = min % 60;
   $('hora').textContent = `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`;
-  $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / 100)) + '%';
+  $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
   $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
   $('n-pistas').textContent = pistas.length;
 }
@@ -308,17 +435,23 @@ function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add
 function avancar() {
   if (fila.length) return mostrarEvento(fila.shift());
   if (story.canContinue) {
-    const texto = story.Continue().trim();
+    let texto = story.Continue().trim();
     for (const tag of story.currentTags) {
       const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
       const [chave, aba] = k.trim().split(/\s+/);
-      if (chave === 'entra') mostrarPersonagem(val.charAt(0).toUpperCase() + val.slice(1));
+      if (chave === 'fundo') trocarFundo(val);
+      if (chave === 'limpa') limparCena();
+      if (chave === 'imagem') mostrarIlustracao(val);
+      if (chave === 'entra') mostrarPersonagem(val);
       if (chave === 'expr') exprPendente = val;  // vale para quem fala nesta linha
-      if (chave === 'pista') { pistas.push({ aba: aba === 'dossie' ? 'Dossiê' : TESTEMUNHA, texto: val }); toast('Nova pista no caderno'); }
+      if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
+      if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
     }
     atualizarHud();
     if (fila.length) { fila.push({ tipo: 'linha', texto }); return avancar(); }
     if (!texto) return avancar();
+    // pergunta curta logo antes das opções ("Para onde você vai?") vira o título das opções
+    if (!story.canContinue && story.currentChoices.length && texto.length < 60 && !/: /.test(texto) && !/ :: /.test(texto)) return mostrarEscolhas(texto);
     return mostrarLinha(texto);
   }
   if (story.currentChoices.length) return mostrarEscolhas();
@@ -344,20 +477,18 @@ function mostrarDados(r) {
 }
 
 function mostrarLinha(texto) {
-  const v = story.variablesState; let nome = null, corpo = texto, classe = 'narracao', passiva = null;
-  const m = texto.match(/^([A-Za-zÀ-ú]+): (.*)$/);
-  if (m && FALANTES.includes(m[1])) { nome = m[1] === 'Você' ? v['nome'] : m[1]; corpo = m[2]; classe = m[1] === 'Você' ? 'voce' : ''; }
+  const v = story.variablesState; let nome = null, chave = null, corpo = texto, classe = 'narracao', passiva = null;
+  const m = texto.match(/^([A-ZÀ-Ú][a-zà-ú]+): (.*)$/);
+  if (m && (m[1] === 'Você' || CHAVE[m[1]])) { nome = m[1] === 'Você' ? v['nome'] : m[1]; chave = CHAVE[m[1]] || null; corpo = m[2]; classe = m[1] === 'Você' ? 'voce' : ''; }
   const p = texto.match(/^(.+?) :: (.*)$/);
   if (!nome && p) { passiva = p[1]; corpo = p[2]; }
-  if (/^FIM DA CENA/.test(texto)) return avancar();
   // personagem com arte: aparece no lado dele e o nome vai para a legenda; sem arte (você), o nome fica na caixa
-  const comArte = nome && m[1] !== 'Você' && mostrarPersonagem(m[1], exprPendente);
+  const comArte = chave && !$('ilustracao').classList.contains('on') && mostrarPersonagem(chave, exprPendente);
   exprPendente = null;
-  falando(comArte ? m[1] : null);
+  falando(comArte ? chave : null);
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
   const c = $('conteudo');
   c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva">${esc(passiva)}</span>` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
-  if (!window.__primeiroTexto) window.__primeiroTexto = performance.now();
   digitar(corpo);
 }
 
@@ -368,21 +499,21 @@ function digitar(t) {
 }
 
 function clicarDialogo() {
-  if (story.currentChoices.length && !story.canContinue && !fila.length && !$('txt')) return;
   const alvo = $('txt'); if (!alvo) return;
   if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; return; }
   avancar();
 }
 
-function mostrarEscolhas() {
+const EMBLEMA = { Gangrel: 'G', Nosferatu: 'N', 'Ministério': 'M' };
+function mostrarEscolhas(pergunta = '') {
   falando(null); $('nome').hidden = true; const c = $('conteudo');
   if (story.variablesState['nome'] === '') {
-    const fichas = ['Carisma 2 · Raciocínio 3 · Manipulação 2 · Animalismo', 'Carisma 3 · Raciocínio 2 · Manipulação 3 · Dominação'];
-    c.innerHTML = `<div class="titulo">${esc(story.currentText.trim() || 'Quem vai interrogar o Rayo?')}</div><div class="cartas">${story.currentChoices.map((ch, i) => {
-      const [nome, ...desc] = ch.text.split('. ');
-      return `<button class="carta" data-i="${i}" type="button"><b>${esc(nome)}</b><span>${esc(desc.join('. '))}</span><small>${fichas[i] || ''}</small></button>`; }).join('')}</div>`;
+    // escolha de personagem: "Nome · Clã ;; descrição ;; ficha"
+    c.innerHTML = `<div class="titulo">${esc(pergunta || 'Quem é você?')}</div><div class="cartas tres">${story.currentChoices.map((ch, i) => {
+      const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || '';
+      return `<button class="carta" data-i="${i}" type="button"><span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span><b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small></button>`; }).join('')}</div>`;
   } else {
-    c.innerHTML = `<ul class="escolhas">${story.currentChoices.map((ch, i) => {
+    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}">(${esc(p[1])})</span>` : '';
       return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
@@ -393,23 +524,29 @@ function mostrarEscolhas() {
 
 function escolher(i) { story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
 
+function finaisVistos() { try { return JSON.parse(localStorage.getItem('matusalem-finais') || '[]'); } catch (e) { return []; } }
 function mostrarFim() {
-  $('nome').hidden = true;
-  $('conteudo').innerHTML = `<div class="titulo">Fim da cena de teste</div><div class="fala">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}${story.variablesState['confessou'] ? ', incluindo o selo queimado' : ''}.</div>
-    <ul class="escolhas"><li><button type="button" data-a="caderno"><span class="num">1</span><span>Ver o caderno</span></button></li><li><button type="button" data-a="de-novo"><span class="num">2</span><span>Jogar de novo com outro personagem</span></button></li></ul>`;
+  $('nome').hidden = true; falando(null);
+  if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {} }
+  const vistos = finaisVistos().length;
+  $('conteudo').innerHTML = `<div class="titulo">Fim da primeira versão</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
+    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados: ${vistos} de ${FINAIS.length}.</p>
+    <ul class="escolhas"><li><button type="button" data-a="caderno"><span class="num">1</span><span>Ver o caderno</span></button></li><li><button type="button" data-a="de-novo"><span class="num">2</span><span>Jogar de novo com outro personagem</span></button></li><li><button type="button" data-a="menu"><span class="num">3</span><span>Voltar ao menu</span></button></li></ul>`;
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
   $('conteudo').querySelector('[data-a=de-novo]').addEventListener('click', e => { e.stopPropagation(); iniciar(); });
+  $('conteudo').querySelector('[data-a=menu]').addEventListener('click', e => { e.stopPropagation(); mostrarCapa(); });
 }
 
-// Caderno: uma folha por fonte (dossiê e cada testemunha) e uma folha livre para anotar.
+// Caderno: uma folha por fonte (dossiê e cada testemunha que já deu pista) e uma folha livre para anotar.
 // As anotações ficam só neste navegador.
-const ABAS = ['Dossiê', TESTEMUNHA, 'Anotações'];
-let abaAtual = TESTEMUNHA, anotacoes = '';
+let abaAtual = 'Dossiê', anotacoes = '';
 try { anotacoes = localStorage.getItem('porao-anotacoes') || ''; } catch (e) {}
 
 function abrirCaderno() {
+  const abas = ['Dossiê', ...Object.values(ABAS_PISTA).filter(a => a !== 'Dossiê' && pistas.some(p => p.aba === a)), 'Anotações'];
+  if (!abas.includes(abaAtual)) abaAtual = 'Dossiê';
   const el = document.createElement('div'); el.className = 'caderno';
-  el.innerHTML = `<div class="bloco-folhas"><div class="abas" role="tablist">${ABAS.map(a =>
+  el.innerHTML = `<div class="bloco-folhas"><div class="abas" role="tablist">${abas.map(a =>
     `<button class="aba" role="tab" type="button" data-aba="${esc(a)}">${esc(a)}</button>`).join('')}</div><div class="folha" role="tabpanel"></div></div>`;
   $('palco').appendChild(el);
   const folha = el.querySelector('.folha');
@@ -433,14 +570,81 @@ function abrirCaderno() {
   el.querySelector(`.aba[data-aba="${abaAtual}"]`).focus();
 }
 
+// ---------- Capa ----------
+function letrasDeRecorte(texto) {
+  // cada letra recortada de uma revista diferente, como bilhete de sequestro
+  let n = 0; const tipos = 'abcadbcabd';
+  return texto.split(' ').map(p => `<span class="palavra">${[...p].map(ch => {
+    n++; const giro = ((n * 37) % 11 - 5) * 1.1, sobe = ((n * 53) % 7 - 3) * .12;
+    return `<span class="letra ${tipos[n % tipos.length]}" style="transform:rotate(${giro}deg) translateY(${sobe}em)">${ch}</span>`; }).join('')}</span>`).join(' ');
+}
+$('logo').innerHTML = `<span aria-hidden="true">${letrasDeRecorte('O MATUSALÉM DESAPARECIDO')}</span>`;
+$('capa-fundo').src = ARTE.fundos.rua;
+// elenco da capa: recortes das testemunhas em volta do Príncipe
+[['paizao', 1, -4, 54], ['rayo', 14, 3, 60], ['dante', 37, 0, 70], ['cao', 63, -3, 60], ['nonna', 82, 4, 46]].forEach(([k, x, giro, alt]) => {
+  const src = ARTE.personagens[k]?.neutro; if (!src) return;
+  const img = document.createElement('img'); img.src = src; img.alt = '';
+  img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
+});
+function mostrarCapa() {
+  pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false;
+  const v = finaisVistos().length; $('finais').textContent = v ? `Finais encontrados: ${v} de ${FINAIS.length}` : '';
+  $('novo-jogo').focus({ preventScroll: true });
+}
+
+// ---------- Abertura animada (uns 30 segundos; dá para pular) ----------
+const QUADROS = [
+  { fundo: 'porto', hora: '00h10', txt: 'Porto de Santos. Um sarcófago desembarca em segredo. Dentro dele dorme um Matusalém, mais velho que a cidade.', rec: 'paizao' },
+  { fundo: 'serra', hora: '01h00', txt: 'Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.', rec: 'rayo' },
+  { fundo: 'tunel', hora: '02h40', txt: 'O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.', rec: 'cao' },
+  { fundo: 'tunel', hora: '03h30', txt: 'O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.', carimbo: true },
+  { fundo: 'corte', hora: '22h00', txt: 'Na noite seguinte, o Príncipe Dante quer um nome antes do amanhecer.', rec: 'dante' },
+  { fundo: 'rua', hora: '22h30', txt: 'E ele mandou chamar você.', bilhete: true },
+];
+let timersAbertura = [];
+function pararAbertura() { timersAbertura.forEach(clearTimeout); timersAbertura = []; }
+function tocarAbertura(depois) {
+  pararAbertura();
+  const ab = $('abertura'), qs = ab.querySelectorAll('.quadro'), rec = ab.querySelector('.recorte-ab');
+  const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash');
+  [rec, carimbo, bilhete].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
+  $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true });
+  const fim = () => { pararAbertura(); ab.hidden = true; depois(); };
+  ab.onclick = e => { if (e.target.id === 'pular') fim(); };
+  $('pular').onclick = fim;
+  let t = 0;
+  const em = (ms, f) => timersAbertura.push(setTimeout(f, ms));
+  QUADROS.forEach((q, i) => {
+    const dur = q.bilhete ? 5200 : 5000;
+    em(t, () => {
+      const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
+      if (!i || QUADROS[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
+      hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on');
+      em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
+      em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
+      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec].neutro; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
+      if (q.carimbo) em(1200, () => { carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
+      if (q.bilhete) em(900, () => bilhete.classList.add('on'));
+    });
+    t += dur;
+  });
+  em(t, fim);
+}
+
+// ---------- Ligações ----------
+$('novo-jogo').addEventListener('click', () => tocarAbertura(() => iniciar()));
+$('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
 $('dialogo').addEventListener('click', clicarDialogo);
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
-$('reiniciar').addEventListener('click', iniciar);
+$('reiniciar').addEventListener('click', mostrarCapa);
 document.addEventListener('keydown', e => {
+  if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
+  if (!$('capa').hidden) return;
   if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }
   if (e.key === ' ' || e.key === 'Enter') { if ($('txt')) { e.preventDefault(); clicarDialogo(); } }
   const n = parseInt(e.key, 10); const b = document.querySelector(`#conteudo [data-i="${n - 1}"]`);
   if (b && !$('txt')) b.click();
 });
-iniciar();
+// ?pular=1 vai direto para o jogo (testes)
+if (/pular=1/.test(location.search)) { $('capa').hidden = true; iniciar(); } else mostrarCapa();
 </script>

@@ -6,3 +6,6 @@ ink/rayo.json
 renpy/game/cache/
 __pycache__/
 art/*@*.png
+video/abertura/img/
+video/*.mp4
+ink/jogo.json

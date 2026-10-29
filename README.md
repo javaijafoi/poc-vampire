@@ -1,33 +1,37 @@
-# Porão do Vincenzo
+# O Matusalém Desaparecido
 
-Prova de conceito de um jogo de investigação em estilo visual novel, ambientado na São Paulo de Vampiro: A Máscara (V5). O jogador interroga testemunhas num bar e precisa descobrir quem está mentindo, no estilo Rashomon.
+Jogo de investigação em estilo visual novel, ambientado na São Paulo de Vampiro: A Máscara (V5). Um Matusalém sumiu no caminho entre o Porto de Santos e o cofre do Príncipe Dante. Você interroga quatro testemunhas no Porão do Vincenzo, uma em cada canto do bar, e acusa alguém antes do amanhecer. Ninguém conta a verdade inteira, como em Rashomon.
 
-Esta primeira cena (o depoimento do Rayo) existe em duas versões, para comparar as ferramentas:
+Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 personagens prontos (Gangrel, Nosferatu, Ministério), as testemunhas (Rayo, Cão, Paizão e o fantasma do Biel, chamado pela Nonna), a acusação diante da Corte e 4 finais. As imagens ainda são provisórias.
 
 | Pasta | O que é |
 | --- | --- |
-| `ink/rayo.ink` | Roteiro da cena em Ink |
-| `web/` | Interface web estilo Coffee Talk que roda o roteiro Ink |
-| `dist/index.html` | Jogo web pronto. Abra no navegador (precisa de internet para carregar o motor Ink) |
-| `renpy/game/` | A mesma cena em Ren'Py |
-| `art/` | Arte da cena: `montar_cena.py` faz o fundo e o recorte de revista dos personagens (`npm run arte`). A versão Ren'Py ainda usa a pixel art antiga (`make_art.py`) |
+| `ink/jogo.ink` | Roteiro completo em Ink |
+| `ink/rayo.ink` | A cena de teste antiga (só o Rayo), mantida para comparação com o Ren'Py |
+| `web/` | Interface web que roda o roteiro |
+| `dist/index.html` | Jogo web pronto, num arquivo só. Abra no navegador (precisa de internet para o motor Ink e as fontes) |
+| `art/` | Arte: `recortar_personagens.py` tira o fundo das artes do Trello, `gerar_fundos.py` gera os fundos com sdxl-turbo, `montar_cena.py` faz o recorte de revista e os fundos finais (`npm run arte`) |
+| `video/` | A abertura como vídeo MP4, feita com HyperFrames (`bash video/renderizar.sh`) |
+| `renpy/game/` | A cena de teste em Ren'Py |
 | `bench/` | Medição de tempo de carregamento |
 
 ## Convenções do roteiro
 
 - `Rayo: texto` é fala; linha sem nome é narração.
 - `Gatilho :: texto` é uma opção ou observação especial (clã, atributo, prova, teste, Disciplina) e aparece com uma etiqueta colorida.
-- `# pista: texto` coloca a pista no caderno do jogador.
+- `# pista <aba>: texto` coloca a pista no caderno, na folha da aba (`dossie`, `rayo`, `cao`, `paizao`, `biel`, `bar`).
+- `# fundo: nome` troca o fundo (`art/cena/fundo_<nome>.webp`); `# entra: nome` põe a testemunha em cena; `# limpa` tira todo mundo.
+- `# imagem: nome` mostra uma ilustração de momento-chave por cima da cena; `# final: letra` marca o final.
 
 ## Versão Ink
 
 ```
 npm install
-npm run testar   # joga a cena 10.000 vezes e checa se sempre chega ao fim
+npm run testar   # joga a história 5.000 vezes e checa se toda partida chega a um final
 npm run build    # gera dist/index.html
 ```
 
-Para editar o roteiro e jogar o texto na hora, use o editor Inky (github.com/inkle/inky) e abra `ink/rayo.ink`.
+Para editar o roteiro e jogar o texto na hora, use o editor Inky (github.com/inkle/inky) e abra `ink/jogo.ink`.
 
 ## Versão Ren'Py
 
