@@ -230,7 +230,7 @@ body {
 .letra.d { background: #d9c9a8; color: #5a1a1f; font-family: "Bodoni Moda", Georgia, serif; font-weight: 600; }
 .capa .sub { position: absolute; left: 50%; top: 37%; transform: translateX(-50%) rotate(-.6deg); margin: 0; white-space: nowrap; font-family: var(--f-tipo); font-size: max(12px, 1.45cqw);
   background: #ece4d2; color: #2a1d16; padding: .4cqw 1.4cqw; }
-.capa .menu { position: absolute; left: 50%; top: 50%; transform: translateX(-50%); display: grid; gap: 1cqw; justify-items: center; }
+.capa .menu { position: absolute; left: 50%; bottom: 6%; transform: translateX(-50%); display: flex; gap: 1.6cqw; align-items: center; z-index: 1; }
 .capa .menu button { font-family: var(--f-tipo); font-size: max(15px, 2.1cqw); border: 0; cursor: pointer; padding: .6cqw 2.4cqw; background: #8f1d26; color: #f4e7d2; box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); transform: rotate(-1deg); }
 .capa .menu button.sec { background: #ece4d2; color: #2a1d16; font-size: max(13px, 1.6cqw); transform: rotate(.8deg); }
 .capa .menu button:hover, .capa .menu button:focus-visible { outline: 2px solid #ece4d2; outline-offset: 3px; }
@@ -580,8 +580,8 @@ function letrasDeRecorte(texto) {
 }
 $('logo').innerHTML = `<span aria-hidden="true">${letrasDeRecorte('O MATUSALÉM DESAPARECIDO')}</span>`;
 $('capa-fundo').src = ARTE.fundos.rua;
-// elenco da capa: recortes das testemunhas em volta do Príncipe
-[['paizao', 1, -4, 54], ['rayo', 14, 3, 60], ['dante', 37, 0, 70], ['cao', 63, -3, 60], ['nonna', 82, 4, 46]].forEach(([k, x, giro, alt]) => {
+// elenco da capa: o Príncipe no meio e um suspeito de cada lado, sem um recorte cobrir o outro
+[['rayo', 2, 2, 60], ['dante', 33, 0, 62], ['cao', 75, -2, 60]].forEach(([k, x, giro, alt]) => {
   const src = ARTE.personagens[k]?.neutro; if (!src) return;
   const img = document.createElement('img'); img.src = src; img.alt = '';
   img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
