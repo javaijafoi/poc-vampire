@@ -25,12 +25,15 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - `# musica: nome` troca a música (`musica/<nome>.mp3`). Sem a tag, cada fundo já tem a sua faixa (a tabela fica em `MUSICA_FUNDO`, no `web/template.html`).
 - As explicações para quem não joga Vampiro (ficha de cada personagem, botão "?", dica ao passar o mouse nas etiquetas e o tutorial do começo) ficam em `web/template.html`, no bloco "Ajuda para quem não joga Vampiro". As notas da ficha repetem as do roteiro: mudou uma, mude a outra.
 - `# imagem: nome` mostra uma ilustração de momento-chave por cima da cena; `# final: letra` marca o final.
+- Hora falada e hora no caderno vêm do relógio do jogo: use `{hora_falada()}` ("Três e dez"), `{hora_digital()}` ("03h10") e `{tempo_falta()}` ("uma hora e vinte minutos"). Os avisos do Vincenzo entram em qualquer conversa com `-> avisos ->`.
+- Palavra com gênero falando com o protagonista: `forasteir{o}` ou `{o == "a":moça|moço}`. O `test_texto.cjs` joga com a Irene e a Joana e acusa masculino solto.
+- `@pistas` numa fala vira "N pistas", com o número do caderno.
 
 ## Versão Ink
 
 ```
 npm install
-npm run testar   # joga a história 5.000 vezes e checa se toda partida chega a um final
+npm run testar   # joga a história milhares de vezes, procura erro de gênero e confere os caminhos certos e errados da acusação
 npm run build    # gera dist/index.html
 ```
 

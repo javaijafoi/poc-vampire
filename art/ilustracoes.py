@@ -38,7 +38,7 @@ def constance_chega():
     x, y = TAM[0] - foto.width - 90, 40
     base.alpha_composite(sombra, (x + 14, y + 18))
     base.alpha_composite(foto, (x, y))
-    carimbo(base, "01H30 · A PRIMOGÊNITA CHEGA", 70, 90)
+    carimbo(base, "A PRIMOGÊNITA CHEGA", 70, 90)
     carimbo(base, "CONSTANCE · LASOMBRA", 110, 190, tam=30, giro=2)
     return base.convert("RGB")
 

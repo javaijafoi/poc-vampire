@@ -90,6 +90,30 @@ VAR c_veio = false
 VAR c_rayo = false
 VAR c_animal = false
 VAR quebrou_regra = 0
+VAR denunciado = false        // o Vincenzo denunciou o uso de Disciplina na frente da Corte
+VAR biel_morte = false        // já perguntou ao fantasma como ele morreu
+VAR p_olho = false            // o Rayo lembra que olho amarelo no bar só tem um: o do Cão
+VAR biel_max = 3              // perguntas ao fantasma; pagar a Nonna com sangue dá uma a mais
+VAR nonna_sangue = false      // a Nonna guardou um frasco do seu sangue (gancho do capítulo 2)
+VAR nonna_favor = false       // você deve um favor à Nonna (gancho do capítulo 2)
+VAR poder_forte = false       // já usou a Disciplina forte (custa 2 de Fome de uma vez)
+VAR besta_avisou = false      // a Besta já deu sinal com Fome 4
+VAR acusado = ""             // quem você acusou na Corte
+VAR provas_max = 3            // quantas provas a Corte ouve (4 com Fome 5)
+// Acusação: provas apresentadas à Corte
+VAR provas_dadas = 0
+VAR provas_fortes = 0
+VAR a_selo = false
+VAR a_hora = false
+VAR a_tunel = false
+VAR a_concreto = false
+VAR a_bunker = false
+VAR a_limpeza = false
+VAR a_olho = false
+VAR a_rayo = false
+VAR a_harumi = false
+VAR a_constance = false
+VAR a_doutora = false
 
 -> escolha_personagem
 
@@ -138,11 +162,12 @@ A dívida é com o Príncipe Dante, da Camarilla. Foi ele quem deixou você entr
 # fundo: salao
 A cantina de cima está fechada. Uma escada de pedra desce até um bar sem placa, cheio de fumaça e de mortos bem vestidos.
 Vincenzo: Benvenuto. O Príncipe espera você. Regra da casa: aqui embaixo ninguém levanta a mão nem usa Disciplina.
+Vincenzo: E cuidado na volta pra casa. Tem gente de terno e crachá rondando o Bixiga esta semana, e dizem que uma tal de Doutora anda pagando informante na cidade.
 Dante: Sente-se. Eu não gosto de repetir, então escute.
 Dante: Esta noite chegou ao Porto de Santos uma carga minha. Um sarcófago. Dentro dele, um Matusalém em torpor, mais velho que esta cidade.
 Dante: A carga subiu a Serra num caminhão e devia chegar ao meu cofre, pelo túnel da Vila Sônia. Não chegou.
 Dante: Meu Xerife diz que o caminhão apareceu vazio no túnel às três e meia, sem o Biel, o entregador Sangue-Ralo que vinha junto com o Rayo. # pista dossie: O Cão disse ao Príncipe que o caminhão chegou vazio às 03h30, sem o Biel, o Sangue-Ralo que acompanhava a carga.
-Dante: O relatório das concessionárias diz que o caminhão não passou em pedágio nenhum, nem na Anchieta nem na Imigrantes. # pista dossie: O caminhão não passou em pedágio nenhum na descida da Serra.
+Dante: O relatório das concessionárias diz que o caminhão não passou em pedágio nenhum, nem na Anchieta nem na Imigrantes. # pista dossie: O caminhão não passou em pedágio nenhum na subida da Serra.
 Você: Por que eu? A cidade tem um Xerife.
 Dante: Porque o transporte passava pela segurança do Xerife. E porque você não tem amigos aqui. Ninguém vai pedir favor a você.
 Dante: Todos que tocaram na carga estão neste bar. O Rayo dirigiu o caminhão. A Harumi, do Ministério, recebeu o contêiner no porto. É ela quem manda nos estivadores de lá. O Cão recebeu no túnel.
@@ -158,23 +183,15 @@ Vincenzo: Onze e meia, forasteir{o}. O relógio corre. # limpa
 # fundo: salao
 # limpa
 { minutos >= limite: -> amanhecer }
-{ minutos >= 240 and aviso_tempo < 1:
-    ~ aviso_tempo = 1
-    Vincenzo: Três da manhã, forasteir{o}. Metade da noite já foi. Eu, no seu lugar, parava de conversar e começava a escolher.
-}
-{ minutos >= 300 and aviso_tempo < 2:
-    ~ aviso_tempo = 2
-    Vincenzo: Quatro horas. Daqui a pouco o Príncipe desce essa escada, com ou sem resposta sua.
-}
-{ minutos >= 360 and aviso_tempo < 3:
-    ~ aviso_tempo = 3
-    Pela fresta da porta lá em cima, o céu do Bixiga já não é preto. É azul-escuro.
-    Vincenzo: Cinco horas. Quarenta minutos de noite. Use bem.
-}
+-> avisos ->
 { minutos >= 150 and not constance_chegou:
     ~ constance_chegou = true
     A porta lá de cima bate. Um terno rosa desce a escada de pedra, devagar, com dois carniçais atrás. # imagem: constance_chega
-    Constance, a Primogênita Lasombra, senta na mesa reservada e pede uma taça. As sombras da sala parecem se inclinar na direção dela. # pista dossie: À 01h30 a Constance, Primogênita Lasombra, chegou ao bar. Ninguém a chamou.
+    Constance, a Primogênita Lasombra, senta na mesa reservada e pede uma taça. As sombras da sala parecem se inclinar na direção dela. # pista dossie: À {hora_digital()} a Constance, Primogênita Lasombra, chegou ao bar. Ninguém a chamou.
+}
+{ fome >= 4 and not besta_avisou:
+    ~ besta_avisou = true
+    Fome {fome} :: A Besta arranha a sua garganta por dentro. Você ouve cada coração que ainda bate neste bar: o dos carniçais, o do garçom, o do rapaz que lava os copos na adega.
 }
 Para onde você vai?
 + [Rayo, debruçado no balcão]
@@ -189,9 +206,81 @@ Para onde você vai?
     -> constance
 + {not p_limpeza} [Vincenzo, o dono do bar]
     -> vincenzo
++ {disciplina == "Ofuscação"} {not poder_forte} {p_cao_versao} [Disciplina forte: Ofuscação :: Vestir o rosto do Cão e perguntar ao Vincenzo como foi a limpeza.]
+    -> forte_irene
++ {disciplina == "Animalismo"} {not poder_forte} [Disciplina forte: Animalismo :: Chamar todos os ratos do Porão e perguntar o que viram esta noite.]
+    -> forte_tomas
++ {fome >= 4} [Fome {fome} :: Descer à adega e beber do rapaz que lava os copos.]
+    -> beber_adega
 + [Chamar o Príncipe e fazer a acusação]
+    -> confirmar_acusacao
+
+=== confirmar_acusacao ===
+Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois que o Príncipe descer, não tem volta.
++ [Sim. Mandar chamar o Príncipe agora.]
     Você: Vincenzo, mande chamar o Príncipe. Eu já sei o que preciso.
     -> acusacao
++ [Ainda não. Voltar para o salão.]
+    -> salao
+
+// Avisos do Vincenzo, com a hora que o relógio marca de verdade. Entram em qualquer conversa: -> avisos ->
+=== avisos ===
+{ minutos >= 240 and aviso_tempo < 1:
+    ~ aviso_tempo = 1
+    Vincenzo: {hora_falada()}, forasteir{o}. Metade da noite já foi. Eu, no seu lugar, parava de conversar e começava a escolher.
+}
+{ minutos >= 300 and aviso_tempo < 2:
+    ~ aviso_tempo = 2
+    Vincenzo: {hora_falada()}. Daqui a pouco o Príncipe desce essa escada, com ou sem resposta sua.
+}
+{ minutos >= 360 and aviso_tempo < 3:
+    ~ aviso_tempo = 3
+    Pela fresta da porta lá em cima, o céu do Bixiga já não é preto. É azul-escuro.
+    Vincenzo: {hora_falada()}. Faltam {tempo_falta()} de noite. Use bem.
+}
+->->
+
+// ------------------------------------------------------------------ FOME: Disciplina forte e beber
+=== forte_tomas ===
+~ passar(20)
+~ poder_forte = true
+~ fome = MIN(fome + 2, 5)
+~ quebrou_regra += 2
+~ p_concreto = true
+~ p_tunel = true
+Você fecha os olhos e chama. Não um bicho: todos. A Besta sai inteira pela sua boca, num chiado que só os ratos escutam.
+Eles vêm de baixo do assoalho, das frestas da adega, do forro. Dezenas. O bar inteiro sente o cheiro e se cala.
+Os ratos falam por cima uns dos outros. Um homem de olho amarelo e cigarro apagado voltou depois das três com as botas sujas de concreto novo, o pó cinza das obras da Linha Amarela. # pista bar: Os ratos do Porão: um homem de olho amarelo voltou depois das três com as botas sujas de concreto novo, da Linha Amarela.
+E embaixo dos trilhos, num túnel com eco e água pingando, um rapaz de jaqueta de entregador gritou e parou de gritar. # pista biel: Os ratos ouviram o rapaz de jaqueta de entregador morrer num túnel embaixo dos trilhos.
+A Fome sobe de uma vez, como se você não comesse há uma semana.
+Vincenzo não pigarreia desta vez. Ele larga o pano no balcão e fica olhando para você até os ratos irem embora.
+-> salao
+
+=== forte_irene ===
+~ passar(20)
+~ poder_forte = true
+~ fome = MIN(fome + 2, 5)
+~ quebrou_regra += 2
+~ p_limpeza = true
+~ p_tunel = true
+# fundo: balcao
+Você entra no banheiro do Porão e sai de lá com o capuz, a jaqueta de couro e os olhos amarelos do Xerife. A Ofuscação não esconde você: ela veste você de outra pessoa.
+Você para no balcão e bate o nó dos dedos na madeira, do jeito que o Cão bate.
+Vincenzo: Xerife. Ficou tudo limpo, como o senhor pediu. A lama de obra saiu das rodas do carro.
+Vincenzo: E o túnel não tem mais cheiro de moleque. Ninguém vai achar nada. # pista bar: Enganado pela Ofuscação, o Vincenzo disse ao "Xerife" que a limpeza ficou pronta: lama de obra nas rodas, e o túnel sem "cheiro de moleque".
+Você se afasta antes que a máscara escorregue. A Fome sobe de uma vez, seca, como se você não comesse há uma semana.
+Lá do outro lado do bar, o Cão de verdade continua embaixo da escada. O Vincenzo olha de um para o outro. Agora ele sabe o que você fez.
+-> salao
+
+=== beber_adega ===
+~ passar(20)
+~ fome = MAX(fome - 2, 1)
+~ quebrou_regra += 1
+Você desce a escadinha da adega. O rapaz que lava os copos levanta a cabeça, vê os seus olhos e não grita. Ninguém grita no Porão.
+Três goles. Quatro. A Besta se deita de novo, satisfeita, e você lambe a ferida do pescoço dele até ela fechar.
+Quando você sobe, o Vincenzo está no pé da escada, de braços cruzados.
+Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso.
+-> salao
 
 // ------------------------------------------------------------------ RAYO
 === rayo ===
@@ -209,6 +298,7 @@ Para onde você vai?
 
 === rayo_perguntas ===
 { minutos >= limite: -> amanhecer }
+-> avisos ->
 + {not p_rayo_versao} {rayo_serra == 0} [O que aconteceu na Serra?]
     ~ passar(20)
     ~ rayo_serra = 1
@@ -224,7 +314,7 @@ Para onde você vai?
     ~ passar(20)
     Rayo: ...Tá. Tá bom. Mas você não vai acreditar.
     -> rayo_lobisomens
-+ {not p_rayo_versao} {rayo_serra >= 1} {not rayo_fechado} [Teste: Carisma + Persuasão, dif. 2 :: Pagar uma dose e deixar ele falar.]
++ {not p_rayo_versao} {rayo_serra >= 1} {not rayo_fechado} {fome < 5} [Teste: Carisma + Persuasão, dif. 2 :: Pagar uma dose e deixar ele falar.]
     ~ passar(20)
     Você empurra um copo para o lado dele do balcão.
     ~ temp dose = rolar(carisma + 1, fome, 2)
@@ -264,7 +354,7 @@ Para onde você vai?
     Você: Lobisomem? Eu sentiria o cheiro em você, irmão. Você não fede a mato. Fede a sombra fria.
     Rayo fica imóvel. Entre dois Gangrel, a mentira não dura muito.
     -> rayo_confissao
-+ {p_rayo_versao} {not rayo_confessou} {carisma >= 3} [Carisma 3 :: Eu não trabalho pro Dante. O que você contar fica neste balcão.]
++ {p_rayo_versao} {not rayo_confessou} {carisma >= 3} {fome < 5} [Carisma 3 :: Eu não trabalho pro Dante. O que você contar fica neste balcão.]
     ~ passar(20)
     Você: Eu não devo nada a essa Corte além de uma resposta. O que você contar fica neste balcão.
     Rayo olha para o Vincenzo, depois para você, e solta o ar que não precisa respirar.
@@ -281,7 +371,14 @@ Para onde você vai?
     Você: Escapamento não deixa marca assim. Isso é selo Tremere. Você encostou no caixão.
     Rayo esconde a mão no bolso da jaqueta, tarde demais.
     -> rayo_pressionar
-+ {p_rayo_versao} {not rayo_confessou} {not rayo_fechado} [Teste: Manipulação + Subterfúgio, dif. 3 :: Blefar: "A Constance já me contou tudo."]
++ {biel_morte} {not p_olho} [Prova :: Olho amarelo: o fantasma do Biel diz que uma fera de olho amarelo o pegou.]
+    ~ passar(20)
+    ~ p_olho = true
+    Você: O Biel morreu achando que foi você. Uma fera de olho amarelo, ele disse.
+    Rayo puxa a pálpebra para baixo com o dedão e chega o rosto perto do seu.
+    Rayo: Olha bem. Castanho. Olho amarelo neste bar só tem um, e ele fica fumando embaixo da escada. # pista rayo: Olho amarelo, no Porão, só o Cão tem. Os do Rayo são castanhos.
+    -> rayo_perguntas
++ {p_rayo_versao} {constance_chegou} {not rayo_confessou} {not rayo_fechado} [Teste: Manipulação + Subterfúgio, dif. 3 :: Blefar: "A Constance já me contou tudo."]
     ~ passar(20)
     Você: A Constance já me contou tudo, Rayo. Só quero ouvir a sua parte.
     ~ temp r = rolar(manipulacao + subterfugio, fome, 3)
@@ -346,7 +443,7 @@ Rayo: Eu entrei em pânico e meti o pé. A carga chegou inteira no túnel, eu ju
 ~ p_rayo_hora = true
 Rayo: Duas e quarenta, eu olhei. Eu tava atrasado e com medo. O Cão tava esperando no portão, e eu deixei o Biel lá com ele. # pista rayo: Rayo entregou às 02h40 no portão da Vila Sônia, e o Cão estava lá. O Cão disse ao Príncipe 03h30.
 Rayo: Se o Dante souber da Constance, eu tô morto. Se ela souber que eu falei, também.
-Você guarda a pista mais importante da noite: só quem viu a carga depois do desvio sabe que um selo estava queimado.
+Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qualquer testemunha.
 -> salao
 
 // ------------------------------------------------------------------ CÃO
@@ -362,6 +459,7 @@ Você guarda a pista mais importante da noite: só quem viu a carga depois do de
 
 === cao_perguntas ===
 { minutos >= limite: -> amanhecer }
+-> avisos ->
 + {not p_cao_versao} [O que aconteceu no túnel?]
     ~ passar(20)
     Cão: O caminhão chegou às três e meia. Baú aberto, vazio. Nem sinal do moleque da moto, o Biel.
@@ -422,6 +520,21 @@ Você guarda a pista mais importante da noite: só quem viu a carga depois do de
     ~ cao_irritado = true
     ~ quebrou_regra += 1
     -> cao_perguntas
++ {disciplina == "Presença"} {not poder_forte} {not p_bunker} [Disciplina forte: Presença :: Arrebatar o Xerife: deixar a Presença inteira cair em cima dele.]
+    ~ passar(20)
+    ~ poder_forte = true
+    ~ fome = MIN(fome + 2, 5)
+    ~ quebrou_regra += 2
+    ~ p_bunker = true
+    ~ p_concreto = true
+    Você não sorri desta vez. Você deixa a Presença inteira sair de uma vez, como quem abre a porta de um forno.
+    O cigarro cai da boca do Cão. Por um instante, o Xerife olha para você como um cachorro olha para o dono.
+    Cão: Eu guardei... eu guardei pra proteger a cidade. Embaixo da Linha Amarela. Ninguém desce lá. A poeira da obra não sai da bota.
+    Ele pisca. A vontade dele volta, e com ela a raiva. # pista cao: Arrebatado pela Presença, o Cão disse que "guardou" algo embaixo da Linha Amarela. A bota dele tem poeira da obra.
+    Cão: O que você fez comigo?
+    A Fome sobe de uma vez, seca, como se você não comesse há uma semana. Do balcão, o Vincenzo viu tudo.
+    ~ cao_irritado = true
+    -> cao_perguntas
 + {p_cao_versao} {not cao_irritado} [Teste: Força + Intimidação, dif. 5 :: Encostar o Xerife na parede.]
     ~ passar(20)
     Você: Você recebeu a carga e está mentindo para o seu Príncipe.
@@ -442,7 +555,7 @@ Você guarda a pista mais importante da noite: só quem viu a carga depois do de
 Você: Você disse que o caminhão chegou vazio. Mas o selo só queimou na Estrada Velha, depois do porto. Só quem viu o caixão depois disso sabe que tinha um selo preto.
 O Cão abre a boca e não sai nada. Pela primeira vez na noite, o Xerife não tem resposta.
 Cão: ...Você não entende o que está acontecendo nesta cidade, forasteir{o}. Quando o Dante cair, quem vai proteger a gente?
-Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão travou: ele viu o caixão depois do desvio. É a prova da acusação.
+Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão ficou sem resposta quando ouviu que o selo só queimou na Estrada Velha.
 -> salao
 
 // ------------------------------------------------------------------ PAIZÃO
@@ -458,6 +571,7 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão travou: ele 
 
 === harumi_perguntas ===
 { minutos >= limite: -> amanhecer }
+-> avisos ->
 { fome >= 3 and not p_dedos:
     Fome 3 :: Quando ela passa perto, você sente: nos dedos dela, um cheiro de sangue antigo, tão forte que a sua boca se enche. # pista harumi: Cheiro de sangue muito antigo nos dedos da Harumi.
     ~ p_dedos = true
@@ -490,7 +604,7 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão travou: ele 
     ~ usou_dedos = true
     Você: Seus dedos cheiram a sangue antigo, Harumi. Antigo demais pra ser seu.
     -> harumi_pressionar
-+ {cla == "Ministério"} {not p_frasco} [Ministério :: Irmão, a Serpente ensina que todo segredo tem preço.]
++ {cla == "Ministério"} {not p_frasco} [Ministério :: Irmã, a Serpente ensina que todo segredo tem preço.]
     ~ passar(20)
     Você: Irmã, nós servimos à mesma Serpente. Ela ensina que todo segredo tem preço. Me diga o seu.
     Harumi: ...Alguém da Serpente. Logo hoje. Tá bom. Eu tirei um pouquinho. Só um frasco, pros meus clientes mais especiais. O velho nem vai sentir falta. # pista harumi: A Harumi admitiu que abriu o sarcófago e tirou um frasco de sangue para vender.
@@ -553,7 +667,7 @@ Você guarda o carimbo como quem guarda uma arma carregada.
 // ------------------------------------------------------------------ NONNA E O FANTASMA
 === nonna ===
 # fundo: fundo_bar
-{ sessao_feita and biel_perguntas >= 3:
+{ sessao_feita and biel_perguntas >= biel_max:
     Nonna: Ele já foi, filh{o}. Os mortos não ficam muito tempo por causa dos vivos.
     -> salao
 }
@@ -563,8 +677,17 @@ Você guarda o carimbo como quem guarda uma arma carregada.
     -> biel_perguntas_loop
 }
 Nonna: Senta, filh{o}. Você quer falar com o rapaz que morreu hoje, eu sei. Ele está aqui desde as três, andando em volta da minha mesa.
-Nonna: Mas os mortos não falam de graça. Eu chamo ele, e você me fica devendo um favor. Um dia eu cobro.
-+ [Aceitar. "Um favor. Combinado."]
+Nonna: Mas os mortos não falam de graça. Ou você me fica devendo um favor, que um dia eu cobro, ou me paga agora, com o que corre nas suas veias.
+Nonna: Sangue de vampiro chama morto mais forte. Com ele, o rapaz vem mais inteiro, e fica mais um pouco.
++ [Pagar com sangue :: Deixar a Nonna encher um frasco com o seu sangue. A Fome sobe 1, e o fantasma responde uma pergunta a mais.]
+    ~ nonna_sangue = true
+    ~ biel_max = 4
+    ~ fome = MIN(fome + 1, 5)
+    A Nonna corta a ponta do seu dedo com uma tesourinha de unha e deixa pingar num frasco de remédio, sem pressa. Ela tampa, beija o vidro e guarda no decote.
+    Nonna: Agora uma parte de você fica comigo, filh{o}. Não se preocupa. Por enquanto.
+    -> sessao
++ [Ficar devendo um favor. "Um favor. Combinado."]
+    ~ nonna_favor = true
     -> sessao
 + [Agora não]
     -> salao
@@ -573,58 +696,72 @@ Nonna: Mas os mortos não falam de graça. Eu chamo ele, e você me fica devendo
 ~ passar(60)
 ~ sessao_feita = true
 A Nonna acende sete velas e reza baixinho em italiano. A sessão demora. Os ponteiros do relógio andam uma hora inteira.
+{ nonna_sangue:
+    Ela pinga uma gota do seu sangue em cada pavio. As chamas ficam vermelhas.
+}
 O ar esfria. A chama das velas deita para o lado, como se alguém tivesse sentado na cadeira vazia. # entra: biel
 Biel: Onde... onde eu tô? A carga. Cadê a carga do patrão?
-Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
+Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
 -> biel_perguntas_loop
 
 === biel_perguntas_loop ===
-{ biel_perguntas >= 3:
+{ biel_perguntas >= biel_max:
     O fantasma tremula e se apaga junto com a última vela.
-    Nonna: Acabou. Agora você me deve um favor.
+    { nonna_sangue:
+        Nonna: Acabou. O seu sangue fica comigo, filh{o}. Um dia ele me serve.
+    - else:
+        Nonna: Acabou. Agora você me deve um favor.
+    }
     -> salao
 }
 { minutos >= limite: -> amanhecer }
+-> avisos ->
 { ocultismo >= 2 and not p_tunel:
     Ocultismo 2 :: Você sabe que fantasmas repetem o lugar onde morreram. O Biel fala com eco, como quem está num túnel, e a roupa dele pinga água de esgoto, não orvalho de mata. # pista biel: O fantasma morreu num túnel, não na Serra. Ele morreu depois da entrega.
     ~ p_tunel = true
 }
-+ {biel_perguntas < 3} [Como você morreu?]
++ {biel_perguntas < biel_max} {not biel_morte} [Como você morreu?]
     ~ passar(10)
     ~ biel_perguntas += 1
-    Biel: Eu defendi a carga, moço. Até o fim. Uma fera me pegou no escuro. Olho amarelo, unha comprida.
-    Biel: Só pode ter sido o Rayo. Ele é Gangrel, vira bicho. # pista biel: O fantasma acha que foi o Rayo, porque "uma fera de olho amarelo" o pegou no escuro.
+    ~ biel_morte = true
+    Biel: Eu defendi a carga, {o == "a":moça|moço}. Até o fim. Uma fera me pegou no escuro. Olho amarelo, unha comprida.
+    { nonna_sangue:
+        Biel: E fedia a cigarro. Cigarro aceso que ninguém tragava. A fumaça só subia.
+        Biel: Só pode ter sido o Rayo. Ele é Gangrel, vira bicho. # pista biel: O fantasma acha que foi o Rayo: "uma fera de olho amarelo" o pegou no escuro. Com o sangue nas velas, ele lembrou do cheiro de um cigarro aceso que ninguém tragava.
+    - else:
+        Biel: Só pode ter sido o Rayo. Ele é Gangrel, vira bicho. # pista biel: O fantasma acha que foi o Rayo, porque "uma fera de olho amarelo" o pegou no escuro.
+    }
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {not p_tunel} [Onde você estava quando morreu?]
++ {biel_perguntas < biel_max} {not p_tunel} [Onde você estava quando morreu?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ p_tunel = true
     Biel: Tava escuro... tinha eco. Pingava água do teto. Cheiro de esgoto e de trilho. A carga já tinha descido do caminhão.
     Na Serra não tem trilho nem esgoto. # pista biel: O fantasma morreu num lugar com eco, trilho e esgoto, depois que a carga desceu do caminhão: o túnel.
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {not biel_hora_feita} [Que horas você morreu?]
++ {biel_perguntas < biel_max} {not biel_hora_feita} [Que horas você morreu?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ biel_hora_feita = true
-    Biel: Hora? Morto não tem hora, moço. É tudo uma noite só, comprida.
+    Biel: Hora? Morto não tem hora, {o == "a":moça|moço}. É tudo uma noite só, comprida.
     Biel: Eu lembro do escuro. Do frio. Do resto, não.
     A vela mais próxima apaga. Uma pergunta a menos.
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {not biel_doeu} [Doeu?]
++ {biel_perguntas < biel_max} {not biel_doeu} [Doeu?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ biel_doeu = true
-    Biel: Doeu, moço. Ainda dói. Dói o tempo todo.
+    Biel: Doeu, {o == "a":moça|moço}. Ainda dói. Dói o tempo todo.
     Ele chora sem lágrima. A Nonna balança a cabeça para você, devagar.
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {not biel_luz} [Você viu alguma luz? Tem alguma coisa do outro lado?]
++ {biel_perguntas < biel_max} {not biel_luz} [Você viu alguma luz? Tem alguma coisa do outro lado?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ biel_luz = true
     Biel: Luz? Tem uma luz, tem... Não, é a vela da senhora. Do outro lado não tem nada. Tem fila.
     Nonna: Não gasta o menino com bobagem, filh{o}.
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {not p_biel_hora} [Quer deixar algum recado pra sua mãe?]
++ {biel_perguntas < biel_max} {not p_biel_hora} [Quer deixar algum recado pra sua mãe?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ p_biel_hora = true
@@ -632,7 +769,7 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
     Biel: Ela nem atendeu. O relógio da guarita marcava duas e cinquenta. Depois disso... # pista biel: O Biel ligou para a mãe da guarita do túnel às 02h50. A carga já estava lá e ele ainda estava vivo. O Cão disse 03h30.
     Ele se apaga um pouco, mais leve.
     -> biel_perguntas_loop
-+ {biel_perguntas < 3} {p_boes} {not p_informante} [Prova :: Carimbo do BOES: quem te pagava, Biel?]
++ {biel_perguntas < biel_max} {p_boes} {not p_informante} [Prova :: Carimbo do BOES: quem te pagava, Biel?]
     ~ passar(10)
     ~ biel_perguntas += 1
     ~ p_informante = true
@@ -643,7 +780,7 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
     -> biel_perguntas_loop
 + [Deixar o fantasma descansar]
     Nonna: Vai em paz, filh{o}.
-    ~ biel_perguntas = 3
+    ~ biel_perguntas = biel_max
     -> salao
 
 // ------------------------------------------------------------------ CONSTANCE (chega à 01h30)
@@ -659,6 +796,7 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
 
 === constance_perguntas ===
 { minutos >= limite: -> amanhecer }
+-> avisos ->
 + {not c_veio} [O que a senhora veio fazer aqui esta noite?]
     ~ passar(20)
     ~ c_veio = true
@@ -720,7 +858,7 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
     ~ quebrou_regra += 1
     ~ p_constance_ordem = true
     Você deixa de ser vista e para atrás da cadeira dela. Constance se inclina para o carniçal da esquerda.
-    Constance: Se o forasteir{o} chegar no Cão, deixa chegar. Se chegar em mim, resolve antes do sol. # pista constance: A Constance mandou o carniçal "resolver" você se a investigação chegar nela. Se chegar no Cão, ela deixa.
+    Constance: Se {o == "a":a|o} forasteir{o} chegar no Cão, deixa chegar. Se chegar em mim, resolve antes do sol. # pista constance: A Constance mandou o carniçal "resolver" você se a investigação chegar nela. Se chegar no Cão, ela deixa.
     A sombra dela se estica pelo chão até o seu pé, e para ali. Talvez ela saiba que você está ouvindo. Talvez não.
     -> constance_perguntas
 + {disciplina == "Presença"} {not constance_hostil} [Disciplina: Presença :: Encantar a Primogênita.]
@@ -751,9 +889,9 @@ Nonna: Ele tem pouco tempo, filh{o}. Três perguntas, talvez. Escolhe bem.
     ~ passar(20)
     ~ v_neutro = true
     Vincenzo: O Porão é neutro. Eu não pergunto, e não conto.
-    Vincenzo: Volte quando souber o que perguntar. Pergunta vaga ganha resposta vaga. # pista bar: Vincenzo: "Volte quando souber o que perguntar." Ele sabe de alguma coisa.
+    Vincenzo: Aqui embaixo eu sirvo bebida e, quando pagam bem, limpo a sujeira dos outros. Volte quando souber de que sujeira você quer falar. # pista bar: Vincenzo: "Quando pagam bem, eu limpo a sujeira dos outros." Ele sabe de alguma coisa, mas só responde a pergunta certa.
     -> salao
-+ {v_neutro} {p_tunel or p_concreto} {not p_limpeza} [Prova :: Túnel: alguém morreu embaixo da terra esta noite. Quem pagou a limpeza?]
++ {v_neutro} {p_tunel or p_concreto or p_bunker} {not p_limpeza} [Prova :: Sujeira: alguém morreu embaixo da terra esta noite. Quem pagou a limpeza?]
     ~ passar(20)
     ~ p_limpeza = true
     Vincenzo: Agora sim, uma pergunta.
@@ -776,55 +914,138 @@ Vincenzo: Acabou o tempo, forasteir{o}. O céu já está clareando lá fora. O P
 # limpa
 A Corte desce a escada. O Príncipe Dante senta no meio do salão. Ao lado dele, de terno rosa, a Primogênita Lasombra Constance observa você sem piscar.
 Dante: Então, forasteir{o}. Quem me traiu?
-{ quebrou_regra >= 2: Vincenzo: Antes, Príncipe: este aí usou Disciplina no meu Porão. Mais de uma vez. }
+{ quebrou_regra >= 2:
+    ~ denunciado = true
+    Vincenzo: Antes, Príncipe: {o == "a":esta|este} aí usou Disciplina no meu Porão. Mais de uma vez.
+    Dante: Anotado, Vincenzo. A regra da sua casa é a minha regra.
+}
+{ fome >= 5:
+    ~ provas_max = 4
+    Dante: Você está com fome, forasteir{o}. Dá para ver nos seus olhos. Com fome assim, todo mundo tem cara de culpado. Vai ter que me convencer em dobro.
+}
 + [Rayo, o motoqueiro]
-    -> final_rayo
+    ~ acusado = "rayo"
+    Você: Foi o Rayo, Príncipe. O motoqueiro.
+    -> provas
 + [Harumi, do porto]
-    -> final_harumi
+    ~ acusado = "harumi"
+    Você: Foi a Harumi, Príncipe. Do porto.
+    -> provas
 + {p_constance} [Constance, a Primogênita Lasombra]
-    -> final_constance
+    ~ acusado = "constance"
+    Você: A Constance pagou o desvio do caminhão.
+    Constance: Que acusação interessante, vinda de alguém que chegou na cidade há três noites.
+    -> provas
 + [O Xerife, o Cão]
-    -> acusa_cao
+    ~ acusado = "cao"
+    Você: Foi o seu Xerife, Príncipe. O Cão recebeu a carga e mentiu para o senhor.
+    # entra: cao
+    Cão: Isso é palavra de forasteir{o} contra a minha.
+    -> provas
 + [Admitir que não sabe]
     -> final_nao_sei
 
-=== function provas_cao() ===
-~ temp n = 0
-{ p_bunker:
-    ~ n += 1
-}
-{ p_concreto:
-    ~ n += 1
-}
-{ p_limpeza:
-    ~ n += 1
-}
-{ p_tunel:
-    ~ n += 1
-}
-{ p_biel_hora or p_rayo_hora:
-    ~ n += 1
-}
-~ return n
+// Na Corte, palavra não basta: você apresenta até {provas_max} coisas do caderno.
+// Contra o Cão, só valem as provas que se sustentam (provas_fortes). Pista fraca gasta uma vez e não convence.
+=== provas ===
+Dante: Palavra não basta. Mostre à Corte o que você juntou. {provas_max == 4:Quatro|Três} coisas, as melhores que você tiver.
+-> provas_loop
 
-=== acusa_cao ===
-Você: Foi o seu Xerife, Príncipe. O Cão recebeu a carga e mentiu para o senhor.
-# entra: cao
-Cão: Isso é palavra de forasteir{o} contra a minha.
-{ cao_travou:
-    Você: Ele disse que o caminhão chegou vazio. Mas sabia que um selo Tremere estava queimado. O selo só queimou na Estrada Velha. Ele viu o caixão.
-    -> cao_desmorona
+=== provas_loop ===
+{ provas_dadas >= provas_max: -> veredito }
+O que você mostra à Corte?
++ {p_cao_selo} {not a_selo} [O selo Tremere queimado que o Cão disse ter visto]
+    ~ a_selo = true
+    ~ provas_dadas += 1
+    Você: O Cão disse que viu um selo Tremere queimado no caixão. Mas, segundo ele, o caminhão chegou vazio.
+    { p_selo:
+        ~ provas_fortes += 1
+        Você: E o selo só queimou na Estrada Velha, depois do porto. Para ver o selo preto, ele viu o caixão.
+    - else:
+        Cão: Eu vi o selo no relatório da Senescal. Qualquer um podia ter visto.
+    }
+    -> provas_loop
++ {p_rayo_hora or p_biel_hora} {not a_hora} [A hora da entrega: antes das três, não às 03h30]
+    ~ a_hora = true
+    ~ provas_dadas += 1
+    ~ provas_fortes += 1
+    Você: {p_biel_hora:O Biel ligou da guarita do túnel às duas e cinquenta, com a carga lá.|O Rayo entregou a carga às duas e quarenta, com o Cão no portão.} Ele disse três e meia ao senhor.
+    -> provas_loop
++ {p_tunel} {not a_tunel} [O lugar onde o Biel morreu: um túnel, depois da entrega]
+    ~ a_tunel = true
+    ~ provas_dadas += 1
+    ~ provas_fortes += 1
+    Você: O Biel não morreu na Serra. Morreu num túnel, com eco e trilho, depois que a carga desceu do caminhão. No território do Xerife.
+    -> provas_loop
++ {p_concreto} {not a_concreto} [O pó de concreto da Linha Amarela na roupa do Cão]
+    ~ a_concreto = true
+    ~ provas_dadas += 1
+    ~ provas_fortes += 1
+    Você: Olhe as botas dele, Príncipe. Pó de concreto novo, das obras da Linha Amarela.
+    -> provas_loop
++ {p_bunker} {not a_bunker} [O esconderijo embaixo dos trilhos]
+    ~ a_bunker = true
+    ~ provas_dadas += 1
+    ~ provas_fortes += 1
+    Você: O Xerife tem um buraco novo embaixo dos trilhos da Linha Amarela. Esta noite ele mandou trancar.
+    -> provas_loop
++ {p_limpeza} {not a_limpeza} [A limpeza do Vincenzo, paga depois das três]
+    ~ a_limpeza = true
+    ~ provas_dadas += 1
+    ~ provas_fortes += 1
+    Você: Alguém com a chave dos túneis pagou a equipe de limpeza do Vincenzo depois das três. O carro voltou com lama de obra.
+    -> provas_loop
++ {biel_morte} {not a_olho} [A fera de olho amarelo que matou o Biel]
+    ~ a_olho = true
+    ~ provas_dadas += 1
+    Você: O Biel morreu nas unhas de uma fera de olho amarelo.
+    { p_olho:
+        ~ provas_fortes += 1
+        Você: O Rayo tem olho castanho. Olho amarelo, neste bar, só o do seu Xerife.
+    - else:
+        Cão: O fantasma disse que foi o motoqueiro. Você mesm{o} ouviu.
+    }
+    -> provas_loop
++ {rayo_confessou or usou_pedagio or p_queimadura} {not a_rayo} [O desvio do Rayo pela Estrada Velha]
+    ~ a_rayo = true
+    ~ provas_dadas += 1
+    Você: O Rayo saiu da rota e desceu pela Estrada Velha, onde ninguém olha.
+    -> provas_loop
++ {p_frasco or p_rayo_frasco or p_cripta or p_dedos} {not a_harumi} [O frasco e o cheiro de cripta da Harumi]
+    ~ a_harumi = true
+    ~ provas_dadas += 1
+    Você: A Harumi sentiu o cheiro de dentro do caixão e escondeu um frasco na manga, no porto.
+    -> provas_loop
++ {p_constance or p_constance_ordem or p_constance_cao} {not a_constance} [O que a Constance fez esta noite]
+    ~ a_constance = true
+    ~ provas_dadas += 1
+    Você: A Constance se meteu nessa carga. Ela sabia da rota antes de todo mundo.
+    Constance não pisca.
+    -> provas_loop
++ {p_envelope or p_informante} {not a_doutora} [A Doutora: o envelope e o informante]
+    ~ a_doutora = true
+    ~ provas_dadas += 1
+    Você: Alguém de fora da Camarilla sabia dessa carga. Uma tal de Doutora.
+    O Príncipe não responde. A Corte se mexe nas cadeiras.
+    -> provas_loop
++ [{provas_dadas > 0:Isso é tudo o que eu tenho.|Não tenho prova nenhuma. Só a minha palavra.}]
+    -> veredito
+
+=== veredito ===
+{ denunciado and acusado != "cao":
+    Dante: E ainda quebrou a regra da casa do Vincenzo. Eu nem preciso ouvir o resto.
 }
-{ provas_cao() >= 4:
-    Você junta as peças diante da Corte, uma por uma.
-    { p_biel_hora or p_rayo_hora: Você: A carga chegou antes das três. Ele disse três e meia ao senhor. }
-    { p_tunel: Você: O Biel morreu no túnel, depois da entrega. O próprio morto disse. }
-    { p_limpeza: Você: Alguém com a chave dos túneis pagou a limpeza do Vincenzo depois das três. }
-    { p_concreto: Você: Ele tem pó de concreto da Linha Amarela na roupa. }
-    { p_bunker: Você: E ele tem um bunker embaixo dos trilhos, trancado esta noite. }
-    -> cao_desmorona
+{ acusado:
+- "rayo": -> final_rayo
+- "harumi": -> final_harumi
+- "constance": -> final_constance
 }
-Você tenta, mas tudo o que tem são suspeitas.
+{ provas_fortes >= provas_max: -> cao_desmorona }
+{ provas_fortes > 0:
+    Você tem peças, mas não o bastante. Na boca de um forasteir{o}, metade de uma prova é só suspeita.
+- else:
+    Você tenta, mas tudo o que tem são suspeitas.
+}
 Dante: Você me traz um palpite na frente da Corte inteira?
 -> final_sem_provas
 
@@ -876,10 +1097,8 @@ Na noite seguinte, o porto de Santos tem uma nova dona. A antiga foi encontrada 
 -> morte_bode
 
 === final_constance ===
-Você: A Constance pagou o desvio do caminhão.
-Constance: Que acusação interessante, vinda de alguém que chegou na cidade há três noites.
 { p_envelope: Você: Ela mesma admitiu. Os homens dela abriram o baú na Serra. }
-Constance: Abri, e o caixão seguiu inteiro. O forasteir{o} sabe disso. Só não sabe onde ele está.
+Constance: Abri, e o caixão seguiu inteiro. {o == "a":A|O} forasteir{o} sabe disso. Só não sabe onde ele está.
 Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de um forasteir{o}. Ainda não.
 # musica: final_triste
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
@@ -890,7 +1109,7 @@ Os Lasombra não deixam acusação sem resposta. De manhã, sobra uma mancha de 
 -> final_a_epilogo
 
 === morte_bode ===
-Três noites depois, alguém bate na porta da sua pensão. É o Cão, com o cigarro que ele não traga.
+{denunciado:Na mesma noite|Três noites depois}, alguém bate na porta da sua pensão. É o Cão, com o cigarro que ele não traga.
 Cão: Bom trabalho, forasteir{o}. Bom até demais. Gente esperta não dura nesta cidade.
 { cla == "Nosferatu": -> irene_some_cao }
 # imagem: amanhecer
@@ -930,7 +1149,7 @@ FINAL F · A MORTA NOS ESGOTOS. Irene errou a acusação, mas a Ofuscação a sa
 # entra: cao
 O Cão sorri, mostrando os dentes tortos.
 Cão: Príncipe, alguém de fora que acusa o Xerife sem prova é alguém que trabalha para alguém.
-Dante: Concordo.
+Dante: Concordo.{denunciado: E que ainda quebra a regra do Vincenzo.}
 Antes que você chegue à escada, as mãos do Cão estão nos seus ombros.
 # imagem: amanhecer
 # musica: final_triste
@@ -953,6 +1172,10 @@ FINAL G · O BICHO ENTERRADO. Tomás acusou sem provas, mas a Besta Gangrel o ti
 
 === final_b ===
 Dante: Você me serviu bem, forasteir{o}. Sua dívida está paga.
+{ denunciado:
+    Dante: Mas o Vincenzo tem razão. Você usou Disciplina no Porão, e a regra da casa vale até para quem me serve. Você não desce mais aquela escada.
+    Vincenzo tira o seu copo do balcão e lava na frente de todo mundo. # pista bar: O Príncipe baniu você do Porão do Vincenzo por usar Disciplina lá dentro.
+}
 # imagem: cao_morto
 # musica: final_verdade
 O Cão é levado escada acima. Ao amanhecer, a cidade tem um novo Xerife, e o antigo vira cinza no telhado.
@@ -960,7 +1183,9 @@ Os carniçais do Príncipe buscam o sarcófago no bunker antes do sol.
 # imagem: van
 Três noites depois, uma van preta sem placa estaciona no porto de Santos. Homens de terno e crachá carregam um sarcófago com um selo queimado.
 Você foi a ferramenta da traição, e ainda não sabe.
-Na saída, o Rayo segura o seu braço. Rayo: O Cão não fez isso sozinho, forasteir{o}. Alguém mandou ele esconder o caixão. Abre o olho.
+{ harumi_confessou: Na sinuca, a Harumi já não está. Sobrou o taco encostado na mesa e um frasco vazio, que ninguém viu ela jogar fora. }
+Na saída, o Rayo segura o seu braço.
+Rayo: O Cão não fez isso sozinho, forasteir{o}. Alguém mandou ele esconder o caixão. Abre o olho.
 Continua no capítulo 2.
 FINAL B · A VERDADE PARA O PRÍNCIPE. Você acertou, quase morreu, e o Príncipe te protegeu. Por enquanto. # final: B
 -> END
@@ -975,20 +1200,26 @@ Constance: Príncipe. A Corte gostaria de ouvir a sua explicação.
 Dante não explica. Pela primeira vez em cem anos, o Príncipe de São Paulo não tem o que dizer.
 # imagem: trono_vazio
 # musica: final_verdade
-Antes do amanhecer, Constance convoca o Primogênito. Dante sai do Porão escoltado, pela escada dos fundos.
+Antes do amanhecer, Constance convoca a Primogenitura. Dante sai do Porão escoltado, pela escada dos fundos.
 { constance_hostil:
     Constance: Você tem faro, forasteir{o}. E pouco juízo. Não esqueci o que você tentou comigo esta noite.
     Constance: Fique na cidade. Prefiro você onde eu possa ver.
 - else:
     Constance: Você tem faro, forasteir{o}. Fique na cidade. Eu vou precisar de gente que não tem amigos.
 }
+{ harumi_confessou: No meio da confusão, a Harumi sai pela porta da cantina sem se despedir. O frasco não sai da manga. }
+{ denunciado: Vincenzo: E você, forasteir{o}, não desce mais esta escada. Com Príncipe ou sem Príncipe, a casa é minha. }
 Na escada dos fundos, Dante para e olha para você. Não tem raiva no olhar dele. Tem paciência.
 Continua no capítulo 2.
-FINAL C · A VERDADE CONTRA O PRÍNCIPE · CONSTANCE # final: C
+FINAL C · A VERDADE CONTRA O PRÍNCIPE · DIANTE DA CORTE # final: C
 -> END
 
 === final_c_anarquistas ===
 Você não diz nada sobre o carimbo. O Cão é levado. O Príncipe paga a sua dívida com um aceno.
+{ denunciado:
+    Dante: Mas o Vincenzo tem razão. Você usou Disciplina no Porão, e a regra da casa vale até para quem me serve. Você não desce mais aquela escada.
+    Vincenzo tira o seu copo do balcão e lava na frente de todo mundo. # pista bar: O Príncipe baniu você do Porão do Vincenzo por usar Disciplina lá dentro.
+}
 Na saída, você para no balcão, ao lado do Rayo.
 Você: Me dá o telefone de quem manda no seu motoclube. Tenho uma coisa que vai interessar.
 { p_informante: Você: E diz pra eles que o Biel era pago pela Segunda Inquisição. Eles vão querer saber quem mais é. }
@@ -1042,3 +1273,77 @@ FINAL H · A FALSA DEVOTA. Joana não acusou ninguém, mas enganou o Laço de Sa
 { RANDOM(1, 10) < 6:
     ~ fome = fome + 1
 }
+
+// Hora de verdade, para as falas e o caderno (o relógio começa às 23h)
+=== function hora_digital() ===
+~ temp h = (23 + minutos / 60) % 24
+~ temp m = minutos % 60
+~ temp hs = "{h}"
+{ h < 10:
+    ~ hs = "0{h}"
+}
+{ m < 10:
+    ~ return hs + "h0{m}"
+}
+~ return hs + "h{m}"
+
+=== function hora_falada() ===
+~ temp h = (23 + minutos / 60) % 24
+~ temp m = minutos % 60
+~ temp nome_h = ""
+{ h:
+- 23: ~ nome_h = "Onze"
+- 0: ~ nome_h = "Meia-noite"
+- 1: ~ nome_h = "Uma"
+- 2: ~ nome_h = "Duas"
+- 3: ~ nome_h = "Três"
+- 4: ~ nome_h = "Quatro"
+- 5: ~ nome_h = "Cinco"
+- else: ~ nome_h = "Seis"
+}
+{ m == 0:
+    { h >= 1 and h <= 6:
+        ~ return nome_h + " da manhã"
+    }
+    ~ return nome_h
+}
+{ m == 30:
+    ~ return nome_h + " e meia"
+}
+~ return nome_h + " e " + minutos_falados(m)
+
+=== function minutos_falados(m) ===
+{ m:
+- 10: ~ return "dez"
+- 20: ~ return "vinte"
+- 30: ~ return "trinta"
+- 40: ~ return "quarenta"
+- 50: ~ return "cinquenta"
+}
+~ return "{m}"
+
+// Quanto falta para o amanhecer, por extenso: "uma hora e vinte minutos"
+=== function tempo_falta() ===
+~ temp r = limite - minutos
+{ r <= 0:
+    ~ return "poucos minutos"
+}
+~ temp h = r / 60
+~ temp m = r % 60
+~ temp hs = ""
+{ h:
+- 0: ~ hs = ""
+- 1: ~ hs = "uma hora"
+- 2: ~ hs = "duas horas"
+- 3: ~ hs = "três horas"
+- 4: ~ hs = "quatro horas"
+- 5: ~ hs = "cinco horas"
+- else: ~ hs = "seis horas"
+}
+{ m == 0:
+    ~ return hs
+}
+{ h == 0:
+    ~ return minutos_falados(m) + " minutos"
+}
+~ return hs + " e " + minutos_falados(m) + " minutos"

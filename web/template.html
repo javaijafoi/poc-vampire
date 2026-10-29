@@ -72,8 +72,12 @@ body {
 @keyframes troca { 40% { transform: rotate(calc(var(--giro) * 1.5)) translateY(-1%); } 100% { transform: rotate(var(--giro)); } }
 
 /* Hora, Fome e caderno: pequenos, no canto da caixa de texto, longe dos rostos */
-.hud { position: absolute; top: .8cqw; right: 1.6cqw; display: flex; gap: 1.1cqw; align-items: center; z-index: 1;
-  font-family: var(--f-tipo); font-size: max(11px, 1.05cqw); color: var(--tinta-fraca); letter-spacing: .04em; }
+.hud { position: absolute; top: .7cqw; right: 1.6cqw; display: flex; gap: 1.3cqw; align-items: center; z-index: 1;
+  font-family: var(--f-tipo); font-size: max(12px, 1.3cqw); color: var(--tinta); letter-spacing: .04em; }
+.hud .amanhecer { color: var(--tinta-fraca); font-size: .85em; }
+/* quando a Fome ou o caderno mudam, o número dá um pulo para chamar o olho */
+.hud .pulso { animation: pulso .9s ease-out; }
+@keyframes pulso { 30% { transform: scale(1.35); filter: drop-shadow(0 0 .4cqw rgb(200 49 63 / .8)); } }
 .hud .hora { color: var(--acento); font-variant-numeric: tabular-nums; }
 /* Tempo acabando: na última hora e meia a hora pulsa, e a luz do amanhecer vai entrando pela cena */
 .hud .hora.urgente { font-weight: 700; animation: urgente 1.2s ease-in-out infinite; }
@@ -85,11 +89,12 @@ body {
 .hud .barra i { display: block; height: 100%; background: var(--acento); transition: width .4s; }
 .hud .grupo { display: flex; gap: .5cqw; align-items: center; }
 .fome { display: flex; gap: 2px; }
-.fome i { width: max(7px, .8cqw); aspect-ratio: 1; border: 1px solid var(--sangue); }
+.fome { transform-origin: center; }
+.fome i { width: max(9px, 1cqw); aspect-ratio: 1; border: 1.5px solid var(--sangue); }
 .fome i.cheio { background: var(--sangue); }
 .caderno-btn { font: inherit; color: inherit; background: none; border: 0; border-bottom: 1px solid currentColor; padding: 0 .1em; cursor: pointer; }
 .caderno-btn:hover, .caderno-btn:focus-visible { color: var(--acento); outline: none; }
-.caderno-btn b { color: var(--acento); font-weight: 600; }
+.caderno-btn b { display: inline-block; color: var(--acento); font-weight: 600; }
 
 /* Diálogo */
 .dialogo {
@@ -115,6 +120,10 @@ body {
 }
 .escolhas button:hover, .escolhas button:focus-visible { background: color-mix(in srgb, var(--acento) 12%, var(--folha)); border-color: color-mix(in srgb, var(--acento) 35%, var(--folha)); outline: none; }
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
+/* pergunta que você já fez: continua ali (e continua custando tempo), mas apagada */
+.escolhas button.feita { color: #8d7c6c; }
+.escolhas button.feita .porque { opacity: .6; }
+.escolhas button.feita::after { content: "já perguntou"; margin-left: auto; padding-left: 1em; font-family: var(--f-tipo); font-size: .7em; color: #9c8b7a; white-space: nowrap; }
 /* O porquê da opção vem depois dela, no mesmo texto, entre parênteses e na cor do tipo. */
 .porque { font-family: var(--f-tipo); font-size: .78em; }
 .porque.cla { color: #5d2f86; }
@@ -166,8 +175,8 @@ body {
 .dados .res.bom { color: #2f6a2b; }
 @keyframes carimbo { to { opacity: 1; transform: rotate(-4deg) scale(1); } }
 .dados .det { font-size: max(11px, 1.3cqw); color: var(--tinta-fraca); text-align: center; }
-.dados .dica { opacity: 0; transition: opacity .3s; }
-.dados .dica.on { opacity: 1; }
+.dados .seguir { font-family: var(--f-tipo); font-size: max(13px, 1.5cqw); background: var(--acento); color: #f4e7d2; border: 0; padding: .4cqw 1.6cqw; cursor: pointer; visibility: hidden; }
+.dados .seguir.on { visibility: visible; }
 @media (prefers-reduced-motion: reduce) { .mesa-dados, .dado, .dado.rolando .face { animation: none; } .dados .res.on { animation: none; opacity: 1; transform: rotate(-4deg); } }
 
 /* Toast e caderno */
@@ -193,6 +202,10 @@ body {
 .rodape button { font: inherit; color: var(--papel-fraco); background: none; border: 1px solid var(--borda); padding: 2px 8px; cursor: pointer; }
 .rodape .acoes { display: flex; align-items: center; gap: 10px; }
 .rodape .som { display: flex; align-items: center; gap: 6px; }
+.rodape button[aria-pressed="true"].opcao { color: var(--papel); border-color: var(--sangue); }
+.historico p { margin: 0 0 .5cqw; }
+.historico b { font-family: var(--f-tipo); font-weight: 400; color: var(--acento); }
+.historico .narr { font-style: italic; color: #6d5440; }
 .rodape .som button[aria-pressed="false"] { text-decoration: line-through; opacity: .7; }
 .rodape input[type=range] { width: 90px; accent-color: #c8313f; }
 
@@ -229,6 +242,8 @@ body {
 
 /* ---------- Primeira versão jogável: elenco, ilustrações, capa e abertura ---------- */
 .fundo { transition: opacity .4s; }
+/* o salão: a foto tem muito teto, e a caixa de texto cobre o chão; mostra as mesas e clareia um pouco */
+.fundo[data-f="salao"] { transform: scale(1.5); transform-origin: 50% 100%; filter: brightness(1.3) saturate(1.05); }
 .fundo.trocando { opacity: 0; }
 /* escala por personagem, para os rostos ficarem de tamanho parecido */
 .lado[data-p="Nonna"] { height: 74%; bottom: 10%; }
@@ -245,6 +260,13 @@ body {
 .ilustracao.on { opacity: 1; }
 .ilustracao img { position: static; width: 64%; aspect-ratio: 16 / 9; object-fit: cover; border: 1cqw solid #ece4d2; box-shadow: .4cqw .8cqw 1.6cqw rgb(0 0 0 / .7); transform: rotate(-1.2deg) scale(.96); transition: transform .8s; }
 .ilustracao.on img { transform: rotate(-1.2deg); }
+/* fim de capítulo: carimbo do final por cima da última ilustração */
+.carimbo-final { position: absolute; left: 50%; top: 38%; z-index: 3; margin: 0; text-align: center; pointer-events: none; font-family: var(--f-tipo); color: #c8313f;
+  border: .5cqw solid currentColor; padding: .6cqw 2.4cqw; background: rgb(236 228 210 / .9); opacity: 0; transform: translate(-50%, -50%) rotate(-8deg) scale(1.8);
+  transition: opacity .25s, transform .4s cubic-bezier(.3, 1.6, .5, 1); box-shadow: .3cqw .6cqw 1.2cqw rgb(0 0 0 / .6); }
+.carimbo-final.on { opacity: 1; transform: translate(-50%, -50%) rotate(-8deg); }
+.carimbo-final b { display: block; font-size: 6cqw; line-height: 1; }
+.carimbo-final span { display: block; font-size: max(13px, 1.8cqw); color: #2a1d16; margin-top: .4cqw; }
 
 /* emblema do clã nas cartas de personagem */
 .carta { grid-template-columns: auto 1fr; column-gap: 1.2cqw; align-items: start; }
@@ -356,13 +378,14 @@ body {
     <figure class="lado esq" id="esq"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <figure class="lado dir" id="dir"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <div class="ilustracao" id="ilustracao"><img alt=""></div>
+    <p class="carimbo-final" id="carimbo-final" aria-hidden="true"></p>
     <div class="sol" id="sol" aria-hidden="true"></div>
     <img class="moldura" id="moldura" alt="">
     <button class="ajuda-btn" id="ajuda-btn" type="button" aria-label="Como jogar" title="Como jogar">?</button>
   </div>
   <div class="dialogo" id="dialogo" aria-live="polite">
     <div class="hud">
-      <span class="grupo" data-dica="hora"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span></span>
+      <span class="grupo" data-dica="hora"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span><span class="amanhecer">sol 05h40</span></span>
       <span class="grupo" data-dica="fome"><span>Fome</span><span class="fome" id="fome"></span></span>
       <button class="caderno-btn" id="abrir-caderno" type="button" data-dica="caderno">Caderno <b id="n-pistas">0</b></button>
     </div>
@@ -403,7 +426,7 @@ body {
   </section>
   <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
-<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" id="reiniciar">Menu inicial</button></span></div>
+<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="{{INKJS}}"></script>
 <script>{{V5}}</script>
@@ -470,8 +493,9 @@ function trocarFundo(nome) {
   if (MUSICA_FUNDO[nome]) tocarMusica(MUSICA_FUNDO[nome]);
   const src = ARTE.fundos[nome]; if (!src || $('fundo').getAttribute('src') === src) return;
   fundoAtual = nome;
+  limparCena();  // mudou de lugar: quem estava na cena anterior sai, com a legenda junto
   const f = $('fundo'); f.classList.add('trocando');
-  setTimeout(() => { f.src = src; f.alt = DESC_FUNDO[nome] || ''; f.classList.remove('trocando'); }, 200);
+  setTimeout(() => { f.src = src; f.dataset.f = nome; f.alt = DESC_FUNDO[nome] || ''; f.classList.remove('trocando'); }, 200);
 }
 const DESC_FUNDO = {
   balcao: 'O balcão do Porão do Vincenzo, com prateleiras de garrafas e luminárias amareladas.',
@@ -492,6 +516,7 @@ function esconderIlustracao() { ilustracaoAtual = null; $('ilustracao').classLis
 
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
+let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
 
 function tipoBadge(g) {
   if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra|Ministério)/.test(g)) return 'cla';
@@ -505,6 +530,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
   fila = []; pistas = []; finalTexto = finalLetra = null; cena = null;
+  feitas = new Set(); historico = []; ultimaFome = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
   }, false);
@@ -517,7 +543,8 @@ function novaHistoria() {
 function iniciar() {
   novaHistoria();
   limparCena(); esconderIlustracao();
-  fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; tocarMusica('salao');
+  fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
+  $('carimbo-final').classList.remove('on');
   atualizarHud();
   avancar();
   if (!tutorialVisto()) mostrarTutorial();
@@ -531,7 +558,7 @@ function salvar() {
   const v = story.variablesState;
   try {
     localStorage.setItem(SAVE, JSON.stringify({
-      ink: story.state.toJson(), pistas, finalLetra, finalTexto, fundo: fundoAtual, ilustracao: ilustracaoAtual, musica: som.faixa,
+      ink: story.state.toJson(), pistas, feitas: [...feitas], historico: historico.slice(-80), finalLetra, finalTexto, fundo: fundoAtual, ilustracao: ilustracaoAtual, musica: som.faixa,
       cena: { esq: cena.esq, dir: cena.dir, expr: cena.expr }, nome: v['nome'], minutos: v['minutos'],
     }));
   } catch (e) {}
@@ -544,10 +571,11 @@ function continuar() {
   novaHistoria();
   try { story.state.LoadJson(s.ink); if (!story.canContinue && !story.currentChoices.length) throw new Error('save vazio'); }
   catch (e) { apagarSave(); iniciar(); toast('O jogo salvo não abriu nesta versão. Começando do zero.'); return; }
-  pistas = s.pistas || []; finalLetra = s.finalLetra || null; finalTexto = s.finalTexto || null;
+  pistas = s.pistas || []; feitas = new Set(s.feitas || []); historico = s.historico || []; ultimasPistas = pistas.length; finalLetra = s.finalLetra || null; finalTexto = s.finalTexto || null;
   limparCena(); esconderIlustracao(); cena.expr = (s.cena && s.cena.expr) || {};
   fundoAtual = ARTE.fundos[s.fundo] ? s.fundo : 'salao';
-  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').alt = DESC_FUNDO[fundoAtual] || '';
+  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').dataset.f = fundoAtual; $('fundo').alt = DESC_FUNDO[fundoAtual] || '';
+  $('carimbo-final').classList.remove('on');
   if (s.ilustracao) mostrarIlustracao(s.ilustracao);
   else for (const lado of ['esq', 'dir']) if (s.cena && s.cena[lado]) mostrarPersonagem(s.cena[lado]);
   tocarMusica(s.musica || MUSICA_FUNDO[fundoAtual] || 'salao');
@@ -563,7 +591,17 @@ function atualizarHud() {
   $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
   $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
   $('n-pistas').textContent = pistas.length;
+  const f = v['fome'];
+  if (ultimaFome != null && f !== ultimaFome) {
+    pulsar($('fome'));
+    // o teste de Despertar tem o aviso dele; os outros (Disciplina forte, sangue da Nonna, beber) avisam aqui
+    if (!fila.some(e => e.tipo === 'despertar')) toast(f > ultimaFome ? `A Fome subiu para ${f}` : `A Fome baixou para ${f}`);
+  }
+  ultimaFome = f;
+  if (pistas.length > ultimasPistas) pulsar($('n-pistas'));
+  ultimasPistas = pistas.length;
 }
+function pulsar(el) { el.classList.remove('pulso'); void el.offsetWidth; el.classList.add('pulso'); }
 
 function horaDe(min) { const h = (23 + Math.floor(min / 60)) % 24, m = min % 60; return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`; }
 function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(fimTimer); fimTimer = setTimeout(() => t.classList.remove('on'), 2600); }
@@ -609,8 +647,9 @@ function mostrarDados(r) {
   const mesa = document.createElement('div'); mesa.className = 'mesa-dados';
   mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
     <div class="linha">${r.dados.map((d, i) => `<span class="dado rolando ${d.fome ? 'fomed' : ''}" style="--atraso:${(i * 0.09).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}%;--giro0:${(Math.random() * 360 - 540).toFixed(0)}deg"><span class="face">${1 + Math.floor(Math.random() * 10)}</span></span>`).join('')}</div>
-    <div class="res ${r.resultado === 1 || r.resultado === 2 ? 'bom' : ''}">${RESULTADOS[r.resultado]} · ${r.sucessos} sucesso${r.sucessos === 1 ? '' : 's'}</div>
-    <div class="det dica">Dados vermelhos são de Fome. Clique para continuar.</div></div>`;
+    <div class="res ${r.resultado === 1 || r.resultado === 2 ? 'bom' : ''}" aria-live="polite"></div>
+    <div class="det">Dados vermelhos são de Fome. Clique em qualquer lugar para continuar.</div>
+    <button type="button" class="seguir">Continuar ▸</button></div>`;
   document.querySelector('.jogo').appendChild(mesa);
   const dados = [...mesa.querySelectorAll('.dado')];
   const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -627,7 +666,8 @@ function mostrarDados(r) {
   const terminar = () => {
     if (pronto) return; pronto = true; clearInterval(embaralha); timers.forEach(clearTimeout);
     dados.forEach((el, i) => { el.style.animation = 'none'; parar(el, i); });
-    mesa.querySelector('.res').classList.add('on'); mesa.querySelector('.dica').classList.add('on');
+    const res = mesa.querySelector('.res'); res.textContent = `${RESULTADOS[r.resultado]} · ${r.sucessos} sucesso${r.sucessos === 1 ? '' : 's'}`;
+    res.classList.add('on'); mesa.querySelector('.seguir').classList.add('on');
   };
   if (reduzido) terminar();
   else {
@@ -637,9 +677,12 @@ function mostrarDados(r) {
   const fechar = () => { if (!pronto) return terminar(); clearInterval(embaralha); mesa.remove(); document.removeEventListener('keydown', tecla); avancar(); };
   const tecla = e => { if (!mesa.isConnected) return document.removeEventListener('keydown', tecla); if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); fechar(); } };
   mesa.addEventListener('click', e => { e.stopPropagation(); fechar(); }); setTimeout(() => document.addEventListener('keydown', tecla), 50);
+  // a caixa de texto fica por baixo da mesa: clicar nela também segue
+  $('dialogo').addEventListener('click', function f(e) { if (!mesa.isConnected) return $('dialogo').removeEventListener('click', f, true); e.stopPropagation(); fechar(); }, true);
 }
 
 function mostrarLinha(texto) {
+  texto = texto.replace('@pistas', `${pistas.length} pista${pistas.length === 1 ? '' : 's'}`);
   const v = story.variablesState; let nome = null, chave = null, corpo = texto, classe = 'narracao', passiva = null;
   const m = texto.match(/^([A-ZÀ-Ú][a-zà-ú]+): (.*)$/);
   if (m && (m[1] === 'Você' || CHAVE[m[1]])) { nome = m[1] === 'Você' ? v['nome'] : m[1]; chave = CHAVE[m[1]] || null; corpo = m[2]; classe = m[1] === 'Você' ? 'voce' : ''; }
@@ -650,21 +693,49 @@ function mostrarLinha(texto) {
   exprPendente = null;
   falando(comArte ? chave : null);
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
+  historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo }); if (historico.length > 200) historico.shift();
   const c = $('conteudo');
-  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span>` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
+  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
   digitar(corpo);
 }
 
 function digitar(t) {
   const alvo = $('txt'); alvoTexto = t; let i = 0; clearInterval(digitando);
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; return; }
-  digitando = setInterval(() => { i += 2; alvo.textContent = t.slice(0, i); if (i >= t.length) clearInterval(digitando); }, 16);
+  if (opcoes.instantaneo || pulando || matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; mostradoEm = performance.now(); return; }
+  digitando = setInterval(() => { i += 3; alvo.textContent = t.slice(0, i); if (i >= t.length) { clearInterval(digitando); mostradoEm = performance.now(); } }, 16);
 }
 
+// 1º clique completa a frase, o seguinte avança. Um clique que chega logo depois de a frase completar
+// é ignorado, para clique rápido não pular uma fala sem ler.
 function clicarDialogo() {
   const alvo = $('txt'); if (!alvo) return;
-  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; return; }
+  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; mostradoEm = performance.now(); return; }
+  if (!pulando && performance.now() - mostradoEm < 250) return;
   avancar();
+}
+
+// Segurar Ctrl passa rápido pelas falas (para nas escolhas, nos dados e nas janelas).
+let pulando = false, pulaTimer;
+function pular(liga) {
+  if (liga === pulando) return; pulando = liga; clearInterval(pulaTimer);
+  if (liga) pulaTimer = setInterval(() => { if (!$('txt') || document.querySelector('.mesa-dados, .caderno') || !$('capa').hidden) return; clicarDialogo(); }, 70);
+}
+addEventListener('keydown', e => { if (e.key === 'Control' && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) pular(true); });
+addEventListener('keyup', e => { if (e.key === 'Control') pular(false); });
+addEventListener('blur', () => pular(false));
+
+// Opções do jogador, guardadas neste navegador
+const opcoes = { instantaneo: false };
+try { Object.assign(opcoes, JSON.parse(localStorage.getItem('matusalem-opcoes') || '{}')); } catch (e) {}
+function ajustarOpcoes() {
+  $('instantaneo').setAttribute('aria-pressed', opcoes.instantaneo);
+  try { localStorage.setItem('matusalem-opcoes', JSON.stringify(opcoes)); } catch (e) {}
+}
+
+function abrirHistorico() {
+  abrirJanela('Histórico', [], 'h', (a, mostrar, fechar) => ({ html: `<h2>Histórico</h2><div class="historico">${historico.length ? historico.slice(-80).map(l =>
+    l.nome ? `<p><b>${esc(l.nome)}:</b> ${esc(l.texto)}</p>` : `<p class="narr">${esc(l.texto)}</p>`).join('') : '<p class="vazio">Nada ainda.</p>'}</div>`, botoes: [['Fechar', 'principal', fechar]] }));
+  const f = document.querySelector('.caderno .folha'); if (f) f.scrollTop = f.scrollHeight;
 }
 
 const EMBLEMA = { Gangrel: 'G', Nosferatu: 'N', 'Ministério': 'M' };
@@ -679,7 +750,8 @@ function mostrarEscolhas(pergunta = '') {
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
-      return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
+      const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : '';
+      return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
   }
   const ficha = story.variablesState['nome'] === '';
   c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ficha ? abrirFicha(+b.dataset.i) : escolher(+b.dataset.i); }));
@@ -687,11 +759,22 @@ function mostrarEscolhas(pergunta = '') {
   c.focus({ preventScroll: true });
 }
 
-function escolher(i) { esconderDica(); story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
+// Perguntas às testemunhas que já foram feitas ficam marcadas. Navegar pelo bar e a acusação não contam.
+const CONVERSAS = /^(rayo_perguntas|cao_perguntas|harumi_perguntas|constance_perguntas|biel_perguntas_loop|vincenzo)\b/;
+function chaveEscolha(ch) { const p = String(ch.sourcePath || ''); return CONVERSAS.test(p) && !/Voltar|descansar/.test(ch.text) ? p.split('.')[0] + '|' + ch.text : null; }
+function escolher(i) {
+  esconderDica(); const k = chaveEscolha(story.currentChoices[i]); if (k) feitas.add(k);
+  story.ChooseChoiceIndex(i); atualizarHud(); avancar();
+}
 
 function finaisVistos() { try { return JSON.parse(localStorage.getItem('matusalem-finais') || '[]'); } catch (e) { return []; } }
 function mostrarFim() {
-  $('nome').hidden = true; falando(null); apagarSave();
+  $('nome').hidden = true; limparCena(); apagarSave();
+  if (finalLetra) {
+    const titulo = (finalTexto || '').split('.')[0].replace(/^FINAL\s+\w+\s*·\s*/, '');
+    $('carimbo-final').innerHTML = `<b>FINAL ${esc(finalLetra)}</b><span>${esc(titulo)}</span>`;
+    requestAnimationFrame(() => $('carimbo-final').classList.add('on'));
+  }
   if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {} }
   const vistos = finaisVistos().length;
   $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo 1</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
@@ -876,7 +959,8 @@ const DISC = {
   'Presença': { curta: 'um charme sobrenatural que faz a pessoa querer te agradar.',
     longa: 'Um charme sobrenatural: a pessoa passa a gostar de você e quer te agradar. Quem tem a vontade muito forte pode resistir.' },
 };
-const CUSTO_DISC = 'Usar gasta sangue (a Fome pode subir 1) e o Vincenzo proibiu Disciplinas no Porão: ele pode perceber.';
+const CUSTO_DISC = 'Usar gasta sangue (a Fome pode subir 1) e o Vincenzo proibiu Disciplinas no Porão: ele pode perceber, e pode contar ao Príncipe.';
+const CUSTO_FORTE = 'É a versão forte, uma vez por noite: rende muito, mas a Fome sobe 2 de uma vez, sem sorte, e o Vincenzo vê na hora.';
 const pontos = n => '●'.repeat(n) + '○'.repeat(Math.max(0, 5 - n));
 
 function fichaHTML(nome) {
@@ -885,7 +969,7 @@ function fichaHTML(nome) {
     <h3>Clã ${esc(f.cla)}</h3><p>${esc(CLAS[f.cla])} Algumas falas só aparecem para quem é ${esc(f.cla)}.</p>
     <h3>Notas</h3><table class="ficha-tab">${NOTAS.map(([k, rot, desc]) => `<tr><th>${rot}</th><td class="pontos">${pontos(f.notas[k])}</td><td>${desc}</td></tr>`).join('')}</table>
     <p style="margin-top:.8cqw">Quando a cena pede um teste, cada ponto vira um dado. Nota alta também abre falas que outros personagens não têm.</p>
-    <h3>Disciplina: ${esc(f.disciplina)}</h3><p>Disciplina é um poder de vampiro. ${esc(DISC[f.disciplina].longa)}</p><p>${CUSTO_DISC}</p>
+    <h3>Disciplina: ${esc(f.disciplina)}</h3><p>Disciplina é um poder de vampiro. ${esc(DISC[f.disciplina].longa)}</p><p>${CUSTO_DISC}</p><p>Uma vez por noite, dá para usar a versão forte. ${CUSTO_FORTE.replace(/^É a versão forte, uma vez por noite: r/, 'R')}</p>
     <h3>Em resumo</h3><p><b>Bom em:</b> ${esc(f.forte)}.<br><b>Fraco em:</b> ${esc(f.fraco)}.</p>`;
 }
 
@@ -926,16 +1010,17 @@ const AJUDA = {
   'Como jogar': () => `<h2>Como jogar</h2>
     <p>O Príncipe Dante quer saber quem sumiu com a carga dele, e você tem até o amanhecer para dar um nome.</p>
     <h3>Converse</h3><p>No salão, escolha com quem falar. Cada testemunha fica num canto do bar e conta a sua versão. Ninguém conta a verdade inteira.</p>
-    <h3>O relógio corre</h3><p>Quase toda pergunta gasta uns 20 minutos. A hora fica no canto da caixa de texto e o sol nasce às 05h40. Quando a hora começar a piscar, falta pouco.</p>
+    <h3>O relógio corre</h3><p>Cada pergunta custa minutos, mesmo se você repetir uma que já fez: uns 20 com as testemunhas e 10 com o fantasma. A sessão da Nonna custa 1 hora. A hora fica no canto da caixa de texto e o sol nasce às 05h40. Quando a hora começar a piscar, falta pouco. Pergunta que você já fez aparece apagada.</p>
     <h3>Junte pistas</h3><p>Toda pista vai para o Caderno, numa folha para cada testemunha. Uma pista pode abrir uma pergunta nova com outra pessoa. A última folha é sua, para anotar o que quiser.</p>
-    <h3>Acuse</h3><p>Quando achar que sabe, volte ao salão e mande chamar o Príncipe. Errar custa caro.</p>
-    <h3>Teclado</h3><p>Clique ou Espaço avança. As teclas 1, 2, 3... escolhem uma opção. M liga e desliga a música. Esc fecha esta janela.</p>`,
+    <h3>Acuse</h3><p>Quando achar que sabe, volte ao salão e mande chamar o Príncipe. Na Corte, nome não basta: você mostra três coisas do seu caderno. Prova fraca não convence ninguém, e errar custa caro.</p>
+    <h3>Teclado</h3><p>Clique ou Espaço avança. Segure Ctrl para passar rápido pelas falas. As teclas 1, 2, 3... escolhem uma opção. H mostra o histórico das falas. M liga e desliga a música. Esc fecha esta janela.</p>`,
   'Sua ficha': () => fichaHTML(story?.variablesState['nome']) + (FICHAS[story?.variablesState['nome']] ? `<p><b>Fome agora:</b> ${story.variablesState['fome']} de 5.</p>` : ''),
   'Dados e Fome': () => `<h2>Dados e Fome</h2>
     <h3>Testes</h3><p>Quando o resultado não é garantido, você faz um teste: rola dados de dez faces. Cada dado que der 6 ou mais é um sucesso. Juntou tantos sucessos quanto a dificuldade, passou.</p>
     <p>Quantos dados você rola depende das notas da sua ficha. Dois 10 na mesma rolagem valem 4 sucessos: é um crítico.</p>
     <h3>Fome</h3><p>Vampiro vive com fome de sangue. Os quadradinhos vermelhos ao lado da hora mostram a sua Fome, de 0 a 5.</p>
-    <p>Usar uma Disciplina gasta sangue: depois, há uma chance em duas de a Fome subir 1 (é o "teste de Despertar" que aparece no aviso).</p>
+    <p>Usar uma Disciplina gasta sangue: depois, há uma chance em duas de a Fome subir 1 (é o "teste de Despertar" que aparece no aviso). A Disciplina forte sobe 2 de uma vez, sem sorte. Pagar a Nonna com sangue sobe 1.</p>
+    <p>Com Fome 4, a Besta aparece e pede sangue. Com Fome 5, as conversas com jeitinho somem e o Príncipe desconfia de você: na Corte, ele pede uma prova a mais.</p>
     <p>Nos testes, um dado para cada ponto de Fome vira dado de Fome, vermelho. Se um dado vermelho der 1 e você falhar, é uma <b>falha bestial</b>: a Besta, o seu lado animal, escapa por um instante. Se um vermelho der 10 num crítico, é um <b>crítico bagunçado</b>: você consegue, mas de um jeito feio.</p>
     <p>Fome alta tem um lado bom: os sentidos de predador ficam mais aguçados.</p>`,
   'Etiquetas': () => `<h2>Etiquetas nas opções</h2>
@@ -961,7 +1046,7 @@ const TUTORIAL = [
     <p>Este é um jogo de conversa. Você escolhe com quem falar e o que perguntar. Não precisa saber nada de Vampiro: A Máscara.</p>`,
   `<h2>Converse e anote</h2><p>As testemunhas estão espalhadas pelo bar, uma em cada canto. Cada uma conta a sua versão, e ninguém conta a verdade inteira.</p>
     <p>O que você descobre vai sozinho para o <b>Caderno</b>, no canto da caixa de texto. Uma pista de uma testemunha pode abrir uma pergunta nova com outra.</p>`,
-  `<h2>O relógio corre</h2><p>Quase toda pergunta gasta uns 20 minutos. O sol nasce às 05h40 e você não vai conseguir falar de tudo com todos. Quando achar que sabe, chame o Príncipe e acuse.</p>`,
+  `<h2>O relógio corre</h2><p>Cada pergunta custa minutos, mesmo repetida: uns 20 com as testemunhas. O sol nasce às 05h40 e você não vai conseguir falar de tudo com todos. Quando achar que sabe, chame o Príncipe e mostre a ele três provas do seu caderno.</p>`,
   `<h2>Opções especiais</h2><p>Algumas respostas têm uma etiqueta colorida no fim, como <span class="porque prova">(Prova)</span> ou <span class="porque disc">(Disciplina: Presença)</span>. Elas aparecem por causa do seu clã, das suas notas, das pistas que você achou ou dos seus poderes.</p>
     <p>Passe o mouse em cima da etiqueta e o jogo explica, em uma linha, o que ela faz.</p>`,
   `<h2>Dados e Fome</h2><p>Às vezes o resultado depende de sorte: você rola dados e precisa tirar 6 ou mais em alguns deles. Quanto melhor a sua nota, mais dados.</p>
@@ -1006,8 +1091,8 @@ function dicaDe(g, texto, passiva) {
     return `Só aparece porque você já tem ${onde}. Jogar uma prova na cara de alguém pode pegar a pessoa numa mentira.`;
   }
   if (tipo === 'disc') {
-    const d = g.replace(/^Disciplina:\s*/, '');
-    return `${d}, a sua Disciplina: ${DISC[d]?.curta || 'um poder de vampiro.'} ${CUSTO_DISC}`;
+    const forte = /^Disciplina forte/.test(g), d = g.replace(/^Disciplina( forte)?:\s*/, '');
+    return `${d}, a sua Disciplina: ${DISC[d]?.curta || 'um poder de vampiro.'} ${forte ? CUSTO_FORTE : CUSTO_DISC}`;
   }
   if (tipo === 'teste') {
     const m = g.match(/^Teste:\s*(.+?),\s*dif\.\s*(\d+)/); if (!m) return 'Teste: rola dados; cada 6 ou mais é um sucesso.';
@@ -1026,8 +1111,8 @@ function dicaDe(g, texto, passiva) {
 }
 
 const DICAS_HUD = {
-  hora: 'Hora da noite. Quase toda pergunta gasta uns 20 minutos. O sol nasce às 05h40.',
-  fome: 'Fome, de 0 a 5. Usar Disciplina pode subir. Cada ponto vira um dado vermelho nos testes, que pode dar falha bestial.',
+  hora: 'Hora da noite. Cada pergunta custa minutos, mesmo se você repetir: uns 20 com as testemunhas e 10 com o fantasma. A sessão da Nonna custa 1 hora. O sol nasce às 05h40, e aí o Príncipe desce.',
+  fome: 'Fome, de 0 a 5. Usar Disciplina pode subir 1, e a Disciplina forte sobe 2 de uma vez. Cada ponto vira um dado vermelho nos testes. Com 4, a Besta aparece; com 5, a conversa com jeitinho some e a Corte desconfia de você.',
   caderno: 'Caderno: as pistas que você juntou, uma folha por testemunha, e uma folha para anotar.',
 };
 document.querySelectorAll('.hud [data-dica]').forEach(el => { el.dataset.dica = DICAS_HUD[el.dataset.dica]; });
@@ -1057,10 +1142,14 @@ $('dialogo').addEventListener('click', clicarDialogo);
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
 $('ajuda-btn').addEventListener('click', e => { e.stopPropagation(); abrirAjuda(); });
 $('reiniciar').addEventListener('click', mostrarCapa);
+$('historico').addEventListener('click', e => { e.stopPropagation(); if (story && $('capa').hidden) abrirHistorico(); });
+$('instantaneo').addEventListener('click', () => { opcoes.instantaneo = !opcoes.instantaneo; ajustarOpcoes(); });
+ajustarOpcoes();
 document.addEventListener('keydown', e => {
   if ((e.key === 'm' || e.key === 'M') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { som.ligado = !som.ligado; ajustarSom(); return; }
   if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
   if (!$('capa').hidden) { if (e.key === 'Escape' && !$('confirma').hidden) mostrarCapa(); return; }
+  if ((e.key === 'h' || e.key === 'H') && !document.querySelector('.dados, .caderno') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { abrirHistorico(); return; }
   if (e.key === '?' && !document.querySelector('.dados, .caderno') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { abrirAjuda(); return; }
   if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }
   if (e.key === ' ' || e.key === 'Enter') { if ($('txt')) { e.preventDefault(); clicarDialogo(); } }
