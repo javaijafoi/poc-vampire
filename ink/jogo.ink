@@ -194,7 +194,7 @@ Para onde você vai?
     -> rayo_perguntas
 + {p_rayo_versao} {not p_queimadura} {not rayo_confessou} [Como estava o caixão quando você entregou?]
     ~ passar(20)
-    Rayo: Inteiro. Caixão lacrado, os selos da Senescal no lugar. Ninguém mexeu.
+    Rayo: Inteiro. Caixão lacrado, os selos da Luciana no lugar. Ninguém mexeu.
     { raciocinio >= 3:
         Raciocínio 3 :: Quando ele diz "selos", esfrega a ponta dos dedos. A pele está empolada, como queimadura recente. # pista rayo: O Rayo tem queimaduras frescas nos dedos.
         ~ p_queimadura = true
@@ -576,14 +576,14 @@ Vincenzo: Acabou o tempo, forasteir{o}. O céu já está clareando lá fora. O P
 === acusacao ===
 # fundo: corte
 # limpa
-A Corte desce a escada. O Príncipe Dante senta no meio do salão. Ao lado dele, de terno rosa, a Senescal Constance observa você sem piscar.
+A Corte desce a escada. O Príncipe Dante senta no meio do salão. Ao lado dele, de terno rosa, a Primogênita Lasombra Constance observa você sem piscar.
 Dante: Então, forasteir{o}. Quem me traiu?
 { quebrou_regra >= 2: Vincenzo: Antes, Príncipe: este aí usou Disciplina no meu Porão. Mais de uma vez. }
 + [Rayo, o motoqueiro]
     -> final_rayo
 + [Paizão, do porto]
     -> final_paizao
-+ {p_constance} [A Senescal Constance]
++ {p_constance} [Constance, a Primogênita Lasombra]
     -> final_constance
 + [O Xerife, o Cão]
     -> acusa_cao
@@ -669,9 +669,9 @@ Na noite seguinte, o porto de Santos tem um novo dono. O antigo foi encontrado n
 -> final_a_epilogo
 
 === final_constance ===
-Você: A Senescal pagou o desvio do caminhão.
+Você: A Constance pagou o desvio do caminhão.
 Constance: Que acusação interessante, vinda de alguém que chegou na cidade há três noites.
-Dante olha para ela por um longo tempo. Ele não pode derrubar a Senescal por causa de um forasteir{o}. Ainda não.
+Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de um forasteir{o}. Ainda não.
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
 Constance sorri para você na saída. É o sorriso de quem vai lembrar do seu nome.
 -> final_a_epilogo

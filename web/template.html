@@ -330,7 +330,7 @@ const PERS = {
   biel: { nome: 'Biel', lado: 'dir', desc: 'O fantasma do Biel, rapaz magro de jaqueta de entregador, todo em azul e branco' },
   vincenzo: { nome: 'Vincenzo', lado: 'esq', desc: 'Vincenzo, o dono do bar, velho de cabelo branco e terno cinza risca de giz' },
   dante: { nome: 'Dante', lado: 'esq', desc: 'O Príncipe Dante, de barba grisalha e terno risca de giz azul-marinho' },
-  constance: { nome: 'Constance', lado: 'esq', desc: 'A Senescal Constance, de terno rosa' },
+  constance: { nome: 'Constance', lado: 'esq', desc: 'Constance, a Primogênita Lasombra, de terno rosa' },
   nonna: { nome: 'Nonna', lado: 'esq', desc: 'Nonna Benedetta, senhora muito velha de xale preto de renda' },
 };
 const CHAVE = Object.fromEntries(Object.entries(PERS).map(([k, p]) => [p.nome, k]));
@@ -580,8 +580,8 @@ function letrasDeRecorte(texto) {
 }
 $('logo').innerHTML = `<span aria-hidden="true">${letrasDeRecorte('O MATUSALÉM DESAPARECIDO')}</span>`;
 $('capa-fundo').src = ARTE.fundos.rua;
-// elenco da capa: o Príncipe no meio e um suspeito de cada lado, sem um recorte cobrir o outro
-[['rayo', 2, 2, 60], ['dante', 33, 0, 62], ['cao', 75, -2, 60]].forEach(([k, x, giro, alt]) => {
+// elenco da capa: a Primogênita Lasombra, o Príncipe e o Xerife, sem um recorte cobrir o outro
+[['constance', 2, 2, 56], ['dante', 34, 0, 62], ['cao', 75, -2, 60]].forEach(([k, x, giro, alt]) => {
   const src = ARTE.personagens[k]?.neutro; if (!src) return;
   const img = document.createElement('img'); img.src = src; img.alt = '';
   img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
