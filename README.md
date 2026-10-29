@@ -23,6 +23,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - `# pista <aba>: texto` coloca a pista no caderno, na folha da aba (`dossie`, `rayo`, `cao`, `harumi`, `biel`, `bar`).
 - `# fundo: nome` troca o fundo (`art/cena/fundo_<nome>.webp`); `# entra: nome` põe a testemunha em cena; `# limpa` tira todo mundo.
 - `# musica: nome` troca a música (`musica/<nome>.mp3`). Sem a tag, cada fundo já tem a sua faixa (a tabela fica em `MUSICA_FUNDO`, no `web/template.html`).
+- As explicações para quem não joga Vampiro (ficha de cada personagem, botão "?", dica ao passar o mouse nas etiquetas e o tutorial do começo) ficam em `web/template.html`, no bloco "Ajuda para quem não joga Vampiro". As notas da ficha repetem as do roteiro: mudou uma, mude a outra.
 - `# imagem: nome` mostra uma ilustração de momento-chave por cima da cena; `# final: letra` marca o final.
 
 ## Versão Ink

@@ -248,7 +248,7 @@ body {
 
 /* emblema do clã nas cartas de personagem */
 .carta { grid-template-columns: auto 1fr; column-gap: 1.2cqw; align-items: start; }
-.carta .emblema { grid-row: span 3; width: max(40px, 5.6cqw); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--acento); color: var(--acento);
+.carta .emblema { grid-row: span 4; width: max(40px, 5.6cqw); aspect-ratio: 1; border-radius: 50%; display: grid; place-items: center; border: 2px solid var(--acento); color: var(--acento);
   font-family: var(--f-nome); font-size: max(18px, 2.8cqw); transform: rotate(-8deg); }
 .cartas.tres { grid-template-columns: repeat(3, 1fr); }
 
@@ -310,6 +310,43 @@ body {
 @keyframes flash { 10% { opacity: .9; } 100% { opacity: 0; } }
 .abertura .pular { position: absolute; right: 2cqw; top: 2cqw; z-index: 2; font-family: var(--f-tipo); font-size: max(12px, 1.3cqw); background: rgb(236 228 210 / .85); color: #2a1d16; border: 0; padding: .4cqw 1.2cqw; cursor: pointer; }
 @media (prefers-reduced-motion: reduce) { .abertura .quadro.on, .capa .capa-fundo, .lado[data-p="Biel"] img { animation: none; } }
+
+/* ---------- Ajuda para quem não joga Vampiro: ficha, botão "?", dicas e tutorial ---------- */
+/* botão "?" no canto de cima da cena, longe dos rostos */
+.ajuda-btn { position: absolute; top: 2.2cqw; right: 2.2cqw; z-index: 5; width: max(28px, 3.2cqw); aspect-ratio: 1; border-radius: 50%; border: 2px solid #ece4d2;
+  background: var(--acento); color: #f4e7d2; font-family: var(--f-nome); font-size: max(15px, 1.8cqw); line-height: 1; cursor: pointer; box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); }
+.ajuda-btn:hover, .ajuda-btn:focus-visible { outline: 2px solid #ece4d2; outline-offset: 2px; }
+/* dica de uma linha ao passar o mouse sobre uma etiqueta */
+.dica-pop { position: absolute; z-index: 30; max-width: min(420px, 60%); pointer-events: none; background: #1d1412; color: #efe3d2; font-family: var(--f-texto); font-size: max(13px, 1.35cqw);
+  line-height: 1.35; padding: .6em .8em; box-shadow: .2cqw .4cqw 1cqw rgb(0 0 0 / .6); border-left: 3px solid var(--sangue); opacity: 0; transition: opacity .15s; }
+.dica-pop.on { opacity: 1; }
+.dica-pop b { font-family: var(--f-tipo); font-weight: 400; color: var(--ambar); }
+[data-dica] { cursor: help; }
+.porque[data-dica], .passiva[data-dica] { text-decoration: underline dotted; text-underline-offset: .2em; }
+.carta .ver { font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: var(--acento); }
+/* ficha, ajuda e tutorial usam a mesma folha do caderno */
+.caderno .folha.longa { min-height: 0; }
+.caderno:has(.folha.longa) { grid-template-rows: 100%; }
+.caderno .bloco-folhas:has(.folha.longa) { width: min(92%, 860px); display: flex; flex-direction: column; }
+.caderno .folha.longa { flex: 0 1 auto; padding-bottom: 0; }
+/* botões sempre à vista, mesmo com a folha rolando */
+.caderno .folha.longa .botoes { position: sticky; bottom: 0; background: var(--folha); padding: 1cqw 0 1.6cqw; margin-top: .6cqw; }
+.caderno .folha h3 { font-family: var(--f-nome); font-weight: 600; font-size: max(14px, 1.7cqw); margin: 1.4cqw 0 .4cqw; color: var(--acento); }
+.caderno .folha p { margin: 0 0 .7cqw; font-size: max(14px, 1.65cqw); line-height: 1.45; }
+.caderno .folha .lead { font-style: italic; color: #6d5440; }
+.ficha-tab { width: 100%; border-collapse: collapse; font-size: max(13px, 1.4cqw); line-height: 1.3; color: inherit; }
+.ficha-tab th, .ficha-tab td { color: inherit; font-size: inherit; }
+.ficha-tab th { text-align: left; font-family: var(--f-tipo); font-weight: 400; white-space: nowrap; padding: .25cqw 1cqw .25cqw 0; vertical-align: top; }
+.ficha-tab td { padding: .25cqw 0; vertical-align: top; border-bottom: 1px solid #d6c7ad; }
+.ficha-tab th { border-bottom: 1px solid #d6c7ad; }
+.pontos { font-family: var(--f-tipo); color: var(--acento); letter-spacing: .1em; white-space: nowrap; padding-right: 1cqw !important; }
+.caderno .botoes { display: flex; gap: 1cqw; flex-wrap: wrap; align-items: center; }
+.caderno .botoes .fechar { margin-top: 0; }
+.caderno .botoes .fechar.sec { background: none; color: #2a1810; border: 1px solid #2a1810; }
+.caderno .botoes .fechar.principal { background: var(--acento); color: #f4e7d2; }
+.caderno .passo { font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #6d5440; margin-left: auto; }
+.exemplos { display: grid; gap: .4cqw; margin: .4cqw 0 .8cqw; padding: 0; list-style: none; font-size: max(13px, 1.5cqw); }
+.exemplos .porque { margin-right: .4em; }
 </style>
 
 <div class="jogo">
@@ -321,12 +358,13 @@ body {
     <div class="ilustracao" id="ilustracao"><img alt=""></div>
     <div class="sol" id="sol" aria-hidden="true"></div>
     <img class="moldura" id="moldura" alt="">
+    <button class="ajuda-btn" id="ajuda-btn" type="button" aria-label="Como jogar" title="Como jogar">?</button>
   </div>
   <div class="dialogo" id="dialogo" aria-live="polite">
     <div class="hud">
-      <span class="grupo" title="Hora (o sol nasce às 05h40)"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span></span>
-      <span class="grupo" title="Fome"><span>Fome</span><span class="fome" id="fome"></span></span>
-      <button class="caderno-btn" id="abrir-caderno" type="button">Caderno <b id="n-pistas">0</b></button>
+      <span class="grupo" data-dica="hora"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span></span>
+      <span class="grupo" data-dica="fome"><span>Fome</span><span class="fome" id="fome"></span></span>
+      <button class="caderno-btn" id="abrir-caderno" type="button" data-dica="caderno">Caderno <b id="n-pistas">0</b></button>
     </div>
     <div class="toast" id="toast" role="status"></div>
     <span class="nome" id="nome" hidden></span>
@@ -363,6 +401,7 @@ body {
     <div class="legenda-ab" aria-live="polite"></div>
     <button class="pular" type="button" id="pular">Pular ▸</button>
   </section>
+  <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
 <div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
@@ -481,6 +520,7 @@ function iniciar() {
   fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; tocarMusica('salao');
   atualizarHud();
   avancar();
+  if (!tutorialVisto()) mostrarTutorial();
 }
 
 // ---------- Jogo salvo: grava sozinho neste navegador antes de cada linha ----------
@@ -611,7 +651,7 @@ function mostrarLinha(texto) {
   falando(comArte ? chave : null);
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
   const c = $('conteudo');
-  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva">${esc(passiva)}</span>` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
+  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span>` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
   digitar(corpo);
 }
 
@@ -634,19 +674,20 @@ function mostrarEscolhas(pergunta = '') {
     // escolha de personagem: "Nome · Clã ;; descrição ;; ficha"
     c.innerHTML = `<div class="titulo">${esc(pergunta || 'Quem é você?')}</div><div class="cartas tres">${story.currentChoices.map((ch, i) => {
       const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || '';
-      return `<button class="carta" data-i="${i}" type="button"><span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span><b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small></button>`; }).join('')}</div>`;
+      return `<button class="carta" data-i="${i}" type="button"><span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span><b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
   } else {
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
       const p = ch.text.match(/^(.+?) :: (.*)$/);
-      const porque = p ? ` <span class="porque ${tipoBadge(p[1])}">(${esc(p[1])})</span>` : '';
+      const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
       return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
   }
-  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); escolher(+b.dataset.i); }));
+  const ficha = story.variablesState['nome'] === '';
+  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ficha ? abrirFicha(+b.dataset.i) : escolher(+b.dataset.i); }));
   // foco na caixa, não na primeira opção, para nenhuma parecer já escolhida; Tab e as teclas 1, 2, 3 continuam funcionando
   c.focus({ preventScroll: true });
 }
 
-function escolher(i) { story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
+function escolher(i) { esconderDica(); story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
 
 function finaisVistos() { try { return JSON.parse(localStorage.getItem('matusalem-finais') || '[]'); } catch (e) { return []; } }
 function mostrarFim() {
@@ -801,6 +842,211 @@ $('som').addEventListener('click', () => { som.ligado = !som.ligado; if (som.lig
 $('volume').addEventListener('input', e => { som.vol = e.target.value / 100; som.ligado = som.vol > 0; ajustarSom(); });
 ajustarSom();
 
+// ---------- Ajuda para quem não joga Vampiro: ficha, botão "?", dicas e tutorial ----------
+// Explica as regras, nunca a solução. As notas repetem as do roteiro (escolha_personagem, em ink/jogo.ink): mudou lá, muda aqui.
+const FICHAS = {
+  'Tomás': { cla: 'Gangrel', frase: 'Caminhoneiro do Sul. Rude, com faro de bicho.', disciplina: 'Animalismo',
+    notas: { carisma: 2, manipulacao: 2, subterfugio: 2, raciocinio: 3, intimidacao: 6, ocultismo: 1 },
+    forte: 'meter medo (é quem rola mais dados para ameaçar) e sentir o que os outros sentem', fraco: 'conversa com jeitinho, mentira e assuntos do outro mundo' },
+  'Irene': { cla: 'Nosferatu', frase: 'Ex-espiã dos esgotos de Curitiba. Ouve tudo.', disciplina: 'Ofuscação',
+    notas: { carisma: 1, manipulacao: 2, subterfugio: 3, raciocinio: 3, intimidacao: 4, ocultismo: 2 },
+    forte: 'escutar escondida, reparar em detalhes e entender de fantasmas', fraco: 'simpatia: quase ninguém confia nela de cara' },
+  'Joana': { cla: 'Ministério', frase: 'Pastora de fala mansa. Vende salvação.', disciplina: 'Presença',
+    notas: { carisma: 3, manipulacao: 3, subterfugio: 3, raciocinio: 2, intimidacao: 3, ocultismo: 2 },
+    forte: 'lábia, blefe e encantar as pessoas', fraco: 'força bruta e reparar em detalhes' },
+};
+const CLAS = {
+  Gangrel: 'Vampiros selvagens, de estrada e de mato. Têm faro e jeito de bicho.',
+  Nosferatu: 'Vampiros de aparência monstruosa, escondidos nos esgotos. Vivem de segredos.',
+  'Ministério': 'Um culto de vampiros que adora a Serpente. Prendem os outros pelos vícios e desejos.',
+};
+const NOTAS = [
+  ['carisma', 'Carisma', 'Simpatia e conversa franca. Ajuda a ganhar a confiança de alguém.'],
+  ['manipulacao', 'Manipulação', 'Convencer com mentira. Soma com o Subterfúgio quando você blefa.'],
+  ['subterfugio', 'Subterfúgio', 'Esconder o que você sabe e mentir sem tremer.'],
+  ['raciocinio', 'Raciocínio', 'Reparar em detalhes. Com nota alta, você percebe coisas sem precisar perguntar.'],
+  ['intimidacao', 'Força + Intimidação', 'Meter medo. É quantos dados você rola quando ameaça alguém.'],
+  ['ocultismo', 'Ocultismo', 'Saber de fantasmas, magia e coisas do outro mundo.'],
+];
+const DISC = {
+  Animalismo: { curta: 'falar com os bichos e sentir a Besta, o lado animal, dos outros.',
+    longa: 'O poder de falar com os bichos e de sentir a Besta, o lado animal que todo vampiro carrega. Dá para farejar o que alguém sente de verdade ou pedir ajuda a um animal por perto.' },
+  'Ofuscação': { curta: 'passar despercebido, como se você não estivesse ali.',
+    longa: 'O poder de passar despercebido, como se você não estivesse ali. Dá para sumir num canto e escutar o que dizem quando acham que estão sozinhos.' },
+  'Presença': { curta: 'um charme sobrenatural que faz a pessoa querer te agradar.',
+    longa: 'Um charme sobrenatural: a pessoa passa a gostar de você e quer te agradar. Quem tem a vontade muito forte pode resistir.' },
+};
+const CUSTO_DISC = 'Usar gasta sangue (a Fome pode subir 1) e o Vincenzo proibiu Disciplinas no Porão: ele pode perceber.';
+const pontos = n => '●'.repeat(n) + '○'.repeat(Math.max(0, 5 - n));
+
+function fichaHTML(nome) {
+  const f = FICHAS[nome]; if (!f) return '<p class="vazio">Você ainda não escolheu um personagem.</p>';
+  return `<h2>${esc(nome)} · ${esc(f.cla)}</h2><p class="lead">${esc(f.frase)}</p>
+    <h3>Clã ${esc(f.cla)}</h3><p>${esc(CLAS[f.cla])} Algumas falas só aparecem para quem é ${esc(f.cla)}.</p>
+    <h3>Notas</h3><table class="ficha-tab">${NOTAS.map(([k, rot, desc]) => `<tr><th>${rot}</th><td class="pontos">${pontos(f.notas[k])}</td><td>${desc}</td></tr>`).join('')}</table>
+    <p style="margin-top:.8cqw">Quando a cena pede um teste, cada ponto vira um dado. Nota alta também abre falas que outros personagens não têm.</p>
+    <h3>Disciplina: ${esc(f.disciplina)}</h3><p>Disciplina é um poder de vampiro. ${esc(DISC[f.disciplina].longa)}</p><p>${CUSTO_DISC}</p>
+    <h3>Em resumo</h3><p><b>Bom em:</b> ${esc(f.forte)}.<br><b>Fraco em:</b> ${esc(f.fraco)}.</p>`;
+}
+
+// Janela com a cara do caderno: abas opcionais, uma folha e botões embaixo. montar(aba) devolve { html, botoes: [[texto, classe, ação]] }.
+function abrirJanela(rotulo, abas, inicial, montar) {
+  document.querySelector('.caderno')?.remove(); esconderDica();
+  const el = document.createElement('div'); el.className = 'caderno';
+  el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', rotulo);
+  el.innerHTML = `<div class="bloco-folhas">${abas.length ? `<div class="abas" role="tablist">${abas.map(a =>
+    `<button class="aba" role="tab" type="button" data-aba="${esc(a)}">${esc(a)}</button>`).join('')}</div>` : '<div></div>'}<div class="folha longa" tabindex="-1"></div></div>`;
+  $('palco').appendChild(el);
+  const folha = el.querySelector('.folha'), fechar = () => el.remove();
+  const mostrar = aba => {
+    el.querySelectorAll('.aba').forEach(b => b.setAttribute('aria-selected', b.dataset.aba === aba));
+    const { html, botoes = [] } = montar(aba, mostrar, fechar);
+    folha.innerHTML = html + `<div class="botoes">${botoes.map(([t, cl], i) => cl === 'passo' ? `<span class="passo">${esc(t)}</span>`
+      : `<button class="fechar ${cl || ''}" type="button" data-b="${i}">${esc(t)}</button>`).join('')}</div>`;
+    folha.querySelectorAll('[data-b]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); botoes[+b.dataset.b][2](); }));
+    folha.scrollTop = 0;
+    (folha.querySelector('.principal') || folha.querySelector('[data-b]'))?.focus({ preventScroll: true });
+  };
+  el.querySelectorAll('.aba').forEach(b => b.addEventListener('click', () => mostrar(b.dataset.aba)));
+  el.addEventListener('click', e => { if (e.target === el) fechar(); });
+  mostrar(inicial);
+  return el;
+}
+
+// Ao clicar num personagem na escolha: a ficha dele, com abas para comparar, e só então o botão de confirmar.
+function abrirFicha(i) {
+  const nomes = story.currentChoices.map(ch => ch.text.split(' ;; ')[0].split(' · ')[0]);
+  abrirJanela('Ficha do personagem', nomes, nomes[i], (nome, mostrar, fechar) => ({ html: fichaHTML(nome), botoes: [
+    [`Jogar com ${nome}`, 'principal', () => { fechar(); escolher(nomes.indexOf(nome)); }],
+    ['Voltar', 'sec', fechar],
+  ] }));
+}
+
+const AJUDA = {
+  'Como jogar': () => `<h2>Como jogar</h2>
+    <p>O Príncipe Dante quer saber quem sumiu com a carga dele, e você tem até o amanhecer para dar um nome.</p>
+    <h3>Converse</h3><p>No salão, escolha com quem falar. Cada testemunha fica num canto do bar e conta a sua versão. Ninguém conta a verdade inteira.</p>
+    <h3>O relógio corre</h3><p>Quase toda pergunta gasta uns 20 minutos. A hora fica no canto da caixa de texto e o sol nasce às 05h40. Quando a hora começar a piscar, falta pouco.</p>
+    <h3>Junte pistas</h3><p>Toda pista vai para o Caderno, numa folha para cada testemunha. Uma pista pode abrir uma pergunta nova com outra pessoa. A última folha é sua, para anotar o que quiser.</p>
+    <h3>Acuse</h3><p>Quando achar que sabe, volte ao salão e mande chamar o Príncipe. Errar custa caro.</p>
+    <h3>Teclado</h3><p>Clique ou Espaço avança. As teclas 1, 2, 3... escolhem uma opção. M liga e desliga a música. Esc fecha esta janela.</p>`,
+  'Sua ficha': () => fichaHTML(story?.variablesState['nome']) + (FICHAS[story?.variablesState['nome']] ? `<p><b>Fome agora:</b> ${story.variablesState['fome']} de 5.</p>` : ''),
+  'Dados e Fome': () => `<h2>Dados e Fome</h2>
+    <h3>Testes</h3><p>Quando o resultado não é garantido, você faz um teste: rola dados de dez faces. Cada dado que der 6 ou mais é um sucesso. Juntou tantos sucessos quanto a dificuldade, passou.</p>
+    <p>Quantos dados você rola depende das notas da sua ficha. Dois 10 na mesma rolagem valem 4 sucessos: é um crítico.</p>
+    <h3>Fome</h3><p>Vampiro vive com fome de sangue. Os quadradinhos vermelhos ao lado da hora mostram a sua Fome, de 0 a 5.</p>
+    <p>Usar uma Disciplina gasta sangue: depois, há uma chance em duas de a Fome subir 1 (é o "teste de Despertar" que aparece no aviso).</p>
+    <p>Nos testes, um dado para cada ponto de Fome vira dado de Fome, vermelho. Se um dado vermelho der 1 e você falhar, é uma <b>falha bestial</b>: a Besta, o seu lado animal, escapa por um instante. Se um vermelho der 10 num crítico, é um <b>crítico bagunçado</b>: você consegue, mas de um jeito feio.</p>
+    <p>Fome alta tem um lado bom: os sentidos de predador ficam mais aguçados.</p>`,
+  'Etiquetas': () => `<h2>Etiquetas nas opções</h2>
+    <p>Algumas respostas terminam com uma etiqueta colorida entre parênteses. Ela diz por que a opção apareceu para você. Passe o mouse em cima da etiqueta para ver os detalhes.</p>
+    <ul class="exemplos">
+      <li><span class="porque cla">(Gangrel)</span> Clã: só aparece para quem é daquele clã.</li>
+      <li><span class="porque atrib">(Carisma 3)</span> Nota da ficha: só aparece se a sua nota for alta o bastante.</li>
+      <li><span class="porque prova">(Prova)</span> Só aparece quando você já tem a pista certa no caderno.</li>
+      <li><span class="porque teste">(Teste: Força + Intimidação, dif. 4)</span> Rola dados. A dica mostra quantos dados e a chance de passar.</li>
+      <li><span class="porque disc">(Disciplina: Presença)</span> Usa o seu poder de vampiro. Não rola dado, mas tem preço.</li>
+    </ul>
+    <p>Quando uma linha da história começa com <span class="passiva" style="font-size:.8em">Raciocínio 3</span>, foi algo que você percebeu sozinho graças à sua ficha.</p>`,
+};
+function abrirAjuda(aba = 'Como jogar') {
+  abrirJanela('Como jogar', Object.keys(AJUDA), aba, (a, mostrar, fechar) => ({ html: AJUDA[a](), botoes: [
+    ['Fechar', 'principal', fechar], ['Rever o tutorial', 'sec', () => { fechar(); mostrarTutorial(); }],
+  ] }));
+}
+
+// Tutorial curto no começo da primeira partida (pulável). Depois fica no botão "?".
+const TUTORIAL = [
+  `<h2>Uma noite para achar o culpado</h2><p>Você é um vampiro recém-chegado a São Paulo e deve um favor ao Príncipe. Esta noite ele cobra: alguém sumiu com uma carga preciosa dele, e você tem até o amanhecer para descobrir quem foi.</p>
+    <p>Este é um jogo de conversa. Você escolhe com quem falar e o que perguntar. Não precisa saber nada de Vampiro: A Máscara.</p>`,
+  `<h2>Converse e anote</h2><p>As testemunhas estão espalhadas pelo bar, uma em cada canto. Cada uma conta a sua versão, e ninguém conta a verdade inteira.</p>
+    <p>O que você descobre vai sozinho para o <b>Caderno</b>, no canto da caixa de texto. Uma pista de uma testemunha pode abrir uma pergunta nova com outra.</p>`,
+  `<h2>O relógio corre</h2><p>Quase toda pergunta gasta uns 20 minutos. O sol nasce às 05h40 e você não vai conseguir falar de tudo com todos. Quando achar que sabe, chame o Príncipe e acuse.</p>`,
+  `<h2>Opções especiais</h2><p>Algumas respostas têm uma etiqueta colorida no fim, como <span class="porque prova">(Prova)</span> ou <span class="porque disc">(Disciplina: Presença)</span>. Elas aparecem por causa do seu clã, das suas notas, das pistas que você achou ou dos seus poderes.</p>
+    <p>Passe o mouse em cima da etiqueta e o jogo explica, em uma linha, o que ela faz.</p>`,
+  `<h2>Dados e Fome</h2><p>Às vezes o resultado depende de sorte: você rola dados e precisa tirar 6 ou mais em alguns deles. Quanto melhor a sua nota, mais dados.</p>
+    <p>Vampiro também sente <b>Fome</b>, os quadradinhos vermelhos. Usar seus poderes pode aumentar a Fome, e com muita Fome a sua Besta pode atrapalhar os testes.</p>
+    <p>Esqueceu alguma coisa? O botão <b>?</b> no canto da cena explica tudo de novo. Agora, escolha quem você é. Clique num personagem para ver a ficha dele.</p>`,
+];
+const TUT = 'matusalem-tutorial';
+function mostrarTutorial() {
+  try { localStorage.setItem(TUT, '1'); } catch (e) {}
+  const passos = TUTORIAL.map((_, i) => String(i));
+  abrirJanela('Tutorial', [], '0', (p, mostrar, fechar) => {
+    const i = +p, ultimo = i === passos.length - 1;
+    return { html: TUTORIAL[i], botoes: [
+      [ultimo ? 'Começar' : 'Próximo ›', 'principal', () => ultimo ? fechar() : mostrar(String(i + 1))],
+      ...(i ? [['‹ Voltar', 'sec', () => mostrar(String(i - 1))]] : []),
+      ...(ultimo ? [] : [['Pular tutorial', 'sec', fechar]]),
+      [`${i + 1} de ${passos.length}`, 'passo'],
+    ] };
+  });
+}
+function tutorialVisto() { try { return !!localStorage.getItem(TUT); } catch (e) { return true; } }
+
+// Dica de uma linha sobre cada etiqueta: o que ela faz ou por que a opção apareceu.
+function paradaDoTeste(nomeTeste) {
+  const v = story.variablesState;
+  if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
+  if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
+  if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];
+  return null;
+}
+function chanceDe(parada, fome, dif) {
+  let ok = 0; const N = 3000;
+  for (let i = 0; i < N; i++) { const r = V5.rolarV5(parada, fome, dif).resultado; if (r >= 1 && r <= 3) ok++; }
+  return Math.round(100 * ok / N / 5) * 5;
+}
+function dicaDe(g, texto, passiva) {
+  const v = story.variablesState, tipo = tipoBadge(g);
+  if (tipo === 'cla') return `Só aparece porque você é ${g}. ${CLAS[g] || ''}`;
+  if (tipo === 'prova') {
+    const rot = (texto.split(':')[0] || '').trim();
+    const onde = rot === 'Dossiê' ? 'o que o Príncipe contou no dossiê' : `a pista certa no caderno${rot ? ` ("${rot}")` : ''}`;
+    return `Só aparece porque você já tem ${onde}. Jogar uma prova na cara de alguém pode pegar a pessoa numa mentira.`;
+  }
+  if (tipo === 'disc') {
+    const d = g.replace(/^Disciplina:\s*/, '');
+    return `${d}, a sua Disciplina: ${DISC[d]?.curta || 'um poder de vampiro.'} ${CUSTO_DISC}`;
+  }
+  if (tipo === 'teste') {
+    const m = g.match(/^Teste:\s*(.+?),\s*dif\.\s*(\d+)/); if (!m) return 'Teste: rola dados; cada 6 ou mais é um sucesso.';
+    const dif = +m[2], n = paradaDoTeste(m[1]), f = v['fome'];
+    if (n == null) return `Teste: rola dados (${m[1]}) e precisa de ${dif} sucesso${dif === 1 ? '' : 's'}. Cada dado com 6 ou mais conta um.`;
+    const verm = Math.min(f, n);
+    return `Teste: você rola ${n} dados (${m[1]}) e precisa de ${dif} sucesso${dif === 1 ? '' : 's'}. Cada dado com 6 ou mais conta um.${verm ? ` ${verm} ${verm === 1 ? 'deles é' : 'deles são'} de Fome.` : ''} Chance de passar: uns ${chanceDe(n, f, dif)}%.`;
+  }
+  const m = g.match(/^(.+?) (\d+)$/);
+  if (m && m[1] === 'Fome') return `${passiva ? 'Você sentiu isto' : 'Só aparece'} porque a sua Fome está em ${m[2]} ou mais. Com fome, os sentidos de predador ficam mais aguçados.`;
+  if (m) {
+    const nota = NOTAS.find(n => n[1] === m[1]);
+    return `${passiva ? 'Você percebeu isto sozinho' : 'Só aparece'} porque o seu ${m[1]} é ${m[2]} ou mais.${nota ? ' ' + nota[1] + ': ' + nota[2].charAt(0).toLowerCase() + nota[2].slice(1) : ''}`;
+  }
+  return '';
+}
+
+const DICAS_HUD = {
+  hora: 'Hora da noite. Quase toda pergunta gasta uns 20 minutos. O sol nasce às 05h40.',
+  fome: 'Fome, de 0 a 5. Usar Disciplina pode subir. Cada ponto vira um dado vermelho nos testes, que pode dar falha bestial.',
+  caderno: 'Caderno: as pistas que você juntou, uma folha por testemunha, e uma folha para anotar.',
+};
+document.querySelectorAll('.hud [data-dica]').forEach(el => { el.dataset.dica = DICAS_HUD[el.dataset.dica]; });
+function mostrarDica(el) {
+  const txt = el?.dataset.dica; if (!txt) return esconderDica();
+  const pop = $('dica-pop'), jogo = document.querySelector('.jogo').getBoundingClientRect(), r = el.getBoundingClientRect();
+  pop.textContent = txt; pop.classList.add('on');
+  const w = pop.offsetWidth, h = pop.offsetHeight;
+  let top = r.top - jogo.top - h - 8; if (top < 0) top = r.bottom - jogo.top + 8;
+  pop.style.left = Math.max(0, Math.min(jogo.width - w, r.left - jogo.left + r.width / 2 - w / 2)) + 'px';
+  pop.style.top = top + 'px';
+}
+function esconderDica() { $('dica-pop').classList.remove('on'); }
+document.querySelector('.jogo').addEventListener('mouseover', e => mostrarDica(e.target.closest('[data-dica]')));
+document.querySelector('.jogo').addEventListener('mouseleave', esconderDica);
+// teclado: com a opção em foco, mostra a dica da etiqueta dela
+document.querySelector('.jogo').addEventListener('focusin', e => { const el = e.target.closest?.('[data-dica]') || e.target.querySelector?.('[data-dica]'); el ? mostrarDica(el) : esconderDica(); });
+addEventListener('pointerdown', esconderDica, true);
+
 // ---------- Ligações ----------
 $('novo-jogo').addEventListener('click', novoJogo);
 $('continuar').addEventListener('click', continuar);
@@ -809,11 +1055,13 @@ $('confirma-nao').addEventListener('click', mostrarCapa);
 $('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
 $('dialogo').addEventListener('click', clicarDialogo);
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
+$('ajuda-btn').addEventListener('click', e => { e.stopPropagation(); abrirAjuda(); });
 $('reiniciar').addEventListener('click', mostrarCapa);
 document.addEventListener('keydown', e => {
   if ((e.key === 'm' || e.key === 'M') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { som.ligado = !som.ligado; ajustarSom(); return; }
   if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
   if (!$('capa').hidden) { if (e.key === 'Escape' && !$('confirma').hidden) mostrarCapa(); return; }
+  if (e.key === '?' && !document.querySelector('.dados, .caderno') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { abrirAjuda(); return; }
   if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }
   if (e.key === ' ' || e.key === 'Enter') { if ($('txt')) { e.preventDefault(); clicarDialogo(); } }
   const n = parseInt(e.key, 10); const b = document.querySelector(`#conteudo [data-i="${n - 1}"]`);
