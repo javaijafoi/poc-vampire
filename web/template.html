@@ -126,16 +126,43 @@ body {
 .carta small { font-family: var(--f-tipo); font-size: max(11px, 1.3cqw); color: var(--tinta); }
 .titulo { font-family: var(--f-nome); font-size: max(13px, 1.6cqw); color: var(--tinta-fraca); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 1.2cqw; }
 
-/* Dados */
-.dados { position: absolute; left: 50%; top: 34%; transform: translate(-50%, -50%) rotate(-.6deg); z-index: 5; background: var(--folha); color: var(--tinta); box-shadow: .3cqw .6cqw 1.4cqw rgb(0 0 0 / .6);
-  padding: 1.6cqw 2cqw; display: grid; gap: 1cqw; justify-items: center; font-family: var(--f-tipo); min-width: 38%; }
-.dados .linha { display: flex; gap: .8cqw; flex-wrap: wrap; justify-content: center; }
-.dado { width: max(28px, 4.2cqw); aspect-ratio: 1; display: grid; place-items: center; font-size: max(14px, 2cqw); border: 2px solid var(--tinta); color: var(--tinta); }
-.dado.fomed { border-color: var(--sangue); color: var(--sangue); background: rgb(200 49 63 / .1); }
-.dado.ok { background: var(--tinta); color: var(--folha); }
-.dado.fomed.ok { background: var(--sangue); color: #fff; }
-.dados .res { font-size: max(15px, 2.2cqw); color: var(--acento); }
-.dados .det { font-size: max(11px, 1.3cqw); color: var(--tinta-fraca); }
+/* Dados: mesa escura por cima do jogo inteiro, dados de dez faces caem, giram e param no valor */
+.mesa-dados { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; cursor: pointer;
+  background: radial-gradient(ellipse at 50% 45%, rgb(18 10 14 / .55), rgb(18 10 14 / .88)); animation: mesa-entra .25s ease-out; }
+@keyframes mesa-entra { from { opacity: 0; } }
+.dados { background: var(--folha); color: var(--tinta); box-shadow: .3cqw .6cqw 1.4cqw rgb(0 0 0 / .6); transform: rotate(-.6deg);
+  padding: 1.8cqw 2.4cqw 1.4cqw; display: grid; gap: 1.1cqw; justify-items: center; font-family: var(--f-tipo); min-width: 44%; max-width: 86%; }
+.dados .linha { display: flex; gap: 1cqw; flex-wrap: wrap; justify-content: center; padding: .6cqw 0; }
+.dado { width: max(34px, 5cqw); aspect-ratio: .86; position: relative; filter: drop-shadow(0 .35cqw .3cqw rgb(0 0 0 / .45));
+  animation: dado-cai .9s cubic-bezier(.2, .7, .3, 1) both; animation-delay: var(--atraso, 0s); transition: translate .25s, opacity .25s, filter .25s; }
+#conteudo:focus { outline: none; }
+.dado .face { position: absolute; inset: 0; display: grid; place-items: center; padding-top: 12%;
+  clip-path: polygon(50% 0, 100% 42%, 50% 100%, 0 42%);
+  background: linear-gradient(160deg, #f6eedc 0 48%, #d9cbab 52% 100%); color: var(--tinta); font-size: max(14px, 2.1cqw); }
+.dado .face::before { content: ""; position: absolute; inset: 0; clip-path: polygon(50% 0, 100% 42%, 50% 64%, 0 42%); background: rgb(255 255 255 / .28); }
+.dado.fomed .face { background: linear-gradient(160deg, #c8313f 0 48%, #8a1622 52% 100%); color: #fbe9e6; }
+.dado.rolando .face { animation: dado-gira .18s linear infinite; }
+.dado.parou.ok { translate: 0 -.5cqw; filter: drop-shadow(0 0 .5cqw rgb(224 165 74 / .95)) drop-shadow(0 .5cqw .3cqw rgb(0 0 0 / .4)); }
+.dado.parou.ok .face { font-weight: 700; }
+.dado.parou.dez { filter: drop-shadow(0 0 .9cqw rgb(255 196 90 / 1)) drop-shadow(0 .5cqw .3cqw rgb(0 0 0 / .4)); }
+.dado.parou:not(.ok) { opacity: .55; }
+.dado.parou.bestial { opacity: 1; filter: drop-shadow(0 0 .7cqw rgb(200 49 63 / .9)); }
+@keyframes dado-cai {
+  0% { transform: translate(var(--dx, 0), -260%) rotate(var(--giro0, -200deg)); opacity: 0; }
+  15% { opacity: 1; }
+  60% { transform: translate(0, 8%) rotate(14deg); }
+  78% { transform: translate(0, -14%) rotate(-6deg); }
+  100% { transform: none; }
+}
+@keyframes dado-gira { 50% { transform: scaleX(.55) skewY(8deg); } }
+.dados .res { font-size: max(16px, 2.5cqw); color: var(--acento); border: 2px solid currentColor; padding: .1em .7em; margin: .3cqw 0 .8cqw; opacity: 0; transform: rotate(-4deg) scale(1.8); }
+.dados .res.on { animation: carimbo .35s cubic-bezier(.3, 1.6, .5, 1) forwards; }
+.dados .res.bom { color: #2f6a2b; }
+@keyframes carimbo { to { opacity: 1; transform: rotate(-4deg) scale(1); } }
+.dados .det { font-size: max(11px, 1.3cqw); color: var(--tinta-fraca); text-align: center; }
+.dados .dica { opacity: 0; transition: opacity .3s; }
+.dados .dica.on { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .mesa-dados, .dado, .dado.rolando .face { animation: none; } .dados .res.on { animation: none; opacity: 1; transform: rotate(-4deg); } }
 
 /* Toast e caderno */
 .toast { position: absolute; top: 0; left: 50%; translate: -50% -115%; z-index: 6; background: var(--acento); color: #f4e7d2; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw);
@@ -167,7 +194,6 @@ body {
   .dialogo { position: relative; left: auto; right: auto; bottom: auto; margin-top: 18px; min-height: 9em; padding: 18px 16px 16px; }
   .nome { left: 12px; }
   .cartas { grid-template-columns: 1fr; }
-  .dados { top: 50%; }
   .hud { top: 6px; right: 10px; }
 }
 /* Tema revista: caixa de texto em papel rasgado, legenda presa com fita */
@@ -297,7 +323,7 @@ body {
     </div>
     <div class="toast" id="toast" role="status"></div>
     <span class="nome" id="nome" hidden></span>
-    <div id="conteudo"></div>
+    <div id="conteudo" tabindex="-1"></div>
   </div>
 
   <section class="capa" id="capa" aria-label="Tela inicial">
@@ -528,16 +554,40 @@ function mostrarEvento(ev) {
   if (ev.tipo === 'despertar') { atualizarHud(); toast(ev.ok ? 'Teste de Despertar: a Fome se manteve' : 'Teste de Despertar: a Fome subiu'); return avancar(); }
 }
 
+// Os dados caem na mesa, giram mostrando números ao acaso e param um a um no valor tirado; depois vem o carimbo do resultado.
+// Clicar durante a rolagem pula a animação; clicar de novo (ou Enter/Espaço) fecha e segue a história.
 function mostrarDados(r) {
-  const el = document.createElement('div'); el.className = 'dados'; el.setAttribute('role', 'dialog');
-  el.innerHTML = `<div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
-    <div class="linha">${r.dados.map(d => `<span class="dado ${d.fome ? 'fomed' : ''} ${d.valor >= 6 ? 'ok' : ''}">${d.valor}</span>`).join('')}</div>
-    <div class="res">${RESULTADOS[r.resultado]} · ${r.sucessos} sucesso${r.sucessos === 1 ? '' : 's'}</div>
-    <div class="det">Dados vermelhos são de Fome. Clique para continuar.</div>`;
-  $('palco').appendChild(el);
-  const fechar = () => { el.remove(); document.removeEventListener('keydown', tecla); avancar(); };
-  const tecla = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); fechar(); } };
-  el.addEventListener('click', fechar); setTimeout(() => document.addEventListener('keydown', tecla), 50);
+  const mesa = document.createElement('div'); mesa.className = 'mesa-dados';
+  mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
+    <div class="linha">${r.dados.map((d, i) => `<span class="dado rolando ${d.fome ? 'fomed' : ''}" style="--atraso:${(i * 0.09).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}%;--giro0:${(Math.random() * 360 - 540).toFixed(0)}deg"><span class="face">${1 + Math.floor(Math.random() * 10)}</span></span>`).join('')}</div>
+    <div class="res ${r.resultado === 1 || r.resultado === 2 ? 'bom' : ''}">${RESULTADOS[r.resultado]} · ${r.sucessos} sucesso${r.sucessos === 1 ? '' : 's'}</div>
+    <div class="det dica">Dados vermelhos são de Fome. Clique para continuar.</div></div>`;
+  document.querySelector('.jogo').appendChild(mesa);
+  const dados = [...mesa.querySelectorAll('.dado')];
+  const reduzido = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let pronto = false;
+  const embaralha = setInterval(() => dados.forEach(el => { if (el.classList.contains('rolando')) el.firstChild.textContent = 1 + Math.floor(Math.random() * 10); }), 70);
+  const timers = [];
+  const parar = (el, i) => {
+    const d = r.dados[i]; el.classList.remove('rolando'); el.classList.add('parou');
+    el.firstChild.textContent = d.valor;
+    if (d.valor >= 6) el.classList.add('ok');
+    if (d.valor === 10) el.classList.add('dez');
+    if (d.fome && d.valor === 1 && r.resultado === 4) el.classList.add('bestial');
+  };
+  const terminar = () => {
+    if (pronto) return; pronto = true; clearInterval(embaralha); timers.forEach(clearTimeout);
+    dados.forEach((el, i) => { el.style.animation = 'none'; parar(el, i); });
+    mesa.querySelector('.res').classList.add('on'); mesa.querySelector('.dica').classList.add('on');
+  };
+  if (reduzido) terminar();
+  else {
+    dados.forEach((el, i) => timers.push(setTimeout(() => parar(el, i), 750 + i * 160)));
+    timers.push(setTimeout(terminar, 900 + dados.length * 160));
+  }
+  const fechar = () => { if (!pronto) return terminar(); clearInterval(embaralha); mesa.remove(); document.removeEventListener('keydown', tecla); avancar(); };
+  const tecla = e => { if (!mesa.isConnected) return document.removeEventListener('keydown', tecla); if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); fechar(); } };
+  mesa.addEventListener('click', e => { e.stopPropagation(); fechar(); }); setTimeout(() => document.addEventListener('keydown', tecla), 50);
 }
 
 function mostrarLinha(texto) {
@@ -583,7 +633,8 @@ function mostrarEscolhas(pergunta = '') {
       return `<li><button data-i="${i}" type="button"><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
   }
   c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); escolher(+b.dataset.i); }));
-  const primeiro = c.querySelector('[data-i]'); if (primeiro) primeiro.focus({ preventScroll: true });
+  // foco na caixa, não na primeira opção, para nenhuma parecer já escolhida; Tab e as teclas 1, 2, 3 continuam funcionando
+  c.focus({ preventScroll: true });
 }
 
 function escolher(i) { story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
@@ -651,6 +702,7 @@ $('capa-fundo').src = ARTE.fundos.rua;
   img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
 });
 function mostrarCapa() {
+  document.querySelector('.mesa-dados')?.remove();
   pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
   const v = finaisVistos().length; $('finais').textContent = v ? `Finais encontrados: ${v} de ${FINAIS.length}` : '';
   // com jogo salvo, "Continuar" vira o botão principal e "Novo jogo" pede confirmação
