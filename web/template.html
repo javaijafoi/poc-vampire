@@ -238,6 +238,12 @@ body {
   background: #ece4d2; color: #2a1d16; padding: .4cqw 1.4cqw; }
 .capa .menu { position: absolute; left: 50%; bottom: 6%; transform: translateX(-50%); display: flex; gap: 1.6cqw; align-items: center; z-index: 1; }
 .capa .menu button { font-family: var(--f-tipo); font-size: max(15px, 2.1cqw); border: 0; cursor: pointer; padding: .6cqw 2.4cqw; background: #8f1d26; color: #f4e7d2; box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); transform: rotate(-1deg); }
+.capa .menu[hidden] { display: none; }
+.capa .menu.confirma { flex-direction: column; gap: .8cqw; }
+.capa .menu.confirma p { margin: 0; font-family: var(--f-tipo); font-size: max(13px, 1.5cqw); background: #ece4d2; color: #2a1d16; padding: .4cqw 1.2cqw; transform: rotate(-.5deg); text-align: center; }
+.capa .menu.confirma div { display: flex; gap: 1.6cqw; }
+.capa .salvo { position: absolute; left: 50%; bottom: 1.6%; transform: translateX(-50%); margin: 0; white-space: nowrap; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #2a1d16; background: #ece4d2; padding: .1cqw .8cqw; box-shadow: .2cqw .3cqw .6cqw rgb(0 0 0 / .6); }
+.capa .salvo:empty { display: none; }
 .capa .menu button.sec { background: #ece4d2; color: #2a1d16; font-size: max(13px, 1.6cqw); transform: rotate(.8deg); }
 .capa .menu button:hover, .capa .menu button:focus-visible { outline: 2px solid #ece4d2; outline-offset: 3px; }
 .capa .finais { position: absolute; right: 2.4cqw; bottom: 2cqw; margin: 0; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #c9b998; }
@@ -299,10 +305,16 @@ body {
     <div class="elenco" id="elenco"></div>
     <h1 class="logo" id="logo" aria-label="O Matusalém Desaparecido"></h1>
     <p class="sub">Vampiro: A Máscara · São Paulo · uma noite no Porão do Vincenzo</p>
-    <div class="menu">
+    <div class="menu" id="menu">
+      <button type="button" id="continuar" hidden>Continuar</button>
       <button type="button" id="novo-jogo">Novo jogo</button>
       <button type="button" class="sec" id="ver-abertura">Ver a abertura</button>
     </div>
+    <div class="menu confirma" id="confirma" role="alertdialog" aria-labelledby="confirma-txt" hidden>
+      <p id="confirma-txt">Começar do zero apaga o jogo salvo. Tem certeza?</p>
+      <div><button type="button" id="confirma-sim">Apagar e começar</button><button type="button" class="sec" id="confirma-nao">Voltar</button></div>
+    </div>
+    <p class="salvo" id="salvo"></p>
     <p class="finais" id="finais"></p>
   </section>
 
@@ -385,6 +397,7 @@ function trocarFundo(nome) {
   esconderIlustracao();
   if (MUSICA_FUNDO[nome]) tocarMusica(MUSICA_FUNDO[nome]);
   const src = ARTE.fundos[nome]; if (!src || $('fundo').getAttribute('src') === src) return;
+  fundoAtual = nome;
   const f = $('fundo'); f.classList.add('trocando');
   setTimeout(() => { f.src = src; f.alt = DESC_FUNDO[nome] || ''; f.classList.remove('trocando'); }, 200);
 }
@@ -399,14 +412,14 @@ const DESC_FUNDO = {
 };
 function mostrarIlustracao(nome) {
   const src = ARTE.fundos[nome]; if (!src) return;
-  limparCena();
+  limparCena(); ilustracaoAtual = nome;
   const il = $('ilustracao'); il.querySelector('img').src = src; il.querySelector('img').alt = 'Ilustração provisória: ' + nome.replace(/_/g, ' ');
   il.classList.add('on');
 }
-function esconderIlustracao() { $('ilustracao').classList.remove('on'); }
+function esconderIlustracao() { ilustracaoAtual = null; $('ilustracao').classList.remove('on'); }
 
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
-let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra;
+let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
 
 function tipoBadge(g) {
   if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra|Ministério)/.test(g)) return 'cla';
@@ -417,7 +430,7 @@ function tipoBadge(g) {
 }
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-function iniciar() {
+function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
   fila = []; pistas = []; finalTexto = finalLetra = null; cena = null;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
@@ -428,26 +441,63 @@ function iniciar() {
     if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
     fila.push({ tipo: 'despertar', ok });
   }, false);
+}
+function iniciar() {
+  novaHistoria();
   limparCena(); esconderIlustracao();
-  $('fundo').src = ARTE.fundos.salao; tocarMusica('salao');
+  fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; tocarMusica('salao');
+  atualizarHud();
+  avancar();
+}
+
+// ---------- Jogo salvo: grava sozinho neste navegador antes de cada linha ----------
+// Guarda o estado do Ink (variáveis, personagem, onde está no roteiro), as pistas do caderno e o que está em cena.
+// Ao continuar, a linha que estava na tela é lida de novo. Acabou a partida, o save é apagado.
+const SAVE = 'matusalem-save';
+function salvar() {
+  const v = story.variablesState;
+  try {
+    localStorage.setItem(SAVE, JSON.stringify({
+      ink: story.state.toJson(), pistas, finalLetra, finalTexto, fundo: fundoAtual, ilustracao: ilustracaoAtual, musica: som.faixa,
+      cena: { esq: cena.esq, dir: cena.dir, expr: cena.expr }, nome: v['nome'], minutos: v['minutos'],
+    }));
+  } catch (e) {}
+}
+function lerSave() { try { const s = JSON.parse(localStorage.getItem(SAVE)); return s && s.ink ? s : null; } catch (e) { return null; } }
+function apagarSave() { try { localStorage.removeItem(SAVE); } catch (e) {} }
+function continuar() {
+  const s = lerSave(); if (!s) return iniciar();
+  pararAbertura(); $('abertura').hidden = true; $('capa').hidden = true;
+  novaHistoria();
+  try { story.state.LoadJson(s.ink); if (!story.canContinue && !story.currentChoices.length) throw new Error('save vazio'); }
+  catch (e) { apagarSave(); iniciar(); toast('O jogo salvo não abriu nesta versão. Começando do zero.'); return; }
+  pistas = s.pistas || []; finalLetra = s.finalLetra || null; finalTexto = s.finalTexto || null;
+  limparCena(); esconderIlustracao(); cena.expr = (s.cena && s.cena.expr) || {};
+  fundoAtual = ARTE.fundos[s.fundo] ? s.fundo : 'salao';
+  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').alt = DESC_FUNDO[fundoAtual] || '';
+  if (s.ilustracao) mostrarIlustracao(s.ilustracao);
+  else for (const lado of ['esq', 'dir']) if (s.cena && s.cena[lado]) mostrarPersonagem(s.cena[lado]);
+  tocarMusica(s.musica || MUSICA_FUNDO[fundoAtual] || 'salao');
   atualizarHud();
   avancar();
 }
 
 function atualizarHud() {
-  const v = story.variablesState, min = v['minutos'], h = (23 + Math.floor(min / 60)) % 24, m = min % 60;
-  $('hora').textContent = `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`;
+  const v = story.variablesState, min = v['minutos'];
+  $('hora').textContent = horaDe(min);
   $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
   $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
   $('n-pistas').textContent = pistas.length;
 }
 
+function horaDe(min) { const h = (23 + Math.floor(min / 60)) % 24, m = min % 60; return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`; }
 function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(fimTimer); fimTimer = setTimeout(() => t.classList.remove('on'), 2600); }
 
 // Puxa a próxima linha do roteiro e trata efeitos (dados, tags) antes de mostrar.
 function avancar() {
   if (fila.length) return mostrarEvento(fila.shift());
   if (story.canContinue) {
+    salvar();
     let texto = story.Continue().trim();
     for (const tag of story.currentTags) {
       const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
@@ -540,7 +590,7 @@ function escolher(i) { story.ChooseChoiceIndex(i); atualizarHud(); avancar(); }
 
 function finaisVistos() { try { return JSON.parse(localStorage.getItem('matusalem-finais') || '[]'); } catch (e) { return []; } }
 function mostrarFim() {
-  $('nome').hidden = true; falando(null);
+  $('nome').hidden = true; falando(null); apagarSave();
   if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {} }
   const vistos = finaisVistos().length;
   $('conteudo').innerHTML = `<div class="titulo">Fim da primeira versão</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
@@ -603,7 +653,15 @@ $('capa-fundo').src = ARTE.fundos.rua;
 function mostrarCapa() {
   pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
   const v = finaisVistos().length; $('finais').textContent = v ? `Finais encontrados: ${v} de ${FINAIS.length}` : '';
-  $('novo-jogo').focus({ preventScroll: true });
+  // com jogo salvo, "Continuar" vira o botão principal e "Novo jogo" pede confirmação
+  const s = lerSave(); $('menu').hidden = false; $('confirma').hidden = true;
+  $('continuar').hidden = !s; $('novo-jogo').classList.toggle('sec', !!s);
+  $('salvo').textContent = s ? `Jogo salvo${s.nome ? ': ' + s.nome : ''}${s.minutos != null ? ', ' + horaDe(s.minutos) : ''}` : '';
+  (s ? $('continuar') : $('novo-jogo')).focus({ preventScroll: true });
+}
+function novoJogo() {
+  if (lerSave()) { $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
+  tocarAbertura(iniciar);
 }
 
 // ---------- Abertura animada (uns 30 segundos; dá para pular) ----------
@@ -683,7 +741,10 @@ $('volume').addEventListener('input', e => { som.vol = e.target.value / 100; som
 ajustarSom();
 
 // ---------- Ligações ----------
-$('novo-jogo').addEventListener('click', () => tocarAbertura(() => iniciar()));
+$('novo-jogo').addEventListener('click', novoJogo);
+$('continuar').addEventListener('click', continuar);
+$('confirma-sim').addEventListener('click', () => { apagarSave(); tocarAbertura(iniciar); });
+$('confirma-nao').addEventListener('click', mostrarCapa);
 $('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
 $('dialogo').addEventListener('click', clicarDialogo);
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
@@ -691,7 +752,7 @@ $('reiniciar').addEventListener('click', mostrarCapa);
 document.addEventListener('keydown', e => {
   if ((e.key === 'm' || e.key === 'M') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { som.ligado = !som.ligado; ajustarSom(); return; }
   if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
-  if (!$('capa').hidden) return;
+  if (!$('capa').hidden) { if (e.key === 'Escape' && !$('confirma').hidden) mostrarCapa(); return; }
   if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }
   if (e.key === ' ' || e.key === 'Enter') { if ($('txt')) { e.preventDefault(); clicarDialogo(); } }
   const n = parseInt(e.key, 10); const b = document.querySelector(`#conteudo [data-i="${n - 1}"]`);
