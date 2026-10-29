@@ -49,3 +49,7 @@ RENPY_SDK=~/renpy-8.5.3-sdk bench/renpy/medir_web.sh 5  # build web e carregamen
 ```
 
 Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `bench/renpy/zz_bench.rpy`, que nunca entra no jogo.
+
+## Publicar na Vercel
+
+O jogo web é um site estático: `dist/index.html` mais as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.

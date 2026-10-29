@@ -1,0 +1,5 @@
+{
+  "buildCommand": "npm run compilar && node build_web.cjs cdn",
+  "outputDirectory": "dist",
+  "framework": null
+}
