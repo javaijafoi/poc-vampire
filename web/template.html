@@ -46,6 +46,8 @@ body {
   transition: opacity .5s, transform .5s, filter .3s; filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); }
 .lado.esq { left: 4%; }
 .lado.dir { right: 4%; --giro: -1.5deg; }
+/* escala por personagem, para os rostos ficarem do mesmo tamanho (a arte do Vincenzo é um close) */
+.lado[data-p="Vincenzo"] { height: 64%; bottom: 12%; }
 .lado.on { opacity: 1; transform: rotate(var(--giro)); }
 .lado.calado { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.5) saturate(.6); }
 .palco .lado img { position: static; display: block; height: 100%; width: auto; }
@@ -204,7 +206,7 @@ function mostrarPersonagem(nome, expr) {
   if (!src) return false;
   const lado = LADO[nome] || 'esq', el = $(lado), img = el.querySelector('img');
   if (cena[lado] !== nome) {
-    cena[lado] = nome; el.classList.remove('on'); void el.offsetWidth;
+    cena[lado] = nome; el.dataset.p = nome; el.classList.remove('on'); void el.offsetWidth;
     el.querySelector('.legenda').textContent = nome; img.alt = (DESCRICAO[nome] || nome) + ', recortado como foto de revista.';
   }
   if (expr) cena.expr[nome] = expr;
@@ -216,10 +218,14 @@ function mostrarPersonagem(nome, expr) {
   return true;
 }
 
-// Quem fala fica aceso; o outro lado escurece. Narração e falas suas acendem os dois.
+// Quem fala fica aceso; o outro lado escurece.
+// O personagem da esquerda (Vincenzo e outros de passagem) só fica em cena enquanto conversa com a testemunha:
+// na narração, nas suas falas ou nas escolhas, ele sai.
 function falando(nome) {
+  if (cena.esq && nome !== cena.esq && nome !== cena.dir) tirar('esq');
   for (const lado of ['esq', 'dir']) $(lado).classList.toggle('calado', !!nome && cena[lado] !== nome);
 }
+function tirar(lado) { cena[lado] = null; $(lado).classList.remove('on', 'calado'); }
 
 function limparCena() {
   cena = { esq: null, dir: null, expr: {} }; exprPendente = null;
@@ -336,7 +342,7 @@ function clicarDialogo() {
 }
 
 function mostrarEscolhas() {
-  $('nome').hidden = true; const c = $('conteudo');
+  falando(null); $('nome').hidden = true; const c = $('conteudo');
   if (story.variablesState['nome'] === '') {
     const fichas = ['Carisma 2 · Raciocínio 3 · Manipulação 2 · Animalismo', 'Carisma 3 · Raciocínio 2 · Manipulação 3 · Dominação'];
     c.innerHTML = `<div class="titulo">${esc(story.currentText.trim() || 'Quem vai interrogar o Rayo?')}</div><div class="cartas">${story.currentChoices.map((ch, i) => {
