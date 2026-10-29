@@ -883,6 +883,7 @@ Constance: Abri, e o caixão seguiu inteiro. O forasteir{o} sabe disso. Só não
 Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de um forasteir{o}. Ainda não.
 # musica: final_triste
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
+{ cla == "Nosferatu": -> irene_some_constance }
 Você não chega à próxima noite. Na escada da pensão, a sua própria sombra se levanta da parede e fecha a sua boca.
 # imagem: amanhecer
 Os Lasombra não deixam acusação sem resposta. De manhã, sobra uma mancha de cinza no degrau e um lenço cor-de-rosa.
@@ -891,6 +892,7 @@ Os Lasombra não deixam acusação sem resposta. De manhã, sobra uma mancha de 
 === morte_bode ===
 Três noites depois, alguém bate na porta da sua pensão. É o Cão, com o cigarro que ele não traga.
 Cão: Bom trabalho, forasteir{o}. Bom até demais. Gente esperta não dura nesta cidade.
+{ cla == "Nosferatu": -> irene_some_cao }
 # imagem: amanhecer
 Ninguém pergunta por você. Você não tinha amigos aqui, como o Príncipe disse.
 -> final_a_epilogo
@@ -902,6 +904,28 @@ Longe dali, embaixo dos trilhos da Linha Amarela, um sarcófago com um selo quei
 FINAL A · O BODE EXPIATÓRIO. Você acusou a pessoa errada e pagou com a vida. # final: A
 -> END
 
+=== irene_some_cao ===
+O Cão empurra a porta. O quarto está vazio: cama feita, mala aberta, janela fechada.
+Você está a meio metro dele, encostada na parede, e ele não vê. A Ofuscação nunca foi tão fácil.
+Cão: Rato. Eu sei que você está aqui.
+Ele fareja o ar e vai embora. Ele vai voltar. Mas até lá, você já desceu pelo ralo do banheiro.
+-> final_irene_esgoto
+
+=== irene_some_constance ===
+Na escada da pensão, a sua sombra se levanta da parede para fechar a sua boca, e não encontra boca nenhuma.
+Você já não estava ali. Uma Nosferatu aprende a sumir antes de aprender a andar.
+-> final_irene_esgoto
+
+=== final_irene_esgoto ===
+# imagem: tunel
+# musica: final_triste
+Para a cidade, a forasteira morreu. Para os ratos dos esgotos do Bixiga, chegou uma vizinha nova.
+Daqui de baixo você ouve tudo: os túneis falam, e um deles, embaixo da Linha Amarela, cheira a morte velha.
+Ninguém procura quem está morta. É a melhor posição para recomeçar a investigação.
+Continua no capítulo 2.
+FINAL F · A MORTA NOS ESGOTOS. Irene errou a acusação, mas a Ofuscação a salvou. A cidade acha que ela virou cinza. # final: F
+-> END
+
 === final_sem_provas ===
 # entra: cao
 O Cão sorri, mostrando os dentes tortos.
@@ -910,8 +934,21 @@ Dante: Concordo.
 Antes que você chegue à escada, as mãos do Cão estão nos seus ombros.
 # imagem: amanhecer
 # musica: final_triste
-Quando você abre os olhos, tem correntes nos pulsos, no telhado da cantina, olhando o céu do Bixiga ficar cor de laranja. É a última coisa que você vê.
+Quando você abre os olhos, tem correntes nos pulsos, no telhado da cantina, olhando o céu do Bixiga ficar cor de laranja.
+{ cla == "Gangrel": -> tomas_foge }
+É a última coisa que você vê.
 FINAL D · SEM PROVAS. Você acusou o culpado sem ter como provar. # final: D
+-> END
+
+=== tomas_foge ===
+A Besta acorda antes de você. As unhas viram garras, e a corrente, feita para gente, não para bicho, estoura no terceiro puxão.
+Você pula do telhado com a pele já fumegando, atravessa a rua e enterra o corpo no barro de um terreno baldio, como os velhos Gangrel do Sul ensinaram.
+# imagem: serra
+# musica: final_triste
+Você acorda na noite seguinte, coberto de terra, com queimaduras que vão levar anos para sumir. Para o Príncipe, você é cinza no telhado.
+Na estrada, um caminhoneiro aceita levar você até a Serra sem fazer perguntas. Lá em cima, a neblina é grossa. E dessa vez, quem sabe, tem lobisomem de verdade.
+Continua no capítulo 2.
+FINAL G · O BICHO ENTERRADO. Tomás acusou sem provas, mas a Besta Gangrel o tirou do sol. Agora ele é um fugitivo. # final: G
 -> END
 
 === final_b ===
@@ -971,10 +1008,20 @@ Dante: Uma resposta honesta. A primeira da noite.
 Dante: Mas a sua dívida continua. E eu vou cobrá-la do único jeito de que um devedor não foge.
 Ele corta o próprio pulso com a unha e estende o braço. Os carniçais seguram os seus ombros.
 # musica: final_triste
+{ cla == "Ministério": -> joana_engana }
 Três noites, três goles. Na terceira, você já não lembra por que um dia quis ir embora de São Paulo. Você ama o Príncipe. Você sempre amou.
 Embaixo dos trilhos da Linha Amarela, o sarcófago continua no escuro. Você nunca vai procurar. Ele não deixaria.
 Continua no capítulo 2.
 FINAL E · O SERVO DO PRÍNCIPE. Você não acusou ninguém e virou servo do Príncipe pelo Laço de Sangue. # final: E
+-> END
+
+=== joana_engana ===
+Três noites, três goles. Você bebe cada um ajoelhada, de olhos baixos, como uma boa fiel.
+E cada noite, antes do amanhecer, você reza à Serpente e devolve o sangue do Príncipe numa bacia de cobre. O Ministério ensina: só um deus pode ser dono de você, e ele não mora em São Paulo.
+Na terceira noite, Dante sorri para você como quem olha um cachorro novo. Você sorri de volta. Você aprendeu a fingir amor há muito tempo, no púlpito.
+Agora você tem uma cadeira na Corte, os ouvidos do Príncipe e nenhuma corrente de verdade.
+Continua no capítulo 2.
+FINAL H · A FALSA DEVOTA. Joana não acusou ninguém, mas enganou o Laço de Sangue. Ela é uma espiã dentro da Corte do Príncipe. # final: H
 -> END
 
 // Funções de apoio
