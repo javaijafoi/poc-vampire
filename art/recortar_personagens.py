@@ -20,7 +20,7 @@ SAIDA = os.path.join(os.path.dirname(os.path.abspath(__file__)), "fontes")
 PERSONAGENS = {
     "dante": ("dante.png", (0, .15, 1, .80), None),
     "cao": ("originais/Cao__4320b7.png", (0, .08, 1, .72), None),
-    "paizao": ("paizao.png", (0, .12, 1, .80), None),
+    "harumi": ("harumi.png", (0, 0, 1, 1), None),
     "nonna": ("nonna-benedetta.png", (0, .14, 1, .56), None),
     "constance": ("constance.png", (0, .10, 1, .65), None),
     "biel": ("biel.png", (.30, .10, 1, .72), "fantasma"),  # o Biel morto, no lugar do carniçal Zé Carlos

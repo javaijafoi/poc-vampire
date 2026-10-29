@@ -2,7 +2,7 @@
 
 Jogo de investigação em estilo visual novel, ambientado na São Paulo de Vampiro: A Máscara (V5). Um Matusalém sumiu no caminho entre o Porto de Santos e o cofre do Príncipe Dante. Você interroga quatro testemunhas no Porão do Vincenzo, uma em cada canto do bar, e acusa alguém antes do amanhecer. Ninguém conta a verdade inteira, como em Rashomon.
 
-Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 personagens prontos (Gangrel, Nosferatu, Ministério), as testemunhas (Rayo, Cão, Paizão e o fantasma do Biel, chamado pela Nonna), a acusação diante da Corte e 4 finais. As imagens ainda são provisórias.
+Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 personagens prontos (Gangrel, Nosferatu, Ministério), as testemunhas (Rayo, Cão, Harumi e o fantasma do Biel, chamado pela Nonna), a acusação diante da Corte e 4 finais. As imagens ainda são provisórias.
 
 | Pasta | O que é |
 | --- | --- |
@@ -19,7 +19,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 
 - `Rayo: texto` é fala; linha sem nome é narração.
 - `Gatilho :: texto` é uma opção ou observação especial (clã, atributo, prova, teste, Disciplina) e aparece com uma etiqueta colorida.
-- `# pista <aba>: texto` coloca a pista no caderno, na folha da aba (`dossie`, `rayo`, `cao`, `paizao`, `biel`, `bar`).
+- `# pista <aba>: texto` coloca a pista no caderno, na folha da aba (`dossie`, `rayo`, `cao`, `harumi`, `biel`, `bar`).
 - `# fundo: nome` troca o fundo (`art/cena/fundo_<nome>.webp`); `# entra: nome` põe a testemunha em cena; `# limpa` tira todo mundo.
 - `# imagem: nome` mostra uma ilustração de momento-chave por cima da cena; `# final: letra` marca o final.
 

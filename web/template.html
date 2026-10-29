@@ -196,7 +196,8 @@ body {
 /* escala por personagem, para os rostos ficarem de tamanho parecido */
 .lado[data-p="Nonna"] { height: 74%; bottom: 10%; }
 .lado[data-p="Dante"], .lado[data-p="Constance"] { height: 92%; bottom: 2%; }
-.lado[data-p="Paizão"] { height: 94%; }
+.lado[data-p="Harumi"] { height: 68%; bottom: 22%; }
+.lado[data-p="Harumi"] .legenda { bottom: 16%; }
 /* o Biel é um fantasma: azul, flutuando, com brilho frio */
 .lado[data-p="Biel"] img { animation: flutua 4.5s ease-in-out infinite; filter: drop-shadow(0 0 1.6cqw rgb(150 200 255 / .75)); opacity: .9; }
 @keyframes flutua { 50% { transform: translateY(-2.5%); } }
@@ -326,7 +327,7 @@ document.documentElement.dataset.tema = 'revista';
 const PERS = {
   rayo: { nome: 'Rayo', lado: 'dir', desc: 'Rayo, Gangrel barbudo de colete de couro e braço tatuado' },
   cao: { nome: 'Cão', lado: 'dir', desc: 'O Cão, Xerife Nosferatu de capuz e jaqueta de couro, olhos amarelos' },
-  paizao: { nome: 'Paizão', lado: 'dir', desc: 'Paizão, homem sorridente de camisa estampada, com uma prancheta' },
+  harumi: { nome: 'Harumi', lado: 'dir', desc: 'Harumi, mulher de cabelo preto liso e quimono preto, sorrindo com as presas à mostra' },
   biel: { nome: 'Biel', lado: 'dir', desc: 'O fantasma do Biel, rapaz magro de jaqueta de entregador, todo em azul e branco' },
   vincenzo: { nome: 'Vincenzo', lado: 'esq', desc: 'Vincenzo, o dono do bar, velho de cabelo branco e terno cinza risca de giz' },
   dante: { nome: 'Dante', lado: 'esq', desc: 'O Príncipe Dante, de barba grisalha e terno risca de giz azul-marinho' },
@@ -335,7 +336,7 @@ const PERS = {
 };
 const CHAVE = Object.fromEntries(Object.entries(PERS).map(([k, p]) => [p.nome, k]));
 // folhas do caderno: chave da tag "# pista <aba>:" -> título da aba
-const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', paizao: 'Paizão', biel: 'Biel', bar: 'Vincenzo' };
+const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', harumi: 'Harumi', biel: 'Biel', bar: 'Vincenzo' };
 const FINAIS = ['A', 'B', 'C', 'D'];
 let cena;
 
@@ -594,7 +595,7 @@ function mostrarCapa() {
 
 // ---------- Abertura animada (uns 30 segundos; dá para pular) ----------
 const QUADROS = [
-  { fundo: 'porto', hora: '00h10', txt: 'Porto de Santos. Um sarcófago desembarca em segredo. Dentro dele dorme um Matusalém, mais velho que a cidade.', rec: 'paizao' },
+  { fundo: 'porto', hora: '00h10', txt: 'Porto de Santos. Um sarcófago desembarca em segredo. Dentro dele dorme um Matusalém, mais velho que a cidade.', rec: 'harumi' },
   { fundo: 'serra', hora: '01h00', txt: 'Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.', rec: 'rayo' },
   { fundo: 'tunel', hora: '02h40', txt: 'O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.', rec: 'cao' },
   { fundo: 'tunel', hora: '03h30', txt: 'O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.', carimbo: true },

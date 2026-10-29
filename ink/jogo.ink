@@ -4,7 +4,7 @@
 //   Rayo: texto            -> fala de um personagem (o nome antes dos dois pontos)
 //   texto sem nome         -> narração
 //   Gatilho :: texto       -> opção ou observação especial (skill, clã, prova, teste, Disciplina)
-//   # pista <aba>: texto   -> a pista entra no caderno, na folha da aba (dossie, rayo, cao, paizao, ze, bar)
+//   # pista <aba>: texto   -> a pista entra no caderno, na folha da aba (dossie, rayo, cao, harumi, biel, bar)
 //   # fundo: nome          -> troca o fundo (art/cena/fundo_<nome>.webp)
 //   # entra: nome          -> põe a testemunha em cena, à direita
 //   # limpa                -> tira todo mundo de cena
@@ -38,14 +38,14 @@ VAR p_rayo_hora = false       // entregou 02h40
 VAR p_queimadura = false      // dedos queimados do Rayo
 VAR p_selo = false            // selo queimado na tentativa de roubo (confissão do Rayo)
 VAR p_constance = false       // Constance pagou o desvio
-VAR p_rayo_frasco = false     // Rayo viu o Paizão com um frasquinho
+VAR p_rayo_frasco = false     // Rayo viu o Harumi com um frasquinho
 VAR p_cao_versao = false      // Cão: chegou vazio às 03h30
 VAR p_cao_selo = false        // Cão deixou escapar o selo queimado
 VAR p_concreto = false        // pó de concreto da Linha Amarela
 VAR p_bunker = false          // o Cão tem um esconderijo embaixo dos trilhos
-VAR p_cripta = false          // Paizão falou do cheiro de cripta
-VAR p_dedos = false           // cheiro de sangue antigo nos dedos do Paizão
-VAR p_frasco = false          // Paizão admitiu o frasco
+VAR p_cripta = false          // Harumi falou do cheiro de cripta
+VAR p_dedos = false           // cheiro de sangue antigo nos dedos do Harumi
+VAR p_frasco = false          // Harumi admitiu o frasco
 VAR p_boes = false            // carimbo do BOES no manifesto
 VAR p_tunel = false           // o fantasma morreu num túnel, não na mata
 VAR p_biel_hora = false         // o fantasma viu o relógio às 02h50
@@ -62,9 +62,9 @@ VAR sentiu_besta_rayo = false
 VAR cao_travou = false
 VAR cao_irritado = false
 VAR cao_hora_confrontada = false
-VAR paizao_pressao = 0
-VAR paizao_confessou = false
-VAR paizao_fechado = false
+VAR harumi_pressao = 0
+VAR harumi_confessou = false
+VAR harumi_fechado = false
 VAR usou_cripta = false
 VAR usou_frasco_rayo = false
 VAR usou_dedos = false
@@ -98,8 +98,9 @@ Quem é você?
     ~ ocultismo = 2
     ~ disciplina = "Ofuscação"
     ~ o = "a"
-* [Joaquim · Ministério ;; Pastor de fala mansa. Vende salvação. ;; Carisma 3 · Manipulação 3 · Ocultismo 2 · Presença]
-    ~ nome = "Joaquim"
+* [Joana · Ministério ;; Pastora de fala mansa. Vende salvação. ;; Carisma 3 · Manipulação 3 · Ocultismo 2 · Presença]
+    ~ nome = "Joana"
+    ~ o = "a"
     ~ cla = "Ministério"
     ~ carisma = 3
     ~ raciocinio = 2
@@ -126,7 +127,7 @@ Dante: Meu Xerife diz que o caminhão apareceu vazio no túnel às três e meia,
 Dante: O relatório das concessionárias diz que o caminhão não passou em pedágio nenhum, nem na Anchieta nem na Imigrantes. # pista dossie: O caminhão não passou em pedágio nenhum na descida da Serra.
 Você: Por que eu? A cidade tem um Xerife.
 Dante: Porque o transporte passava pela segurança do Xerife. E porque você não tem amigos aqui. Ninguém vai pedir favor a você.
-Dante: Todos que tocaram na carga estão neste bar. O Rayo dirigiu o caminhão. O Paizão liberou o contêiner no porto. O Cão recebeu no túnel.
+Dante: Todos que tocaram na carga estão neste bar. O Rayo dirigiu o caminhão. A Harumi, do Ministério, recebeu o contêiner no porto. É ela quem manda nos estivadores de lá. O Cão recebeu no túnel.
 Dante: E a Nonna Benedetta, lá no fundo, diz que fala com os mortos. O Biel não aparece desde as três. Se ele virou cinza, talvez ainda tenha algo a dizer.
 Dante: Você tem até o amanhecer. Quando o sol estiver para nascer, eu volto com a Corte, e você me diz quem me traiu.
 Dante: Acerte, e sua dívida está paga. Erre, e você paga por ela.
@@ -145,8 +146,8 @@ Para onde você vai?
     -> rayo
 + [O Cão, no canto escuro perto da escada]
     -> cao
-+ [Paizão, na mesa de sinuca]
-    -> paizao
++ [Harumi, na mesa de sinuca]
+    -> harumi
 + [Nonna Benedetta, na mesa do fundo]
     -> nonna
 + {not vincenzo_falou} [Vincenzo, o dono do bar]
@@ -188,8 +189,8 @@ Para onde você vai?
     -> rayo_perguntas
 + {not p_rayo_frasco} [Quem te entregou a carga no porto?]
     ~ passar(20)
-    Rayo: O Paizão. Todo sorridente, como sempre. Tava guardando um frasquinho escuro no bolso da camisa quando eu cheguei.
-    Rayo: Achei que era cachaça. Aquele lá não bebe cachaça. # pista rayo: O Rayo viu o Paizão guardar um frasquinho escuro no bolso, no porto.
+    Rayo: A Harumi. Toda sorridente, como sempre. Tava guardando um frasquinho escuro na manga do quimono quando eu cheguei.
+    Rayo: Achei que era perfume. Aquela lá não usa perfume. # pista rayo: O Rayo viu a Harumi guardar um frasquinho escuro na manga, no porto.
     ~ p_rayo_frasco = true
     -> rayo_perguntas
 + {p_rayo_versao} {not p_queimadura} {not rayo_confessou} [Como estava o caixão quando você entregou?]
@@ -345,7 +346,7 @@ Você guarda a pista mais importante da noite: só quem viu a carga depois do de
 + {disciplina == "Presença"} {not cao_irritado} [Disciplina: Presença :: Ganhar a confiança dele com charme.]
     ~ passar(20)
     ~ despertar()
-    Cão: Guarda esse charme pra Toreador, pastor. Eu já fui mordido por coisa mais bonita.
+    Cão: Guarda esse charme pra Toreador, pastora. Eu já fui mordido por coisa mais bonita.
     Ele cospe no chão. Agora ele sabe que você usa Disciplina dentro do Porão. # pista cao: O Cão resiste à Presença. Ele tem a vontade muito forte.
     ~ cao_irritado = true
     ~ quebrou_regra += 1
@@ -374,107 +375,107 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão travou: ele 
 -> salao
 
 // ------------------------------------------------------------------ PAIZÃO
-=== paizao ===
+=== harumi ===
 # fundo: sinuca
-# entra: paizao
-{ paizao_confessou:
-    Paizão: Eu já te dei o que você queria, meu bem. Agora esquece que eu existo.
+# entra: harumi
+{ harumi_confessou:
+    Harumi: Eu já te dei o que você queria, querid{o}. Agora esquece que me viu.
     -> salao
 }
-{ not p_cripta: Na mesa de sinuca, o Paizão erra uma tacada fácil e ri alto demais. A camisa estampada está aberta até o peito. }
--> paizao_perguntas
+{ not p_cripta: Na mesa de sinuca, a Harumi encaçapa três bolas seguidas sem tirar os olhos de você. O quimono preto tem serpentes bordadas. }
+-> harumi_perguntas
 
-=== paizao_perguntas ===
+=== harumi_perguntas ===
 { minutos >= limite: -> amanhecer }
 { fome >= 3 and not p_dedos:
-    Fome 3 :: Quando ele passa perto, você sente: nos dedos dele, um cheiro de sangue antigo, tão forte que a sua boca se enche. # pista paizao: Cheiro de sangue muito antigo nos dedos do Paizão.
+    Fome 3 :: Quando ela passa perto, você sente: nos dedos dela, um cheiro de sangue antigo, tão forte que a sua boca se enche. # pista harumi: Cheiro de sangue muito antigo nos dedos da Harumi.
     ~ p_dedos = true
 }
 + [O que saiu do porto?]
     ~ passar(20)
-    Paizão: Um contêiner lacrado, meu bem. Eu assinei a papelada e liberei. Nunca abri, nunca vi, nunca quis ver.
-    Paizão: Se sumiu, foi no caminho. E quem fez o caminho foi esse motoqueiro anarquista.
-    -> paizao_perguntas
+    Harumi: Um contêiner lacrado, querid{o}. Meus estivadores tiraram do navio e eu liberei. Nunca abri, nunca vi, nunca quis ver.
+    Harumi: Se sumiu, foi no caminho. E quem fez o caminho foi esse motoqueiro anarquista.
+    -> harumi_perguntas
 + {not p_cripta} [Como era a carga? Pesada, grande?]
     ~ passar(20)
-    Paizão: Pesada e fedida. Cheiro de cripta, de terra de cemitério velho. Até os estivadores reclamaram.
-    Ele sorri, e o sorriso dura menos do que devia. # pista paizao: O Paizão falou do "cheiro de cripta" da carga, mas diz que o contêiner saiu lacrado.
+    Harumi: Pesada e fedida. Cheiro de cripta, de terra de cemitério velho. Até os estivadores reclamaram.
+    Ela sorri, e o sorriso dura menos do que devia. # pista harumi: A Harumi falou do "cheiro de cripta" da carga, mas diz que o contêiner saiu lacrado.
     ~ p_cripta = true
-    -> paizao_perguntas
-+ {p_cripta} {not usou_cripta} {not paizao_confessou} [Prova :: Cheiro de cripta: se estava lacrado, como você sentiu o cheiro?]
+    -> harumi_perguntas
++ {p_cripta} {not usou_cripta} {not harumi_confessou} [Prova :: Cheiro de cripta: se estava lacrado, como você sentiu o cheiro?]
     ~ passar(20)
     ~ usou_cripta = true
-    Você: Contêiner lacrado não tem cheiro, Paizão. Sarcófago aberto tem.
-    Paizão: Eu... eu tenho o nariz bom, ué.
-    -> paizao_pressionar
-+ {p_rayo_frasco} {not usou_frasco_rayo} {not paizao_confessou} [Prova :: Frasco: o Rayo te viu guardando um frasquinho no bolso.]
+    Você: Contêiner lacrado não tem cheiro, Harumi. Sarcófago aberto tem.
+    Harumi: Eu tenho o nariz bom. Faz parte do meu negócio.
+    -> harumi_pressionar
++ {p_rayo_frasco} {not usou_frasco_rayo} {not harumi_confessou} [Prova :: Frasco: o Rayo te viu guardando um frasquinho na manga.]
     ~ passar(20)
     ~ usou_frasco_rayo = true
-    Você: O Rayo viu você guardar um frasco escuro no bolso, no porto. Não era cachaça.
-    O Paizão leva a mão ao bolso da camisa sem pensar.
-    -> paizao_pressionar
-+ {p_dedos} {not usou_dedos} {not paizao_confessou} [Prova :: Sangue: seus dedos cheiram a sangue mais velho que esta cidade.]
+    Você: O Rayo viu você guardar um frasco escuro na manga, no porto. Não era perfume.
+    A Harumi cobre a manga com a outra mão, devagar demais.
+    -> harumi_pressionar
++ {p_dedos} {not usou_dedos} {not harumi_confessou} [Prova :: Sangue: seus dedos cheiram a sangue mais velho que esta cidade.]
     ~ passar(20)
     ~ usou_dedos = true
-    Você: Seus dedos cheiram a sangue antigo, Paizão. Antigo demais pra ser seu.
-    -> paizao_pressionar
+    Você: Seus dedos cheiram a sangue antigo, Harumi. Antigo demais pra ser seu.
+    -> harumi_pressionar
 + {cla == "Ministério"} {not p_frasco} [Ministério :: Irmão, a Serpente ensina que todo segredo tem preço.]
     ~ passar(20)
-    Você: Irmão, nós dois servimos à mesma Serpente. Ela ensina que todo segredo tem preço. Me diga o seu.
-    Paizão: ...Um irmão. Logo hoje. Tá bom. Eu tirei um pouquinho. Só um frasco, pra vender pra Harumi. O velho nem vai sentir falta. # pista paizao: O Paizão admitiu que abriu o sarcófago e tirou um frasco de sangue para vender à Harumi.
+    Você: Irmã, nós servimos à mesma Serpente. Ela ensina que todo segredo tem preço. Me diga o seu.
+    Harumi: ...Alguém da Serpente. Logo hoje. Tá bom. Eu tirei um pouquinho. Só um frasco, pros meus clientes mais especiais. O velho nem vai sentir falta. # pista harumi: A Harumi admitiu que abriu o sarcófago e tirou um frasco de sangue para vender.
     ~ p_frasco = true
-    -> paizao_perguntas
-+ {not paizao_fechado} {not paizao_confessou} [Teste: Força + Intimidação, dif. 4 :: Segurar o taco dele e falar baixo.]
+    -> harumi_perguntas
++ {not harumi_fechado} {not harumi_confessou} [Teste: Força + Intimidação, dif. 4 :: Segurar o taco dela e falar baixo.]
     ~ passar(20)
-    Você segura o taco de sinuca no meio da tacada dele.
+    Você segura o taco de sinuca no meio da tacada dela.
     ~ temp r = rolar(intimidacao, fome, 4)
     {
     - r == 1 or r == 2 or r == 3:
-        Paizão: Calma! Calma, pelo amor. Eu falo.
-        -> paizao_confissao
+        Harumi: Solta. Solta o taco, eu falo. Ninguém encosta em mim aqui dentro.
+        -> harumi_confissao
     - r == 4:
         A Besta empurra e você quebra o taco ao meio. O bar inteiro fica quieto. O Vincenzo pousa o copo devagar.
         ~ quebrou_regra += 1
-        ~ paizao_fechado = true
-        Paizão: Vincenzo! Esse aí tá quebrando a regra da casa!
+        ~ harumi_fechado = true
+        Harumi: Vincenzo! Seu convidado está quebrando a regra da casa.
         -> salao
     - else:
-        Paizão: Ih, que é isso? Vai bater num velho gordo na frente de todo mundo? Me poupe.
-        ~ paizao_fechado = true
-        -> paizao_perguntas
+        Harumi: Que gracinha. Você acha que me assusta? Eu tenho cem anos de gente mais feia que você.
+        ~ harumi_fechado = true
+        -> harumi_perguntas
     }
-+ {disciplina == "Presença"} {not paizao_confessou} [Disciplina: Presença :: Fazer ele querer contar tudo para você.]
++ {disciplina == "Presença"} {not harumi_confessou} [Disciplina: Presença :: Fazer ela querer contar tudo para você.]
     ~ passar(20)
     ~ despertar()
-    Você deixa a Presença tomar a sala. O Paizão olha para você como para um velho amigo que voltou de viagem.
+    Você deixa a Presença tomar a sala. A Harumi, que vive de seduzir os outros, se pega sorrindo para você como para uma velha amizade.
     ~ quebrou_regra += 1
-    -> paizao_confissao
-+ {disciplina == "Animalismo"} {not paizao_confessou} [Disciplina: Animalismo :: Farejar o medo dele.]
+    -> harumi_confissao
++ {disciplina == "Animalismo"} {not harumi_confessou} [Disciplina: Animalismo :: Farejar o medo dela.]
     ~ passar(20)
     ~ despertar()
-    A Besta dele não tem medo de você. Tem medo de gente de terno, crachá e lanterna. Gente que caça vampiro. # pista paizao: O Paizão tem medo de caçadores, de gente "de terno e crachá".
+    A Besta dela não tem medo de você. Tem medo de gente de terno, crachá e lanterna. Gente que caça vampiro. # pista harumi: A Harumi tem medo de caçadores, de gente "de terno e crachá".
     ~ quebrou_regra += 1
-    -> paizao_pressionar
+    -> harumi_pressionar
 + [Voltar para o salão]
     -> salao
 
-=== paizao_pressionar ===
-~ paizao_pressao += 1
-{ paizao_pressao >= 2:
-    Paizão: Tá bom, tá bom. Mas isso não sai daqui.
-    -> paizao_confissao
+=== harumi_pressionar ===
+~ harumi_pressao += 1
+{ harumi_pressao >= 2:
+    Harumi: Tá bom. Mas isso não sai desta mesa.
+    -> harumi_confissao
 - else:
-    Paizão: Você tá vendo coisa, meu filh{o}. Eu só cuido de papel.
-    -> paizao_perguntas
+    Harumi: Você está vendo coisa, querid{o}. Eu só cuido de mercadoria.
+    -> harumi_perguntas
 }
 
-=== paizao_confissao ===
-~ paizao_confessou = true
+=== harumi_confissao ===
+~ harumi_confessou = true
 ~ p_frasco = true
 ~ p_boes = true
-Paizão: Eu abri o caixão. Só o suficiente pra encher um frasco. Sangue daquele, a Harumi paga uma fortuna.
-Paizão: Mas tem outra coisa, e essa é a que me tira o sono. O manifesto da carga tinha um carimbo. BOES. Batalhão de Operações Especiais.
-Paizão: Carga do Príncipe, com carimbo de caçador. Você entende o que isso quer dizer? Eu não quero entender. # pista paizao: O manifesto da carga tinha um carimbo do BOES, os caçadores. A carga do Príncipe tinha papel da Segunda Inquisição.
+Harumi: Eu abri o caixão. Só o suficiente pra encher um frasco. Sangue daquele, meus clientes pagam uma fortuna.
+Harumi: Mas tem outra coisa, e essa é a que me tira o sono. O manifesto da carga tinha um carimbo. BOES. Batalhão de Operações Especiais.
+Harumi: Carga do Príncipe, com carimbo de caçador. Você entende o que isso quer dizer? Eu não quero entender. # pista harumi: O manifesto da carga tinha um carimbo do BOES, os caçadores. A carga do Príncipe tinha papel da Segunda Inquisição.
 Você guarda o carimbo como quem guarda uma arma carregada.
 -> salao
 
@@ -581,8 +582,8 @@ Dante: Então, forasteir{o}. Quem me traiu?
 { quebrou_regra >= 2: Vincenzo: Antes, Príncipe: este aí usou Disciplina no meu Porão. Mais de uma vez. }
 + [Rayo, o motoqueiro]
     -> final_rayo
-+ [Paizão, do porto]
-    -> final_paizao
++ [Harumi, do porto]
+    -> final_harumi
 + {p_constance} [Constance, a Primogênita Lasombra]
     -> final_constance
 + [O Xerife, o Cão]
@@ -656,16 +657,16 @@ Ao amanhecer, o Rayo é amarrado no telhado da cantina. O sol faz o resto.
 Na noite seguinte, o motoclube dele declara guerra à Camarilla. A Augusta pega fogo.
 -> final_a_epilogo
 
-=== final_paizao ===
-# entra: paizao
-Paizão: Eu?! Eu só cuido de papel, Príncipe!
+=== final_harumi ===
+# entra: harumi
+Harumi: Eu? Eu só cuido de mercadoria, Príncipe. O senhor sabe disso.
 { p_frasco:
-    Você: Ele abriu o sarcófago e tirou um frasco do sangue do Matusalém para vender.
-    Dante: Então ele roubou de mim. Dá no mesmo.
+    Você: Ela abriu o sarcófago e tirou um frasco do sangue do Matusalém para vender.
+    Dante: Então ela roubou de mim. Dá no mesmo.
 }
-O Paizão é levado pela escada, ainda falando, ainda sorrindo de nervoso.
-# imagem: paizao_morto
-Na noite seguinte, o porto de Santos tem um novo dono. O antigo foi encontrado numa câmara fria de contêiner, de olhos abertos.
+A Harumi é levada pela escada, ainda sorrindo, sem pressa nenhuma.
+# imagem: harumi_morto
+Na noite seguinte, o porto de Santos tem uma nova dona. A antiga foi encontrada numa câmara fria de contêiner, de olhos abertos.
 -> final_a_epilogo
 
 === final_constance ===

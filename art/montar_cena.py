@@ -31,7 +31,7 @@ TAM = (1280, 720)
 MORTOS = {
     "rayo": ("amanhecer", "DESTRUÍDO AO AMANHECER"),
     "cao": ("amanhecer", "O XERIFE VIROU CINZA"),
-    "paizao": ("porto", "ENCONTRADO NO PORTO"),
+    "harumi": ("porto", "ENCONTRADA NO PORTO"),
 }
 
 

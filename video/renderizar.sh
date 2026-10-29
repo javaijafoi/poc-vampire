@@ -5,5 +5,5 @@ set -euo pipefail
 cd "$(dirname "$0")/abertura"
 mkdir -p img
 for f in porto serra tunel corte rua; do cp ../../art/cena/fundo_$f.webp img/; done
-for k in paizao rayo cao dante; do cp ../../art/cena/${k}_neutro.webp img/; done
+for k in harumi rayo cao dante; do cp ../../art/cena/${k}_neutro.webp img/; done
 npx -y hyperframes@0.8.214 render -q "${QUALIDADE:-looks}" -o ../abertura.mp4
