@@ -668,6 +668,7 @@ function iniciar() {
   fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
   $('carimbo-final').classList.remove('on');
   atualizarHud();
+  comecarPartida('nova');
   avancar();
   if (!tutorialVisto()) mostrarTutorial();
 }
@@ -702,6 +703,7 @@ function continuar() {
   else for (const lado of ['esq', 'dir']) if (s.cena && s.cena[lado]) mostrarPersonagem(s.cena[lado]);
   tocarMusica(s.musica || MUSICA_FUNDO[fundoAtual] || 'salao');
   atualizarHud();
+  comecarPartida('continuar');
   avancar();
 }
 
@@ -732,7 +734,7 @@ function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add
 function avancar() {
   if (fila.length) return mostrarEvento(fila.shift());
   if (story.canContinue) {
-    salvar();
+    salvar(); marcarLugar();
     let texto = story.Continue().trim();
     for (const tag of story.currentTags) {
       const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
@@ -855,6 +857,7 @@ function ajustarOpcoes() {
 }
 
 function abrirHistorico() {
+  registrar('abriu', { o_que: 'historico' });
   abrirJanela('Histórico', [], 'h', (a, mostrar, fechar) => ({ html: `<h2>Histórico</h2><div class="historico">${historico.length ? historico.slice(-80).map(l =>
     l.nome ? `<p><b>${esc(l.nome)}:</b> ${esc(l.texto)}</p>` : `<p class="narr">${esc(l.texto)}</p>`).join('') : '<p class="vazio">Nada ainda.</p>'}</div>`, botoes: [['Fechar', 'principal', fechar]] }));
   const f = document.querySelector('.caderno .folha'); if (f) f.scrollTop = f.scrollHeight;
@@ -885,7 +888,11 @@ function mostrarEscolhas(pergunta = '') {
 const CONVERSAS = /^(rayo_perguntas|cao_perguntas|harumi_perguntas|constance_perguntas|biel_perguntas_loop|vincenzo)\b/;
 function chaveEscolha(ch) { const p = String(ch.sourcePath || ''); return CONVERSAS.test(p) && !/Voltar|descansar/.test(ch.text) ? p.split('.')[0] + '|' + ch.text : null; }
 function escolher(i) {
-  esconderDica(); const k = chaveEscolha(story.currentChoices[i]); if (k) feitas.add(k);
+  esconderDica(); const ch = story.currentChoices[i], k = chaveEscolha(ch); if (k) feitas.add(k);
+  const txt = ch.text.split(' ;; ')[0], p = txt.match(/^(.+?) :: (.*)$/), origem = String(ch.sourcePath || '').split('.')[0];
+  const lugar = /^[a-z_]/i.test(origem) ? origem : partida.lugar;
+  if (story.variablesState['nome'] === '') registrar('personagem_escolhido', { escolhido: txt.split(' · ')[0] });
+  else { partida.escolhas++; partida.ultimaEscolha = p ? p[2] : txt; registrar('escolha', { lugar, opcao: partida.ultimaEscolha, etiqueta: p ? p[1] : '', repetida: !!document.querySelector(`#conteudo [data-i="${i}"].feita`) }); }
   if (ILUSTRACAO_DE_PASSAGEM.has(ilustracaoAtual)) voltarDaIlustracao();
   story.ChooseChoiceIndex(i); atualizarHud(); avancar();
 }
@@ -893,6 +900,7 @@ function escolher(i) {
 function finaisVistos() { try { return JSON.parse(localStorage.getItem('matusalem-finais') || '[]'); } catch (e) { return []; } }
 function mostrarFim() {
   $('nome').hidden = true; limparCena(); apagarSave();
+  if (partida.ativa) { registrar('final', { final: finalLetra || 'sem letra' }); partida.ativa = false; }
   if (finalLetra) {
     const titulo = (finalTexto || '').split('.')[0].replace(/^FINAL\s+\w+\s*·\s*/, '');
     $('carimbo-final').innerHTML = `<b>FINAL ${esc(finalLetra)}</b><span>${esc(titulo)}</span>`;
@@ -914,6 +922,7 @@ let abaAtual = 'Dossiê', anotacoes = '';
 try { anotacoes = localStorage.getItem('porao-anotacoes') || ''; } catch (e) {}
 
 function abrirCaderno() {
+  registrar('abriu', { o_que: 'caderno' });
   const abas = ['Dossiê', ...Object.values(ABAS_PISTA).filter(a => a !== 'Dossiê' && pistas.some(p => p.aba === a)), 'Anotações'];
   if (!abas.includes(abaAtual)) abaAtual = 'Dossiê';
   const el = document.createElement('div'); el.className = 'caderno';
@@ -960,8 +969,11 @@ $('capa-fundo').src = ARTE.fundos.rua;
 // no celular em pé, a capa mostra um recorte de cada vez (o CSS só usa a classe "on" nesse caso)
 { let i = 0; const elenco = [...$('elenco').children]; elenco[0]?.classList.add('on');
   setInterval(() => { if ($('capa').hidden || !elenco.length) return; elenco[i].classList.remove('on'); i = (i + 1) % elenco.length; elenco[i].classList.add('on'); }, 4000); }
+let abriuRegistrado = false;
 function mostrarCapa() {
   document.querySelector('.mesa-dados')?.remove();
+  if (!abriuRegistrado) { abriuRegistrado = true; registrar('jogo_aberto', { tem_save: !!lerSave(), finais_vistos: finaisVistos().length, de_onde: document.referrer ? new URL(document.referrer).hostname : '' }); }
+  else if (partida.ativa) { registrar('voltou_ao_menu'); partida.ativa = false; }
   pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
   const v = finaisVistos().length; $('finais').textContent = v ? `Finais encontrados: ${v} de ${FINAIS.length}` : '';
   // com jogo salvo, "Continuar" vira o botão principal e "Novo jogo" pede confirmação
@@ -994,7 +1006,8 @@ function tocarAbertura(depois) {
   const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash'), quem = ab.querySelector('.quem-ab');
   [rec, carimbo, bilhete, quem].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
   $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true }); tocarMusica('abertura', false);
-  const fim = () => { pararAbertura(); ab.hidden = true; depois(); };
+  // o clique em Pular chega aqui duas vezes (botão e abertura); só a primeira vale
+  const fim = () => { if (ab.hidden) return; pararAbertura(); ab.hidden = true; depois(); };
   ab.onclick = e => { if (e.target.id === 'pular') fim(); };
   $('pular').onclick = fim;
   let t = 0;
@@ -1142,7 +1155,8 @@ const AJUDA = {
     <h3>Junte pistas</h3><p>Toda pista vai para o Caderno, numa folha para cada testemunha. Uma pista pode abrir uma pergunta nova com outra pessoa. A última folha é sua, para anotar o que quiser.</p>
     <h3>Acuse</h3><p>Quando achar que sabe, volte ao salão e mande chamar o Príncipe. Na Corte, nome não basta: você mostra três coisas do seu caderno. Prova fraca não convence ninguém, e errar custa caro.</p>
     ${TOQUE ? `<h3>No celular</h3><p>Toque na cena ou na caixa de texto para avançar. Toque numa etiqueta, na hora ou na Fome para ver o que é. Embaixo da tela ficam o Histórico, a música e o menu. O jogo funciona em pé ou deitado; deitado, a cena fica maior.</p>`
-      : `<h3>Teclado</h3><p>Clique ou Espaço avança. Segure Ctrl para passar rápido pelas falas. As teclas 1, 2, 3... escolhem uma opção. H mostra o histórico das falas. M liga e desliga a música. Esc fecha esta janela.</p>`}`,
+      : `<h3>Teclado</h3><p>Clique ou Espaço avança. Segure Ctrl para passar rápido pelas falas. As teclas 1, 2, 3... escolhem uma opção. H mostra o histórico das falas. M liga e desliga a música. Esc fecha esta janela.</p>`}
+    ${registroLigado ? `<h3>Ajude a melhorar o jogo</h3><p>Para descobrir onde as pessoas travam, o jogo registra de forma anônima por onde você passa: cenas, escolhas e finais. Nada do que você escreve no caderno sai daqui, e não guardamos nome nem e-mail.</p>` : ''}`,
   'Sua ficha': () => fichaHTML(story?.variablesState['nome']) + (FICHAS[story?.variablesState['nome']] ? `<p><b>Fome agora:</b> ${story.variablesState['fome']} de 5.</p>` : ''),
   'Dados e Fome': () => `<h2>Dados e Fome</h2>
     <h3>Testes</h3><p>Quando o resultado não é garantido, você faz um teste: rola dados de dez faces. Cada dado que der 6 ou mais é um sucesso. Juntou tantos sucessos quanto a dificuldade, passou.</p>
@@ -1164,6 +1178,7 @@ const AJUDA = {
     <p>Quando uma linha da história começa com <span class="passiva" style="font-size:.8em">Raciocínio 3</span>, foi algo que você percebeu sozinho graças à sua ficha.</p>`,
 };
 function abrirAjuda(aba = 'Como jogar') {
+  registrar('abriu', { o_que: 'ajuda' });
   abrirJanela('Como jogar', Object.keys(AJUDA), aba, (a, mostrar, fechar) => ({ html: AJUDA[a](), botoes: [
     ['Fechar', 'principal', fechar], ['Rever o tutorial', 'sec', () => { fechar(); mostrarTutorial(); }],
   ] }));
@@ -1191,7 +1206,7 @@ function mostrarTutorial() {
     return { html: TUTORIAL[i], botoes: [
       [ultimo ? 'Começar' : 'Próximo ›', 'principal', () => ultimo ? fechar() : mostrar(String(i + 1))],
       ...(i ? [['‹ Voltar', 'sec', () => mostrar(String(i - 1))]] : []),
-      ...(ultimo ? [] : [['Pular tutorial', 'sec', fechar]]),
+      ...(ultimo ? [] : [['Pular tutorial', 'sec', () => { registrar('tutorial_pulado', { passo: i + 1 }); fechar(); }]]),
       [`${i + 1} de ${passos.length}`, 'passo'],
     ] };
   });
@@ -1281,6 +1296,61 @@ jogoEl.addEventListener('click', e => {
   }
 }, true);
 jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault(); });
+
+// ---------- Registro anônimo de como as pessoas jogam (PostHog) ----------
+// Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
+// Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
+// Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
+const REGISTRO = { chave: '{{POSTHOG_CHAVE}}', host: 'https://us.i.posthog.com', versao: '{{VERSAO}}' };
+const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
+  && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
+const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
+let jogadorId; try { jogadorId = localStorage.getItem('matusalem-jogador') || sorteio(); localStorage.setItem('matusalem-jogador', jogadorId); } catch (e) { jogadorId = sorteio(); }
+const sessaoId = sorteio();
+const partida = { escolhas: 0, inicio: 0, lugar: '', ativa: false, ultimaEscolha: '' };
+function registrar(evento, props = {}) {
+  const v = story && story.variablesState;
+  const dados = {
+    distinct_id: jogadorId, $session_id: sessaoId, $process_person_profile: false, $lib: 'matusalem',
+    $current_url: location.origin + location.pathname, versao: REGISTRO.versao, aparelho: TOQUE ? 'toque' : 'mouse',
+    ...(partida.ativa && v ? { personagem: v['nome'] || '', lugar: partida.lugar, hora_no_jogo: horaDe(v['minutos']), escolhas: partida.escolhas, pistas: pistas.length,
+      minutos_jogando: Math.round((Date.now() - partida.inicio) / 60000) } : {}),
+    ...props,
+  };
+  if (!registroLigado) { if (/registro=ver/.test(location.search)) console.log('[registro]', evento, dados); return; }
+  try {
+    // text/plain evita a checagem extra do navegador; keepalive deixa o envio terminar mesmo se a aba fechar
+    fetch(REGISTRO.host + '/i/v0/e/', { method: 'POST', keepalive: true, headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify({ api_key: REGISTRO.chave, event: evento, properties: dados, timestamp: new Date().toISOString() }) }).catch(() => {});
+  } catch (e) {}
+}
+// lugar = o trecho do roteiro (knot do Ink) onde a pessoa está, como "rayo_perguntas" ou "salao"
+function marcarLugar() {
+  const p = story.state.currentPathString; if (!p) return;
+  const lugar = p.split('.')[0]; if (lugar === partida.lugar || /^\d/.test(lugar)) return;
+  partida.lugar = lugar; registrar('cena', { fundo: fundoAtual });
+}
+function comecarPartida(modo) {
+  Object.assign(partida, { escolhas: 0, inicio: Date.now(), lugar: '', ativa: true, ultimaEscolha: '' });
+  registrar('partida_iniciada', { modo }); marcarLugar();
+}
+// parado: ninguém clicou nem apertou tecla por 2 minutos no meio da partida (um aviso por pausa)
+let paradoTimer;
+function mexeu() {
+  clearTimeout(paradoTimer);
+  paradoTimer = setTimeout(() => {
+    if (!partida.ativa || !$('capa').hidden || document.hidden) return;
+    registrar('parado', { tela: $('txt') ? 'texto' : document.querySelector('.caderno') ? 'janela' : 'escolhas', ultima_escolha: partida.ultimaEscolha });
+  }, 120000);
+}
+['pointerdown', 'keydown'].forEach(t => addEventListener(t, mexeu, true));
+// saiu: a aba foi fechada, trocada ou o celular bloqueou no meio da partida. Repetido no mesmo lugar sem escolha nova não conta.
+let ultimaSaida = '';
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden || !partida.ativa) return;
+  const marca = partida.lugar + '|' + partida.escolhas; if (marca === ultimaSaida) return;
+  ultimaSaida = marca; registrar('saiu', { ultima_escolha: partida.ultimaEscolha, na_capa: !$('capa').hidden });
+});
 
 // ---------- Ligações ----------
 $('novo-jogo').addEventListener('click', novoJogo);

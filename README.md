@@ -67,3 +67,12 @@ Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `benc
 ## Publicar na Vercel
 
 O jogo web é um site estático: `dist/index.html` mais as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.
+
+## Registro anônimo das partidas (PostHog)
+
+Para ver onde os jogadores travam, o jogo publicado manda eventos anônimos ao PostHog (plano grátis). Fica tudo em `web/template.html`, bloco "Registro anônimo".
+
+- Eventos: `jogo_aberto`, `partida_iniciada`, `personagem_escolhido`, `cena` (mudou de trecho do roteiro), `escolha`, `abriu` (ajuda, caderno, histórico), `tutorial_pulado`, `parado` (2 minutos sem clicar), `saiu` (fechou ou trocou de aba no meio), `voltou_ao_menu`, `final`.
+- Quase todo evento leva `lugar` (knot do Ink), `hora_no_jogo`, `escolhas`, `pistas`, `personagem` e `versao` (commit).
+- O jogador é um número sorteado guardado no navegador (`matusalem-jogador`). Nada do caderno, nenhum nome ou e-mail.
+- A chave do projeto PostHog fica em `build_web.cjs` (ou na variável `POSTHOG_CHAVE`). Sem chave, em `localhost`/`file:` ou com `?semregistro=1`, nada é enviado. Com `?registro=ver` os eventos aparecem no console em vez de sair.

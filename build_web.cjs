@@ -12,8 +12,13 @@ for (const f of fs.readdirSync('art/cena')) {
   else if (m) (personagens[m[1]] ??= {})[m[2]] = b64('art/cena/' + f);
 }
 let html = fs.readFileSync('web/template.html', 'utf8');
+// registro anônimo das partidas (PostHog): a chave do projeto é pública, vai no HTML de qualquer jeito
+const POSTHOG_CHAVE = process.env.POSTHOG_CHAVE || '';
+let versao = (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7);
+if (!versao) try { versao = require('child_process').execSync('git rev-parse --short HEAD').toString().trim(); } catch (e) { versao = 'dev'; }
 const inkjs = mode === 'cdn' ? 'https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/ink.js' : 'ink.js';
 html = html.replace('{{INKJS}}', inkjs)
+  .replace('{{POSTHOG_CHAVE}}', POSTHOG_CHAVE).replace('{{VERSAO}}', versao)
   .replace('{{V5}}', () => fs.readFileSync('web/v5.js', 'utf8'))
   .replace('{{STORY}}', () => fs.readFileSync('ink/jogo.json', 'utf8'))
   .replace('{{FUNDOS}}', () => JSON.stringify(fundos)).replace('{{MOLDURA}}', () => b64('art/cena/moldura.webp')).replace('{{RASGO}}', () => b64('art/cena/rasgo.png')).replace('{{PERSONAGENS}}', () => JSON.stringify(personagens));
