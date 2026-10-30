@@ -1,5 +1,5 @@
 {
-  "buildCommand": "npm run compilar && node build_web.cjs cdn",
+  "buildCommand": "npm run compilar && node build_web.cjs cdn && node fluxo/gerar.cjs 300",
   "outputDirectory": "dist",
   "framework": null
 }

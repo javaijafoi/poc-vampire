@@ -4,10 +4,11 @@
   "description": "O Matusalém Desaparecido: investigação em Ink, jogo web",
   "scripts": {
     "compilar": "node compile.cjs ink/jogo.ink ink/jogo.json",
-    "build": "npm run compilar && node build_web.cjs cdn && node build_web.cjs local",
+    "build": "npm run compilar && node build_web.cjs cdn && node build_web.cjs local && node fluxo/gerar.cjs",
     "testar": "npm run compilar && node test_jogo.cjs 3000 && node test_texto.cjs 1000 && node test_caminho.cjs",
     "bench": "npm run build && node bench/bench.cjs",
-    "arte": "python3 art/montar_cena.py"
+    "arte": "python3 art/montar_cena.py",
+    "fluxo": "npm run compilar && node fluxo/gerar.cjs"
   },
   "dependencies": {
     "inkjs": "2.2.3"

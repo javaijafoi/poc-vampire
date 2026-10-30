@@ -1,0 +1,516 @@
+<title>Fluxograma do Matusalém</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Spectral:ital,wght@0,400;0,600;1,400&display=swap">
+<style>
+/* Layout: mapa de cenas à esquerda (ou em cima no celular), ficha de papel à direita com três abas. */
+:root {
+  --noite: #f3ece2; --painel: #fbf7f0; --papel: #fffdf8; --tinta: #231a17; --tinta-fraca: #6d5e57;
+  --linha: #d9ccbd; --sangue: #a3222f; --ambar: #a86a12; --verde: #2f6b3f; --azul: #2c5a7a;
+  --chip: #efe5d8; --sombra: rgba(40, 20, 20, .12);
+  --f-titulo: "Special Elite", "Courier New", monospace;
+  --f-texto: "Spectral", Georgia, serif;
+  --f-ui: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --noite: #120a0e; --painel: #1d1216; --papel: #24171c; --tinta: #efe3d2; --tinta-fraca: #b9a594;
+  --linha: #4a2c35; --sangue: #e0525e; --ambar: #e0a54a; --verde: #79c08a; --azul: #7fb3d6;
+  --chip: #33212a; --sombra: rgba(0, 0, 0, .4); color-scheme: dark } }
+:root[data-theme="dark"] {
+  --noite: #120a0e; --painel: #1d1216; --papel: #24171c; --tinta: #efe3d2; --tinta-fraca: #b9a594;
+  --linha: #4a2c35; --sangue: #e0525e; --ambar: #e0a54a; --verde: #79c08a; --azul: #7fb3d6;
+  --chip: #33212a; --sombra: rgba(0, 0, 0, .4); color-scheme: dark }
+html, body { height: 100%; }
+body { background: var(--noite); color: var(--tinta); font: 15px/1.45 var(--f-texto); margin: 0; }
+* { box-sizing: border-box; }
+button, select, input { font: inherit; color: inherit; }
+button:focus-visible, select:focus-visible, input:focus-visible, .clic:focus-visible { outline: 2px solid var(--ambar); outline-offset: 2px; }
+
+.app { display: grid; grid-template-rows: auto 1fr; height: 100%; }
+header { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; padding-block: 10px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  border-bottom: 1px solid var(--linha); background: var(--painel); }
+h1 { font: 22px/1.1 var(--f-titulo); margin: 0; letter-spacing: .02em; }
+h1 small { display: block; font: 12px var(--f-ui); color: var(--tinta-fraca); letter-spacing: 0; margin-top: 3px; }
+.caps { display: flex; gap: 4px; flex-wrap: wrap; }
+.caps button { border: 1px solid var(--linha); background: transparent; border-radius: 3px; padding: 4px 10px; cursor: pointer; font: 13px var(--f-ui); }
+.caps button[aria-pressed="true"] { background: var(--tinta); color: var(--noite); border-color: var(--tinta); }
+.caps button.vazio { color: var(--tinta-fraca); border-style: dashed; }
+.ferramentas { display: flex; gap: 8px 14px; flex-wrap: wrap; align-items: center; font: 13px var(--f-ui); margin-left: auto; }
+.ferramentas label { display: inline-flex; gap: 5px; align-items: center; cursor: pointer; }
+.ferramentas select { padding: 3px 6px; border: 1px solid var(--linha); background: var(--papel); border-radius: 3px; }
+
+main { display: grid; grid-template-columns: minmax(0, 1fr) minmax(340px, 34%); min-height: 0; }
+#mapa-wrap { position: relative; min-height: 0; min-width: 0; }
+#mapa { position: absolute; inset: 0; }
+.legenda { position: absolute; left: max(12px, env(safe-area-inset-left, 0px)); bottom: 12px; display: flex; flex-wrap: wrap; gap: 6px 12px; max-width: calc(100% - 24px);
+  background: var(--painel); border: 1px solid var(--linha); padding: 6px 10px; border-radius: 4px; font: 12px var(--f-ui); color: var(--tinta-fraca); }
+.legenda button { border: 0; cursor: pointer; }
+.legenda i { display: inline-block; width: 18px; height: 0; border-top: 2px solid; vertical-align: middle; margin-right: 4px; }
+.vazio-cap { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; padding: 24px; color: var(--tinta-fraca); }
+.vazio-cap h2 { font: 24px var(--f-titulo); color: var(--tinta); margin: 0 0 8px; }
+
+aside { background: var(--papel); border-left: 1px solid var(--linha); display: grid; grid-template-rows: auto 1fr; min-height: 0; min-width: 0; }
+.abas { display: flex; border-bottom: 1px solid var(--linha); }
+.abas button { flex: 1; padding: 10px 6px; border: 0; background: transparent; cursor: pointer; font: 14px var(--f-titulo); color: var(--tinta-fraca); border-bottom: 2px solid transparent; }
+.abas button[aria-selected="true"] { color: var(--tinta); border-bottom-color: var(--sangue); }
+.corpo { overflow: auto; padding: 14px 16px 40px; min-width: 0; }
+.corpo h2 { font: 20px/1.2 var(--f-titulo); margin: 0 0 2px; text-wrap: balance; }
+.corpo h3 { font: 12px var(--f-ui); text-transform: uppercase; letter-spacing: .08em; color: var(--tinta-fraca); margin: 18px 0 6px; }
+.sub { color: var(--tinta-fraca); font: 13px var(--f-ui); }
+.dica { font: 13px/1.5 var(--f-ui); color: var(--tinta-fraca); background: var(--chip); padding: 10px 12px; border-radius: 4px; }
+
+.op { border: 1px solid var(--linha); border-radius: 4px; padding: 8px 10px; margin-bottom: 8px; background: var(--painel); }
+.op.travada { opacity: .5; }
+.op .t { font-weight: 600; }
+.op .gat { font: 11px var(--f-ui); text-transform: uppercase; letter-spacing: .06em; color: var(--ambar); display: block; }
+.linhas { display: flex; flex-direction: column; gap: 4px; margin-top: 6px; font: 13px/1.4 var(--f-ui); }
+.chips { display: flex; flex-wrap: wrap; gap: 4px; }
+.chip { display: inline-block; font: 12px/1.3 var(--f-ui); padding: 2px 7px; border-radius: 10px; background: var(--chip); color: var(--tinta); }
+.chip.pede { box-shadow: inset 0 0 0 1px var(--azul); }
+.chip.nao { box-shadow: inset 0 0 0 1px var(--sangue); }
+.chip.ok { background: color-mix(in srgb, var(--verde) 22%, var(--chip)); }
+.chip.falta { background: color-mix(in srgb, var(--sangue) 20%, var(--chip)); }
+.r { color: var(--tinta-fraca); }
+.abre { color: var(--verde); } .fecha { color: var(--sangue); } .pista { color: var(--ambar); }
+.clic { cursor: pointer; text-decoration: underline; text-decoration-color: var(--linha); text-underline-offset: 2px; }
+.clic:hover { text-decoration-color: currentColor; }
+.estado-tag { float: right; font: 11px var(--f-ui); padding: 1px 6px; border-radius: 3px; }
+.estado-tag.sim { background: color-mix(in srgb, var(--verde) 25%, transparent); }
+.estado-tag.nao { background: color-mix(in srgb, var(--sangue) 25%, transparent); }
+
+table { border-collapse: collapse; width: 100%; font: 13px var(--f-ui); font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 5px 6px; border-bottom: 1px solid var(--linha); vertical-align: top; }
+th { font-weight: 600; color: var(--tinta-fraca); font-size: 12px; }
+td.n { text-align: right; }
+.barra { height: 4px; background: var(--sangue); border-radius: 2px; margin-top: 3px; opacity: .7; }
+.chave { border-bottom: 1px solid var(--linha); padding: 8px 0; }
+.chave summary { cursor: pointer; display: flex; gap: 8px; align-items: baseline; }
+.chave summary b { font: 13px var(--f-ui); font-weight: 600; }
+.chave summary .pct { margin-left: auto; font: 12px var(--f-ui); color: var(--tinta-fraca); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.estado { display: flex; flex-wrap: wrap; gap: 6px 10px; font: 13px var(--f-ui); align-items: center; }
+.estado input[type=number] { width: 4.5em; padding: 2px 4px; border: 1px solid var(--linha); background: var(--painel); border-radius: 3px; }
+.tog { cursor: pointer; user-select: none; }
+.tog input { accent-color: var(--sangue); }
+
+@media (max-width: 820px) {
+  main { grid-template-columns: 1fr; grid-template-rows: 58vh auto; }
+  aside { border-left: 0; border-top: 1px solid var(--linha); }
+  .app { height: auto; }
+  .ferramentas { margin-left: 0; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="app">
+  <header>
+    <h1>Fluxograma das escolhas<small id="gerado"></small></h1>
+    <nav class="caps" id="caps" aria-label="Capítulos"></nav>
+    <div class="ferramentas">
+      <label for="personagem">Simular com
+        <select id="personagem"><option value="">todas as opções</option></select>
+      </label>
+      <label class="tog"><input type="checkbox" id="ver-voltas"> voltas ao salão</label>
+      <label class="tog"><input type="checkbox" id="ver-tempo"> fim do tempo</label>
+    </div>
+  </header>
+  <main>
+    <div id="mapa-wrap"><div id="mapa"></div>
+      <div class="legenda" id="legenda">
+        <span><i style="border-color:var(--tinta)"></i>opção do jogador</span>
+        <span><i style="border-color:var(--ambar);border-top-style:dashed"></i>pulo automático</span>
+        <span><i style="border-color:var(--sangue);border-top-style:dotted"></i>travada no estado simulado</span>
+        <button type="button" class="chip" id="ver-tudo">ver o mapa inteiro</button>
+      </div>
+    </div>
+    <aside>
+      <div class="abas" role="tablist">
+        <button role="tab" id="aba-cena" aria-selected="true">Cena</button>
+        <button role="tab" id="aba-chaves" aria-selected="false">Pistas e travas</button>
+        <button role="tab" id="aba-finais" aria-selected="false">Finais</button>
+      </div>
+      <div class="corpo" id="corpo"></div>
+    </aside>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.2/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+<script>
+const DADOS = /*DADOS*/null;
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const CORES_SECAO = ['#7b4a8c', '#2c6e8f', '#8f5a2c', '#3f7d4f', '#8f2c4a', '#5a5f8f', '#6e7a2c', '#2c8f86', '#8f3a2c'];
+
+let cap = null, cy = null, aba = 'cena', selecionado = null, chaveSel = null, estado = null;
+
+// ------------------------------------------------------------------ dados derivados
+function preparar(c) {
+  const porId = Object.fromEntries(c.knots.map(k => [k.id, k]));
+  const secoes = [...new Set(c.knots.map(k => k.secao || 'Outros'))];
+  const ops = []; // todas as opções, com o knot de origem
+  for (const k of c.knots) k.escolhas.forEach((e, i) => { e.knot = k.id; e.i = i; ops.push(e); });
+  const entradas = {};
+  const ligar = (de, s, e) => (entradas[s.para] = entradas[s.para] || []).push({ de, op: e, quando: s.quando });
+  for (const k of c.knots) {
+    for (const s of k.auto.saidas) ligar(k.id, s, null);
+    for (const e of k.escolhas) for (const s of (e.saidas.length ? e.saidas : k.auto.saidas)) ligar(k.id, s, e);
+  }
+  // quem liga e quem lê cada variável
+  const leitores = {}, escritores = {};
+  for (const e of ops) for (const cnd of e.conds) for (const v of varsDe(cnd, c.vars)) (leitores[v] = leitores[v] || []).push({ op: e, nao: negada(cnd, v), cond: cnd });
+  const anotar = (v, onde) => (escritores[v] = escritores[v] || []).push(onde);
+  for (const k of c.knots) {
+    for (const m of k.auto.muda) anotar(m.v, { knot: k.id, op: null, m });
+    for (const e of k.escolhas) for (const m of e.muda) anotar(m.v, { knot: k.id, op: e, m });
+  }
+  const finais = {};
+  for (const k of c.knots) for (const f of [...k.auto.finais, ...k.escolhas.flatMap(e => e.finais)]) (finais[f] = finais[f] || []).push(k.id);
+  return { porId, secoes, ops, entradas, leitores, escritores, finais };
+}
+function varsDe(cnd, vars) { return [...new Set((cnd.match(/\b[a-z_][a-z0-9_]*\b/gi) || []).filter(w => w in vars))]; }
+function negada(cnd, v) { return new RegExp(`\\bnot\\s+\\(?\\s*${v}\\b`).test(cnd) && !new RegExp(`\\bor\\b`).test(cnd); }
+
+// ------------------------------------------------------------------ nomes para gente
+const ACENTOS = { cao: 'Cão', salao: 'Salão', prologo: 'Prólogo', acusacao: 'Acusação', confissao: 'confissão', sessao: 'Sessão', nao: 'não',
+  tomas: 'Tomás', lobisomens: 'lobisomens', esgoto: 'esgoto', epilogo: 'epílogo', loop: '', forte: 'Disciplina forte:' };
+function nomeCena(id) {
+  const k = cap.d.porId[id];
+  const f = k && [...k.auto.finais, ...k.escolhas.flatMap(e => e.finais)][0];
+  if (f) {
+    const t = TITULOS_FINAIS[f] || id;
+    const irmaos = cap.d.finais[f] || [];
+    return irmaos.length > 1 ? `Final ${f} · ${t} (${id.split('_').slice(-1)[0]})` : `Final ${f} · ${t}`;
+  }
+  let n = id.split('_').map(p => p in ACENTOS ? ACENTOS[p] : p).filter(Boolean).join(' ');
+  return n.charAt(0).toUpperCase() + n.slice(1);
+}
+function descVar(v) { const x = cap.vars[v]; return x && x.desc ? x.desc : v.replace(/_/g, ' '); }
+function condHumana(c) {
+  let t = c.replace(/\bnot\s+\(([^()]*)\)/g, 'não ($1)')
+    .replace(/\bnot\s+(\w+)/g, (m, v) => v in cap.vars ? `sem ${v}` : m)
+    .replace(/\band\b/g, 'e').replace(/\bor\b/g, 'ou')
+    .replace(/>=/g, '≥').replace(/<=/g, '≤').replace(/!=/g, '≠').replace(/==/g, '=');
+  return t;
+}
+function chipCond(c) {
+  const vs = varsDe(c, cap.vars);
+  const titulo = vs.map(v => `${v}: ${descVar(v)}`).join('\n');
+  const ok = estado ? avaliar(c) : null;
+  const cls = ['chip', /\bnot\b|não/.test(c) ? 'nao' : 'pede', ok === true ? 'ok' : ok === false ? 'falta' : ''].join(' ');
+  return `<span class="${cls}" title="${esc(titulo)}">${esc(condHumana(c))}</span>`;
+}
+
+// ------------------------------------------------------------------ simulador de estado
+function estadoInicial(nome) {
+  if (!nome) return null;
+  const st = {};
+  for (const [v, x] of Object.entries(cap.vars)) { try { st[v] = JSON.parse(x.inicial); } catch { st[v] = x.inicial; } }
+  const abertura = cap.knots[0];
+  const e = abertura && abertura.escolhas.find(e => e.muda.some(m => m.v === 'nome' && m.expr.includes(nome)));
+  if (e) for (const m of e.muda) { try { st[m.v] = JSON.parse(m.expr); } catch {} }
+  return st;
+}
+function avaliar(c) {
+  if (!estado) return null;
+  if (/\bteste\b|\(\s*\)|\w\(/.test(c)) return null;
+  const vs = varsDe(c, cap.vars);
+  const js = c.replace(/\bnot\b/g, '!').replace(/\band\b/g, '&&').replace(/\bor\b/g, '||');
+  try { return !!Function(...vs, `return (${js});`)(...vs.map(v => estado[v])); } catch { return null; }
+}
+const disponivel = e => !estado || e.conds.every(c => avaliar(c) !== false);
+
+// ------------------------------------------------------------------ mapa
+function montarMapa() {
+  const d = cap.d, nodes = [], edges = [], vistos = {};
+  const simTotal = cap.sim ? Object.values(cap.sim) : null;
+  const pctVisita = id => {
+    if (!simTotal) return null;
+    const p = simTotal.filter(r => !cap.sim[$('#personagem').value] || r === cap.sim[$('#personagem').value]);
+    return p.reduce((a, r) => a + (r.visitas[id] || 0), 0) / p.reduce((a, r) => a + r.partidas, 0);
+  };
+  for (const k of cap.knots) {
+    const sec = k.secao || 'Outros';
+    const final = [...k.auto.finais, ...k.escolhas.flatMap(e => e.finais)].length > 0;
+    const pv = pctVisita(k.id);
+    const voltas = k.escolhas.filter(e => e.saidas.some(s => s.para === k.id)).length;
+    nodes.push({ data: { id: k.id, label: nomeCena(k.id) + (pv !== null ? `\n${fmtPct(pv)} das partidas` : '') + (voltas ? `\n↻ ${voltas} pergunta${voltas > 1 ? 's' : ''}` : ''),
+      cor: CORES_SECAO[d.secoes.indexOf(sec) % CORES_SECAO.length] }, classes: [final ? 'final' : '', pv === 0 ? 'nunca' : ''].join(' ') });
+  }
+  const juntar = (de, para, tipo, rotulo, aberta) => {
+    if (de === para) return;
+    if (!d.porId[para]) return;
+    const chave = `${de}>${para}>${tipo}`;
+    if (!vistos[chave]) { vistos[chave] = { data: { id: chave, source: de, target: para, rotulos: [], abertas: 0, total: 0 }, classes: tipo }; edges.push(vistos[chave]); }
+    const x = vistos[chave].data; x.total++; if (aberta) x.abertas++; if (rotulo && x.rotulos.length < 3) x.rotulos.push(rotulo);
+  };
+  for (const k of cap.knots) {
+    for (const s of k.auto.saidas) {
+      const tempo = s.quando.some(q => /minutos\s*>=\s*limite/.test(q));
+      const ok = s.quando.every(q => avaliar(q) !== false);
+      juntar(k.id, s.para, tempo ? 'tempo' : s.para === 'salao' && k.id !== 'prologo' ? 'volta' : 'auto', s.quando.map(condHumana).join(' e '), ok);
+    }
+    for (const e of k.escolhas) {
+      const outs = e.saidas.length ? e.saidas : k.auto.saidas;
+      for (const s of outs) {
+        const volta = s.para === 'salao' && k.id !== 'prologo';
+        juntar(k.id, s.para, volta ? 'volta' : 'escolha', curto(e.texto), disponivel(e));
+      }
+    }
+  }
+  for (const e of edges) {
+    const x = e.data;
+    x.label = x.classes === 'tempo' ? '' : (x.total > 1 ? `${x.total} opções` : (x.rotulos[0] || ''));
+    if (estado && x.abertas === 0) e.classes += ' travada';
+  }
+  return { nodes, edges };
+}
+const curto = t => t.length > 34 ? t.slice(0, 32).trim() + '…' : t;
+const fmtPct = p => p === null || p === undefined ? '' : (p > 0 && p < .01 ? '<1%' : Math.round(p * 100) + '%');
+
+function desenhar(manterVista) {
+  const { nodes, edges } = montarMapa();
+  const vista = cy && manterVista ? { zoom: cy.zoom(), pan: cy.pan() } : null;
+  if (cy) cy.destroy();
+  const tinta = css('--tinta'), fraca = css('--tinta-fraca'), papel = css('--papel'), sangue = css('--sangue'), ambar = css('--ambar'), linha = css('--linha'), verde = css('--verde'), azul = css('--azul');
+  cy = cytoscape({
+    container: $('#mapa'), elements: { nodes, edges }, wheelSensitivity: .25, minZoom: .1, maxZoom: 2.5,
+    style: [
+      { selector: 'node', style: { shape: 'round-rectangle', width: 'label', height: 'label', padding: '9px', 'background-color': papel,
+        'border-width': 1.5, 'border-color': 'data(cor)', label: 'data(label)', 'text-wrap': 'wrap', 'text-max-width': 170, 'text-valign': 'center',
+        'font-family': 'Spectral, Georgia, serif', 'font-size': 13, color: tinta, 'line-height': 1.25 } },
+      { selector: 'node.final', style: { 'border-width': 3, 'border-color': sangue, 'background-color': papel, 'font-weight': 600 } },
+      { selector: 'node.nunca', style: { 'border-style': 'dashed', opacity: .65 } },
+      { selector: 'node:selected', style: { 'background-color': ambar, color: '#1d1716', 'border-color': ambar } },
+      { selector: 'node.realce', style: { 'border-width': 4, 'border-color': ambar } },
+      { selector: 'node.liga', style: { 'border-width': 4, 'border-color': verde } },
+      { selector: 'node.le', style: { 'border-width': 4, 'border-color': azul } },
+      { selector: 'node.apagado', style: { opacity: .18 } },
+      { selector: 'edge', style: { width: 1.4, 'line-color': fraca, 'target-arrow-color': fraca, 'target-arrow-shape': 'triangle', 'curve-style': 'bezier', 'arrow-scale': .9,
+        label: 'data(label)', 'font-size': 10, 'font-family': 'system-ui, sans-serif', color: fraca, 'text-background-color': css('--noite'), 'text-background-opacity': .85,
+        'text-background-padding': 2, 'text-rotation': 'autorotate', 'text-max-width': 140, 'text-wrap': 'ellipsis' } },
+      { selector: 'edge.auto', style: { 'line-style': 'dashed', 'line-color': ambar, 'target-arrow-color': ambar, color: ambar } },
+      { selector: 'edge.tempo', style: { 'line-style': 'dotted', 'line-color': linha, 'target-arrow-color': linha, width: 1, display: $('#ver-tempo').checked ? 'element' : 'none' } },
+      { selector: 'edge.volta', style: { 'line-color': linha, 'target-arrow-color': linha, width: 1, label: '', display: $('#ver-voltas').checked ? 'element' : 'none' } },
+      { selector: 'edge.travada', style: { 'line-style': 'dotted', 'line-color': sangue, 'target-arrow-color': sangue, opacity: .55 } },
+      { selector: 'edge.apagado', style: { opacity: .08 } },
+    ],
+    layout: { name: 'dagre', rankDir: 'TB', nodeSep: 26, rankSep: 70, edgeSep: 10,
+      edgeWeight: e => e.hasClass('volta') || e.hasClass('tempo') ? 0 : 1, animate: false },
+  });
+  // as voltas e o fim do tempo não entram no cálculo do desenho, só aparecem por cima
+  cy.on('tap', 'node', ev => selecionar(ev.target.id()));
+  cy.on('tap', ev => { if (ev.target === cy) limparRealce(); });
+  if (vista) { cy.zoom(vista.zoom); cy.pan(vista.pan); }
+  else if (cy.zoom() < .7) {
+    // o mapa inteiro fica pequeno demais para ler: começa no salão, que é o centro do capítulo
+    const hub = cy.nodes().max(n => n.indegree(false)).ele;
+    cy.zoom(.75); cy.center(hub); cy.panBy({ x: 0, y: -cy.height() * .3 });
+  }
+  if (selecionado && cy.$id(selecionado).length) cy.$id(selecionado).select();
+  aplicarRealce();
+}
+
+function limparRealce() { chaveSel = null; aplicarRealce(); }
+function aplicarRealce() {
+  if (!cy) return;
+  cy.elements().removeClass('realce liga le apagado');
+  if (chaveSel && chaveSel.tipo === 'var') {
+    const v = chaveSel.v, d = cap.d;
+    const liga = new Set((d.escritores[v] || []).map(w => w.knot));
+    const le = new Set((d.leitores[v] || []).map(r => r.op.knot));
+    cy.nodes().forEach(n => { if (liga.has(n.id())) n.addClass('liga'); else if (le.has(n.id())) n.addClass('le'); else n.addClass('apagado'); });
+    cy.edges().addClass('apagado');
+  } else if (chaveSel && chaveSel.tipo === 'final') {
+    // tudo o que leva até as cenas desse final
+    const alvo = cy.collection(cap.d.finais[chaveSel.f].map(id => cy.$id(id)));
+    const antes = alvo.predecessors().union(alvo);
+    cy.elements().difference(antes).addClass('apagado');
+    alvo.addClass('realce');
+  }
+}
+
+function selecionar(id, centrar) {
+  selecionado = id; aba = 'cena'; renderPainel();
+  if (cy) { cy.$(':selected').unselect(); const n = cy.$id(id); n.select(); if (centrar) cy.animate({ center: { eles: n }, zoom: Math.max(cy.zoom(), .9) }, { duration: 250 }); }
+}
+
+// ------------------------------------------------------------------ painel
+function renderPainel() {
+  for (const b of document.querySelectorAll('.abas button')) b.setAttribute('aria-selected', String(b.id === 'aba-' + aba));
+  const corpo = $('#corpo');
+  if (!cap.knots.length) { corpo.innerHTML = `<h2>${esc(cap.titulo)}</h2><p class="sub">${esc(cap.resumo)}</p><p class="dica">Quando o roteiro deste capítulo existir em Ink, ele aparece aqui sozinho. Basta apontar o arquivo em <code>fluxo/capitulos.json</code> e rodar <code>npm run fluxo</code>.</p>`; return; }
+  if (aba === 'cena') corpo.innerHTML = painelCena();
+  else if (aba === 'chaves') corpo.innerHTML = painelChaves();
+  else corpo.innerHTML = painelFinais();
+  corpo.scrollTop = 0;
+}
+
+function lnkCena(id) { return `<span class="clic" tabindex="0" data-cena="${esc(id)}">${esc(nomeCena(id))}</span>`; }
+function lnkVar(v) { return `<span class="clic" tabindex="0" data-var="${esc(v)}" title="${esc(descVar(v))}">${esc(descVar(v))}</span>`; }
+
+function painelCena() {
+  const d = cap.d;
+  if (!selecionado) return `<h2>${esc(cap.titulo)}</h2><p class="sub">${esc(cap.resumo)}</p>
+    <p class="dica">Cada caixa é uma cena do roteiro e cada seta é uma opção do jogador (linha cheia) ou um pulo automático (tracejado). Clique numa cena para ver as opções dela, o que cada uma pede, o que ela libera e o que ela tranca.<br><br>
+    Em <b>Simular com</b>, escolha um personagem: as opções que ele ainda não pode escolher ficam apagadas. Na aba <b>Pistas e travas</b> você liga e desliga pistas para ver o caminho abrir e fechar.</p>
+    ${resumoCap()}`;
+  const k = d.porId[selecionado];
+  const sim = cap.sim ? simDe() : null;
+  const pv = sim ? sim.visitas(k.id) : null;
+  let h = `<h2>${esc(nomeCena(k.id))}</h2><div class="sub">${esc(k.secao || '')} · linha ${k.linha} do ink${pv !== null ? ` · ${fmtPct(pv)} das partidas de teste passam aqui` : ''}</div>`;
+  const ent = (d.entradas[k.id] || []).filter((x, i, a) => a.findIndex(y => y.de === x.de) === i);
+  if (ent.length) h += `<h3>Como se chega aqui</h3><div class="linhas">${ent.slice(0, 12).map(x => `<div>de ${lnkCena(x.de)}${x.op ? `: <i>${esc(curto(x.op.texto))}</i>` : ''}${x.quando.length ? ` <span class="r">(se ${esc(x.quando.map(condHumana).join(' e '))})</span>` : ''}</div>`).join('')}${ent.length > 12 ? `<div class="r">e mais ${ent.length - 12} cenas</div>` : ''}</div>`;
+  const auto = k.auto;
+  if (auto.muda.length || auto.pistas.length || auto.saidas.length || auto.tuneis) {
+    h += `<h3>Acontece sozinho ao entrar</h3><div class="linhas">${efeitos(auto)}${auto.tuneis ? `<div class="r">Passa por ${auto.tuneis.map(lnkCena).join(', ')} (avisos de hora e chegada da Constance)</div>` : ''}${auto.saidas.map(s => `<div>→ ${lnkCena(s.para)}${s.quando.length ? ` <span class="r">se ${esc(s.quando.map(condHumana).join(' e '))}</span>` : ''}</div>`).join('')}</div>`;
+  }
+  if (k.escolhas.length) {
+    h += `<h3>Opções (${k.escolhas.length})</h3>`;
+    for (const e of k.escolhas) {
+      const ok = estado ? disponivel(e) : null;
+      h += `<div class="op ${ok === false ? 'travada' : ''}">${ok !== null ? `<span class="estado-tag ${ok ? 'sim' : 'nao'}">${ok ? 'aparece' : 'travada'}</span>` : ''}
+        ${e.gatilho ? `<span class="gat">${esc(e.gatilho)}</span>` : ''}<span class="t">${esc(e.texto)}</span>${e.fixa ? '' : ' <span class="r" title="Opção com * some depois de escolhida">(uma vez)</span>'}
+        <div class="linhas">${e.conds.length ? `<div class="chips">${e.conds.map(chipCond).join('')}</div>` : ''}${efeitos(e)}
+        ${(e.saidas.length ? e.saidas : k.auto.saidas).map(s => `<div>→ ${s.para === k.id ? '<span class="r">volta para as perguntas</span>' : lnkCena(s.para)}${s.quando.length ? ` <span class="r">se ${esc(s.quando.map(condHumana).join(' e '))}</span>` : ''}</div>`).join('')}</div></div>`;
+    }
+  }
+  return h;
+}
+
+function efeitos(x) {
+  const d = cap.d, out = [];
+  if (x.minutos) out.push(`<div class="r">custa ${x.minutos} min${x.despertar ? ' · pode subir a Fome' : ''}</div>`);
+  else if (x.despertar) out.push(`<div class="r">pode subir a Fome</div>`);
+  if (x.teste) out.push(`<div class="r">teste de dados: ${esc(x.teste.parada)} contra dificuldade ${x.teste.dif}</div>`);
+  for (const p of x.pistas) out.push(`<div class="pista">✎ pista (${esc(p.aba)}): ${esc(p.texto)}${p.quando.length ? ` <span class="r">se ${esc(p.quando.map(condHumana).join(' e '))}</span>` : ''}</div>`);
+  for (const m of x.muda) {
+    if (['passar'].includes(m.v)) continue;
+    const ls = d.leitores[m.v] || [];
+    const liga = m.op === '=' && m.expr === 'true';
+    const abre = ls.filter(r => liga ? !r.nao : r.nao), fecha = ls.filter(r => liga ? r.nao : !r.nao);
+    const q = m.quando.length ? ` <span class="r">se ${esc(m.quando.map(condHumana).join(' e '))}</span>` : '';
+    if (m.op === '=' && (m.expr === 'true' || m.expr === 'false')) {
+      out.push(`<div>${liga ? '🔓' : '🔒'} ${lnkVar(m.v)}${q}${abre.length ? ` <span class="abre">abre ${abre.length}</span>` : ''}${fecha.length ? ` <span class="fecha">fecha ${fecha.length}</span>` : ''}</div>`);
+      if (abre.length) out.push(`<div class="abre">&nbsp;&nbsp;abre: ${abre.slice(0, 6).map(r => `<span class="clic" data-cena="${esc(r.op.knot)}">${esc(curto(r.op.texto))}</span>`).join(' · ')}${abre.length > 6 ? ' …' : ''}</div>`);
+      if (fecha.length) out.push(`<div class="fecha">&nbsp;&nbsp;fecha: ${fecha.slice(0, 6).map(r => `<span class="clic" data-cena="${esc(r.op.knot)}">${esc(curto(r.op.texto))}</span>`).join(' · ')}${fecha.length > 6 ? ' …' : ''}</div>`);
+    } else if (!['nome', 'cla', 'carisma', 'raciocinio', 'manipulacao', 'subterfugio', 'intimidacao', 'ocultismo', 'disciplina', 'o', 'minutos'].includes(m.v) || ls.length) {
+      out.push(`<div class="r">${esc(m.v)} ${esc(m.op === '=' ? '=' : m.op)} ${esc(m.expr)}${q}${ls.length ? ` · usado em ${ls.length} opções` : ''}</div>`);
+    }
+  }
+  return out.join('');
+}
+
+function simDe() {
+  const nome = $('#personagem').value;
+  const rs = nome && cap.sim[nome] ? [cap.sim[nome]] : Object.values(cap.sim);
+  const tot = rs.reduce((a, r) => a + r.partidas, 0);
+  return {
+    tot, rs,
+    visitas: id => rs.reduce((a, r) => a + (r.visitas[id] || 0), 0) / tot,
+    chave: v => rs.reduce((a, r) => a + (r.chaves[v] || 0), 0) / tot,
+  };
+}
+
+function resumoCap() {
+  const d = cap.d, nunca = cap.sim ? cap.knots.filter(k => simDe().visitas(k.id) === 0) : [];
+  return `<h3>Neste capítulo</h3><div class="linhas"><div>${cap.knots.length} cenas, ${d.ops.length} opções, ${Object.keys(d.finais).length} finais.</div>
+    ${cap.sim ? `<div class="r">${simDe().tot} partidas de teste com escolhas ao acaso.</div>` : ''}
+    ${nunca.length ? `<div class="fecha">Nenhuma partida de teste chegou em: ${nunca.map(k => lnkCena(k.id)).join(', ')}</div>` : ''}</div>`;
+}
+
+function painelChaves() {
+  const d = cap.d, sim = cap.sim ? simDe() : null;
+  const bools = Object.keys(cap.vars).filter(v => cap.vars[v].inicial === 'false' && (d.leitores[v] || d.escritores[v]));
+  const pistas = bools.filter(v => v.startsWith('p_')), outras = bools.filter(v => !v.startsWith('p_'));
+  let h = `<p class="dica">Uma <b>chave</b> é algo que o jogo lembra: uma pista que você achou ou algo que já aconteceu. Clique numa chave para ver no mapa <span class="abre">onde ela é ligada</span> e <span style="color:var(--azul)">onde ela abre ou fecha opções</span>.${estado ? ' Marque e desmarque para ver as opções abrirem e fecharem no mapa.' : ' Escolha um personagem em <b>Simular com</b> para poder ligar e desligar as chaves.'}</p>`;
+  if (estado) {
+    h += `<h3>Estado simulado</h3><div class="estado">
+      <label>Fome <input type="number" id="st-fome" min="1" max="5" value="${estado.fome}"></label>
+      <label>Minutos <input type="number" id="st-minutos" min="0" max="400" step="10" value="${estado.minutos}"></label>
+      <button class="chip" id="st-zerar" type="button">zerar chaves</button></div>`;
+  }
+  const linha = v => {
+    const pct = sim ? sim.chave(v) : null;
+    const liga = d.escritores[v] || [], le = d.leitores[v] || [];
+    const abre = le.filter(r => !r.nao), fecha = le.filter(r => r.nao);
+    return `<details class="chave" ${chaveSel && chaveSel.v === v ? 'open' : ''} data-chave="${esc(v)}"><summary>
+      ${estado ? `<input type="checkbox" data-st="${esc(v)}" ${estado[v] ? 'checked' : ''} aria-label="ligar ${esc(v)}" onclick="event.stopPropagation()">` : ''}
+      <b>${esc(descVar(v))}</b><span class="pct">${pct !== null ? fmtPct(pct) + ' das partidas' : ''}</span></summary>
+      <div class="linhas"><div class="r">${esc(v)}</div>
+      <div class="abre">liga em: ${liga.map(w => `<span class="clic" data-cena="${esc(w.knot)}">${esc(w.op ? curto(w.op.texto) : nomeCena(w.knot))}</span>`).join(' · ') || '<span class="r">nenhum lugar</span>'}</div>
+      ${abre.length ? `<div>abre: ${abre.map(r => `<span class="clic" data-cena="${esc(r.op.knot)}">${esc(curto(r.op.texto))}</span>`).join(' · ')}</div>` : ''}
+      ${fecha.length ? `<div class="fecha">fecha: ${fecha.map(r => `<span class="clic" data-cena="${esc(r.op.knot)}">${esc(curto(r.op.texto))}</span>`).join(' · ')}</div>` : ''}
+      ${sim && sim.rs.length > 1 ? `<div class="r">${Object.entries(cap.sim).map(([n, r]) => `${esc(n)} ${fmtPct((r.chaves[v] || 0) / r.partidas)}`).join(' · ')}</div>` : ''}
+      </div></details>`;
+  };
+  h += `<h3>Pistas (${pistas.length})</h3>${pistas.map(linha).join('')}<h3>O que já aconteceu (${outras.length})</h3>${outras.map(linha).join('')}`;
+  return h;
+}
+
+function painelFinais() {
+  const d = cap.d, letras = Object.keys(d.finais).sort();
+  const nomes = cap.sim ? Object.keys(cap.sim) : [];
+  let h = `<p class="dica">Clique num final para ver no mapa todas as cenas que podem levar até ele. Os números vêm de ${cap.sim ? simDe().tot : 0} partidas de teste com escolhas ao acaso, então mostram o que é fácil ou difícil de alcançar, não o que um jogador atento faria.</p>`;
+  h += `<table><thead><tr><th>Final</th>${nomes.map(n => `<th class="n">${esc(n)}</th>`).join('')}</tr></thead><tbody>`;
+  for (const f of letras) {
+    const ks = d.finais[f], titulo = finalTitulo(ks[0], f);
+    h += `<tr><td><span class="clic" tabindex="0" data-final="${esc(f)}"><b>${esc(f)}</b> · ${esc(titulo)}</span> <span class="clic r" data-cena="${esc(ks[0])}">abrir</span>${ks.length > 1 ? `<div class="r">${ks.map(lnkCena).join(', ')}</div>` : ''}</td>
+      ${nomes.map(n => { const r = cap.sim[n], p = (r.finais[f] || 0) / r.partidas; return `<td class="n">${p ? fmtPct(p) : '<span class="r">nunca</span>'}<div class="barra" style="width:${Math.round(p * 100)}%"></div></td>`; }).join('')}</tr>`;
+  }
+  return h + '</tbody></table>';
+}
+function finalTitulo(id, f) {
+  // o título vem da linha "FINAL X · TÍTULO." do roteiro, guardada na pista do knot quando existir
+  const t = TITULOS_FINAIS[f];
+  return t || nomeCena(id);
+}
+let TITULOS_FINAIS = {};
+
+// ------------------------------------------------------------------ eventos
+document.addEventListener('click', ev => {
+  const c = ev.target.closest('[data-cena]'); if (c) { selecionar(c.dataset.cena, true); return; }
+  const v = ev.target.closest('[data-var]'); if (v) { chaveSel = { tipo: 'var', v: v.dataset.var }; aba = 'chaves'; renderPainel(); aplicarRealce(); return; }
+  const f = ev.target.closest('[data-final]'); if (f) { chaveSel = { tipo: 'final', f: f.dataset.final }; aplicarRealce(); return; }
+  if (ev.target.id === 'ver-tudo' && cy) { cy.animate({ fit: { padding: 20 } }, { duration: 250 }); return; }
+  if (ev.target.id === 'st-zerar') { const n = $('#personagem').value; estado = estadoInicial(n); renderPainel(); desenhar(true); }
+});
+document.addEventListener('keydown', ev => { if (ev.key === 'Enter' && ev.target.classList.contains('clic')) ev.target.click(); });
+document.addEventListener('toggle', ev => {
+  const det = ev.target.closest && ev.target.closest('details[data-chave]');
+  if (det && det.open) { chaveSel = { tipo: 'var', v: det.dataset.chave }; aplicarRealce(); }
+}, true);
+document.addEventListener('change', ev => {
+  const t = ev.target;
+  if (t.dataset.st) { estado[t.dataset.st] = t.checked; desenhar(true); if (aba === 'cena') renderPainel(); }
+  else if (t.id === 'st-fome' || t.id === 'st-minutos') { estado[t.id.slice(3)] = +t.value; desenhar(true); }
+  else if (t.id === 'personagem') { estado = estadoInicial(t.value); desenhar(true); renderPainel(); }
+  else if (t.id === 'ver-voltas' || t.id === 'ver-tempo') desenhar(true);
+});
+for (const b of document.querySelectorAll('.abas button')) b.addEventListener('click', () => { aba = b.id.slice(4); renderPainel(); });
+
+function abrirCapitulo(n) {
+  cap = DADOS.capitulos.find(c => c.n === n);
+  cap.d = cap.d || preparar(cap);
+  selecionado = null; chaveSel = null;
+  for (const b of document.querySelectorAll('#caps button')) b.setAttribute('aria-pressed', String(+b.dataset.n === n));
+  const sel = $('#personagem');
+  const nomes = cap.knots.length ? cap.knots[0].escolhas.map(e => (e.muda.find(m => m.v === 'nome') || {}).expr).filter(Boolean).map(x => x.replace(/"/g, '')) : [];
+  sel.innerHTML = '<option value="">todas as opções</option>' + nomes.map(n => `<option>${esc(n)}</option>`).join('');
+  estado = null;
+  const vazio = !cap.knots.length;
+  $('#legenda').hidden = vazio;
+  if (vazio) { if (cy) { cy.destroy(); cy = null; } $('#mapa').innerHTML = `<div class="vazio-cap"><div><h2>${esc(cap.titulo)}</h2><p>${esc(cap.resumo)}</p></div></div>`; }
+  else { $('#mapa').innerHTML = ''; desenhar(); }
+  renderPainel();
+}
+
+$('#gerado').textContent = `gerado do roteiro em Ink · ${new Date(DADOS.gerado).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}`;
+$('#caps').innerHTML = DADOS.capitulos.map(c => `<button type="button" data-n="${c.n}" class="${c.knots.length ? '' : 'vazio'}" title="${esc(c.titulo)}">Cap. ${c.n}${c.knots.length ? ' · ' + esc(c.titulo) : ''}</button>`).join('');
+for (const b of document.querySelectorAll('#caps button')) b.addEventListener('click', () => abrirCapitulo(+b.dataset.n));
+TITULOS_FINAIS = DADOS.titulosFinais || {};
+abrirCapitulo(DADOS.capitulos[0].n);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => cap.knots.length && desenhar(true));
+new MutationObserver(() => cap.knots.length && desenhar(true)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+</script>

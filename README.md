@@ -15,6 +15,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 | `video/` | A abertura como vídeo MP4, feita com HyperFrames (`bash video/renderizar.sh`) |
 | `renpy/game/` | A cena de teste em Ren'Py |
 | `bench/` | Medição de tempo de carregamento |
+| `fluxo/` | Fluxograma das escolhas, gerado do roteiro (`npm run fluxo` cria `dist/fluxo.html`) |
 
 ## Convenções do roteiro
 
@@ -29,6 +30,14 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - Hora falada e hora no caderno vêm do relógio do jogo: use `{hora_falada()}` ("Três e dez"), `{hora_digital()}` ("03h10") e `{tempo_falta()}` ("uma hora e vinte minutos"). Os avisos do Vincenzo entram em qualquer conversa com `-> avisos ->`.
 - Palavra com gênero falando com o protagonista: `forasteir{o}` ou `{o == "a":moça|moço}`. O `test_texto.cjs` joga com a Irene e a Joana e acusa masculino solto.
 - `@pistas` numa fala vira "N pistas", com o número do caderno.
+
+## Fluxograma das escolhas
+
+`npm run fluxo` lê o roteiro em Ink e gera `dist/fluxo.html` (na Vercel, em `/fluxo.html`): um mapa de todas as cenas, com as opções de cada uma, o que cada opção pede, as pistas que ela dá e as opções que ela abre ou tranca em outras cenas. Também joga partidas de teste com escolhas ao acaso e mostra quanto cada cena, pista e final aparece por personagem.
+
+- Cada capítulo aponta para o seu arquivo `.ink` em `fluxo/capitulos.json`. Num arquivo só, a linha `// CAPÍTULO 2: Título` muda o capítulo dos knots seguintes.
+- As linhas `// ------ NOME` do roteiro viram as cores das seções no mapa, e o comentário de cada `VAR` vira o nome da pista ou da trava. Escreva esse comentário em português de gente.
+- `node fluxo/gerar.cjs 0` gera sem as partidas de teste, em menos de um segundo.
 
 ## Versão Ink
 

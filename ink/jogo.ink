@@ -39,13 +39,13 @@ VAR p_rayo_hora = false       // entregou 02h40
 VAR p_queimadura = false      // dedos queimados do Rayo
 VAR p_selo = false            // selo queimado na tentativa de roubo (confissão do Rayo)
 VAR p_constance = false       // Constance pagou o desvio
-VAR p_rayo_frasco = false     // Rayo viu o Harumi com um frasquinho
+VAR p_rayo_frasco = false     // Rayo viu a Harumi com um frasquinho
 VAR p_cao_versao = false      // Cão: chegou vazio às 03h30
 VAR p_cao_selo = false        // Cão deixou escapar o selo queimado
 VAR p_concreto = false        // pó de concreto da Linha Amarela
 VAR p_bunker = false          // o Cão tem um esconderijo embaixo dos trilhos
 VAR p_cripta = false          // Harumi falou do cheiro de cripta
-VAR p_dedos = false           // cheiro de sangue antigo nos dedos do Harumi
+VAR p_dedos = false           // cheiro de sangue antigo nos dedos da Harumi
 VAR p_frasco = false          // Harumi admitiu o frasco
 VAR p_boes = false            // carimbo do BOES no manifesto
 VAR p_tunel = false           // o fantasma morreu num túnel, não na mata
@@ -117,6 +117,7 @@ VAR a_doutora = false
 
 -> escolha_personagem
 
+// ------------------------------------------------------------------ ABERTURA E SALÃO
 === escolha_personagem ===
 Quem é você?
 * [Tomás · Gangrel ;; Caminhoneiro do Sul. Rude, com faro de bicho. ;; Carisma 2 · Raciocínio 3 · Intimidação 6 · Animalismo]
@@ -559,7 +560,7 @@ Cão: ...Você não entende o que está acontecendo nesta cidade, forasteir{o}. 
 Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão ficou sem resposta quando ouviu que o selo só queimou na Estrada Velha.
 -> salao
 
-// ------------------------------------------------------------------ PAIZÃO
+// ------------------------------------------------------------------ HARUMI
 === harumi ===
 # fundo: sinuca
 # entra: harumi
