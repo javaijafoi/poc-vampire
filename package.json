@@ -5,7 +5,7 @@
   "scripts": {
     "compilar": "node compile.cjs ink/jogo.ink ink/jogo.json",
     "build": "npm run compilar && node build_web.cjs cdn && node build_web.cjs local && node fluxo/gerar.cjs",
-    "testar": "npm run compilar && node test_jogo.cjs 3000 && node test_texto.cjs 1000 && node test_caminho.cjs",
+    "testar": "npm run compilar && node test_jogo.cjs 3000 && node test_texto.cjs 1000 && node test_caminho.cjs && node test_cap2.cjs 2000",
     "bench": "npm run build && node bench/bench.cjs",
     "arte": "python3 art/montar_cena.py",
     "fluxo": "npm run compilar && node fluxo/gerar.cjs"

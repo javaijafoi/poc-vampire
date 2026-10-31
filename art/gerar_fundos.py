@@ -32,6 +32,11 @@ CENAS = {
     "van": ("black unmarked van at a container port at night, men in dark suits with lanyards loading a heavy stone sarcophagus into the van, seen from far away, floodlights, fog", 111),
     "amanhecer": ("view from a rooftop at dawn over old rooftops of Sao Paulo, orange sunrise sky, heavy iron chains lying on the rooftop floor" + SEM_GENTE, 121),
     "anarquistas": ("street poles covered with photocopied posters pasted at night on Rua Augusta Sao Paulo, neon signs, graffiti, wet asphalt, a motorcycle parked" + SEM_GENTE, 131),
+    # capítulo 2: o Elísio do MASP
+    "loft": ("small loft apartment in Jardins Sao Paulo at night, bare concrete walls, mattress on the floor, muddy dress shoes next to it, a bathroom mirror light on, city lights through a big window, messy" + SEM_GENTE, 151),
+    "vao_livre": ("the open plaza under the suspended red concrete museum MASP on Avenida Paulista Sao Paulo at night, red pillars, wet concrete floor, a side door with a velvet rope and a security podium, city lights" + SEM_GENTE, 161),
+    "gala": ("elegant night gala inside a modernist art museum, paintings displayed on glass easels standing in rows, warm spotlights, champagne glasses on a tray, black and gold decor, large windows to the city at night" + SEM_GENTE, 171),
+    "paulista": ("Avenida Paulista sidewalk in Sao Paulo at night, tall buildings with lit windows, rain reflections, red tail lights blurred, a storm drain grate on the curb" + SEM_GENTE, 181),
     "trono_vazio": ("an empty red velvet throne armchair knocked over in a candlelit basement, spilled wine glass on the floor, candles burning low" + SEM_GENTE, 141),
 }
 
