@@ -35,6 +35,7 @@ VAR o = "o"         // terminação de gênero do protagonista: forasteir{o}
 // Relógio: minutos desde as 23h. O sol nasce às 05h40 (400).
 VAR minutos = 0
 VAR limite = 400
+VAR hora_base = 23            // a hora em que o relógio começa (minutos = 0). Capítulo 1: 23h. Capítulo 2: 19h.
 
 // Pistas
 VAR p_rayo_versao = false     // lobisomens na Serra
@@ -1313,7 +1314,7 @@ FINAL H · A FALSA DEVOTA. Joana não acusou ninguém, mas enganou o Laço de Sa
 
 // Hora de verdade, para as falas e o caderno (o relógio começa às 23h)
 === function hora_digital() ===
-~ temp h = (23 + minutos / 60) % 24
+~ temp h = (hora_base + minutos / 60) % 24
 ~ temp m = minutos % 60
 ~ temp hs = "{h}"
 { h < 10:
@@ -1325,10 +1326,14 @@ FINAL H · A FALSA DEVOTA. Joana não acusou ninguém, mas enganou o Laço de Sa
 ~ return hs + "h{m}"
 
 === function hora_falada() ===
-~ temp h = (23 + minutos / 60) % 24
+~ temp h = (hora_base + minutos / 60) % 24
 ~ temp m = minutos % 60
 ~ temp nome_h = ""
 { h:
+- 19: ~ nome_h = "Sete"
+- 20: ~ nome_h = "Oito"
+- 21: ~ nome_h = "Nove"
+- 22: ~ nome_h = "Dez"
 - 23: ~ nome_h = "Onze"
 - 0: ~ nome_h = "Meia-noite"
 - 1: ~ nome_h = "Uma"
@@ -1341,6 +1346,9 @@ FINAL H · A FALSA DEVOTA. Joana não acusou ninguém, mas enganou o Laço de Sa
 { m == 0:
     { h >= 1 and h <= 6:
         ~ return nome_h + " da manhã"
+    }
+    { h >= 19 and h <= 22:
+        ~ return nome_h + " da noite"
     }
     ~ return nome_h
 }

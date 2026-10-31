@@ -29,7 +29,7 @@ for (let run = 0; run < N; run++) {
     }
     if (!s.currentChoices.length) break;
     let ops = s.currentChoices.map((c, i) => i);
-    if (run % 2 && passos < 150 && s.variablesState['minutos'] < 300) ops = ops.filter(i => !/Corte e dizer|Voltar|Ainda não|Admitir/.test(s.currentChoices[i].text));
+    if (run % 2 && passos < 150 && s.variablesState['minutos'] < 540) ops = ops.filter(i => !/Corte e contar|Voltar|Ainda não|Admitir/.test(s.currentChoices[i].text));
     if (!ops.length) ops = s.currentChoices.map((c, i) => i);
     s.ChooseChoiceIndex(ops[Math.floor(Math.random() * ops.length)]);
     passos++;
@@ -72,7 +72,8 @@ function caminho(personagem, partida, passos, esperado) {
 const NEUTRO = [/sapatos/, /celular/, /convite/, /^Isadora/, /Ligação/, /Voltar ao salão/, /^Dr. Arnaldo/, /Lama: eu estive/, /Voltar ao salão/,
   /Descer para o vão/, /Valentina/, /me viu/, /Lama: eu voltei/, /Voltar ao vão/, /Subir para o salão/,
   /^Dr. Arnaldo/, /Quem nesta cidade/, /segurança da porta é humano/, /Voltar ao salão/,
-  /^Luciana/, /Arquivo:/, /^Voltar$/, /Chamar quem preside/, /^Sim/, /A Luciana/, /03h12/, /saiu da Capela/, /mulher de luvas/];
+  /Descer para o vão/, /Subir para o salão/, /Descer para o vão/, /Subir para o salão/,
+  /^Luciana/, /Arquivo:/, /^Voltar$/, /Chamar quem preside/, /^Sim/, /com a Luciana/, /03h12/, /saiu da Capela/, /mulher de luvas/];
 for (const pers of [0, 1, 2]) caminho(pers, 'B', [...NEUTRO, /Ao Príncipe/], '2B');
 caminho(1, 'C_corte', [...NEUTRO, /À Constance/], '2C');
 caminho(2, 'E', [...NEUTRO, /Dr. Arnaldo, o Juiz/], '2J');

@@ -10,6 +10,7 @@
 //   Fora (vão livre, portaria, Paulista) vale tudo, mas o chip transmite: Disciplina sobe o Sinal em 2, briga em 1.
 //   Sinal 5: o BOES chega.
 //   Entrar ou sair do salão custa 20 minutos, passando pela portaria do Rocha.
+//   O relógio começa às 19h (hora_base) no loft: olhar as coisas custa tempo. A gala abre às 22h; o sol nasce às 05h40.
 
 // Estado do capítulo
 VAR sinal = 0                 // o chip na língua: 0 a 5. No 5, o BOES chega
@@ -55,6 +56,8 @@ VAR luc_fechada = false
 VAR anfitriao_falou = false
 VAR rayo2_falou = false
 VAR c2_aviso = 0
+VAR loft_bolsos = false
+VAR loft_camisa = false
 // Acusação do capítulo 2
 VAR a2_sedativo = false
 VAR a2_capela = false
@@ -75,7 +78,9 @@ VAR a2_isadora = false
 === capitulo_2 ===
 # capitulo: 2
 ~ capitulo = 2
+~ hora_base = 19
 ~ minutos = 0
+~ limite = 640
 ~ fome = 2
 ~ quebrou_regra = 0
 ~ denunciado = false
@@ -108,26 +113,64 @@ VAR a2_isadora = false
 - "G": Você acorda enterrad{o} até o peito num terreno baldio da Consolação, com a pele ainda repuxada das queimaduras e a boca ardendo como se tivesse mastigado brasa.
 - else: Você acorda no chão do loft que o Príncipe te emprestou nos Jardins, de roupa, de sapato, com a boca ardendo como se tivesse mastigado brasa.
 }
-Três noites se passaram desde o Porão. Você lembra de duas. A terceira é um buraco liso, sem borda.
+O sol acabou de se pôr: sete da noite. Três noites se passaram desde o Porão. Você lembra de duas. A terceira é um buraco liso, sem borda.
 Você passa a língua nos dentes e sente um relevo. No espelho, embaixo da língua, tem uma tatuagem: um código de barras, fino, prateado. E por baixo da pele, uma coisa dura do tamanho de um grão de arroz.
 Você tenta arrancar com a unha. A carne cede, o chip não. Está costurado por dentro, onde o seu sangue fecha tudo de novo. # pista loft: Um chip embaixo da língua, com um código de barras tatuado por cima. Não dá para arrancar.
+O celular vibra no chão. Uma mensagem de voz, de agora há pouco.
+{ final_cap1:
+- "C_corte":
+    Constance: Querid{o}. Na terça, alguém desceu ao esgoto da Consolação e levou uma coisa que a cidade inteira teme. Um Nosferatu jura que viu você saindo de um bueiro ali, às cinco da manhã, sujo até o joelho. # entra: constance # expr: seria
+    Constance: Hoje, na gala, antes do sol, a Corte vai te perguntar o que você fez na terça. Eu presido. Não me faça passar vergonha.
+- "C_anarq":
+    Rayo: Ô, forasteir{o}. Tá todo mundo da Corte dizendo que você desceu no esgoto da Consolação na terça e saiu às cinco com alguma coisa deles. Um rato de terno jura que viu. # entra: rayo # expr: bravo
+    Rayo: Eles vão te chamar na gala do MASP hoje, antes do sol, pra explicar. Se você não souber o que fez, eles inventam por você. E invenção de Camarilla acaba em estaca.
+- "F":
+    Arnaldo: Aqui é o Dr. Arnaldo, o Juiz do Elísio. Na terça, uma coisa que pertencia à Corte sumiu do esgoto da Consolação, e uma testemunha viu você saindo de um bueiro ali às cinco da manhã. # entra: arnaldo # expr: neutro
+    Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
+- "G":
+    Arnaldo: Aqui é o Dr. Arnaldo, o Juiz do Elísio. Na terça, uma coisa que pertencia à Corte sumiu do esgoto da Consolação, e uma testemunha viu você saindo de um bueiro ali às cinco da manhã. # entra: arnaldo # expr: neutro
+    Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
+- else:
+    Dante: Forasteir{o}. Na terça eu te mandei fazer um trabalho. Eu sei aonde te mandei. Não sei aonde você foi depois. # entra: dante # expr: calado
+    Dante: Naquela madrugada, uma coisa que pertence à minha Corte sumiu do esgoto da Consolação, e um Nosferatu jura que viu você saindo de um bueiro ali às cinco da manhã. Hoje, na gala, antes do sol, você vai me dizer o que fez na terça. Se não souber, eu decido o que você fez.
+}
+# limpa
+Você não lembra de terça. E se você fez alguma coisa, a cidade inteira vai cobrar de você, não de quem mexeu na sua cabeça. # pista dossie: MISSÃO: descobrir o que você fez na terça, a noite apagada, e quem apagou ela. Ao amanhecer a Corte vai perguntar. Se você não souber responder, a Corte decide por você.
+Você tem até o amanhecer para descobrir.
 -> loft_perguntas
 
 === loft_perguntas ===
-+ {not p2_lama} [Olhar os sapatos]
+{ minutos >= 150 and minutos < 170:
+    {hora_falada()}. A gala abre às dez. Se você quer chegar cedo, está na hora de sair.
+}
++ {not p2_lama} [Olhar os sapatos (20 minutos)]
     ~ p2_lama = true
+    ~ passar(20)
     Os sapatos estão duros de lama preta. Não é barro de rua: cheira a esgoto velho e a ferro. # pista loft: Lama de esgoto nos seus sapatos. Você esteve embaixo da terra na noite apagada.
     -> loft_perguntas
-+ {not p2_ligacao} [Ver o celular]
++ {not p2_ligacao} [Ver o celular (20 minutos)]
     ~ p2_ligacao = true
+    ~ passar(20)
     Na lista de chamadas, uma ligação sua de um minuto, às 03h12 da noite apagada, para um número sem nome. Ninguém atende quando você liga de novo. # pista loft: Às 03h12 da noite apagada você ligou para um número sem nome. Ninguém atende.
     -> loft_perguntas
-+ {ocultismo >= 2} {not p2_corte} [Ocultismo 2 :: Examinar o buraco na sua memória.]
++ {not loft_bolsos} [Revistar os bolsos (20 minutos)]
+    ~ loft_bolsos = true
+    ~ passar(20)
+    No bolso do casaco, um papel úmido e amassado: um tíquete de estacionamento do porto de Santos, entrada às 22h40 da noite apagada. Saída, nenhuma. # pista loft: Um tíquete de estacionamento do porto de Santos: você entrou lá às 22h40 da noite apagada e não há saída marcada.
+    -> loft_perguntas
++ {not loft_camisa} [Olhar a camisa no espelho (20 minutos)]
+    ~ loft_camisa = true
+    ~ passar(20)
+    A gola da camisa está dura de sangue seco. Não é seu. Cheira a óleo diesel e maresia, e tem um gosto amargo quando você lambe o dedo, como remédio. # pista loft: Sangue seco na gola da camisa, que não é seu: cheira a diesel e maresia e tem gosto amargo de remédio.
+    -> loft_perguntas
++ {ocultismo >= 2} {not p2_corte} [Ocultismo 2 :: Examinar o buraco na sua memória. (20 minutos)]
     ~ p2_corte = true
+    ~ passar(20)
     Ocultismo 2 :: Droga deixa a memória borrada, como vidro embaçado. A sua não está borrada. Está cortada, reta, como papel cortado com régua. Isso é sangue. Dominação ou ritual. # pista loft: A sua noite não foi apagada por droga. Foi cortada a sangue, por Dominação ou ritual.
     -> loft_perguntas
-+ {tem_frasco} {not c2_bebeu_frasco} [Frasco :: Beber uma gota do sangue do Matusalém.]
++ {tem_frasco} {not c2_bebeu_frasco} [Frasco :: Beber uma gota do sangue do Matusalém. (20 minutos)]
     ~ c2_bebeu_frasco = true
+    ~ passar(20)
     ~ fome = 1
     ~ p2_luvas = true
     ~ p2_caixa = true
@@ -141,17 +184,44 @@ Você tenta arrancar com a unha. A carne cede, o chip não. Está costurado por 
 === convite ===
 { final_cap1:
 - "C_corte":
-    No chão, um envelope cor-de-rosa passado por baixo da porta. "Gala da Corte, Elísio do MASP, onze horas. Agora a cidade tem uma Primogenitura que manda. Venha. C."
+    No chão, um envelope cor-de-rosa passado por baixo da porta. "Gala da Corte, Elísio do MASP, dez horas. Agora a cidade tem uma Primogenitura que manda. Venha. C."
 - "C_anarq":
     O celular vibra. Mensagem do Rayo: "Festa dos engravatados no MASP hoje. Te ponho pra dentro pela porta dos fundos. Alguém da Corte anda perguntando por você."
 - "F":
-    Pela grade do esgoto, você ouve dois ratos de terno falando da gala da Corte no MASP, hoje às onze. Uma morta pode entrar onde quiser, se ninguém olhar para ela.
+    Pela grade do esgoto, você ouve dois ratos de terno falando da gala da Corte no MASP, hoje às dez. Uma morta pode entrar onde quiser, se ninguém olhar para ela.
 - "G":
     Um panfleto molhado colado no muro do terreno: a gala da Corte, no MASP, hoje. Você não foi convidad{o}. Você é cinza num telhado, para o Príncipe.
 - else:
-    No chão, um envelope de papel grosso com lacre de cera azul. "Gala da Corte, Elísio do MASP, onze horas. Você me deve uma noite de trabalho bem feito. Venha. D."
+    No chão, um envelope de papel grosso com lacre de cera azul. "Gala da Corte, Elísio do MASP, dez horas. Você me deve uma noite de trabalho bem feito. Venha. D."
 }
 Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
+-> trajeto
+
+// O caminho até o MASP: uma animação de mapa (tag # trajeto: origem modo minutos) no lugar do corte seco.
+=== trajeto ===
+# limpa
+{ final_cap1:
+- "F":
+    Você sobe pela galeria do Bixiga até a grade da Treze de Maio e sai na rua de cabeça baixa, junto com o vapor do bueiro.
+    ~ passar(40)
+    A cidade passa por você, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: bixiga pe 40
+- "G":
+    Você sacode a terra do corpo e sobe a Consolação a pé, pelo lado escuro da calçada, com o capuz puxado sobre as queimaduras.
+    ~ passar(40)
+    A cidade passa por você, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: consolacao pe 40
+- "C_anarq":
+    O Rayo buzina lá embaixo. Você sobe na garupa da moto e ele corta os Jardins pela Augusta, rindo de cada sinal vermelho.
+    ~ passar(20)
+    A cidade passa de lado, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: jardins moto 20
+- else:
+    Você desce, chama um táxi e manda subir a Augusta. O motorista olha você pelo retrovisor e não puxa assunto.
+    ~ passar(30)
+    A cidade passa pela janela, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: jardins taxi 30
+}
+{ minutos < 180:
+    ~ minutos = 180
+    Você chega cedo e espera no vão livre, encostad{o} num pilar, até as portas abrirem às dez.
+}
 -> chegada
 
 === chegada ===
@@ -174,7 +244,7 @@ Elísio :: Lá dentro vale a lei do Elísio: nada de Disciplina, nada de violên
 
 // ------------------------------------------------------------------ AVISOS (hora, chegada da Luciana)
 === avisos2 ===
-{ minutos >= 150 and not luciana_chegou:
+{ minutos >= 390 and not luciana_chegou:
     ~ luciana_chegou = true
     { expulso or not dentro:
         Lá em cima, pelo vidro do museu, você vê a gala parar. Uma mulher de cabelo curto, vestido escuro e luvas pretas sobe a escada. A Senescal chegou. # pista dossie: À {hora_digital()} a Luciana, a Senescal, chegou à gala.
@@ -182,11 +252,11 @@ Elísio :: Lá dentro vale a lei do Elísio: nada de Disciplina, nada de violên
         A música para meio compasso. Uma mulher de cabelo curto, vestido escuro e luvas pretas atravessa o salão sem cumprimentar ninguém. A Senescal chegou. # pista dossie: À {hora_digital()} a Luciana, a Senescal, chegou à gala. Ela usa luvas pretas.
     }
 }
-{ minutos >= 240 and c2_aviso < 1:
+{ minutos >= 480 and c2_aviso < 1:
     ~ c2_aviso = 1
     {hora_falada()}. Os primeiros convidados começam a ir embora. Metade da noite já foi.
 }
-{ minutos >= 330 and c2_aviso < 2:
+{ minutos >= 570 and c2_aviso < 2:
     ~ c2_aviso = 2
     {hora_falada()}. Os garçons recolhem as taças. Faltam {tempo_falta()} para o sol.
 }
@@ -222,7 +292,7 @@ Quem você procura no salão?
     ~ passar(20)
     ~ dentro = false
     -> fora
-+ [Chamar quem preside a Corte e dizer quem apagou a sua noite]
++ [Chamar quem preside a Corte e contar o que você fez na terça]
     -> confirmar_acusacao2
 
 === confirmar_acusacao2 ===
@@ -301,7 +371,7 @@ Para onde você vai?
     ~ c2_pode_entrar = true
     Valentina: Cabeça baixa e sorriso bobo, querid{o}. Você é meu acompanhante. # entra: valentina # expr: rindo
     -> salao2
-+ [Chamar quem preside a Corte e dizer quem apagou a sua noite]
++ [Chamar quem preside a Corte e contar o que você fez na terça]
     -> confirmar_acusacao2
 
 === boes ===
@@ -443,7 +513,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
     ~ p2_constance_dica = true
 - else:
     # entra: dante
-    Dante: Você fez um trabalho para mim na terça, forasteir{o}. Fez bem. Não me pergunte qual. # expr: neutro
+    Dante: Você fez um trabalho para mim na terça, forasteir{o}. A primeira parte, fez bem. Não me pergunte qual. O resto da noite, você me conta antes do sol. # expr: neutro
     Você: Eu não lembro de terça.
     Dante: Melhor assim. # expr: calado # pista dossie: O Príncipe diz que você fez um trabalho para ele na terça, a noite apagada. Ele não quis dizer qual.
     { constance_aliada:
@@ -660,10 +730,10 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 # limpa
 { final_cap1 == "C_corte":
     A Corte se reúne no último andar do museu, entre os quadros. A Constance preside, de pé. # entra: constance
-    Constance: Alguém mexeu na cabeça de uma pessoa que eu convidei. Então, querid{o}: quem foi?
+    Constance: Terça à noite, querid{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem?
 - else:
     A Corte se reúne no último andar do museu, entre os quadros. O Príncipe Dante senta numa cadeira de acrílico, como num trono. # entra: dante
-    Dante: Dizem que você anda perguntando quem mexeu na sua cabeça, forasteir{o}. Diga à Corte. Agora.
+    Dante: Terça à noite, forasteir{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem? Diga à Corte. Agora.
 }
 { expulso:
     ~ denunciado = true
@@ -678,16 +748,16 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     ~ provas_max = MAX(provas_max - 1, 2)
     O Príncipe olha para você e lembra do favor que deve. Ele vai te ouvir com mais paciência.
 }
-+ [A Luciana, a Senescal]
++ [Eu estava com a Luciana, a Senescal. Ela apagou a minha noite.]
     ~ acusado = "luciana"
-    Você: Foi a Senescal. A Luciana apagou a minha noite.
+    Você: Eu desci atrás de uma caixa, e não estava sozinh{o}. A Senescal estava lá. A Luciana me pegou e apagou a minha noite.
     O salão inteiro olha para a mulher de luvas pretas. Ela não se mexe. # entra: luciana # expr: fria
     -> provas2
-+ [O segurança da porta. A Inquisição.]
++ [A Inquisição me drogou e me usou. O segurança da porta é deles.]
     ~ acusado = "rocha"
     Você: O segurança da porta é da Inquisição. Eles me drogaram no porto e apagaram a minha noite.
     -> provas2
-+ [Isadora, a anfitriã]
++ [Eu estava com a Isadora, a anfitriã. Ela apagou a minha noite.]
     ~ acusado = "isadora"
     Você: Foi a Isadora. Ela esteve na Capela, ela mentiu sobre isso.
     Isadora: Eu?! # entra: isadora # expr: ofendida
@@ -816,6 +886,7 @@ Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por
     Dante: Quem me serve, ninguém toca. Nem você, Luciana. Pelo menos esta noite.
 }
 O sangue volta para dentro das suas veias. Você respira, sem precisar respirar, só para lembrar que ainda está aqui.
+Agora você tem a sua terça inteira: o porto, o chip, o esgoto, a caixa do Cão, as luvas pretas. Você não roubou nada. Você só viu.
 A Luciana calça a luva de novo, devagar. A caixa do Cão continua com ela. Você sabe disso. Ela sabe que você sabe.
 Agora a pergunta é outra: para quem você leva essa verdade?
 + {final_cap1 != "C_corte"} [Ao Príncipe Dante]

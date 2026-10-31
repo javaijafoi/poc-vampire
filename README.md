@@ -39,6 +39,8 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - O capítulo 1 guarda o final em `final_cap1` (B, C_corte, C_anarq, E, F, G, H ou S). O capítulo 2 começa no knot `capitulo_2` e muda o texto e quem te protege conforme esse final. Sem jogo do capítulo 1, `capitulo_2_novo` escolhe o personagem e começa como se fosse o final B.
 - `# capitulo: 2` no roteiro limpa o caderno e avisa na tela. Ao fim do capítulo 1 com o personagem vivo, a tela de fim oferece "Seguir para o capítulo 2" e guarda o estado em `localStorage` (`matusalem-cap1`); o botão "Capítulo 2" da capa começa dali.
 - Capítulo 2: dentro do salão (`dentro`) vale a lei do Elísio, e Disciplina ali põe você para fora (`expulso`). Do lado de fora, `acender(n)` sobe o `sinal` do chip; no 5, o BOES chega. O marcador Sinal aparece no topo a partir do capítulo 2.
+- Relógio: `minutos` conta a partir de `hora_base` (capítulo 1: 23h; capítulo 2: 19h, com `limite` 640, sol às 05h40). O loft custa 20 minutos por coisa olhada e a gala abre às 22h.
+- `# trajeto: origem modo minutos` (origem jardins, bixiga ou consolacao; modo taxi, moto ou pe) mostra o mapa do caminho até o MASP com o relógio correndo. Ponha a tag na linha depois do `passar()` da viagem.
 - `node test_cap2.cjs` joga o capítulo 2 partindo de cada final do 1, confere o caminho neutro (só conversa e provas) com os três personagens e o final S do capítulo 1.
 
 ## Fluxograma das escolhas
