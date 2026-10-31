@@ -13,7 +13,7 @@ for (const f of fs.readdirSync('art/cena')) {
 }
 let html = fs.readFileSync('web/template.html', 'utf8');
 // registro anônimo das partidas (PostHog): a chave do projeto é pública, vai no HTML de qualquer jeito
-const POSTHOG_CHAVE = process.env.POSTHOG_CHAVE || '';
+const POSTHOG_CHAVE = process.env.POSTHOG_CHAVE || 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB';
 let versao = (process.env.VERCEL_GIT_COMMIT_SHA || '').slice(0, 7);
 if (!versao) try { versao = require('child_process').execSync('git rev-parse --short HEAD').toString().trim(); } catch (e) { versao = 'dev'; }
 const inkjs = mode === 'cdn' ? 'https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/ink.js' : 'ink.js';
