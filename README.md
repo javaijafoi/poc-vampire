@@ -23,6 +23,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - `Gatilho :: texto` é uma opção ou observação especial (clã, atributo, prova, teste, Disciplina) e aparece com uma etiqueta colorida.
 - `# pista <aba>: texto` coloca a pista no caderno, na folha da aba (`dossie`, `rayo`, `cao`, `harumi`, `biel`, `bar`).
 - `# fundo: nome` troca o fundo (`art/cena/fundo_<nome>.webp`); `# entra: nome` põe a testemunha em cena; `# limpa` tira todo mundo.
+- `# expr: medo` troca o rosto de quem fala na linha; `# expr cao: pego` troca o rosto de alguém numa narração. A imagem é `art/cena/<personagem>_<expressão>.webp`; enquanto ela não existe, fica o neutro. A lista de poses para gerar está no doc "Capítulo 2 · o que falta decidir e lista de poses".
 - `# musica: nome` troca a música (`musica/<nome>.mp3`). Sem a tag, cada fundo já tem a sua faixa (a tabela fica em `MUSICA_FUNDO`, no `web/template.html`).
 - As explicações para quem não joga Vampiro (ficha de cada personagem, botão "?", dica ao passar o mouse nas etiquetas e o tutorial do começo) ficam em `web/template.html`, no bloco "Ajuda para quem não joga Vampiro". As notas da ficha repetem as do roteiro: mudou uma, mude a outra.
 - Celular: o mesmo `web/template.html` serve em pé e deitado (bloco "Celular" no CSS). Em pé, a cena fica em cima e o texto embaixo; deitado, é a tela do PC. No toque, tocar numa etiqueta (ou segurar o dedo na opção) mostra a dica, e tocar na cena avança.

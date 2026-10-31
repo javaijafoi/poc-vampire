@@ -594,7 +594,7 @@ function falando(chave) {
 }
 function tirar(lado) { cena[lado] = null; $(lado).classList.remove('on', 'calado'); }
 function limparCena() {
-  cena = cena || { expr: {} }; cena.esq = cena.dir = null;
+  cena = cena || { expr: {} }; cena.esq = cena.dir = null; cena.expr = {};
   for (const lado of ['esq', 'dir']) $(lado).classList.remove('on', 'calado', 'troca');
 }
 
@@ -742,8 +742,9 @@ function avancar() {
       if (chave === 'fundo') trocarFundo(val);
       if (chave === 'limpa') limparCena();
       if (chave === 'imagem') mostrarIlustracao(val);
-      if (chave === 'entra') mostrarPersonagem(val);
-      if (chave === 'expr') exprPendente = val;  // vale para quem fala nesta linha
+      if (chave === 'entra') mostrarPersonagem(val, 'neutro');  // cada visita começa com o rosto de sempre
+      // "# expr: medo" vale para quem fala nesta linha; "# expr cao: pego" troca o rosto de alguém numa narração
+      if (chave === 'expr') { if (aba) mostrarPersonagem(aba, val); else exprPendente = val; }
       if (chave === 'musica') tocarMusica(val);
       if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
