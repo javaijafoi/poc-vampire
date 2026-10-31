@@ -38,7 +38,20 @@ POSES = {
         "dante_calado": (715, 45, 1000, 470),    # "silent & cold"
         "dante_pulso": (785, 225, 1345, 640),    # "the oath": a mão estendida, oferecendo o sangue
     },
+    "harumi": {  # a prancha estilizada (fundo vermelho); a realista com acabamento do Rayo ficou só no teste
+        "harumi_neutro": (40, 88, 340, 440),
+        "harumi_taco": (366, 88, 680, 320),
+        "harumi_manga": (700, 88, 1020, 375),
+        "harumi_medo": (1040, 88, 1345, 460),
+        "harumi_brava": (362, 432, 680, 640),
+        "harumi_desdem": (700, 432, 1020, 745),
+    },
 }
+# pranchas de fundo vermelho chapado: o vermelho que aparece nos vãos (entre o braço e o corpo) também sai,
+# e o recorte usa o modelo de ilustração (isnet-anime), que guarda o taco e os dedos finos
+FUNDO_VERMELHO = {"harumi"}
+# poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
+INTERSECAO = {"harumi_taco"}
 
 
 def limpar(im, limiar=30):
@@ -52,14 +65,38 @@ def limpar(im, limiar=30):
     return im
 
 
+def tirar_vermelho(im, minimo=150):
+    """Apaga manchas grandes do vermelho do fundo que ficaram dentro do recorte (o rembg preenche os vãos)."""
+    a = np.array(im).astype(np.int16)
+    r, g, b = a[..., 0], a[..., 1], a[..., 2]
+    verm = ((r > 105) & (r > 2.0 * g) & (r > 2.0 * b)) | ((r > 22) & (r > 2.8 * g) & (r > 2.8 * b))
+    verm = ndimage.binary_opening(verm, iterations=2)
+    rot, n = ndimage.label(verm)
+    if n:
+        tam = np.bincount(rot.ravel()); tam[0] = 0
+        grande = tam[rot] >= minimo
+        grande = ndimage.binary_dilation(grande, iterations=2)
+        alfa = np.array(im.getchannel("A")); alfa[grande] = 0
+        im.putalpha(Image.fromarray(alfa))
+    return im
+
+
 sessao = new_session("isnet-general-use")
+sessao_ilustra = new_session("isnet-anime")
 for prancha in sys.argv[1:] or POSES:
     img = Image.open(os.path.join(PRANCHAS, prancha + ".jpg")).convert("RGB")
     for nome, caixa in POSES[prancha].items():
         # amplia 2x antes do rembg: a prancha é pequena e o recorte fica mais limpo
         parte = img.crop(caixa)
         parte = parte.resize((parte.width * 2, parte.height * 2), Image.LANCZOS)
-        out = limpar(remove(parte, session=sessao))
+        if prancha in FUNDO_VERMELHO:
+            out = limpar(remove(parte, session=sessao_ilustra), 128)
+            if nome in INTERSECAO:
+                geral = limpar(remove(parte, session=sessao))
+                out.putalpha(Image.fromarray(np.minimum(np.array(out.getchannel("A")), np.array(geral.getchannel("A")))))
+            out = tirar_vermelho(out)
+        else:
+            out = limpar(remove(parte, session=sessao))
         out = out.crop(out.getbbox())
         out.save(os.path.join(SAIDA, nome + ".png"))
         print(nome, out.size)
