@@ -7,8 +7,10 @@
   },
   {
     "n": 2,
-    "titulo": "Capítulo 2",
-    "resumo": "Ainda sem roteiro em Ink."
+    "titulo": "O Custo do Esquecimento",
+    "resumo": "A gala da Corte no Elísio do MASP. Quem apagou a sua noite, e por quê? Dentro do Elísio, nada de Disciplina; fora, o chip na língua transmite.",
+    "arquivo": "ink/jogo.ink",
+    "inicio": "capitulo_2_novo"
   },
   {
     "n": 3,

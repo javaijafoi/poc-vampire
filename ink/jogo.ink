@@ -117,11 +117,16 @@ VAR a_rayo = false
 VAR a_harumi = false
 VAR a_constance = false
 VAR a_doutora = false
+// Ponte para o capítulo 2
+VAR capitulo = 1
+VAR final_cap1 = ""          // B, C_corte, C_anarq, E, F, G, H ou S: de onde você parte no capítulo 2
+VAR tem_frasco = false        // final S: você saiu com o frasco do sangue do Matusalém
+VAR favor_principe = false    // final S: o Príncipe te deve um favor
 
--> escolha_personagem
+-> escolha_personagem(-> prologo)
 
 // ------------------------------------------------------------------ ABERTURA E SALÃO
-=== escolha_personagem ===
+=== escolha_personagem(-> depois) ===
 Quem é você?
 * [Tomás · Gangrel ;; Caminhoneiro do Sul. Rude, com faro de bicho. ;; Carisma 2 · Raciocínio 3 · Intimidação 6 · Animalismo]
     ~ nome = "Tomás"
@@ -155,7 +160,7 @@ Quem é você?
     ~ intimidacao = 3
     ~ ocultismo = 2
     ~ disciplina = "Presença"
-- -> prologo
+- -> depois
 
 === prologo ===
 # fundo: rua
@@ -1073,6 +1078,8 @@ Você leva a mão ao pescoço. Mais um segundo e não sobrava nada para o Prínc
         -> final_c_corte
     + [Guardar a prova e levar aos Anarquistas, pelo Rayo]
         -> final_c_anarquistas
+    + {p_informante} {constance_aliada} {p_frasco} {quebrou_regra == 0} [Final ideal :: Dizer só ao Príncipe, no ouvido, que você sabe para quem ia a carga.]
+        -> final_s
 - else:
     -> final_b
 }
@@ -1141,6 +1148,7 @@ Você já não estava ali. Uma Nosferatu aprende a sumir antes de aprender a and
 -> final_irene_esgoto
 
 === final_irene_esgoto ===
+~ final_cap1 = "F"
 # imagem: tunel
 # musica: final_triste
 Para a cidade, a forasteira morreu. Para os ratos dos esgotos do Bixiga, chegou uma vizinha nova.
@@ -1165,6 +1173,7 @@ FINAL D · SEM PROVAS. Você acusou o culpado sem ter como provar. # final: D
 -> END
 
 === tomas_foge ===
+~ final_cap1 = "G"
 A Besta acorda antes de você. As unhas viram garras, e a corrente, feita para gente, não para bicho, estoura no terceiro puxão.
 Você pula do telhado com a pele já fumegando, atravessa a rua e enterra o corpo no barro de um terreno baldio, como os velhos Gangrel do Sul ensinaram.
 # imagem: serra
@@ -1176,6 +1185,7 @@ FINAL G · O BICHO ENTERRADO. Tomás acusou sem provas, mas a Besta Gangrel o ti
 -> END
 
 === final_b ===
+~ final_cap1 = "B"
 Dante: Você me serviu bem, forasteir{o}. Sua dívida está paga.
 { denunciado:
     Dante: Mas o Vincenzo tem razão. Você usou Disciplina no Porão, e a regra da casa vale até para quem me serve. Você não desce mais aquela escada.
@@ -1196,6 +1206,7 @@ FINAL B · A VERDADE PARA O PRÍNCIPE. Você acertou, quase morreu, e o Príncip
 -> END
 
 === final_c_corte ===
+~ final_cap1 = "C_corte"
 Você: Antes, Príncipe, uma pergunta para a Corte. Por que a carga do Príncipe tinha carimbo do BOES no manifesto?
 O salão inteiro vira para Dante.
 { p_informante: Você: O Biel, que vigiava a carga, era pago pela Dra. Elisa, da Segunda Inquisição. Os caçadores sabiam da rota e não interceptaram. Porque eram eles que iam receber. }
@@ -1219,7 +1230,26 @@ Continua no capítulo 2.
 FINAL C · A VERDADE CONTRA O PRÍNCIPE · DIANTE DA CORTE # final: C
 -> END
 
+=== final_s ===
+~ final_cap1 = "S"
+~ tem_frasco = true
+~ favor_principe = true
+Você chega perto do Príncipe, perto demais para a Corte ouvir. # entra: dante
+Você: O sarcófago está no bunker da Linha Amarela. E eu sei para quem a carga ia, Príncipe. O carimbo, o informante, a Doutora. Eu não contei a ninguém. Ainda.
+Dante: ...Você é mais perigos{o} do que parece, forasteir{o}. # expr: calado
+Dante: A sua dívida está paga. E eu fico devendo um favor a você. Um só. Escolha bem quando cobrar.
+O Cão é levado escada acima. A Corte não entende por que o Príncipe está tão quieto, e a Constance entende tudo. # limpa
+# imagem: cao_morto
+# musica: final_verdade
+Na saída, a Harumi passa por você na escada e deixa alguma coisa no seu bolso, sem olhar. Um frasco escuro, morno.
+Harumi: Melhor com você do que comigo, querid{o}. Eu não quero esse velho me procurando.
+O sangue de um Matusalém, no bolso de quem não tem amigos nesta cidade. E um Príncipe com medo de você.
+Continua no capítulo 2.
+FINAL S · O COFRE ABERTO. Você acertou tudo, guardou o segredo e saiu com o frasco do Matusalém e um favor do Príncipe. # final: S
+-> END
+
 === final_c_anarquistas ===
+~ final_cap1 = "C_anarq"
 Você não diz nada sobre o carimbo. O Cão é levado. O Príncipe paga a sua dívida com um aceno.
 { denunciado:
     Dante: Mas o Vincenzo tem razão. Você usou Disciplina no Porão, e a regra da casa vale até para quem me serve. Você não desce mais aquela escada.
@@ -1245,6 +1275,7 @@ Dante: Mas a sua dívida continua. E eu vou cobrá-la do único jeito de que um 
 Ele corta o próprio pulso com a unha e estende o braço. Os carniçais seguram os seus ombros. # expr dante: pulso
 # musica: final_triste
 { cla == "Ministério": -> joana_engana }
+~ final_cap1 = "E"
 Três noites, três goles. Na terceira, você já não lembra por que um dia quis ir embora de São Paulo. Você ama o Príncipe. Você sempre amou.
 Embaixo dos trilhos da Linha Amarela, o sarcófago continua no escuro. Você nunca vai procurar. Ele não deixaria.
 Continua no capítulo 2.
@@ -1252,6 +1283,7 @@ FINAL E · O SERVO DO PRÍNCIPE. Você não acusou ninguém e virou servo do Pr�
 -> END
 
 === joana_engana ===
+~ final_cap1 = "H"
 Três noites, três goles. Você bebe cada um ajoelhada, de olhos baixos, como uma boa fiel.
 E cada noite, antes do amanhecer, você reza à Serpente e devolve o sangue do Príncipe numa bacia de cobre. O Ministério ensina: só um deus pode ser dono de você, e ele não mora em São Paulo.
 Na terceira noite, Dante sorri para você como quem olha um cachorro novo. Você sorri de volta. Você aprendeu a fingir amor há muito tempo, no púlpito.
@@ -1352,3 +1384,6 @@ FINAL H · A FALSA DEVOTA. Joana não acusou ninguém, mas enganou o Laço de Sa
     ~ return minutos_falados(m) + " minutos"
 }
 ~ return hs + " e " + minutos_falados(m) + " minutos"
+
+// ------------------------------------------------------------------ CAPÍTULO 2
+INCLUDE capitulo2.ink

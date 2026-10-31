@@ -1,6 +1,9 @@
 const { Compiler } = require('inkjs/dist/ink-full.js');
 const fs = require('fs');
-const src = fs.readFileSync(process.argv[2], 'utf8');
+const path = require('path');
+// INCLUDE outro.ink: o texto do arquivo entra no lugar da linha (cada capítulo fica no seu arquivo)
+const ler = f => fs.readFileSync(f, 'utf8').replace(/^INCLUDE\s+(.+)$/gm, (_, inc) => ler(path.join(path.dirname(f), inc.trim())));
+const src = ler(process.argv[2]);
 const t0 = performance.now();
 const c = new Compiler(src);
 let story;

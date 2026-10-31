@@ -56,8 +56,10 @@ function textoLimpo(t) {
   return out.replace(/\s*;;\s*/g, ' · ').replace(/\s+/g, ' ').trim();
 }
 
+// INCLUDE outro.ink: o texto do arquivo entra no lugar da linha, como no compile.cjs
+const lerComInclude = f => fs.readFileSync(f, 'utf8').replace(/^INCLUDE\s+(.+)$/gm, (_, inc) => lerComInclude(path.join(path.dirname(f), inc.trim())));
 function lerInk(arquivo, capPadrao) {
-  const src = fs.readFileSync(path.join(RAIZ, arquivo), 'utf8');
+  const src = lerComInclude(path.join(RAIZ, arquivo));
   const linhas = src.split('\n');
   const vars = {}, knots = [], titulos = {};
   let knot = null, secao = '', cap = capPadrao, escolha = null, temps = {};
@@ -214,11 +216,11 @@ function lerInk(arquivo, capPadrao) {
 }
 
 // ------------------------------------------------------------------ partidas de teste
-function simular(arquivoInk, personagens) {
+function simular(arquivoInk, personagens, inicio) {
   const { Story, Compiler, CompilerOptions } = require('inkjs/dist/ink-full.js');
   require(path.join(RAIZ, 'web/v5.js'));
   // compila de novo contando todas as visitas, para saber por quais cenas cada partida passou
-  const json = new Compiler(fs.readFileSync(arquivoInk, 'utf8'), new CompilerOptions(null, [], true)).Compile().ToJson();
+  const json = new Compiler(lerComInclude(arquivoInk), new CompilerOptions(null, [], true)).Compile().ToJson();
   const res = {};
   personagens.forEach((nome, idx) => {
     const r = res[nome] = { partidas: 0, finais: {}, visitas: {}, chaves: {} };
@@ -227,6 +229,7 @@ function simular(arquivoInk, personagens) {
       s.BindExternalFunction('rolar', (p, f, d) => V5.rolarV5(p, f, d).resultado, false);
       s.BindExternalFunction('despertar', () => { if (!V5.despertarV5()) s.variablesState['fome'] = Math.min(5, s.variablesState['fome'] + 1); }, false);
       s.onError = () => {};
+      if (inicio) s.ChoosePathString(inicio);  // capítulo 2 em diante: começa do knot do capítulo
       let passos = 0, final = null;
       while (passos < 3000) {
         while (s.canContinue) {
@@ -269,9 +272,9 @@ for (const c of capitulos) {
       const t0 = Date.now();
       knotsSimulados = cap.knots.map(k => k.id);
       chavesSimuladas = Object.keys(vars).filter(v => vars[v].inicial === 'false');
-      const esc = cap.knots.find(k => k.id === (c.personagens_em || 'escolha_personagem'));
+      const esc = knots.find(k => k.id === (c.personagens_em || 'escolha_personagem'));
       const nomes = esc ? esc.escolhas.map(e => (e.muda.find(m => m.v === 'nome') || {}).expr?.replace(/"/g, '') || e.texto) : ['partida'];
-      cap.sim = simular(path.join(RAIZ, c.arquivo), nomes);
+      cap.sim = simular(path.join(RAIZ, c.arquivo), nomes, c.inicio);
       console.log(`capítulo ${c.n}: ${nomes.length * PARTIDAS} partidas em ${Date.now() - t0} ms`);
     }
   }

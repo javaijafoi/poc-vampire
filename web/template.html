@@ -248,6 +248,11 @@ body {
 .lado[data-p="Nonna"] { height: 74%; bottom: 10%; }
 .lado[data-p="Dante"], .lado[data-p="Constance"] { height: 92%; bottom: 2%; }
 .lado[data-p="Harumi"] { height: 84%; bottom: 4%; }
+.lado[data-p="Isadora"], .lado[data-p="Valentina"] { height: 84%; bottom: 4%; }
+.lado[data-p="Dr. Arnaldo"], .lado[data-p="Luciana"] { height: 90%; bottom: 2%; }
+.lado[data-p="Agente Rocha"] { height: 66%; bottom: 8%; }
+.sinal i { border-color: #b8860b; }
+.sinal i.cheio { background: #e0a020; box-shadow: 0 0 .4em #e0a020; }
 .lado[data-p="Harumi"] .legenda { bottom: 34%; }
 /* o Biel é um fantasma: azul, flutuando, com brilho frio */
 .lado[data-p="Biel"] img { animation: flutua 4.5s ease-in-out infinite; filter: drop-shadow(0 0 1.6cqw rgb(150 200 255 / .75)); opacity: .9; }
@@ -497,6 +502,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     <div class="hud">
       <span class="grupo" data-dica="hora"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span><span class="amanhecer">sol 05h40</span></span>
       <span class="grupo" data-dica="fome"><span>Fome</span><span class="fome" id="fome"></span></span>
+      <span class="grupo" data-dica="sinal" id="grupo-sinal" hidden><span>Sinal</span><span class="fome sinal" id="sinal"></span></span>
       <button class="caderno-btn" id="abrir-caderno" type="button" data-dica="caderno">Caderno <b id="n-pistas">0</b></button>
     </div>
     <div class="toast" id="toast" role="status"></div>
@@ -512,6 +518,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     <div class="menu" id="menu">
       <button type="button" id="continuar" hidden>Continuar</button>
       <button type="button" id="novo-jogo">Novo jogo</button>
+      <button type="button" class="sec" id="capitulo-2">Capítulo 2</button>
       <button type="button" class="sec" id="ver-abertura">Ver a abertura</button>
     </div>
     <div class="menu confirma" id="confirma" role="alertdialog" aria-labelledby="confirma-txt" hidden>
@@ -561,11 +568,22 @@ const PERS = {
   dante: { nome: 'Dante', lado: 'esq', desc: 'O Príncipe Dante, de barba grisalha e terno risca de giz azul-marinho' },
   constance: { nome: 'Constance', lado: 'esq', desc: 'Constance, a Primogênita Lasombra, de terno rosa' },
   nonna: { nome: 'Nonna', lado: 'esq', desc: 'Nonna Benedetta, senhora muito velha de xale preto de renda' },
+  // capítulo 2, o Elísio do MASP ("fala" é o nome antes dos dois pontos no roteiro, quando é diferente da legenda)
+  isadora: { nome: 'Isadora', lado: 'dir', desc: 'Isadora, Toreador ruiva de vestido preto de gala' },
+  arnaldo: { nome: 'Dr. Arnaldo', fala: 'Arnaldo', lado: 'dir', desc: 'O Dr. Arnaldo, o Juiz, homem grisalho de terno cinza de três peças' },
+  rocha: { nome: 'Agente Rocha', fala: 'Rocha', lado: 'dir', desc: 'O segurança da porta, homem careca de terno preto com ponto no ouvido' },
+  valentina: { nome: 'Valentina', lado: 'dir', desc: 'Valentina, Toreador de tranças longas e vestido vermelho, com uma taça na mão' },
+  luciana: { nome: 'Luciana', lado: 'dir', desc: 'Luciana, a Senescal Tremere, de cabelo curto e blazer escuro' },
 };
-const CHAVE = Object.fromEntries(Object.entries(PERS).map(([k, p]) => [p.nome, k]));
+const CHAVE = Object.fromEntries(Object.entries(PERS).map(([k, p]) => [p.fala || p.nome, k]));
 // folhas do caderno: chave da tag "# pista <aba>:" -> título da aba
-const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', harumi: 'Harumi', biel: 'Biel', constance: 'Constance', bar: 'Vincenzo' };
-const FINAIS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+const ABAS_PISTA = { dossie: 'Dossiê', rayo: 'Rayo', cao: 'Cão', harumi: 'Harumi', biel: 'Biel', constance: 'Constance', bar: 'Vincenzo',
+  loft: 'Você', isadora: 'Isadora', arnaldo: 'Dr. Arnaldo', rocha: 'Agente Rocha', valentina: 'Valentina', luciana: 'Luciana' };
+const FINAIS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'S'];
+const FINAIS2 = ['2A', '2B', '2C', '2D', '2E', '2F', '2G', '2H', '2J', '2K', '2X'];
+// finais do capítulo 1 que seguem para o capítulo 2 (A e D são morte)
+const SEGUEM = new Set(['B', 'C', 'E', 'F', 'G', 'H', 'S']);
+const CAP1 = 'matusalem-cap1';  // o estado do Ink no fim do capítulo 1, para começar o 2 dali
 let cena;
 
 // Põe o personagem no lado dele (troca quem estava lá). Devolve false se ele não tem arte.
@@ -615,6 +633,10 @@ const DESC_FUNDO = {
   fundo_bar: 'A mesa do fundo, com toalha de renda, velas acesas, terço e fotos antigas.',
   corte: 'O salão arrumado para a Corte, com uma poltrona de veludo vermelho no centro.',
   rua: 'Rua do Bixiga à noite, na chuva.',
+  loft: 'Um loft vazio nos Jardins, à noite, com um colchão no chão e sapatos sujos de lama.',
+  vao_livre: 'O vão livre do MASP à noite, embaixo do museu vermelho, com a porta lateral e a portaria.',
+  gala: 'A gala da Corte dentro do museu, entre os quadros nos cavaletes de vidro.',
+  paulista: 'A calçada da Avenida Paulista à noite, na chuva, com uma grade de esgoto no meio-fio.',
 };
 function mostrarIlustracao(nome) {
   const src = ARTE.fundos[nome]; if (!src) return;
@@ -638,6 +660,7 @@ function voltarDaIlustracao() {
 const TOQUE = matchMedia('(hover: none)').matches;
 const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
+let ultimoSinal = null;
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
 let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
 
@@ -653,7 +676,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
   fila = []; pistas = []; finalTexto = finalLetra = null; cena = null;
-  feitas = new Set(); historico = []; ultimaFome = null; ultimasPistas = 0;
+  feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
   }, false);
@@ -672,6 +695,23 @@ function iniciar() {
   comecarPartida('nova');
   avancar();
   if (!tutorialVisto()) mostrarTutorial();
+}
+
+// ---------- Capítulos ----------
+// "# capitulo: 2" no roteiro: caderno novo (as pistas do capítulo anterior ficam para trás).
+function comecarCapitulo(n) {
+  pistas = []; feitas = new Set(); ultimasPistas = 0; ultimoSinal = null;
+  toast(`Capítulo ${n}`); registrar('capitulo', { capitulo: +n });
+}
+// Começa o capítulo 2: do fim do capítulo 1 que você jogou (se houver) ou escolhendo o personagem.
+function jogarCapitulo2(daqui) {
+  if (!daqui) { novaHistoria(); let cap1 = null; try { cap1 = localStorage.getItem(CAP1); } catch (e) {}
+    try { if (cap1) story.state.LoadJson(cap1); } catch (e) { cap1 = null; novaHistoria(); }
+    story.ChoosePathString(cap1 ? 'capitulo_2' : 'capitulo_2_novo'); }
+  else { story.ChoosePathString('capitulo_2'); finalTexto = finalLetra = null; }
+  pararAbertura(); $('abertura').hidden = true; $('capa').hidden = true;
+  limparCena(); esconderIlustracao(); $('carimbo-final').classList.remove('on');
+  atualizarHud(); comecarPartida('capitulo_2'); avancar();
 }
 
 // ---------- Jogo salvo: grava sozinho neste navegador antes de cada linha ----------
@@ -716,6 +756,11 @@ function atualizarHud() {
   $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
   $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
   $('n-pistas').textContent = pistas.length;
+  // o chip na língua (capítulo 2): 0 a 5
+  const sn = v['sinal'] || 0; $('grupo-sinal').hidden = v['capitulo'] < 2;
+  $('sinal').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= sn ? 'cheio' : ''}"></i>`).join('');
+  if (ultimoSinal != null && sn > ultimoSinal) { pulsar($('sinal')); toast(sn >= 5 ? 'O chip está queimando' : `O chip transmitiu. Sinal ${sn}`); }
+  ultimoSinal = sn;
   const f = v['fome'];
   if (ultimaFome != null && f !== ultimaFome) {
     pulsar($('fome'));
@@ -747,6 +792,7 @@ function avancar() {
       // "# expr: medo" vale para quem fala nesta linha; "# expr cao: pego" troca o rosto de alguém numa narração
       if (chave === 'expr') { if (aba) { mostrarPersonagem(aba, val); exprAlvo = aba; } else exprPendente = val; }
       if (chave === 'musica') tocarMusica(val);
+      if (chave === 'capitulo') comecarCapitulo(val);
       if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
     }
@@ -910,10 +956,16 @@ function mostrarFim() {
     requestAnimationFrame(() => $('carimbo-final').classList.add('on'));
   }
   if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {} }
-  const vistos = finaisVistos().length;
-  $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo 1</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
-    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados: ${vistos} de ${FINAIS.length}.</p>
-    <ul class="escolhas"><li><button type="button" data-a="caderno"><span class="num">1</span><span>Ver o caderno</span></button></li><li><button type="button" data-a="de-novo"><span class="num">2</span><span>Jogar de novo com outro personagem</span></button></li><li><button type="button" data-a="menu"><span class="num">3</span><span>Voltar ao menu</span></button></li></ul>`;
+  const cap = story.variablesState['capitulo'] || 1, lista = cap >= 2 ? FINAIS2 : FINAIS;
+  const vistos = finaisVistos().filter(f => lista.includes(f)).length;
+  // fim do capítulo 1 com o personagem vivo: guarda onde parou e oferece o capítulo 2
+  const segue = cap === 1 && SEGUEM.has(finalLetra);
+  if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); } catch (e) {}
+  const ops = [...(segue ? [['cap2', 'Seguir para o capítulo 2']] : []), ['caderno', 'Ver o caderno'], ['de-novo', 'Jogar de novo com outro personagem'], ['menu', 'Voltar ao menu']];
+  $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo ${cap}</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
+    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>
+    <ul class="escolhas">${ops.map(([a, t], i) => `<li><button type="button" data-a="${a}"><span class="num">${i + 1}</span><span>${t}</span></button></li>`).join('')}</ul>`;
+  if (segue) $('conteudo').querySelector('[data-a=cap2]').addEventListener('click', e => { e.stopPropagation(); jogarCapitulo2(true); });
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
   $('conteudo').querySelector('[data-a=de-novo]').addEventListener('click', e => { e.stopPropagation(); iniciar(); });
   $('conteudo').querySelector('[data-a=menu]').addEventListener('click', e => { e.stopPropagation(); mostrarCapa(); });
@@ -978,7 +1030,8 @@ function mostrarCapa() {
   if (!abriuRegistrado) { abriuRegistrado = true; registrar('jogo_aberto', { tem_save: !!lerSave(), finais_vistos: finaisVistos().length, de_onde: document.referrer ? new URL(document.referrer).hostname : '' }); }
   else if (partida.ativa) { registrar('voltou_ao_menu'); partida.ativa = false; }
   pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
-  const v = finaisVistos().length; $('finais').textContent = v ? `Finais encontrados: ${v} de ${FINAIS.length}` : '';
+  const fv = finaisVistos(), v1 = fv.filter(f => FINAIS.includes(f)).length, v2 = fv.filter(f => FINAIS2.includes(f)).length;
+  $('finais').textContent = v1 || v2 ? `Finais encontrados: ${v1} de ${FINAIS.length}${v2 ? ` no capítulo 1, ${v2} de ${FINAIS2.length} no capítulo 2` : ''}` : '';
   // com jogo salvo, "Continuar" vira o botão principal e "Novo jogo" pede confirmação
   const s = lerSave(); $('menu').hidden = false; $('confirma').hidden = true;
   $('continuar').hidden = !s; $('novo-jogo').classList.toggle('sec', !!s);
@@ -986,6 +1039,7 @@ function mostrarCapa() {
   (s ? $('continuar') : $('novo-jogo')).focus({ preventScroll: true });
 }
 function novoJogo() {
+  confirmaCap2 = false;
   if (lerSave()) { $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
   tocarAbertura(iniciar);
 }
@@ -1035,7 +1089,8 @@ function tocarAbertura(depois) {
 
 // ---------- Música: uma faixa por cena (musica/<nome>.mp3), com fade na troca ----------
 // Todas CC0, do OpenGameArt (créditos em musica/CREDITOS.md). A tag "# musica: nome" do roteiro troca a faixa; sem ela, vale a do fundo.
-const MUSICA_FUNDO = { rua: 'rua', salao: 'salao', balcao: 'balcao', escada: 'escada', sinuca: 'sinuca', fundo_bar: 'sessao', corte: 'corte' };
+const MUSICA_FUNDO = { rua: 'rua', salao: 'salao', balcao: 'balcao', escada: 'escada', sinuca: 'sinuca', fundo_bar: 'sessao', corte: 'corte',
+  loft: 'escada', vao_livre: 'rua', gala: 'salao', paulista: 'rua' };
 const som = { faixa: null, el: null, vol: .6, ligado: true, liberado: false };
 try { Object.assign(som, JSON.parse(localStorage.getItem('matusalem-som') || '{}')); } catch (e) {}
 const volumeAlvo = () => som.ligado ? som.vol : 0;
@@ -1103,6 +1158,7 @@ const DISC = {
   'Presença': { curta: 'um charme sobrenatural que faz a pessoa querer te agradar.',
     longa: 'Um charme sobrenatural: a pessoa passa a gostar de você e quer te agradar. Quem tem a vontade muito forte pode resistir.' },
 };
+const CUSTO_DISC2 = 'Usar gasta sangue (a Fome pode subir 1). Dentro do Elísio, o Dr. Arnaldo vê e põe você para fora. Do lado de fora, o chip na sua língua transmite (o Sinal sobe 2).';
 const CUSTO_DISC = 'Usar gasta sangue (a Fome pode subir 1) e o Vincenzo proibiu Disciplinas no Porão: ele pode perceber, e pode contar ao Príncipe.';
 const CUSTO_FORTE = 'É a versão forte, uma vez por noite: rende muito, mas a Fome sobe 2 de uma vez, sem sorte, e o Vincenzo vê na hora.';
 const pontos = n => '●'.repeat(n) + '○'.repeat(Math.max(0, 5 - n));
@@ -1239,7 +1295,7 @@ function dicaDe(g, texto, passiva) {
   }
   if (tipo === 'disc') {
     const forte = /^Disciplina forte/.test(g), d = g.replace(/^Disciplina( forte)?:\s*/, '');
-    return `${d}, a sua Disciplina: ${DISC[d]?.curta || 'um poder de vampiro.'} ${forte ? CUSTO_FORTE : CUSTO_DISC}`;
+    return `${d}, a sua Disciplina: ${DISC[d]?.curta || 'um poder de vampiro.'} ${forte ? CUSTO_FORTE : v['capitulo'] >= 2 ? CUSTO_DISC2 : CUSTO_DISC}`;
   }
   if (tipo === 'teste') {
     const m = g.match(/^Teste:\s*(.+?),\s*dif\.\s*(\d+)/); if (!m) return 'Teste: rola dados; cada 6 ou mais é um sucesso.';
@@ -1249,6 +1305,7 @@ function dicaDe(g, texto, passiva) {
     return `Teste: você rola ${n} dados (${m[1]}) e precisa de ${dif} sucesso${dif === 1 ? '' : 's'}. Cada dado com 6 ou mais conta um.${verm ? ` ${verm} ${verm === 1 ? 'deles é' : 'deles são'} de Fome.` : ''} Chance de passar: uns ${chanceDe(n, f, dif)}%.`;
   }
   const m = g.match(/^(.+?) (\d+)$/);
+  if (m && m[1] === 'Sinal') return 'O chip na sua língua transmitiu. Com Sinal 5, a Inquisição vem buscar você.';
   if (m && m[1] === 'Fome') return `${passiva ? 'Você sentiu isto' : 'Só aparece'} porque a sua Fome está em ${m[2]} ou mais. Com fome, os sentidos de predador ficam mais aguçados.`;
   if (m) {
     const nota = NOTAS.find(n => n[1] === m[1]);
@@ -1259,6 +1316,7 @@ function dicaDe(g, texto, passiva) {
 
 const DICAS_HUD = {
   hora: 'Hora da noite. Cada pergunta custa minutos, mesmo se você repetir: uns 20 com as testemunhas e 10 com o fantasma. A sessão da Nonna custa 1 hora. O sol nasce às 05h40, e aí o Príncipe desce.',
+  sinal: 'O chip na sua língua, de 0 a 5. Do lado de fora do Elísio, cada Disciplina faz ele transmitir (sobe 2), e briga sobe 1. Com 5, a Inquisição vem buscar você. Dentro do salão o chip não importa, mas o Dr. Arnaldo põe para fora quem usar Disciplina.',
   fome: 'Fome, de 0 a 5. Usar Disciplina pode subir 1, e a Disciplina forte sobe 2 de uma vez. Cada ponto vira um dado vermelho nos testes. Com 4, a Besta aparece; com 5, a conversa com jeitinho some e a Corte desconfia de você.',
   caderno: 'Caderno: as pistas que você juntou, uma folha por testemunha, e uma folha para anotar.',
 };
@@ -1358,8 +1416,14 @@ document.addEventListener('visibilitychange', () => {
 // ---------- Ligações ----------
 $('novo-jogo').addEventListener('click', novoJogo);
 $('continuar').addEventListener('click', continuar);
-$('confirma-sim').addEventListener('click', () => { apagarSave(); tocarAbertura(iniciar); });
+$('confirma-sim').addEventListener('click', () => { apagarSave(); if (confirmaCap2) { confirmaCap2 = false; jogarCapitulo2(false); } else tocarAbertura(iniciar); });
 $('confirma-nao').addEventListener('click', mostrarCapa);
+// Capítulo 2 pela capa: com jogo salvo no meio, pede confirmação como o Novo jogo
+let confirmaCap2 = false;
+$('capitulo-2').addEventListener('click', () => {
+  if (lerSave()) { confirmaCap2 = true; $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
+  jogarCapitulo2(false);
+});
 $('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
 $('dialogo').addEventListener('click', clicarDialogo);
 $('palco').addEventListener('click', e => { if (!e.target.closest('button') && $('txt')) clicarDialogo(); });

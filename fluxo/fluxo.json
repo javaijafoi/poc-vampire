@@ -1,5 +1,5 @@
 {
- "gerado": "2026-10-30T17:57:28.012Z",
+ "gerado": "2026-10-31T16:27:24.535Z",
  "titulosFinais": {
   "A": "O bode expiatório",
   "F": "A morta nos esgotos",
@@ -7,8 +7,20 @@
   "G": "O bicho enterrado",
   "B": "A verdade para o Príncipe",
   "C": "A verdade contra o Príncipe",
+  "S": "O cofre aberto",
   "E": "O servo do Príncipe",
-  "H": "A falsa devota"
+  "H": "A falsa devota",
+  "2X": "O sinal",
+  "2B": "A verdade para o Príncipe",
+  "2C": "A verdade para a constance",
+  "2J": "A verdade para a lei",
+  "2K": "O segredo da senescal",
+  "2A": "A noite inteira",
+  "2F": "A rata sem sinal",
+  "2D": "Sem provas",
+  "2G": "O bicho não esquece",
+  "2E": "A isca recolhida",
+  "2H": "A agente dupla"
  },
  "capitulos": [
   {
@@ -21,7 +33,7 @@
      "id": "escolha_personagem",
      "secao": "ABERTURA E SALÃO",
      "cap": 1,
-     "linha": 121,
+     "linha": 129,
      "escolhas": [
       {
        "texto": "Tomás · Gangrel · Caminhoneiro do Sul. Rude, com faro de bicho. · Carisma 2 · Raciocínio 3 · Intimidação 6 · Animalismo",
@@ -87,7 +99,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 123
+       "linha": 131
       },
       {
        "texto": "Irene · Nosferatu · Ex-espiã dos esgotos de Curitiba. Ouve tudo. · Carisma 1 · Raciocínio 3 · Ocultismo 2 · Ofuscação",
@@ -159,7 +171,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 133
+       "linha": 141
       },
       {
        "texto": "Joana · Ministério · Pastora de fala mansa. Vende salvação. · Carisma 3 · Manipulação 3 · Ocultismo 2 · Presença",
@@ -231,13 +243,13 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 144
+       "linha": 152
       }
      ],
      "auto": {
       "saidas": [
        {
-        "para": "prologo",
+        "para": "depois",
         "quando": []
        }
       ],
@@ -250,7 +262,7 @@
      "id": "prologo",
      "secao": "ABERTURA E SALÃO",
      "cap": 1,
-     "linha": 157,
+     "linha": 165,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -286,7 +298,7 @@
      "id": "salao",
      "secao": "ABERTURA E SALÃO",
      "cap": 1,
-     "linha": 183,
+     "linha": 191,
      "escolhas": [
       {
        "texto": "Rayo, debruçado no balcão",
@@ -302,7 +314,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 193
+       "linha": 201
       },
       {
        "texto": "O Cão, no canto escuro perto da escada",
@@ -318,7 +330,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 195
+       "linha": 203
       },
       {
        "texto": "Harumi, na mesa de sinuca",
@@ -334,7 +346,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 197
+       "linha": 205
       },
       {
        "texto": "Nonna Benedetta, na mesa do fundo",
@@ -350,7 +362,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 199
+       "linha": 207
       },
       {
        "texto": "Constance, na mesa reservada",
@@ -368,7 +380,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 201
+       "linha": 209
       },
       {
        "texto": "Vincenzo, o dono do bar",
@@ -386,7 +398,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 203
+       "linha": 211
       },
       {
        "texto": "Vestir o rosto do Cão e perguntar ao Vincenzo como foi a limpeza.",
@@ -406,7 +418,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 205
+       "linha": 213
       },
       {
        "texto": "Chamar todos os ratos do Porão e perguntar o que viram esta noite.",
@@ -425,7 +437,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 207
+       "linha": 215
       },
       {
        "texto": "Descer à adega e beber do rapaz que lava os copos.",
@@ -443,7 +455,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 209
+       "linha": 217
       },
       {
        "texto": "Chamar o Príncipe e fazer a acusação",
@@ -459,7 +471,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 211
+       "linha": 219
       }
      ],
      "auto": {
@@ -492,7 +504,7 @@
      "id": "confirmar_acusacao",
      "secao": "ABERTURA E SALÃO",
      "cap": 1,
-     "linha": 214,
+     "linha": 222,
      "escolhas": [
       {
        "texto": "Sim. Mandar chamar o Príncipe agora.",
@@ -508,7 +520,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 216
+       "linha": 224
       },
       {
        "texto": "Ainda não. Voltar para o salão.",
@@ -524,7 +536,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 219
+       "linha": 227
       }
      ],
      "auto": {
@@ -538,7 +550,7 @@
      "id": "avisos",
      "secao": "ABERTURA E SALÃO",
      "cap": 1,
-     "linha": 224,
+     "linha": 232,
      "escolhas": [],
      "auto": {
       "saidas": [],
@@ -592,7 +604,7 @@
      "id": "forte_tomas",
      "secao": "FOME: Disciplina forte e beber",
      "cap": 1,
-     "linha": 246,
+     "linha": 254,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -653,7 +665,7 @@
      "id": "forte_irene",
      "secao": "FOME: Disciplina forte e beber",
      "cap": 1,
-     "linha": 261,
+     "linha": 269,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -709,7 +721,7 @@
      "id": "beber_adega",
      "secao": "FOME: Disciplina forte e beber",
      "cap": 1,
-     "linha": 277,
+     "linha": 285,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -741,7 +753,7 @@
      "id": "rayo",
      "secao": "RAYO",
      "cap": 1,
-     "linha": 288,
+     "linha": 296,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -765,7 +777,7 @@
      "id": "rayo_perguntas",
      "secao": "RAYO",
      "cap": 1,
-     "linha": 301,
+     "linha": 309,
      "escolhas": [
       {
        "texto": "O que aconteceu na Serra?",
@@ -791,7 +803,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 304,
+       "linha": 312,
        "minutos": 20
       },
       {
@@ -818,7 +830,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 310,
+       "linha": 318,
        "minutos": 20
       },
       {
@@ -838,7 +850,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 315,
+       "linha": 323,
        "minutos": 20
       },
       {
@@ -877,7 +889,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 319,
+       "linha": 327,
        "minutos": 20,
        "teste": {
         "parada": "carisma + 1",
@@ -907,7 +919,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 331,
+       "linha": 339,
        "minutos": 20
       },
       {
@@ -939,7 +951,7 @@
         }
        ],
        "finais": [],
-       "linha": 338,
+       "linha": 346,
        "minutos": 20
       },
       {
@@ -977,7 +989,7 @@
         }
        ],
        "finais": [],
-       "linha": 344,
+       "linha": 352,
        "minutos": 20
       },
       {
@@ -998,7 +1010,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 354,
+       "linha": 362,
        "minutos": 20
       },
       {
@@ -1020,7 +1032,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 359,
+       "linha": 367,
        "minutos": 20
       },
       {
@@ -1054,7 +1066,7 @@
         }
        ],
        "finais": [],
-       "linha": 364,
+       "linha": 372,
        "minutos": 20
       },
       {
@@ -1082,7 +1094,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 370,
+       "linha": 378,
        "minutos": 20
       },
       {
@@ -1115,7 +1127,7 @@
         }
        ],
        "finais": [],
-       "linha": 376,
+       "linha": 384,
        "minutos": 20
       },
       {
@@ -1176,7 +1188,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 383,
+       "linha": 391,
        "minutos": 20,
        "teste": {
         "parada": "manipulacao + subterfugio",
@@ -1208,7 +1220,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 403,
+       "linha": 411,
        "minutos": 20,
        "despertar": true
       },
@@ -1250,7 +1262,7 @@
         }
        ],
        "finais": [],
-       "linha": 410,
+       "linha": 418,
        "minutos": 20,
        "despertar": true
       },
@@ -1268,7 +1280,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 418
+       "linha": 426
       }
      ],
      "auto": {
@@ -1292,7 +1304,7 @@
      "id": "rayo_pressionar",
      "secao": "RAYO",
      "cap": 1,
-     "linha": 421,
+     "linha": 429,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -1325,7 +1337,7 @@
      "id": "rayo_lobisomens",
      "secao": "RAYO",
      "cap": 1,
-     "linha": 431,
+     "linha": 439,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -1356,7 +1368,7 @@
      "id": "rayo_confissao",
      "secao": "RAYO",
      "cap": 1,
-     "linha": 438,
+     "linha": 446,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -1410,7 +1422,7 @@
      "id": "cao",
      "secao": "CÃO",
      "cap": 1,
-     "linha": 452,
+     "linha": 460,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -1434,7 +1446,7 @@
      "id": "cao_perguntas",
      "secao": "CÃO",
      "cap": 1,
-     "linha": 462,
+     "linha": 470,
      "escolhas": [
       {
        "texto": "O que aconteceu no túnel?",
@@ -1459,7 +1471,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 465,
+       "linha": 473,
        "minutos": 20
       },
       {
@@ -1492,7 +1504,7 @@
         }
        ],
        "finais": [],
-       "linha": 471,
+       "linha": 479,
        "minutos": 20
       },
       {
@@ -1513,7 +1525,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 477,
+       "linha": 485,
        "minutos": 20
       },
       {
@@ -1547,7 +1559,7 @@
         }
        ],
        "finais": [],
-       "linha": 480,
+       "linha": 488,
        "minutos": 20
       },
       {
@@ -1580,7 +1592,7 @@
         }
        ],
        "finais": [],
-       "linha": 487,
+       "linha": 495,
        "minutos": 20
       },
       {
@@ -1613,7 +1625,7 @@
         }
        ],
        "finais": [],
-       "linha": 494,
+       "linha": 502,
        "minutos": 20
       },
       {
@@ -1652,7 +1664,7 @@
         }
        ],
        "finais": [],
-       "linha": 500,
+       "linha": 508,
        "minutos": 20,
        "despertar": true
       },
@@ -1692,7 +1704,7 @@
         }
        ],
        "finais": [],
-       "linha": 509,
+       "linha": 517,
        "minutos": 20,
        "despertar": true
       },
@@ -1732,7 +1744,7 @@
         }
        ],
        "finais": [],
-       "linha": 517,
+       "linha": 525,
        "minutos": 20,
        "despertar": true
       },
@@ -1797,7 +1809,7 @@
         }
        ],
        "finais": [],
-       "linha": 525,
+       "linha": 533,
        "minutos": 20
       },
       {
@@ -1832,7 +1844,7 @@
         }
        ],
        "finais": [],
-       "linha": 540,
+       "linha": 548,
        "minutos": 20,
        "teste": {
         "parada": "intimidacao",
@@ -1853,7 +1865,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 552
+       "linha": 560
       }
      ],
      "auto": {
@@ -1877,7 +1889,7 @@
      "id": "cao_trava",
      "secao": "CÃO",
      "cap": 1,
-     "linha": 555,
+     "linha": 563,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -1908,7 +1920,7 @@
      "id": "harumi",
      "secao": "HARUMI",
      "cap": 1,
-     "linha": 564,
+     "linha": 572,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -1932,7 +1944,7 @@
      "id": "harumi_perguntas",
      "secao": "HARUMI",
      "cap": 1,
-     "linha": 574,
+     "linha": 582,
      "escolhas": [
       {
        "texto": "O que saiu do porto?",
@@ -1948,7 +1960,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 581,
+       "linha": 589,
        "minutos": 20
       },
       {
@@ -1980,7 +1992,7 @@
         }
        ],
        "finais": [],
-       "linha": 586,
+       "linha": 594,
        "minutos": 20
       },
       {
@@ -2008,7 +2020,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 592,
+       "linha": 600,
        "minutos": 20
       },
       {
@@ -2036,7 +2048,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 598,
+       "linha": 606,
        "minutos": 20
       },
       {
@@ -2064,7 +2076,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 604,
+       "linha": 612,
        "minutos": 20
       },
       {
@@ -2097,7 +2109,7 @@
         }
        ],
        "finais": [],
-       "linha": 609,
+       "linha": 617,
        "minutos": 20
       },
       {
@@ -2156,7 +2168,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 615,
+       "linha": 623,
        "minutos": 20,
        "teste": {
         "parada": "intimidacao",
@@ -2187,7 +2199,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 634,
+       "linha": 642,
        "minutos": 20,
        "despertar": true
       },
@@ -2221,7 +2233,7 @@
         }
        ],
        "finais": [],
-       "linha": 640,
+       "linha": 648,
        "minutos": 20,
        "despertar": true
       },
@@ -2239,7 +2251,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 646
+       "linha": 654
       }
      ],
      "auto": {
@@ -2280,7 +2292,7 @@
      "id": "harumi_pressionar",
      "secao": "HARUMI",
      "cap": 1,
-     "linha": 649,
+     "linha": 657,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -2313,7 +2325,7 @@
      "id": "harumi_confissao",
      "secao": "HARUMI",
      "cap": 1,
-     "linha": 659,
+     "linha": 667,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -2356,7 +2368,7 @@
      "id": "nonna",
      "secao": "NONNA E O FANTASMA",
      "cap": 1,
-     "linha": 670,
+     "linha": 678,
      "escolhas": [
       {
        "texto": "Deixar a Nonna encher um frasco com o seu sangue. A Fome sobe 1, e o fantasma responde uma pergunta a mais.",
@@ -2391,7 +2403,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 684
+       "linha": 692
       },
       {
        "texto": "Ficar devendo um favor. \"Um favor. Combinado.\"",
@@ -2414,7 +2426,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 691
+       "linha": 699
       },
       {
        "texto": "Agora não",
@@ -2430,7 +2442,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 694
+       "linha": 702
       }
      ],
      "auto": {
@@ -2457,7 +2469,7 @@
      "id": "sessao",
      "secao": "NONNA E O FANTASMA",
      "cap": 1,
-     "linha": 697,
+     "linha": 705,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -2483,7 +2495,7 @@
      "id": "biel_perguntas_loop",
      "secao": "NONNA E O FANTASMA",
      "cap": 1,
-     "linha": 709,
+     "linha": 717,
      "escolhas": [
       {
        "texto": "Como você morreu?",
@@ -2530,7 +2542,7 @@
         }
        ],
        "finais": [],
-       "linha": 725,
+       "linha": 733,
        "minutos": 10
       },
       {
@@ -2569,7 +2581,7 @@
         }
        ],
        "finais": [],
-       "linha": 737,
+       "linha": 745,
        "minutos": 10
       },
       {
@@ -2602,7 +2614,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 744,
+       "linha": 752,
        "minutos": 10
       },
       {
@@ -2635,7 +2647,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 752,
+       "linha": 760,
        "minutos": 10
       },
       {
@@ -2668,7 +2680,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 759,
+       "linha": 767,
        "minutos": 10
       },
       {
@@ -2707,7 +2719,7 @@
         }
        ],
        "finais": [],
-       "linha": 766,
+       "linha": 774,
        "minutos": 10
       },
       {
@@ -2747,7 +2759,7 @@
         }
        ],
        "finais": [],
-       "linha": 774,
+       "linha": 782,
        "minutos": 10
       },
       {
@@ -2771,7 +2783,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 783
+       "linha": 791
       }
      ],
      "auto": {
@@ -2818,7 +2830,7 @@
      "id": "constance",
      "secao": "CONSTANCE (chega à 01h30)",
      "cap": 1,
-     "linha": 789,
+     "linha": 797,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -2842,7 +2854,7 @@
      "id": "constance_perguntas",
      "secao": "CONSTANCE (chega à 01h30)",
      "cap": 1,
-     "linha": 799,
+     "linha": 807,
      "escolhas": [
       {
        "texto": "O que a senhora veio fazer aqui esta noite?",
@@ -2873,7 +2885,7 @@
         }
        ],
        "finais": [],
-       "linha": 802,
+       "linha": 810,
        "minutos": 20
       },
       {
@@ -2899,7 +2911,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 808,
+       "linha": 816,
        "minutos": 20
       },
       {
@@ -2932,7 +2944,7 @@
         }
        ],
        "finais": [],
-       "linha": 814,
+       "linha": 822,
        "minutos": 20
       },
       {
@@ -2966,7 +2978,7 @@
         }
        ],
        "finais": [],
-       "linha": 823,
+       "linha": 831,
        "minutos": 20
       },
       {
@@ -3049,7 +3061,7 @@
         }
        ],
        "finais": [],
-       "linha": 829,
+       "linha": 837,
        "minutos": 20,
        "teste": {
         "parada": "manipulacao + subterfugio",
@@ -3087,7 +3099,7 @@
         }
        ],
        "finais": [],
-       "linha": 851,
+       "linha": 859,
        "minutos": 20
       },
       {
@@ -3126,7 +3138,7 @@
         }
        ],
        "finais": [],
-       "linha": 857,
+       "linha": 865,
        "minutos": 20,
        "despertar": true
       },
@@ -3160,7 +3172,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 866,
+       "linha": 874,
        "minutos": 20,
        "despertar": true
       },
@@ -3200,7 +3212,7 @@
         }
        ],
        "finais": [],
-       "linha": 874,
+       "linha": 882,
        "minutos": 20,
        "despertar": true
       },
@@ -3218,7 +3230,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 881
+       "linha": 889
       }
      ],
      "auto": {
@@ -3242,7 +3254,7 @@
      "id": "vincenzo",
      "secao": "VINCENZO",
      "cap": 1,
-     "linha": 885,
+     "linha": 893,
      "escolhas": [
       {
        "texto": "Alguém usou os seus serviços esta noite?",
@@ -3273,7 +3285,7 @@
         }
        ],
        "finais": [],
-       "linha": 890,
+       "linha": 898,
        "minutos": 20
       },
       {
@@ -3307,7 +3319,7 @@
         }
        ],
        "finais": [],
-       "linha": 896,
+       "linha": 904,
        "minutos": 20
       },
       {
@@ -3324,7 +3336,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 903
+       "linha": 911
       }
      ],
      "auto": {
@@ -3345,7 +3357,7 @@
      "id": "amanhecer",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 908,
+     "linha": 916,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -3363,7 +3375,7 @@
      "id": "acusacao",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 914,
+     "linha": 922,
      "escolhas": [
       {
        "texto": "Rayo, o motoqueiro",
@@ -3386,7 +3398,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 928
+       "linha": 936
       },
       {
        "texto": "Harumi, do porto",
@@ -3409,7 +3421,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 932
+       "linha": 940
       },
       {
        "texto": "Constance, a Primogênita Lasombra",
@@ -3434,7 +3446,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 936
+       "linha": 944
       },
       {
        "texto": "O Xerife, o Cão",
@@ -3457,7 +3469,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 941
+       "linha": 949
       },
       {
        "texto": "Admitir que não sabe",
@@ -3473,7 +3485,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 947
+       "linha": 955
       }
      ],
      "auto": {
@@ -3504,7 +3516,7 @@
      "id": "provas",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 952,
+     "linha": 960,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -3522,7 +3534,7 @@
      "id": "provas_loop",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 956,
+     "linha": 964,
      "escolhas": [
       {
        "texto": "O selo Tremere queimado que o Cão disse ter visto",
@@ -3562,7 +3574,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 959
+       "linha": 967
       },
       {
        "texto": "A hora da entrega: antes das três, não às 03h30",
@@ -3600,7 +3612,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 970
+       "linha": 978
       },
       {
        "texto": "O lugar onde o Biel morreu: um túnel, depois da entrega",
@@ -3638,7 +3650,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 976
+       "linha": 984
       },
       {
        "texto": "O pó de concreto da Linha Amarela na roupa do Cão",
@@ -3676,7 +3688,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 982
+       "linha": 990
       },
       {
        "texto": "O esconderijo embaixo dos trilhos",
@@ -3714,7 +3726,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 988
+       "linha": 996
       },
       {
        "texto": "A limpeza do Vincenzo, paga depois das três",
@@ -3752,7 +3764,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 994
+       "linha": 1002
       },
       {
        "texto": "A fera de olho amarelo que matou o Biel",
@@ -3792,7 +3804,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 1000
+       "linha": 1008
       },
       {
        "texto": "O desvio do Rayo pela Estrada Velha",
@@ -3824,7 +3836,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 1011
+       "linha": 1019
       },
       {
        "texto": "O frasco e o cheiro de cripta da Harumi",
@@ -3856,7 +3868,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 1016
+       "linha": 1024
       },
       {
        "texto": "O que a Constance fez esta noite",
@@ -3888,7 +3900,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 1021
+       "linha": 1029
       },
       {
        "texto": "A Doutora: o envelope e o informante",
@@ -3920,7 +3932,7 @@
        ],
        "pistas": [],
        "finais": [],
-       "linha": 1027
+       "linha": 1035
       },
       {
        "texto": "Isso é tudo o que eu tenho. / Não tenho prova nenhuma. Só a minha palavra.",
@@ -3936,7 +3948,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 1033
+       "linha": 1041
       }
      ],
      "auto": {
@@ -3957,7 +3969,7 @@
      "id": "veredito",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1036,
+     "linha": 1044,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -3999,7 +4011,7 @@
      "id": "cao_desmorona",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1054,
+     "linha": 1062,
      "escolhas": [
       {
        "texto": "Ficar calado e entregar só o Cão ao Príncipe",
@@ -4017,7 +4029,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 1067
+       "linha": 1075
       },
       {
        "texto": "Mostrar o carimbo do BOES para a Corte inteira",
@@ -4035,7 +4047,7 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 1069
+       "linha": 1077
       },
       {
        "texto": "Guardar a prova e levar aos Anarquistas, pelo Rayo",
@@ -4053,7 +4065,29 @@
        "muda": [],
        "pistas": [],
        "finais": [],
-       "linha": 1071
+       "linha": 1079
+      },
+      {
+       "texto": "Dizer só ao Príncipe, no ouvido, que você sabe para quem ia a carga.",
+       "gatilho": "Final ideal",
+       "fixa": true,
+       "conds": [
+        "p_boes",
+        "p_informante",
+        "constance_aliada",
+        "p_frasco",
+        "quebrou_regra == 0"
+       ],
+       "saidas": [
+        {
+         "para": "final_s",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1081
       }
      ],
      "auto": {
@@ -4074,7 +4108,7 @@
      "id": "final_rayo",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1077,
+     "linha": 1087,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4092,7 +4126,7 @@
      "id": "final_harumi",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1088,
+     "linha": 1098,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4110,7 +4144,7 @@
      "id": "final_constance",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1101,
+     "linha": 1111,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4134,7 +4168,7 @@
      "id": "morte_bode",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1113,
+     "linha": 1123,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4158,7 +4192,7 @@
      "id": "final_a_epilogo",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1121,
+     "linha": 1131,
      "escolhas": [],
      "auto": {
       "saidas": [],
@@ -4174,7 +4208,7 @@
      "id": "irene_some_cao",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1128,
+     "linha": 1138,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4192,7 +4226,7 @@
      "id": "irene_some_constance",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1135,
+     "linha": 1145,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4210,11 +4244,18 @@
      "id": "final_irene_esgoto",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1140,
+     "linha": 1150,
      "escolhas": [],
      "auto": {
       "saidas": [],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"F\"",
+        "quando": []
+       }
+      ],
       "pistas": [],
       "finais": [
        "F"
@@ -4226,7 +4267,7 @@
      "id": "final_sem_provas",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1150,
+     "linha": 1161,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4249,11 +4290,18 @@
      "id": "tomas_foge",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1164,
+     "linha": 1175,
      "escolhas": [],
      "auto": {
       "saidas": [],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"G\"",
+        "quando": []
+       }
+      ],
       "pistas": [],
       "finais": [
        "G"
@@ -4265,11 +4313,18 @@
      "id": "final_b",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1175,
+     "linha": 1187,
      "escolhas": [],
      "auto": {
       "saidas": [],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"B\"",
+        "quando": []
+       }
+      ],
       "pistas": [
        {
         "aba": "bar",
@@ -4289,11 +4344,18 @@
      "id": "final_c_corte",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1195,
+     "linha": 1208,
      "escolhas": [],
      "auto": {
       "saidas": [],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"C_corte\"",
+        "quando": []
+       }
+      ],
       "pistas": [],
       "finais": [
        "C"
@@ -4302,14 +4364,56 @@
      }
     },
     {
-     "id": "final_c_anarquistas",
+     "id": "final_s",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1219,
+     "linha": 1233,
      "escolhas": [],
      "auto": {
       "saidas": [],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"S\"",
+        "quando": []
+       },
+       {
+        "v": "tem_frasco",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "favor_principe",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": [
+       "S"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final_c_anarquistas",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 1,
+     "linha": 1251,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"C_anarq\"",
+        "quando": []
+       }
+      ],
       "pistas": [
        {
         "aba": "bar",
@@ -4329,7 +4433,7 @@
      "id": "final_nao_sei",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1237,
+     "linha": 1270,
      "escolhas": [],
      "auto": {
       "saidas": [
@@ -4340,7 +4444,14 @@
         ]
        }
       ],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"E\"",
+        "quando": []
+       }
+      ],
       "pistas": [],
       "finais": [
        "E"
@@ -4352,11 +4463,18 @@
      "id": "joana_engana",
      "secao": "ACUSAÇÃO E FINAIS",
      "cap": 1,
-     "linha": 1251,
+     "linha": 1285,
      "escolhas": [],
      "auto": {
       "saidas": [],
-      "muda": [],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"H\"",
+        "quando": []
+       }
+      ],
       "pistas": [],
       "finais": [
        "H"
@@ -4725,135 +4843,467 @@
     "a_doutora": {
      "inicial": "false",
      "desc": ""
+    },
+    "capitulo": {
+     "inicial": "1",
+     "desc": ""
+    },
+    "final_cap1": {
+     "inicial": "\"\"",
+     "desc": "B, C_corte, C_anarq, E, F, G, H ou S: de onde você parte no capítulo 2"
+    },
+    "tem_frasco": {
+     "inicial": "false",
+     "desc": "final S: você saiu com o frasco do sangue do Matusalém"
+    },
+    "favor_principe": {
+     "inicial": "false",
+     "desc": "final S: o Príncipe te deve um favor"
+    },
+    "sinal": {
+     "inicial": "0",
+     "desc": "o chip na língua: 0 a 5. No 5, o BOES chega"
+    },
+    "sinal_explicado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "dentro": {
+     "inicial": "true",
+     "desc": "você está no salão (true) ou do lado de fora (false)"
+    },
+    "expulso": {
+     "inicial": "false",
+     "desc": "o Dr. Arnaldo te pôs para fora do Elísio"
+    },
+    "luciana_chegou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "c2_pode_entrar": {
+     "inicial": "true",
+     "desc": "o Tomás, queimado e fugitivo, começa do lado de fora"
+    },
+    "c2_bebeu_frasco": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "aliado_cap2": {
+     "inicial": "\"\"",
+     "desc": "quem te protege no capítulo 3"
+    },
+    "p2_lama": {
+     "inicial": "false",
+     "desc": "lama de esgoto nos seus sapatos"
+    },
+    "p2_ligacao": {
+     "inicial": "false",
+     "desc": "seu celular: chamada às 03h12 para um número sem nome"
+    },
+    "p2_corte": {
+     "inicial": "false",
+     "desc": "a memória foi cortada a sangue (ritual/Dominação), não por droga"
+    },
+    "p2_scanner": {
+     "inicial": "false",
+     "desc": "o segurança da porta tem um leitor que apita na sua boca"
+    },
+    "p2_sedativo": {
+     "inicial": "false",
+     "desc": "Rocha: o sedativo da Inquisição só derruba até as 2h"
+    },
+    "p2_sinal_esgoto": {
+     "inicial": "false",
+     "desc": "Rocha no rádio: o sinal do chip sumiu embaixo da terra, na Consolação"
+    },
+    "p2_isa_lista": {
+     "inicial": "false",
+     "desc": "Isadora: \"só gente de bem foi à Capela\" (mentira)"
+    },
+    "p2_isa_ritual": {
+     "inicial": "false",
+     "desc": "Isadora foi à Capela fazer um ritual de beleza (vaidade, não culpa)"
+    },
+    "p2_numero": {
+     "inicial": "false",
+     "desc": "o número do seu celular é o da Capela da Luciana"
+    },
+    "p2_isa_capela": {
+     "inicial": "false",
+     "desc": "Isadora: a Luciana saiu às 3h e voltou com a barra do vestido suja de esgoto"
+    },
+    "p2_quem_apaga": {
+     "inicial": "false",
+     "desc": "Arnaldo: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco"
+    },
+    "p2_arquivo": {
+     "inicial": "false",
+     "desc": "Arnaldo: o Cão tinha um \"seguro\", um arquivo nos esgotos da Consolação"
+    },
+    "p2_rocha_dante": {
+     "inicial": "false",
+     "desc": "Arnaldo: o segurança humano foi posto ali por ordem de cima"
+    },
+    "p2_luvas": {
+     "inicial": "false",
+     "desc": "Valentina viu você às 4h com uma mulher de luvas"
+    },
+    "p2_caixa": {
+     "inicial": "false",
+     "desc": "os bichos da Paulista: a mulher de luvas voltou do esgoto com uma caixa"
+    },
+    "p2_luciana_slip": {
+     "inicial": "false",
+     "desc": "a Luciana falou dos esgotos da Consolação sem ninguém falar"
+    },
+    "p2_luvas_cheiro": {
+     "inicial": "false",
+     "desc": "as luvas da Luciana cheiram ao mesmo esgoto dos seus sapatos"
+    },
+    "p2_constance_dica": {
+     "inicial": "false",
+     "desc": "Constance: a Senescal anda nervosa desde terça"
+    },
+    "isa_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "isa_fechada": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "isa_varanda": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "arn_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rocha_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rocha_fechado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "val_falou": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "val_bebeu": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "luc_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "luc_fechada": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "anfitriao_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rayo2_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "c2_aviso": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "a2_sedativo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_capela": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_luvas": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_arquivo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_slip": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_numero": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_corte": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_lama": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_rocha": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_isadora": {
+     "inicial": "false",
+     "desc": ""
     }
    },
    "sim": {
     "Tomás": {
      "partidas": 600,
      "finais": {
-      "G": 127,
+      "G": 142,
+      "E": 132,
       "A": 323,
-      "E": 147,
-      "C": 1,
-      "B": 2
+      "B": 2,
+      "C": 1
      },
      "visitas": {
       "escolha_personagem": 600,
       "prologo": 600,
       "salao": 600,
-      "confirmar_acusacao": 418,
+      "confirmar_acusacao": 387,
       "avisos": 600,
-      "forte_tomas": 414,
-      "rayo": 468,
-      "rayo_perguntas": 468,
-      "rayo_pressionar": 157,
-      "rayo_lobisomens": 291,
-      "rayo_confissao": 229,
-      "nonna": 432,
-      "constance": 340,
-      "constance_perguntas": 340,
-      "vincenzo": 422,
-      "acusacao": 600,
-      "provas": 453,
-      "provas_loop": 453,
-      "veredito": 453,
-      "final_sem_provas": 127,
-      "tomas_foge": 127,
-      "beber_adega": 278,
-      "cao": 438,
-      "cao_perguntas": 438,
-      "cao_trava": 53,
+      "forte_tomas": 425,
+      "rayo": 463,
+      "rayo_perguntas": 463,
+      "cao": 452,
+      "cao_perguntas": 452,
       "harumi": 436,
       "harumi_perguntas": 436,
-      "harumi_pressionar": 323,
-      "harumi_confissao": 326,
-      "amanhecer": 307,
-      "final_rayo": 134,
-      "morte_bode": 271,
+      "harumi_pressionar": 336,
+      "harumi_confissao": 335,
+      "nonna": 433,
+      "sessao": 363,
+      "biel_perguntas_loop": 363,
+      "constance": 345,
+      "constance_perguntas": 345,
+      "vincenzo": 427,
+      "amanhecer": 318,
+      "acusacao": 600,
+      "provas": 468,
+      "provas_loop": 468,
+      "veredito": 468,
+      "final_sem_provas": 142,
+      "tomas_foge": 142,
+      "beber_adega": 275,
+      "rayo_lobisomens": 291,
+      "rayo_confissao": 244,
+      "cao_trava": 59,
+      "final_nao_sei": 132,
+      "rayo_pressionar": 168,
+      "final_constance": 54,
       "final_a_epilogo": 323,
-      "sessao": 376,
-      "biel_perguntas_loop": 376,
-      "final_nao_sei": 147,
-      "final_constance": 52,
-      "final_harumi": 137,
+      "final_rayo": 129,
+      "morte_bode": 269,
+      "final_harumi": 140,
       "cao_desmorona": 3,
-      "final_c_anarquistas": 1,
-      "final_b": 2
+      "final_b": 2,
+      "final_c_anarquistas": 1
      },
      "chaves": {
-      "p_rayo_versao": 291,
-      "p_rayo_hora": 229,
-      "p_selo": 229,
-      "p_constance": 229,
-      "p_rayo_frasco": 347,
-      "p_concreto": 417,
-      "p_tunel": 450,
-      "p_limpeza": 92,
-      "rayo_confessou": 229,
-      "rayo_fechado": 54,
-      "usou_pedagio": 87,
-      "vincenzo_falou": 422,
-      "rayo_hora_vaga": 353,
-      "v_neutro": 284,
-      "constance_chegou": 504,
-      "constance_hostil": 208,
-      "p_envelope": 78,
-      "c_veio": 201,
-      "c_rayo": 201,
-      "c_animal": 208,
-      "denunciado": 505,
-      "poder_forte": 414,
-      "besta_avisou": 454,
-      "a_tunel": 119,
-      "a_limpeza": 19,
-      "p_cao_versao": 350,
-      "p_cao_selo": 286,
-      "p_bunker": 390,
-      "p_cripta": 196,
-      "p_dedos": 269,
-      "p_frasco": 326,
-      "p_boes": 326,
-      "cao_travou": 53,
-      "cao_irritado": 277,
-      "harumi_confessou": 326,
-      "harumi_fechado": 127,
-      "usou_cripta": 85,
-      "constance_fechada": 77,
-      "a_selo": 85,
-      "a_bunker": 123,
-      "a_harumi": 143,
-      "p_queimadura": 94,
-      "p_biel_hora": 123,
-      "sentiu_besta_rayo": 109,
-      "sessao_feita": 376,
+      "p_cao_versao": 370,
+      "p_cao_selo": 298,
+      "p_concreto": 426,
+      "p_cripta": 204,
+      "p_frasco": 335,
+      "p_boes": 335,
+      "p_tunel": 457,
+      "cao_irritado": 289,
+      "harumi_confessou": 335,
+      "sessao_feita": 363,
       "biel_hora_feita": 122,
-      "nonna_sangue": 199,
-      "a_constance": 65,
-      "p_constance_cao": 30,
-      "nonna_favor": 177,
-      "p_informante": 42,
-      "biel_doeu": 138,
-      "a_rayo": 54,
-      "usou_dedos": 102,
-      "biel_luz": 119,
-      "constance_aliada": 78,
-      "a_hora": 81,
-      "a_concreto": 114,
-      "biel_morte": 126,
-      "a_olho": 38,
-      "usou_queimadura": 29,
-      "p_olho": 51,
-      "usou_frasco_rayo": 60,
-      "cao_hora_confrontada": 81,
-      "a_doutora": 24
+      "biel_doeu": 135,
+      "vincenzo_falou": 427,
+      "rayo_hora_vaga": 346,
+      "v_neutro": 305,
+      "constance_chegou": 511,
+      "constance_aliada": 76,
+      "c_veio": 204,
+      "c_rayo": 212,
+      "c_animal": 210,
+      "denunciado": 497,
+      "biel_morte": 132,
+      "nonna_favor": 184,
+      "poder_forte": 425,
+      "besta_avisou": 454,
+      "a_selo": 91,
+      "a_tunel": 128,
+      "p_rayo_versao": 291,
+      "p_rayo_hora": 244,
+      "p_selo": 244,
+      "p_constance": 244,
+      "p_bunker": 382,
+      "p_biel_hora": 122,
+      "rayo_confessou": 244,
+      "cao_travou": 59,
+      "cao_hora_confrontada": 87,
+      "nonna_sangue": 179,
+      "p_rayo_frasco": 340,
+      "usou_frasco_rayo": 54,
+      "p_queimadura": 93,
+      "usou_pedagio": 104,
+      "sentiu_besta_rayo": 125,
+      "a_harumi": 159,
+      "a_constance": 85,
+      "p_dedos": 280,
+      "harumi_fechado": 147,
+      "biel_luz": 117,
+      "p_constance_cao": 28,
+      "a_bunker": 103,
+      "rayo_fechado": 57,
+      "a_concreto": 119,
+      "constance_hostil": 196,
+      "usou_cripta": 84,
+      "p_limpeza": 103,
+      "usou_queimadura": 35,
+      "p_informante": 33,
+      "constance_fechada": 58,
+      "p_envelope": 83,
+      "a_hora": 89,
+      "a_doutora": 30,
+      "usou_dedos": 132,
+      "p_olho": 42,
+      "a_olho": 37,
+      "a_limpeza": 26,
+      "a_rayo": 54
      }
     },
     "Irene": {
      "partidas": 600,
      "finais": {
-      "F": 310,
-      "E": 141,
-      "D": 140,
+      "F": 326,
+      "D": 130,
+      "E": 140,
+      "B": 2,
+      "C": 2
+     },
+     "visitas": {
+      "escolha_personagem": 600,
+      "prologo": 600,
+      "salao": 600,
+      "confirmar_acusacao": 398,
+      "avisos": 600,
+      "rayo": 415,
+      "rayo_perguntas": 415,
+      "rayo_pressionar": 163,
+      "rayo_lobisomens": 226,
+      "rayo_confissao": 158,
+      "cao": 395,
+      "cao_perguntas": 395,
+      "harumi": 405,
+      "harumi_perguntas": 405,
+      "harumi_pressionar": 290,
+      "constance": 277,
+      "constance_perguntas": 277,
+      "vincenzo": 318,
+      "acusacao": 600,
+      "provas": 460,
+      "provas_loop": 460,
+      "veredito": 460,
+      "final_rayo": 155,
+      "morte_bode": 298,
+      "irene_some_cao": 298,
+      "final_irene_esgoto": 326,
+      "forte_irene": 155,
+      "beber_adega": 71,
+      "harumi_confissao": 135,
+      "amanhecer": 309,
+      "final_harumi": 143,
+      "nonna": 370,
+      "sessao": 293,
+      "biel_perguntas_loop": 293,
+      "cao_trava": 28,
+      "final_constance": 28,
+      "irene_some_constance": 28,
+      "final_sem_provas": 130,
+      "final_nao_sei": 140,
+      "cao_desmorona": 4,
+      "final_b": 2,
+      "final_c_anarquistas": 2
+     },
+     "chaves": {
+      "p_rayo_versao": 226,
+      "p_rayo_hora": 158,
+      "p_selo": 158,
+      "p_constance": 158,
+      "p_rayo_frasco": 322,
+      "p_concreto": 285,
+      "p_cripta": 298,
+      "p_dedos": 164,
+      "rayo_confessou": 158,
+      "usou_pedagio": 148,
+      "usou_cripta": 214,
+      "vincenzo_falou": 318,
+      "rayo_hora_vaga": 326,
+      "constance_chegou": 488,
+      "p_constance_ordem": 174,
+      "p_constance_cao": 48,
+      "c_veio": 172,
+      "c_rayo": 159,
+      "a_hora": 64,
+      "a_constance": 69,
+      "harumi_fechado": 263,
+      "a_harumi": 136,
+      "p_cao_versao": 305,
+      "p_cao_selo": 229,
+      "p_bunker": 303,
+      "p_frasco": 135,
+      "p_boes": 135,
+      "p_tunel": 331,
+      "p_limpeza": 189,
+      "cao_irritado": 227,
+      "harumi_confessou": 135,
+      "usou_dedos": 98,
+      "v_neutro": 207,
+      "constance_aliada": 23,
+      "constance_hostil": 144,
+      "denunciado": 236,
+      "poder_forte": 155,
+      "besta_avisou": 177,
+      "a_limpeza": 53,
+      "p_queimadura": 145,
+      "p_informante": 11,
+      "usou_queimadura": 100,
+      "sessao_feita": 293,
+      "p_envelope": 49,
+      "biel_morte": 113,
+      "nonna_sangue": 146,
+      "a_tunel": 100,
+      "p_biel_hora": 87,
+      "biel_doeu": 100,
+      "biel_luz": 93,
+      "p_olho": 41,
+      "cao_travou": 28,
+      "cao_hora_confrontada": 61,
+      "nonna_favor": 147,
+      "a_bunker": 84,
+      "biel_hora_feita": 98,
+      "constance_fechada": 43,
+      "a_doutora": 21,
+      "rayo_fechado": 60,
+      "a_selo": 59,
+      "a_concreto": 74,
+      "a_rayo": 50,
+      "usou_frasco_rayo": 90,
+      "a_olho": 27
+     }
+    },
+    "Joana": {
+     "partidas": 600,
+     "finais": {
+      "D": 125,
+      "A": 318,
+      "H": 148,
       "B": 6,
       "C": 3
      },
@@ -4861,239 +5311,4464 @@
       "escolha_personagem": 600,
       "prologo": 600,
       "salao": 600,
+      "confirmar_acusacao": 434,
       "avisos": 600,
-      "forte_irene": 158,
-      "rayo": 433,
-      "rayo_perguntas": 433,
-      "rayo_pressionar": 171,
-      "rayo_lobisomens": 237,
-      "rayo_confissao": 158,
-      "cao": 415,
-      "cao_perguntas": 415,
-      "harumi": 432,
-      "harumi_perguntas": 432,
-      "nonna": 390,
-      "sessao": 328,
-      "biel_perguntas_loop": 328,
-      "constance": 278,
-      "constance_perguntas": 278,
-      "amanhecer": 330,
+      "beber_adega": 230,
+      "rayo": 475,
+      "rayo_perguntas": 475,
+      "cao": 443,
+      "cao_perguntas": 443,
+      "harumi": 438,
+      "harumi_perguntas": 438,
+      "harumi_confissao": 354,
+      "nonna": 439,
+      "sessao": 387,
+      "biel_perguntas_loop": 387,
+      "constance": 323,
+      "constance_perguntas": 323,
+      "vincenzo": 430,
       "acusacao": 600,
-      "provas": 459,
-      "provas_loop": 459,
-      "veredito": 459,
-      "final_harumi": 144,
-      "morte_bode": 285,
-      "irene_some_cao": 285,
-      "final_irene_esgoto": 310,
-      "confirmar_acusacao": 380,
-      "harumi_pressionar": 295,
-      "harumi_confissao": 143,
-      "vincenzo": 342,
-      "final_nao_sei": 141,
-      "final_constance": 25,
-      "irene_some_constance": 25,
-      "final_rayo": 141,
-      "beber_adega": 85,
-      "final_sem_provas": 140,
-      "cao_trava": 35,
+      "provas": 452,
+      "provas_loop": 452,
+      "veredito": 452,
+      "final_sem_provas": 125,
+      "rayo_pressionar": 89,
+      "rayo_lobisomens": 322,
+      "rayo_confissao": 283,
+      "amanhecer": 257,
+      "final_constance": 58,
+      "final_a_epilogo": 318,
+      "final_rayo": 132,
+      "morte_bode": 260,
+      "cao_trava": 96,
+      "final_nao_sei": 148,
+      "joana_engana": 148,
+      "harumi_pressionar": 163,
+      "final_harumi": 128,
       "cao_desmorona": 9,
       "final_b": 6,
-      "final_c_corte": 1,
-      "final_c_anarquistas": 2
+      "final_c_anarquistas": 3
      },
      "chaves": {
-      "p_rayo_versao": 237,
-      "p_rayo_hora": 158,
-      "p_queimadura": 154,
-      "p_selo": 158,
-      "p_constance": 158,
-      "p_cao_versao": 330,
-      "p_cao_selo": 276,
-      "p_concreto": 331,
-      "p_bunker": 346,
-      "p_dedos": 179,
-      "p_tunel": 353,
-      "p_limpeza": 194,
-      "rayo_confessou": 158,
-      "usou_pedagio": 153,
-      "usou_queimadura": 112,
-      "cao_irritado": 256,
-      "sessao_feita": 328,
-      "rayo_hora_vaga": 323,
-      "constance_chegou": 495,
-      "constance_hostil": 141,
-      "c_veio": 168,
-      "c_rayo": 163,
-      "denunciado": 252,
-      "nonna_sangue": 171,
-      "poder_forte": 158,
-      "besta_avisou": 179,
-      "a_hora": 69,
-      "a_rayo": 51,
-      "a_harumi": 147,
-      "p_cripta": 305,
-      "p_frasco": 143,
-      "p_boes": 143,
-      "harumi_confessou": 143,
-      "harumi_fechado": 272,
-      "usou_cripta": 216,
-      "usou_dedos": 103,
-      "biel_hora_feita": 113,
-      "biel_doeu": 120,
-      "a_concreto": 88,
-      "a_bunker": 88,
-      "vincenzo_falou": 342,
-      "v_neutro": 234,
-      "p_rayo_frasco": 340,
-      "rayo_fechado": 62,
-      "biel_morte": 116,
-      "nonna_favor": 157,
-      "a_tunel": 93,
-      "p_constance_ordem": 170,
-      "p_constance_cao": 39,
-      "a_constance": 74,
-      "p_biel_hora": 114,
-      "biel_luz": 120,
-      "cao_hora_confrontada": 71,
-      "usou_frasco_rayo": 85,
-      "p_envelope": 47,
-      "a_doutora": 15,
-      "constance_fechada": 37,
-      "p_olho": 51,
-      "cao_travou": 35,
-      "a_selo": 59,
-      "constance_aliada": 35,
-      "a_limpeza": 60,
-      "a_olho": 32,
-      "p_informante": 14
-     }
-    },
-    "Joana": {
-     "partidas": 600,
-     "finais": {
-      "A": 357,
-      "D": 109,
-      "H": 132,
-      "B": 1,
-      "C": 1
-     },
-     "visitas": {
-      "escolha_personagem": 600,
-      "prologo": 600,
-      "salao": 600,
-      "confirmar_acusacao": 423,
-      "avisos": 600,
-      "rayo": 482,
-      "rayo_perguntas": 482,
-      "rayo_pressionar": 97,
-      "rayo_lobisomens": 333,
-      "rayo_confissao": 287,
-      "cao": 452,
-      "cao_perguntas": 452,
-      "nonna": 457,
-      "sessao": 389,
-      "biel_perguntas_loop": 389,
-      "constance": 370,
-      "constance_perguntas": 370,
-      "vincenzo": 432,
-      "amanhecer": 287,
-      "acusacao": 600,
-      "provas": 468,
-      "provas_loop": 468,
-      "veredito": 468,
-      "final_harumi": 138,
-      "morte_bode": 300,
-      "final_a_epilogo": 357,
-      "harumi": 461,
-      "harumi_perguntas": 461,
-      "harumi_pressionar": 175,
-      "harumi_confissao": 356,
-      "final_sem_provas": 109,
-      "final_rayo": 162,
-      "beber_adega": 247,
-      "cao_trava": 92,
-      "final_nao_sei": 132,
-      "joana_engana": 132,
-      "final_constance": 57,
-      "cao_desmorona": 2,
-      "final_b": 1,
-      "final_c_corte": 1
-     },
-     "chaves": {
-      "p_rayo_versao": 333,
-      "p_rayo_hora": 287,
-      "p_selo": 287,
-      "p_constance": 287,
-      "p_rayo_frasco": 353,
-      "p_concreto": 358,
-      "p_bunker": 386,
-      "p_limpeza": 97,
-      "rayo_confessou": 287,
-      "usou_pedagio": 97,
-      "cao_irritado": 407,
-      "sessao_feita": 389,
-      "vincenzo_falou": 432,
-      "rayo_hora_vaga": 340,
-      "v_neutro": 313,
-      "constance_chegou": 504,
-      "constance_hostil": 299,
-      "p_envelope": 120,
-      "c_veio": 241,
-      "c_rayo": 255,
-      "denunciado": 450,
-      "nonna_favor": 202,
-      "poder_forte": 355,
-      "besta_avisou": 384,
-      "a_doutora": 49,
-      "p_cao_versao": 374,
-      "p_cripta": 199,
-      "p_frasco": 399,
-      "p_boes": 356,
-      "p_tunel": 361,
-      "rayo_fechado": 26,
-      "harumi_confessou": 356,
-      "harumi_fechado": 190,
-      "usou_cripta": 82,
-      "biel_luz": 164,
-      "a_tunel": 94,
-      "a_concreto": 95,
-      "a_constance": 90,
-      "p_cao_selo": 321,
-      "p_dedos": 203,
-      "cao_travou": 92,
-      "cao_hora_confrontada": 119,
-      "biel_hora_feita": 141,
-      "biel_doeu": 154,
-      "biel_morte": 145,
-      "nonna_sangue": 187,
-      "a_selo": 82,
+      "p_cao_versao": 366,
+      "p_cao_selo": 304,
+      "p_concreto": 352,
+      "p_bunker": 383,
+      "p_frasco": 387,
+      "p_boes": 354,
+      "p_tunel": 347,
+      "cao_irritado": 392,
+      "harumi_confessou": 354,
+      "sessao_feita": 387,
+      "biel_luz": 143,
+      "vincenzo_falou": 430,
+      "rayo_hora_vaga": 348,
+      "constance_chegou": 485,
+      "c_rayo": 211,
+      "denunciado": 436,
+      "nonna_favor": 210,
+      "poder_forte": 350,
+      "besta_avisou": 385,
+      "a_selo": 73,
       "a_bunker": 101,
-      "a_harumi": 151,
-      "a_hora": 116,
-      "a_rayo": 75,
-      "p_biel_hora": 147,
-      "usou_frasco_rayo": 65,
-      "p_informante": 45,
-      "constance_aliada": 68,
-      "usou_dedos": 72,
-      "p_constance_cao": 68,
-      "p_olho": 65,
-      "a_olho": 36,
-      "constance_fechada": 34,
-      "a_limpeza": 21
+      "a_harumi": 143,
+      "p_rayo_versao": 322,
+      "p_rayo_hora": 283,
+      "p_selo": 283,
+      "p_constance": 283,
+      "p_cripta": 188,
+      "p_dedos": 188,
+      "rayo_confessou": 283,
+      "rayo_fechado": 24,
+      "usou_pedagio": 89,
+      "harumi_fechado": 182,
+      "biel_hora_feita": 140,
+      "constance_hostil": 245,
+      "c_veio": 198,
+      "nonna_sangue": 177,
+      "a_hora": 98,
+      "v_neutro": 322,
+      "constance_fechada": 38,
+      "p_envelope": 121,
+      "a_rayo": 78,
+      "cao_travou": 96,
+      "p_rayo_frasco": 345,
+      "p_limpeza": 99,
+      "biel_morte": 140,
+      "p_olho": 55,
+      "a_tunel": 103,
+      "a_constance": 72,
+      "usou_cripta": 71,
+      "usou_frasco_rayo": 58,
+      "usou_dedos": 75,
+      "p_constance_cao": 50,
+      "cao_hora_confrontada": 125,
+      "biel_doeu": 142,
+      "a_olho": 27,
+      "a_concreto": 84,
+      "constance_aliada": 65,
+      "a_limpeza": 18,
+      "p_biel_hora": 140,
+      "p_informante": 38,
+      "a_doutora": 49
      }
     }
    }
   },
   {
    "n": 2,
-   "titulo": "Capítulo 2",
-   "resumo": "Ainda sem roteiro em Ink.",
-   "arquivo": null,
-   "knots": [],
-   "vars": {},
-   "sim": null
+   "titulo": "O Custo do Esquecimento",
+   "resumo": "A gala da Corte no Elísio do MASP. Quem apagou a sua noite, e por quê? Dentro do Elísio, nada de Disciplina; fora, o chip na língua transmite.",
+   "arquivo": "ink/jogo.ink",
+   "knots": [
+    {
+     "id": "capitulo_2",
+     "secao": "ENTRADA",
+     "cap": 2,
+     "linha": 1463,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "loft",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "capitulo",
+        "op": "=",
+        "expr": "2",
+        "quando": []
+       },
+       {
+        "v": "minutos",
+        "op": "=",
+        "expr": "0",
+        "quando": []
+       },
+       {
+        "v": "fome",
+        "op": "=",
+        "expr": "2",
+        "quando": []
+       },
+       {
+        "v": "quebrou_regra",
+        "op": "=",
+        "expr": "0",
+        "quando": []
+       },
+       {
+        "v": "denunciado",
+        "op": "=",
+        "expr": "false",
+        "quando": []
+       },
+       {
+        "v": "poder_forte",
+        "op": "=",
+        "expr": "false",
+        "quando": []
+       },
+       {
+        "v": "besta_avisou",
+        "op": "=",
+        "expr": "false",
+        "quando": []
+       },
+       {
+        "v": "acusado",
+        "op": "=",
+        "expr": "\"\"",
+        "quando": []
+       },
+       {
+        "v": "provas_dadas",
+        "op": "=",
+        "expr": "0",
+        "quando": []
+       },
+       {
+        "v": "provas_fortes",
+        "op": "=",
+        "expr": "0",
+        "quando": []
+       },
+       {
+        "v": "provas_max",
+        "op": "=",
+        "expr": "3",
+        "quando": []
+       },
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"B\"",
+        "quando": [
+         "final_cap1 == \"\""
+        ]
+       },
+       {
+        "v": "fome",
+        "op": "=",
+        "expr": "3",
+        "quando": [
+         "final_cap1 == \"G\""
+        ]
+       },
+       {
+        "v": "c2_pode_entrar",
+        "op": "=",
+        "expr": "false",
+        "quando": [
+         "final_cap1 == \"G\""
+        ]
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "capitulo_2_novo",
+     "secao": "ENTRADA",
+     "cap": 2,
+     "linha": 1486,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "escolha_personagem",
+        "quando": []
+       },
+       {
+        "para": "capitulo_2",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "final_cap1",
+        "op": "=",
+        "expr": "\"B\"",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "loft",
+     "secao": "ENTRADA",
+     "cap": 2,
+     "linha": 1490,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "loft_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [],
+      "pistas": [
+       {
+        "aba": "loft",
+        "texto": "Um chip embaixo da língua, com um código de barras tatuado por cima. Não dá para arrancar.",
+        "quando": []
+       }
+      ],
+      "finais": []
+     }
+    },
+    {
+     "id": "loft_perguntas",
+     "secao": "ENTRADA",
+     "cap": 2,
+     "linha": 1504,
+     "escolhas": [
+      {
+       "texto": "Olhar os sapatos",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not p2_lama"
+       ],
+       "saidas": [
+        {
+         "para": "loft_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_lama",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "loft",
+         "texto": "Lama de esgoto nos seus sapatos. Você esteve embaixo da terra na noite apagada.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1505
+      },
+      {
+       "texto": "Ver o celular",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not p2_ligacao"
+       ],
+       "saidas": [
+        {
+         "para": "loft_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_ligacao",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "loft",
+         "texto": "Às 03h12 da noite apagada você ligou para um número sem nome. Ninguém atende.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1509
+      },
+      {
+       "texto": "Examinar o buraco na sua memória.",
+       "gatilho": "Ocultismo 2",
+       "fixa": true,
+       "conds": [
+        "ocultismo >= 2",
+        "not p2_corte"
+       ],
+       "saidas": [
+        {
+         "para": "loft_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_corte",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "loft",
+         "texto": "A sua noite não foi apagada por droga. Foi cortada a sangue, por Dominação ou ritual.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1513
+      },
+      {
+       "texto": "Beber uma gota do sangue do Matusalém.",
+       "gatilho": "Frasco",
+       "fixa": true,
+       "conds": [
+        "tem_frasco",
+        "not c2_bebeu_frasco"
+       ],
+       "saidas": [
+        {
+         "para": "loft_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "c2_bebeu_frasco",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "fome",
+         "op": "=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "p2_luvas",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "p2_caixa",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "loft",
+         "texto": "O sangue do Matusalém mostrou um pedaço da noite: uma mulher de luvas pretas tirando uma caixa de metal de um nicho no esgoto.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1517
+      },
+      {
+       "texto": "Ler o convite",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "convite",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1526
+      }
+     ],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "convite",
+     "secao": "ENTRADA",
+     "cap": 2,
+     "linha": 1529,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "chegada",
+        "quando": []
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "chegada",
+     "secao": "ENTRADA",
+     "cap": 2,
+     "linha": 1545,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "fora",
+        "quando": [
+         "not c2_pode_entrar"
+        ]
+       },
+       {
+        "para": "salao2",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "p2_scanner",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "dentro",
+        "op": "=",
+        "expr": "false",
+        "quando": [
+         "not c2_pode_entrar"
+        ]
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "rocha",
+        "texto": "O segurança da porta tem um leitor que apitou quando você passou. Ele olhou para a sua boca e disse \"não suma de novo\".",
+        "quando": []
+       }
+      ],
+      "finais": []
+     }
+    },
+    {
+     "id": "avisos2",
+     "secao": "AVISOS (hora, chegada da Luciana)",
+     "cap": 2,
+     "linha": 1564,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "luciana_chegou",
+        "op": "=",
+        "expr": "true",
+        "quando": [
+         "minutos >= 150 and not luciana_chegou"
+        ]
+       },
+       {
+        "v": "c2_aviso",
+        "op": "=",
+        "expr": "1",
+        "quando": [
+         "minutos >= 240 and c2_aviso < 1"
+        ]
+       },
+       {
+        "v": "c2_aviso",
+        "op": "=",
+        "expr": "2",
+        "quando": [
+         "minutos >= 330 and c2_aviso < 2"
+        ]
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "dossie",
+        "texto": "À {hora_digital()} a Luciana, a Senescal, chegou à gala.",
+        "quando": [
+         "minutos >= 150 and not luciana_chegou",
+         "expulso or not dentro"
+        ]
+       },
+       {
+        "aba": "dossie",
+        "texto": "À {hora_digital()} a Luciana, a Senescal, chegou à gala. Ela usa luvas pretas.",
+        "quando": [
+         "minutos >= 150 and not luciana_chegou",
+         "not (expulso or not dentro)"
+        ]
+       }
+      ],
+      "finais": []
+     }
+    },
+    {
+     "id": "salao2",
+     "secao": "DENTRO: O SALÃO DO ELÍSIO",
+     "cap": 2,
+     "linha": 1584,
+     "escolhas": [
+      {
+       "texto": "Isadora, a anfitriã, no meio do salão",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not isa_fechada"
+       ],
+       "saidas": [
+        {
+         "para": "isadora",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1595
+      },
+      {
+       "texto": "Dr. Arnaldo, o Juiz, perto dos cavaletes de vidro",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "arnaldo",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1597
+      },
+      {
+       "texto": "Luciana, a Senescal, sozinha perto da janela",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "luciana_chegou",
+        "not luc_fechada"
+       ],
+       "saidas": [
+        {
+         "para": "luciana",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1599
+      },
+      {
+       "texto": "A Constance, que te convidou / O Príncipe Dante, que te convidou",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "final_cap1 != \"C_anarq\"",
+        "final_cap1 != \"F\"",
+        "not anfitriao_falou"
+       ],
+       "saidas": [
+        {
+         "para": "anfitriao",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1601
+      },
+      {
+       "texto": "Sumir na sombra da janela e ouvir a Luciana. (O Dr. Arnaldo está olhando.)",
+       "gatilho": "Disciplina: Ofuscação",
+       "fixa": true,
+       "conds": [
+        "disciplina == \"Ofuscação\"",
+        "luciana_chegou",
+        "not p2_luciana_slip"
+       ],
+       "saidas": [
+        {
+         "para": "ofuscacao_dentro",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1603
+      },
+      {
+       "texto": "Chamar o rato que mora no forro do museu. (O Dr. Arnaldo está olhando.)",
+       "gatilho": "Disciplina: Animalismo",
+       "fixa": true,
+       "conds": [
+        "disciplina == \"Animalismo\"",
+        "not p2_arquivo"
+       ],
+       "saidas": [
+        {
+         "para": "animalismo_dentro",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1605
+      },
+      {
+       "texto": "Fazer a Isadora se apaixonar por você em público. (O Dr. Arnaldo está olhando.)",
+       "gatilho": "Disciplina: Presença",
+       "fixa": true,
+       "conds": [
+        "disciplina == \"Presença\"",
+        "not isa_fechada",
+        "not p2_isa_capela"
+       ],
+       "saidas": [
+        {
+         "para": "presenca_dentro",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1607
+      },
+      {
+       "texto": "Descer para o vão livre (20 minutos, pela portaria)",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "dentro",
+         "op": "=",
+         "expr": "false",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1609,
+       "minutos": 20
+      },
+      {
+       "texto": "Chamar quem preside a Corte e dizer quem apagou a sua noite",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "confirmar_acusacao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1613
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [
+       {
+        "v": "dentro",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "besta_avisou",
+        "op": "=",
+        "expr": "true",
+        "quando": [
+         "fome >= 4 and not besta_avisou"
+        ]
+       }
+      ],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "confirmar_acusacao2",
+     "secao": "DENTRO: O SALÃO DO ELÍSIO",
+     "cap": 2,
+     "linha": 1616,
+     "escolhas": [
+      {
+       "texto": "Sim. Agora.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "acusacao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1618
+      },
+      {
+       "texto": "Ainda não.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "salao2",
+         "quando": [
+          "dentro and not expulso"
+         ]
+        },
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1620
+      }
+     ],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "ofuscacao_dentro",
+     "secao": "DENTRO: O SALÃO DO ELÍSIO",
+     "cap": 2,
+     "linha": 1625,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "arnaldo_viu",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "p2_luciana_slip",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "luciana",
+        "texto": "Escondid{o}, você ouviu a Luciana ao telefone: \"A caixa toda está comigo. {o == \"a\":A|O} forasteir{o} não vai lembrar. Eu garanti.\"",
+        "quando": []
+       }
+      ],
+      "finais": [],
+      "minutos": 20,
+      "despertar": true
+     }
+    },
+    {
+     "id": "animalismo_dentro",
+     "secao": "DENTRO: O SALÃO DO ELÍSIO",
+     "cap": 2,
+     "linha": 1633,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "arnaldo_viu",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "p2_arquivo",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "p2_caixa",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "bar",
+        "texto": "O rato do museu: a caixa de metal do Cão ficava num nicho no esgoto da Consolação. Uma mulher de luvas levou. Você estava lá, de pé, sem piscar.",
+        "quando": []
+       }
+      ],
+      "finais": [],
+      "minutos": 20,
+      "despertar": true
+     }
+    },
+    {
+     "id": "presenca_dentro",
+     "secao": "DENTRO: O SALÃO DO ELÍSIO",
+     "cap": 2,
+     "linha": 1642,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "arnaldo_viu",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "p2_isa_capela",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "isadora",
+        "texto": "Isadora: a Luciana cancelou a sessão dela na Capela às três da noite apagada e voltou com a barra do vestido suja de esgoto.",
+        "quando": []
+       }
+      ],
+      "finais": [],
+      "minutos": 20,
+      "despertar": true
+     }
+    },
+    {
+     "id": "arnaldo_viu",
+     "secao": "DENTRO: O SALÃO DO ELÍSIO",
+     "cap": 2,
+     "linha": 1650,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "fora",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "quebrou_regra",
+        "op": "+=",
+        "expr": "1",
+        "quando": []
+       },
+       {
+        "v": "expulso",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "dentro",
+        "op": "=",
+        "expr": "false",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "fora",
+     "secao": "FORA: VÃO LIVRE E PAULISTA",
+     "cap": 2,
+     "linha": 1662,
+     "escolhas": [
+      {
+       "texto": "O segurança da portaria",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "rocha",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1674
+      },
+      {
+       "texto": "A Valentina, na calçada da Paulista, com o rebanho dela",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "valentina",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1676
+      },
+      {
+       "texto": "O Rayo, encostado na moto",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "final_cap1 == \"C_anarq\"",
+        "not rayo2_falou"
+       ],
+       "saidas": [
+        {
+         "para": "rayo2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1678
+      },
+      {
+       "texto": "A Luciana, que desceu para atender o celular no vão livre",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "luciana_chegou",
+        "expulso",
+        "not luc_fechada"
+       ],
+       "saidas": [
+        {
+         "para": "luciana",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1680
+      },
+      {
+       "texto": "Chamar a Isadora para a varanda, longe do Juiz",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "isa_falou",
+        "not isa_varanda",
+        "not isa_fechada",
+        "not expulso"
+       ],
+       "saidas": [
+        {
+         "para": "isadora_varanda",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1682
+      },
+      {
+       "texto": "Subir para o salão (20 minutos, pela portaria)",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not expulso",
+        "c2_pode_entrar"
+       ],
+       "saidas": [
+        {
+         "para": "salao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1684,
+       "minutos": 20
+      },
+      {
+       "texto": "Entrar com a Valentina, como parte do rebanho dela",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not c2_pode_entrar",
+        "val_falou >= 1"
+       ],
+       "saidas": [
+        {
+         "para": "salao2",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "c2_pode_entrar",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1687,
+       "minutos": 20
+      },
+      {
+       "texto": "Chamar quem preside a Corte e dizer quem apagou a sua noite",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "confirmar_acusacao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1692
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "boes",
+        "quando": [
+         "sinal >= 5"
+        ]
+       },
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [
+       {
+        "v": "dentro",
+        "op": "=",
+        "expr": "false",
+        "quando": []
+       },
+       {
+        "v": "sinal_explicado",
+        "op": "=",
+        "expr": "true",
+        "quando": [
+         "sinal > 0 and not sinal_explicado"
+        ]
+       }
+      ],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "boes",
+     "secao": "FORA: VÃO LIVRE E PAULISTA",
+     "cap": 2,
+     "linha": 1695,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2X"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "isadora",
+     "secao": "ISADORA (dentro)",
+     "cap": 2,
+     "linha": 1707,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "isadora_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "isa_falou",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "isadora_perguntas",
+     "secao": "ISADORA (dentro)",
+     "cap": 2,
+     "linha": 1714,
+     "escolhas": [
+      {
+       "texto": "Quem esteve na Capela da Luciana nesta semana?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not p2_isa_lista"
+       ],
+       "saidas": [
+        {
+         "para": "isadora_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_isa_lista",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "isadora",
+         "texto": "Isadora: \"Na Capela, esta semana, só o Príncipe e eu.\"",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1717,
+       "minutos": 20
+      },
+      {
+       "texto": "O que a senhora foi fazer na Capela?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_isa_lista",
+        "not p2_isa_ritual"
+       ],
+       "saidas": [
+        {
+         "para": "isadora_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_isa_ritual",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "isadora",
+         "texto": "A Isadora foi à Capela fazer um ritual de beleza. É vaidade, e ela tem vergonha.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1723,
+       "minutos": 20
+      },
+      {
+       "texto": "Ligação: de quem é este número, que eu liguei às 03h12?",
+       "gatilho": "Prova",
+       "fixa": true,
+       "conds": [
+        "p2_ligacao",
+        "not p2_numero"
+       ],
+       "saidas": [
+        {
+         "para": "isadora_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_numero",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "p2_isa_capela",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "isadora",
+         "texto": "O número para o qual você ligou às 03h12 é o da Capela da Luciana.",
+         "quando": []
+        },
+        {
+         "aba": "isadora",
+         "texto": "Isadora: a Luciana cancelou a sessão dela às três da noite apagada e voltou de madrugada com a barra do vestido suja de esgoto.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1729,
+       "minutos": 20
+      },
+      {
+       "texto": "Elogiar a festa como ela gosta.",
+       "gatilho": "Teste: Carisma + Persuasão, dif. 3",
+       "fixa": true,
+       "conds": [
+        "not p2_isa_capela",
+        "not isa_fechada",
+        "fome < 5"
+       ],
+       "saidas": [
+        {
+         "para": "salao2",
+         "quando": [
+          "not (teste passou or teste crítico or teste crítico bagunçado)"
+         ]
+        },
+        {
+         "para": "isadora_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_isa_capela",
+         "op": "=",
+         "expr": "true",
+         "quando": [
+          "teste passou or teste crítico or teste crítico bagunçado"
+         ]
+        },
+        {
+         "v": "isa_fechada",
+         "op": "=",
+         "expr": "true",
+         "quando": [
+          "not (teste passou or teste crítico or teste crítico bagunçado)"
+         ]
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "isadora",
+         "texto": "Isadora: a Luciana cancelou a sessão dela às três da noite apagada e voltou de madrugada com a barra do vestido suja de esgoto.",
+         "quando": [
+          "teste passou or teste crítico or teste crítico bagunçado"
+         ]
+        }
+       ],
+       "finais": [],
+       "linha": 1737,
+       "minutos": 20,
+       "teste": {
+        "parada": "carisma + 1",
+        "dif": 3
+       }
+      },
+      {
+       "texto": "Oferecer a ela um segredo de beleza da Serpente.",
+       "gatilho": "Ministério",
+       "fixa": true,
+       "conds": [
+        "cla == \"Ministério\"",
+        "not p2_isa_capela"
+       ],
+       "saidas": [
+        {
+         "para": "isadora_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_isa_capela",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "isadora",
+         "texto": "Isadora: a Luciana cancelou a sessão dela às três da noite apagada e voltou de madrugada com a barra do vestido suja de esgoto.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1752,
+       "minutos": 20
+      },
+      {
+       "texto": "Voltar ao salão",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "salao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1758
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "isadora_varanda",
+     "secao": "ISADORA (dentro)",
+     "cap": 2,
+     "linha": 1762,
+     "escolhas": [
+      {
+       "texto": "Encostar ela no parapeito.",
+       "gatilho": "Teste: Força + Intimidação, dif. 3",
+       "fixa": true,
+       "conds": [
+        "not p2_isa_capela"
+       ],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_isa_capela",
+         "op": "=",
+         "expr": "true",
+         "quando": [
+          "teste passou or teste crítico or teste crítico bagunçado"
+         ]
+        },
+        {
+         "v": "isa_fechada",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "isadora",
+         "texto": "Isadora, apertada na varanda: a Luciana cancelou a sessão dela às três da noite apagada e voltou suja de esgoto.",
+         "quando": [
+          "teste passou or teste crítico or teste crítico bagunçado"
+         ]
+        }
+       ],
+       "finais": [],
+       "linha": 1769,
+       "teste": {
+        "parada": "intimidacao",
+        "dif": 3
+       }
+      },
+      {
+       "texto": "Deixar ela voltar. Não vale o escândalo.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1781
+      }
+     ],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "isa_varanda",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": [],
+      "minutos": 20
+     }
+    },
+    {
+     "id": "arnaldo",
+     "secao": "DR. ARNALDO (dentro)",
+     "cap": 2,
+     "linha": 1786,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "arnaldo_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "arn_falou",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "arnaldo_perguntas",
+     "secao": "DR. ARNALDO (dentro)",
+     "cap": 2,
+     "linha": 1793,
+     "escolhas": [
+      {
+       "texto": "Quem nesta cidade consegue apagar uma noite inteira de alguém?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not p2_quem_apaga"
+       ],
+       "saidas": [
+        {
+         "para": "arnaldo_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_quem_apaga",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "arnaldo",
+         "texto": "Arnaldo: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1796,
+       "minutos": 20
+      },
+      {
+       "texto": "Lama: eu estive no esgoto naquela noite. O que tem lá embaixo?",
+       "gatilho": "Prova",
+       "fixa": true,
+       "conds": [
+        "p2_lama",
+        "not p2_arquivo"
+       ],
+       "saidas": [
+        {
+         "para": "arnaldo_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_arquivo",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "arnaldo",
+         "texto": "Arnaldo: o Cão tinha um \"seguro\", um arquivo numa galeria embaixo da Consolação. Se ele caísse, os segredos de alguém iam para a rua.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1802,
+       "minutos": 20
+      },
+      {
+       "texto": "O segurança da porta é humano. Quem pôs ele ali?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_scanner",
+        "not p2_rocha_dante"
+       ],
+       "saidas": [
+        {
+         "para": "arnaldo_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_rocha_dante",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "arnaldo",
+         "texto": "Arnaldo: o segurança humano da porta foi posto ali \"por ordem de cima\".",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1809,
+       "minutos": 20
+      },
+      {
+       "texto": "Corte: a minha memória foi cortada a sangue, não por droga.",
+       "gatilho": "Prova",
+       "fixa": true,
+       "conds": [
+        "p2_corte",
+        "not p2_quem_apaga"
+       ],
+       "saidas": [
+        {
+         "para": "arnaldo_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_quem_apaga",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "arnaldo",
+         "texto": "Arnaldo: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1815,
+       "minutos": 20
+      },
+      {
+       "texto": "Voltar ao salão",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "salao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1820
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "anfitriao",
+     "secao": "O ANFITRIÃO (Dante ou Constance)",
+     "cap": 2,
+     "linha": 1824,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "salao2",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "anfitriao_falou",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "p2_constance_dica",
+        "op": "=",
+        "expr": "true",
+        "quando": [
+         "final_cap1 == \"C_corte\""
+        ]
+       },
+       {
+        "v": "p2_constance_dica",
+        "op": "=",
+        "expr": "true",
+        "quando": [
+         "not (final_cap1 == \"C_corte\")",
+         "constance_aliada"
+        ]
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "constance",
+        "texto": "Constance: a Senescal anda nervosa desde terça, como quem perdeu alguma coisa.",
+        "quando": [
+         "final_cap1 == \"C_corte\""
+        ]
+       },
+       {
+        "aba": "dossie",
+        "texto": "O Príncipe diz que você fez um trabalho para ele na terça, a noite apagada. Ele não quis dizer qual.",
+        "quando": [
+         "not (final_cap1 == \"C_corte\")"
+        ]
+       },
+       {
+        "aba": "constance",
+        "texto": "Constance: a Senescal anda nervosa desde terça, como quem perdeu alguma coisa.",
+        "quando": [
+         "not (final_cap1 == \"C_corte\")",
+         "constance_aliada"
+        ]
+       }
+      ],
+      "finais": [],
+      "minutos": 20
+     }
+    },
+    {
+     "id": "rocha",
+     "secao": "AGENTE ROCHA (portaria, fora)",
+     "cap": 2,
+     "linha": 1846,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "fora",
+        "quando": [
+         "rocha_fechado"
+        ]
+       },
+       {
+        "para": "rocha_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "rocha_falou",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "rocha_perguntas",
+     "secao": "AGENTE ROCHA (portaria, fora)",
+     "cap": 2,
+     "linha": 1857,
+     "escolhas": [
+      {
+       "texto": "O que tem na minha língua?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "not p2_sedativo"
+       ],
+       "saidas": [
+        {
+         "para": "rocha_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1861,
+       "minutos": 20
+      },
+      {
+       "texto": "Blefar: \"A Doutora já me contou. Só quero ouvir de você.\"",
+       "gatilho": "Teste: Manipulação + Subterfúgio, dif. 3",
+       "fixa": true,
+       "conds": [
+        "not p2_sedativo",
+        "not rocha_fechado",
+        "fome < 5"
+       ],
+       "saidas": [
+        {
+         "para": "rocha_conta",
+         "quando": [
+          "teste passou or teste crítico or teste crítico bagunçado"
+         ]
+        },
+        {
+         "para": "fora",
+         "quando": [
+          "teste falha bestial"
+         ]
+        },
+        {
+         "para": "fora",
+         "quando": [
+          "nenhum dos anteriores"
+         ]
+        }
+       ],
+       "muda": [
+        {
+         "v": "rocha_fechado",
+         "op": "=",
+         "expr": "true",
+         "quando": [
+          "teste falha bestial"
+         ]
+        },
+        {
+         "v": "rocha_fechado",
+         "op": "=",
+         "expr": "true",
+         "quando": [
+          "nenhum dos anteriores"
+         ]
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1866,
+       "minutos": 20,
+       "teste": {
+        "parada": "manipulacao + subterfugio",
+        "dif": 3
+       }
+      },
+      {
+       "texto": "Prensar o humano na pilastra.",
+       "gatilho": "Teste: Força + Intimidação, dif. 4",
+       "fixa": true,
+       "conds": [
+        "not p2_sedativo"
+       ],
+       "saidas": [
+        {
+         "para": "rocha_conta",
+         "quando": [
+          "teste passou or teste crítico or teste crítico bagunçado"
+         ]
+        },
+        {
+         "para": "fora",
+         "quando": [
+          "not (teste passou or teste crítico or teste crítico bagunçado)"
+         ]
+        }
+       ],
+       "muda": [
+        {
+         "v": "rocha_fechado",
+         "op": "=",
+         "expr": "true",
+         "quando": [
+          "not (teste passou or teste crítico or teste crítico bagunçado)"
+         ]
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1883,
+       "minutos": 20,
+       "teste": {
+        "parada": "intimidacao",
+        "dif": 4
+       }
+      },
+      {
+       "texto": "Encantar o humano. (O chip vai transmitir.)",
+       "gatilho": "Disciplina: Presença",
+       "fixa": true,
+       "conds": [
+        "disciplina == \"Presença\"",
+        "not p2_sedativo"
+       ],
+       "saidas": [
+        {
+         "para": "rocha_conta",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1895,
+       "minutos": 20,
+       "despertar": true
+      },
+      {
+       "texto": "Sumir e ouvir o rádio dele. (O chip vai transmitir.)",
+       "gatilho": "Disciplina: Ofuscação",
+       "fixa": true,
+       "conds": [
+        "disciplina == \"Ofuscação\"",
+        "not p2_sinal_esgoto"
+       ],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_sedativo",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "p2_sinal_esgoto",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "rocha",
+         "texto": "Rocha, no rádio: o sedativo da Inquisição só segurou você até as 2h. Depois disso o sinal do chip desceu para o esgoto da Consolação e voltou às 5h. \"Não fomos nós.\"",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1901,
+       "minutos": 20,
+       "despertar": true
+      },
+      {
+       "texto": "Voltar ao vão livre",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1910
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "boes",
+        "quando": [
+         "sinal >= 5"
+        ]
+       },
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "rocha_conta",
+     "secao": "AGENTE ROCHA (portaria, fora)",
+     "cap": 2,
+     "linha": 1913,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "rocha_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "p2_sedativo",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "rocha",
+        "texto": "Rocha: o sedativo da Inquisição só segurou você até as 2h; o chip foi posto no porto. O resto da noite \"não é com a gente\".",
+        "quando": []
+       }
+      ],
+      "finais": []
+     }
+    },
+    {
+     "id": "valentina",
+     "secao": "VALENTINA (Paulista, fora)",
+     "cap": 2,
+     "linha": 1920,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "valentina_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "valentina_perguntas",
+     "secao": "VALENTINA (Paulista, fora)",
+     "cap": 2,
+     "linha": 1926,
+     "escolhas": [
+      {
+       "texto": "Você me viu na terça à noite?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "val_falou == 0"
+       ],
+       "saidas": [
+        {
+         "para": "valentina_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "val_falou",
+         "op": "=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1930,
+       "minutos": 20
+      },
+      {
+       "texto": "Insistir: \"Pensa bem. Terça. Aqui na Paulista.\"",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "val_falou == 1",
+        "not p2_luvas"
+       ],
+       "saidas": [
+        {
+         "para": "valentina_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "val_falou",
+         "op": "=",
+         "expr": "2",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1935,
+       "minutos": 20
+      },
+      {
+       "texto": "Lama: eu voltei do esgoto naquela noite. Alguém me viu sair.",
+       "gatilho": "Prova",
+       "fixa": true,
+       "conds": [
+        "val_falou >= 1",
+        "p2_lama",
+        "not p2_luvas"
+       ],
+       "saidas": [
+        {
+         "para": "valentina_conta",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1940,
+       "minutos": 20
+      },
+      {
+       "texto": "Insistir mais uma vez: \"Valentina. Por favor.\"",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "val_falou == 2",
+        "not p2_luvas"
+       ],
+       "saidas": [
+        {
+         "para": "valentina_conta",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1943,
+       "minutos": 20
+      },
+      {
+       "texto": "Perguntar aos pombos e aos ratos da Paulista. (O chip vai transmitir.)",
+       "gatilho": "Disciplina: Animalismo",
+       "fixa": true,
+       "conds": [
+        "disciplina == \"Animalismo\"",
+        "not p2_caixa"
+       ],
+       "saidas": [
+        {
+         "para": "valentina_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_luvas",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "p2_caixa",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "valentina",
+         "texto": "Os bichos da Paulista: às três uma mulher de luvas pretas te levou pela grade do esgoto da Consolação. Às cinco ela te trouxe de volta, com uma caixa de metal.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 1946,
+       "minutos": 20,
+       "despertar": true
+      },
+      {
+       "texto": "Aceitar um gole do rebanho dela.",
+       "gatilho": "Fome [fome]",
+       "fixa": true,
+       "conds": [
+        "fome >= 3",
+        "not val_bebeu"
+       ],
+       "saidas": [
+        {
+         "para": "valentina_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "val_bebeu",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "fome",
+         "op": "=",
+         "expr": "MAX(fome - 2, 1)",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 1955,
+       "minutos": 20
+      },
+      {
+       "texto": "Voltar ao vão livre",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1962
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "boes",
+        "quando": [
+         "sinal >= 5"
+        ]
+       },
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "valentina_conta",
+     "secao": "VALENTINA (Paulista, fora)",
+     "cap": 2,
+     "linha": 1965,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "valentina_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "p2_luvas",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       },
+       {
+        "v": "val_falou",
+        "op": "=",
+        "expr": "2",
+        "quando": []
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "valentina",
+        "texto": "Valentina viu você às 4h da noite apagada, andando como sonâmbul{o}, de braço dado com uma mulher de luvas pretas.",
+        "quando": []
+       }
+      ],
+      "finais": []
+     }
+    },
+    {
+     "id": "rayo2",
+     "secao": "RAYO (fora, só no caminho dos Anarquistas)",
+     "cap": 2,
+     "linha": 1973,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "fora",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "rayo2_falou",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [
+       {
+        "aba": "dossie",
+        "texto": "Rayo: a Valentina caça na Paulista toda noite. Se alguém te viu, foi ela, e ela finge que não lembra.",
+        "quando": []
+       }
+      ],
+      "finais": [],
+      "minutos": 20
+     }
+    },
+    {
+     "id": "luciana",
+     "secao": "LUCIANA (chega à 01h30)",
+     "cap": 2,
+     "linha": 1983,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "luciana_perguntas",
+        "quando": []
+       }
+      ],
+      "muda": [
+       {
+        "v": "luc_falou",
+        "op": "=",
+        "expr": "true",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "luciana_perguntas",
+     "secao": "LUCIANA (chega à 01h30)",
+     "cap": 2,
+     "linha": 1994,
+     "escolhas": [
+      {
+       "texto": "Boa noite, Senescal.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "luciana_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 1997,
+       "minutos": 20
+      },
+      {
+       "texto": "Onde a senhora estava na madrugada de terça?",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "luciana_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2002,
+       "minutos": 20
+      },
+      {
+       "texto": "Arquivo: o que a senhora sabe do seguro do Cão?",
+       "gatilho": "Prova",
+       "fixa": true,
+       "conds": [
+        "p2_arquivo",
+        "not p2_luciana_slip"
+       ],
+       "saidas": [
+        {
+         "para": "luciana_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_luciana_slip",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "luciana",
+         "texto": "A Luciana falou \"embaixo da Consolação\" sem ninguém dizer onde ficava o arquivo do Cão.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 2006,
+       "minutos": 20
+      },
+      {
+       "texto": "Os ratos de baixo dizem que alguém com chave Tremere abriu a galeria da Consolação.",
+       "gatilho": "Nosferatu",
+       "fixa": true,
+       "conds": [
+        "cla == \"Nosferatu\"",
+        "not p2_luciana_slip"
+       ],
+       "saidas": [
+        {
+         "para": "luciana_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_luciana_slip",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "luciana",
+         "texto": "Quando você falou da galeria do Cão na Consolação, a Luciana não negou. Disse: \"Os ratos falam demais.\"",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 2013,
+       "minutos": 20
+      },
+      {
+       "texto": "Chegar perto e farejar as luvas dela.",
+       "gatilho": "Gangrel",
+       "fixa": true,
+       "conds": [
+        "cla == \"Gangrel\"",
+        "not p2_luvas_cheiro"
+       ],
+       "saidas": [
+        {
+         "para": "luciana_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "p2_luvas_cheiro",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "luciana",
+         "texto": "As luvas da Luciana cheiram ao mesmo esgoto dos seus sapatos.",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 2019,
+       "minutos": 20
+      },
+      {
+       "texto": "Capela: a senhora cancelou a Isadora às três e voltou suja de esgoto.",
+       "gatilho": "Prova",
+       "fixa": true,
+       "conds": [
+        "p2_isa_capela"
+       ],
+       "saidas": [
+        {
+         "para": "luciana_perguntas",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2025,
+       "minutos": 20
+      },
+      {
+       "texto": "Encarar: \"Era a senhora. De luvas, no esgoto, comigo.\"",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_luvas or p2_luvas_cheiro",
+        "p2_luciana_slip"
+       ],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": [
+          "expulso"
+         ]
+        },
+        {
+         "para": "salao2",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "luc_fechada",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        }
+       ],
+       "pistas": [
+        {
+         "aba": "luciana",
+         "texto": "A Luciana te ameaçou: \"Tem coisa que é melhor não lembrar. Eu estou te fazendo um favor.\"",
+         "quando": []
+        }
+       ],
+       "finais": [],
+       "linha": 2029,
+       "minutos": 20
+      },
+      {
+       "texto": "Voltar",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "fora",
+         "quando": [
+          "expulso or not dentro"
+         ]
+        },
+        {
+         "para": "salao2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2036
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "amanhecer2",
+        "quando": [
+         "minutos >= limite"
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [],
+      "tuneis": [
+       "avisos2"
+      ]
+     }
+    },
+    {
+     "id": "amanhecer2",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2041,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "acusacao2",
+        "quando": []
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "acusacao2",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2046,
+     "escolhas": [
+      {
+       "texto": "A Luciana, a Senescal",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "provas2",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "acusado",
+         "op": "=",
+         "expr": "\"luciana\"",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2069
+      },
+      {
+       "texto": "O segurança da porta. A Inquisição.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "provas2",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "acusado",
+         "op": "=",
+         "expr": "\"rocha\"",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2074
+      },
+      {
+       "texto": "Isadora, a anfitriã",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "provas2",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "acusado",
+         "op": "=",
+         "expr": "\"isadora\"",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2078
+      },
+      {
+       "texto": "Admitir que não sabe",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "final2_nao_sei",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2083
+      }
+     ],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "denunciado",
+        "op": "=",
+        "expr": "true",
+        "quando": [
+         "expulso"
+        ]
+       },
+       {
+        "v": "provas_max",
+        "op": "=",
+        "expr": "4",
+        "quando": [
+         "expulso"
+        ]
+       },
+       {
+        "v": "provas_max",
+        "op": "=",
+        "expr": "4",
+        "quando": [
+         "fome >= 5"
+        ]
+       },
+       {
+        "v": "provas_max",
+        "op": "=",
+        "expr": "MAX(provas_max - 1, 2)",
+        "quando": [
+         "favor_principe and final_cap1 != \"C_corte\""
+        ]
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "provas2",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2086,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "provas2_loop",
+        "quando": []
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "provas2_loop",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2095,
+     "escolhas": [
+      {
+       "texto": "O sedativo da Inquisição só me segurou até as 2h",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_sedativo",
+        "not a2_sedativo"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_sedativo",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2098
+      },
+      {
+       "texto": "A minha memória foi cortada a sangue, não por droga",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_corte",
+        "not a2_corte"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_corte",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2104
+      },
+      {
+       "texto": "Às 03h12 eu liguei para a Capela da Luciana",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_numero",
+        "not a2_numero"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_numero",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2110
+      },
+      {
+       "texto": "A Luciana saiu da Capela às três e voltou suja de esgoto",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_isa_capela",
+        "not a2_capela"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_capela",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2116
+      },
+      {
+       "texto": "A mulher de luvas que me levou pelo esgoto",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_luvas or p2_luvas_cheiro",
+        "not a2_luvas"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_luvas",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2122
+      },
+      {
+       "texto": "O arquivo do Cão nos esgotos da Consolação",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_arquivo",
+        "not a2_arquivo"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_arquivo",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2128
+      },
+      {
+       "texto": "A Luciana sabia onde estava o arquivo sem ninguém dizer",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_luciana_slip",
+        "not a2_slip"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_slip",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        },
+        {
+         "v": "provas_fortes",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2134
+      },
+      {
+       "texto": "A lama de esgoto nos meus sapatos",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_lama",
+        "not a2_lama"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_lama",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2140
+      },
+      {
+       "texto": "O chip na minha língua e o segurança da porta",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_scanner or p2_sedativo or p2_sinal_esgoto",
+        "not a2_rocha"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_rocha",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2146
+      },
+      {
+       "texto": "A Isadora mentiu sobre a Capela",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "p2_isa_lista or p2_isa_ritual",
+        "not a2_isadora"
+       ],
+       "saidas": [
+        {
+         "para": "provas2_loop",
+         "quando": []
+        }
+       ],
+       "muda": [
+        {
+         "v": "a2_isadora",
+         "op": "=",
+         "expr": "true",
+         "quando": []
+        },
+        {
+         "v": "provas_dadas",
+         "op": "+=",
+         "expr": "1",
+         "quando": []
+        }
+       ],
+       "pistas": [],
+       "finais": [],
+       "linha": 2152
+      },
+      {
+       "texto": "Isso é tudo o que eu tenho. / Não tenho prova nenhuma. Só a minha palavra.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "veredito2",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2158
+      }
+     ],
+     "auto": {
+      "saidas": [
+       {
+        "para": "veredito2",
+        "quando": [
+         "provas_dadas >= provas_max"
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "veredito2",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2161,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "final2_rocha",
+        "quando": [
+         "acusado == \"rocha\""
+        ]
+       },
+       {
+        "para": "final2_isadora",
+        "quando": [
+         "acusado == \"isadora\""
+        ]
+       },
+       {
+        "para": "luciana_cai",
+        "quando": [
+         "provas_fortes >= provas_max"
+        ]
+       },
+       {
+        "para": "final2_sem_provas",
+        "quando": []
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "luciana_cai",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2175,
+     "escolhas": [
+      {
+       "texto": "Ao Príncipe Dante",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [
+        "final_cap1 != \"C_corte\""
+       ],
+       "saidas": [
+        {
+         "para": "final2_dante",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2209
+      },
+      {
+       "texto": "À Constance",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "final2_constance",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2211
+      },
+      {
+       "texto": "Ao Dr. Arnaldo, o Juiz",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "final2_arnaldo",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2213
+      },
+      {
+       "texto": "A ninguém. Guardar o segredo da Luciana para usar depois.",
+       "gatilho": null,
+       "fixa": true,
+       "conds": [],
+       "saidas": [
+        {
+         "para": "final2_guardar",
+         "quando": []
+        }
+       ],
+       "muda": [],
+       "pistas": [],
+       "finais": [],
+       "linha": 2215
+      }
+     ],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"constance\"",
+        "quando": [
+         "final_cap1 == \"C_corte\""
+        ]
+       },
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"rayo\"",
+        "quando": [
+         "final_cap1 == \"C_anarq\""
+        ]
+       },
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"arnaldo\"",
+        "quando": [
+         "final_cap1 == \"F\""
+        ]
+       },
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"arnaldo\"",
+        "quando": [
+         "final_cap1 == \"G\""
+        ]
+       },
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"dante\"",
+        "quando": [
+         "nenhum dos anteriores"
+        ]
+       }
+      ],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "saida2_rayo",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2218,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": []
+     }
+    },
+    {
+     "id": "final2_dante",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2227,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"dante\"",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": [
+       "2B"
+      ],
+      "tuneis": [
+       "saida2_rayo"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_constance",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2236,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"constance\"",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": [
+       "2C"
+      ],
+      "tuneis": [
+       "saida2_rayo"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_arnaldo",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2245,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"arnaldo\"",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": [
+       "2J"
+      ],
+      "tuneis": [
+       "saida2_rayo"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_guardar",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2253,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [
+       {
+        "v": "aliado_cap2",
+        "op": "=",
+        "expr": "\"ninguem\"",
+        "quando": []
+       }
+      ],
+      "pistas": [],
+      "finais": [
+       "2K"
+      ],
+      "tuneis": [
+       "saida2_rayo"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_rocha",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2264,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "irene_some_sinal",
+        "quando": [
+         "cla == \"Nosferatu\""
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2A"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "irene_some_sinal",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2276,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2F"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_isadora",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2284,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2A"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_sem_provas",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2294,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "tomas_resiste",
+        "quando": [
+         "cla == \"Gangrel\""
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2D"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "tomas_resiste",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2305,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2G"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "final2_nao_sei",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2314,
+     "escolhas": [],
+     "auto": {
+      "saidas": [
+       {
+        "para": "joana_dupla",
+        "quando": [
+         "cla == \"Ministério\""
+        ]
+       }
+      ],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2E"
+      ],
+      "fim": true
+     }
+    },
+    {
+     "id": "joana_dupla",
+     "secao": "ACUSAÇÃO E FINAIS",
+     "cap": 2,
+     "linha": 2331,
+     "escolhas": [],
+     "auto": {
+      "saidas": [],
+      "muda": [],
+      "pistas": [],
+      "finais": [
+       "2H"
+      ],
+      "fim": true
+     }
+    }
+   ],
+   "vars": {
+    "nome": {
+     "inicial": "\"\"",
+     "desc": ""
+    },
+    "cla": {
+     "inicial": "\"\"",
+     "desc": ""
+    },
+    "carisma": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "raciocinio": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "manipulacao": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "subterfugio": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "intimidacao": {
+     "inicial": "0",
+     "desc": "parada de Força + Intimidação"
+    },
+    "ocultismo": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "disciplina": {
+     "inicial": "\"\"",
+     "desc": ""
+    },
+    "fome": {
+     "inicial": "2",
+     "desc": ""
+    },
+    "o": {
+     "inicial": "\"o\"",
+     "desc": "terminação de gênero do protagonista: forasteir{o}"
+    },
+    "minutos": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "limite": {
+     "inicial": "400",
+     "desc": ""
+    },
+    "p_rayo_versao": {
+     "inicial": "false",
+     "desc": "lobisomens na Serra"
+    },
+    "p_rayo_hora": {
+     "inicial": "false",
+     "desc": "entregou 02h40"
+    },
+    "p_queimadura": {
+     "inicial": "false",
+     "desc": "dedos queimados do Rayo"
+    },
+    "p_selo": {
+     "inicial": "false",
+     "desc": "selo queimado na tentativa de roubo (confissão do Rayo)"
+    },
+    "p_constance": {
+     "inicial": "false",
+     "desc": "Constance pagou o desvio"
+    },
+    "p_rayo_frasco": {
+     "inicial": "false",
+     "desc": "Rayo viu a Harumi com um frasquinho"
+    },
+    "p_cao_versao": {
+     "inicial": "false",
+     "desc": "Cão: chegou vazio às 03h30"
+    },
+    "p_cao_selo": {
+     "inicial": "false",
+     "desc": "Cão deixou escapar o selo queimado"
+    },
+    "p_concreto": {
+     "inicial": "false",
+     "desc": "pó de concreto da Linha Amarela"
+    },
+    "p_bunker": {
+     "inicial": "false",
+     "desc": "o Cão tem um esconderijo embaixo dos trilhos"
+    },
+    "p_cripta": {
+     "inicial": "false",
+     "desc": "Harumi falou do cheiro de cripta"
+    },
+    "p_dedos": {
+     "inicial": "false",
+     "desc": "cheiro de sangue antigo nos dedos da Harumi"
+    },
+    "p_frasco": {
+     "inicial": "false",
+     "desc": "Harumi admitiu o frasco"
+    },
+    "p_boes": {
+     "inicial": "false",
+     "desc": "carimbo do BOES no manifesto"
+    },
+    "p_tunel": {
+     "inicial": "false",
+     "desc": "o fantasma morreu num túnel, não na mata"
+    },
+    "p_biel_hora": {
+     "inicial": "false",
+     "desc": "o fantasma viu o relógio às 02h50"
+    },
+    "p_informante": {
+     "inicial": "false",
+     "desc": "Biel era informante da Dra. Elisa"
+    },
+    "p_limpeza": {
+     "inicial": "false",
+     "desc": "equipe de limpeza do Vincenzo trabalhou para alguém"
+    },
+    "rayo_pressao": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "rayo_confessou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rayo_fechado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "usou_pedagio": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "usou_queimadura": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "sentiu_besta_rayo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "cao_travou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "cao_irritado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "cao_hora_confrontada": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "harumi_pressao": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "harumi_confessou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "harumi_fechado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "usou_cripta": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "usou_frasco_rayo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "usou_dedos": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "sessao_feita": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "biel_perguntas": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "biel_hora_feita": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "biel_doeu": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "biel_luz": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "vincenzo_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rayo_hora_vaga": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "v_neutro": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rayo_serra": {
+     "inicial": "0",
+     "desc": "quantas vezes você perguntou da Serra (ele desconversa antes de contar)"
+    },
+    "aviso_tempo": {
+     "inicial": "0",
+     "desc": "avisos do Vincenzo já dados: 1 = 03h, 2 = 04h, 3 = 05h"
+    },
+    "constance_chegou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "constance_fechada": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "constance_aliada": {
+     "inicial": "false",
+     "desc": "viu o carimbo do BOES e ficou do seu lado"
+    },
+    "constance_hostil": {
+     "inicial": "false",
+     "desc": "percebeu que você a ameaçou ou usou Disciplina nela"
+    },
+    "p_envelope": {
+     "inicial": "false",
+     "desc": "Constance: envelope para \"a Doutora\" preso ao sarcófago"
+    },
+    "p_constance_ordem": {
+     "inicial": "false",
+     "desc": "Constance mandou \"resolver\" você se chegar nela"
+    },
+    "p_constance_cao": {
+     "inicial": "false",
+     "desc": "Constance: \"o Dante desconfia de todo mundo, menos do cachorro dele\""
+    },
+    "c_veio": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "c_rayo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "c_animal": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "quebrou_regra": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "denunciado": {
+     "inicial": "false",
+     "desc": "o Vincenzo denunciou o uso de Disciplina na frente da Corte"
+    },
+    "biel_morte": {
+     "inicial": "false",
+     "desc": "já perguntou ao fantasma como ele morreu"
+    },
+    "p_olho": {
+     "inicial": "false",
+     "desc": "o Rayo lembra que olho amarelo no bar só tem um: o do Cão"
+    },
+    "biel_max": {
+     "inicial": "3",
+     "desc": "perguntas ao fantasma; pagar a Nonna com sangue dá uma a mais"
+    },
+    "nonna_sangue": {
+     "inicial": "false",
+     "desc": "a Nonna guardou um frasco do seu sangue (gancho do capítulo 2)"
+    },
+    "nonna_favor": {
+     "inicial": "false",
+     "desc": "você deve um favor à Nonna (gancho do capítulo 2)"
+    },
+    "poder_forte": {
+     "inicial": "false",
+     "desc": "já usou a Disciplina forte (custa 2 de Fome de uma vez)"
+    },
+    "besta_avisou": {
+     "inicial": "false",
+     "desc": "a Besta já deu sinal com Fome 4"
+    },
+    "acusado": {
+     "inicial": "\"\"",
+     "desc": "quem você acusou na Corte"
+    },
+    "provas_max": {
+     "inicial": "3",
+     "desc": "quantas provas a Corte ouve (4 com Fome 5)"
+    },
+    "provas_dadas": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "provas_fortes": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "a_selo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_hora": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_tunel": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_concreto": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_bunker": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_limpeza": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_olho": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_rayo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_harumi": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_constance": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a_doutora": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "capitulo": {
+     "inicial": "1",
+     "desc": ""
+    },
+    "final_cap1": {
+     "inicial": "\"\"",
+     "desc": "B, C_corte, C_anarq, E, F, G, H ou S: de onde você parte no capítulo 2"
+    },
+    "tem_frasco": {
+     "inicial": "false",
+     "desc": "final S: você saiu com o frasco do sangue do Matusalém"
+    },
+    "favor_principe": {
+     "inicial": "false",
+     "desc": "final S: o Príncipe te deve um favor"
+    },
+    "sinal": {
+     "inicial": "0",
+     "desc": "o chip na língua: 0 a 5. No 5, o BOES chega"
+    },
+    "sinal_explicado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "dentro": {
+     "inicial": "true",
+     "desc": "você está no salão (true) ou do lado de fora (false)"
+    },
+    "expulso": {
+     "inicial": "false",
+     "desc": "o Dr. Arnaldo te pôs para fora do Elísio"
+    },
+    "luciana_chegou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "c2_pode_entrar": {
+     "inicial": "true",
+     "desc": "o Tomás, queimado e fugitivo, começa do lado de fora"
+    },
+    "c2_bebeu_frasco": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "aliado_cap2": {
+     "inicial": "\"\"",
+     "desc": "quem te protege no capítulo 3"
+    },
+    "p2_lama": {
+     "inicial": "false",
+     "desc": "lama de esgoto nos seus sapatos"
+    },
+    "p2_ligacao": {
+     "inicial": "false",
+     "desc": "seu celular: chamada às 03h12 para um número sem nome"
+    },
+    "p2_corte": {
+     "inicial": "false",
+     "desc": "a memória foi cortada a sangue (ritual/Dominação), não por droga"
+    },
+    "p2_scanner": {
+     "inicial": "false",
+     "desc": "o segurança da porta tem um leitor que apita na sua boca"
+    },
+    "p2_sedativo": {
+     "inicial": "false",
+     "desc": "Rocha: o sedativo da Inquisição só derruba até as 2h"
+    },
+    "p2_sinal_esgoto": {
+     "inicial": "false",
+     "desc": "Rocha no rádio: o sinal do chip sumiu embaixo da terra, na Consolação"
+    },
+    "p2_isa_lista": {
+     "inicial": "false",
+     "desc": "Isadora: \"só gente de bem foi à Capela\" (mentira)"
+    },
+    "p2_isa_ritual": {
+     "inicial": "false",
+     "desc": "Isadora foi à Capela fazer um ritual de beleza (vaidade, não culpa)"
+    },
+    "p2_numero": {
+     "inicial": "false",
+     "desc": "o número do seu celular é o da Capela da Luciana"
+    },
+    "p2_isa_capela": {
+     "inicial": "false",
+     "desc": "Isadora: a Luciana saiu às 3h e voltou com a barra do vestido suja de esgoto"
+    },
+    "p2_quem_apaga": {
+     "inicial": "false",
+     "desc": "Arnaldo: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco"
+    },
+    "p2_arquivo": {
+     "inicial": "false",
+     "desc": "Arnaldo: o Cão tinha um \"seguro\", um arquivo nos esgotos da Consolação"
+    },
+    "p2_rocha_dante": {
+     "inicial": "false",
+     "desc": "Arnaldo: o segurança humano foi posto ali por ordem de cima"
+    },
+    "p2_luvas": {
+     "inicial": "false",
+     "desc": "Valentina viu você às 4h com uma mulher de luvas"
+    },
+    "p2_caixa": {
+     "inicial": "false",
+     "desc": "os bichos da Paulista: a mulher de luvas voltou do esgoto com uma caixa"
+    },
+    "p2_luciana_slip": {
+     "inicial": "false",
+     "desc": "a Luciana falou dos esgotos da Consolação sem ninguém falar"
+    },
+    "p2_luvas_cheiro": {
+     "inicial": "false",
+     "desc": "as luvas da Luciana cheiram ao mesmo esgoto dos seus sapatos"
+    },
+    "p2_constance_dica": {
+     "inicial": "false",
+     "desc": "Constance: a Senescal anda nervosa desde terça"
+    },
+    "isa_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "isa_fechada": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "isa_varanda": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "arn_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rocha_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rocha_fechado": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "val_falou": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "val_bebeu": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "luc_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "luc_fechada": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "anfitriao_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "rayo2_falou": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "c2_aviso": {
+     "inicial": "0",
+     "desc": ""
+    },
+    "a2_sedativo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_capela": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_luvas": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_arquivo": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_slip": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_numero": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_corte": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_lama": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_rocha": {
+     "inicial": "false",
+     "desc": ""
+    },
+    "a2_isadora": {
+     "inicial": "false",
+     "desc": ""
+    }
+   },
+   "sim": {
+    "Tomás": {
+     "partidas": 600,
+     "finais": {
+      "2G": 165,
+      "2A": 354,
+      "2E": 80,
+      "2B": 1
+     },
+     "visitas": {
+      "capitulo_2": 600,
+      "capitulo_2_novo": 600,
+      "loft": 600,
+      "loft_perguntas": 600,
+      "convite": 600,
+      "chegada": 600,
+      "avisos2": 600,
+      "salao2": 600,
+      "confirmar_acusacao2": 591,
+      "fora": 444,
+      "anfitriao": 218,
+      "valentina": 265,
+      "valentina_perguntas": 265,
+      "valentina_conta": 127,
+      "acusacao2": 600,
+      "provas2": 520,
+      "provas2_loop": 520,
+      "veredito2": 520,
+      "final2_sem_provas": 165,
+      "tomas_resiste": 165,
+      "isadora": 203,
+      "isadora_perguntas": 203,
+      "arnaldo": 193,
+      "arnaldo_perguntas": 193,
+      "animalismo_dentro": 263,
+      "arnaldo_viu": 263,
+      "final2_isadora": 197,
+      "rocha": 253,
+      "rocha_perguntas": 253,
+      "final2_rocha": 157,
+      "rocha_conta": 67,
+      "luciana": 54,
+      "luciana_perguntas": 54,
+      "amanhecer2": 20,
+      "final2_nao_sei": 80,
+      "isadora_varanda": 16,
+      "luciana_cai": 1,
+      "saida2_rayo": 1,
+      "final2_dante": 1
+     },
+     "chaves": {
+      "p2_lama": 283,
+      "p2_ligacao": 300,
+      "p2_scanner": 600,
+      "p2_luvas": 209,
+      "anfitriao_falou": 218,
+      "luciana_chegou": 113,
+      "p2_isa_lista": 115,
+      "p2_quem_apaga": 160,
+      "p2_rocha_dante": 152,
+      "isa_falou": 203,
+      "isa_fechada": 115,
+      "arn_falou": 193,
+      "a2_rocha": 269,
+      "denunciado": 263,
+      "expulso": 263,
+      "p2_arquivo": 321,
+      "p2_caixa": 337,
+      "val_bebeu": 95,
+      "a2_luvas": 90,
+      "a2_arquivo": 120,
+      "sinal_explicado": 201,
+      "rocha_falou": 253,
+      "rocha_fechado": 162,
+      "a2_lama": 113,
+      "p2_sedativo": 67,
+      "a2_sedativo": 23,
+      "p2_luciana_slip": 37,
+      "p2_luvas_cheiro": 37,
+      "luc_falou": 54,
+      "luc_fechada": 24,
+      "a2_slip": 10,
+      "p2_numero": 41,
+      "p2_isa_capela": 57,
+      "a2_capela": 23,
+      "a2_isadora": 51,
+      "a2_numero": 17,
+      "p2_isa_ritual": 64,
+      "isa_varanda": 16
+     }
+    },
+    "Irene": {
+     "partidas": 600,
+     "finais": {
+      "2F": 162,
+      "2D": 201,
+      "2A": 159,
+      "2E": 76,
+      "2B": 2
+     },
+     "visitas": {
+      "capitulo_2": 600,
+      "capitulo_2_novo": 600,
+      "loft": 600,
+      "loft_perguntas": 600,
+      "convite": 600,
+      "chegada": 600,
+      "avisos2": 600,
+      "salao2": 600,
+      "confirmar_acusacao2": 592,
+      "fora": 339,
+      "isadora": 295,
+      "isadora_perguntas": 295,
+      "arnaldo": 262,
+      "arnaldo_perguntas": 262,
+      "rocha": 168,
+      "rocha_perguntas": 168,
+      "acusacao2": 600,
+      "provas2": 524,
+      "provas2_loop": 524,
+      "veredito2": 524,
+      "final2_rocha": 162,
+      "irene_some_sinal": 162,
+      "anfitriao": 276,
+      "valentina": 163,
+      "valentina_perguntas": 163,
+      "valentina_conta": 106,
+      "final2_sem_provas": 201,
+      "ofuscacao_dentro": 32,
+      "arnaldo_viu": 32,
+      "rocha_conta": 33,
+      "luciana": 65,
+      "luciana_perguntas": 65,
+      "final2_isadora": 159,
+      "amanhecer2": 22,
+      "final2_nao_sei": 76,
+      "isadora_varanda": 37,
+      "luciana_cai": 2,
+      "saida2_rayo": 2,
+      "final2_dante": 2
+     },
+     "chaves": {
+      "p2_lama": 310,
+      "p2_scanner": 600,
+      "p2_quem_apaga": 218,
+      "p2_arquivo": 110,
+      "p2_rocha_dante": 210,
+      "isa_falou": 295,
+      "isa_fechada": 174,
+      "arn_falou": 262,
+      "rocha_falou": 168,
+      "a2_lama": 126,
+      "sinal_explicado": 136,
+      "luciana_chegou": 135,
+      "p2_corte": 318,
+      "p2_sedativo": 91,
+      "p2_sinal_esgoto": 84,
+      "p2_isa_lista": 146,
+      "p2_luvas": 106,
+      "anfitriao_falou": 276,
+      "a2_sedativo": 32,
+      "a2_luvas": 49,
+      "a2_rocha": 252,
+      "p2_ligacao": 317,
+      "val_bebeu": 26,
+      "denunciado": 32,
+      "expulso": 32,
+      "p2_isa_ritual": 83,
+      "p2_numero": 77,
+      "p2_isa_capela": 78,
+      "p2_luciana_slip": 72,
+      "luc_falou": 65,
+      "luc_fechada": 23,
+      "a2_capela": 27,
+      "a2_slip": 31,
+      "a2_arquivo": 44,
+      "rocha_fechado": 65,
+      "isa_varanda": 37,
+      "a2_corte": 131,
+      "a2_isadora": 50,
+      "a2_numero": 28
+     }
+    },
+    "Joana": {
+     "partidas": 600,
+     "finais": {
+      "2H": 72,
+      "2A": 369,
+      "2D": 159
+     },
+     "visitas": {
+      "capitulo_2": 600,
+      "capitulo_2_novo": 600,
+      "loft": 600,
+      "loft_perguntas": 600,
+      "convite": 600,
+      "chegada": 600,
+      "avisos2": 600,
+      "salao2": 600,
+      "confirmar_acusacao2": 594,
+      "fora": 406,
+      "arnaldo": 214,
+      "arnaldo_perguntas": 214,
+      "anfitriao": 203,
+      "rocha": 199,
+      "rocha_perguntas": 199,
+      "rocha_conta": 104,
+      "valentina": 236,
+      "valentina_perguntas": 236,
+      "acusacao2": 600,
+      "final2_nao_sei": 72,
+      "joana_dupla": 72,
+      "provas2": 528,
+      "provas2_loop": 528,
+      "veredito2": 528,
+      "final2_isadora": 179,
+      "presenca_dentro": 173,
+      "arnaldo_viu": 173,
+      "valentina_conta": 148,
+      "final2_rocha": 190,
+      "isadora": 199,
+      "isadora_perguntas": 199,
+      "luciana": 53,
+      "luciana_perguntas": 53,
+      "amanhecer2": 20,
+      "final2_sem_provas": 159,
+      "isadora_varanda": 38
+     },
+     "chaves": {
+      "sinal_explicado": 124,
+      "p2_ligacao": 290,
+      "p2_corte": 300,
+      "p2_scanner": 600,
+      "p2_sedativo": 104,
+      "p2_quem_apaga": 183,
+      "arn_falou": 214,
+      "rocha_falou": 199,
+      "val_bebeu": 60,
+      "anfitriao_falou": 203,
+      "p2_lama": 307,
+      "a2_lama": 126,
+      "denunciado": 173,
+      "expulso": 173,
+      "p2_isa_capela": 300,
+      "p2_luvas": 148,
+      "luciana_chegou": 110,
+      "p2_isa_lista": 120,
+      "p2_isa_ritual": 92,
+      "p2_numero": 63,
+      "p2_arquivo": 94,
+      "p2_rocha_dante": 170,
+      "p2_luciana_slip": 16,
+      "isa_falou": 199,
+      "luc_falou": 53,
+      "luc_fechada": 3,
+      "a2_corte": 108,
+      "a2_arquivo": 32,
+      "a2_rocha": 243,
+      "a2_capela": 130,
+      "isa_fechada": 55,
+      "rocha_fechado": 78,
+      "a2_luvas": 67,
+      "a2_sedativo": 35,
+      "isa_varanda": 38,
+      "a2_isadora": 43,
+      "a2_numero": 21,
+      "a2_slip": 6
+     }
+    }
+   }
   },
   {
    "n": 3,

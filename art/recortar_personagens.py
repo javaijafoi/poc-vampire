@@ -24,6 +24,13 @@ PERSONAGENS = {
     "nonna": ("nonna-benedetta.png", (0, .14, 1, .56), None),
     "constance": ("constance.png", (0, .10, 1, .65), None),
     "biel": ("biel.png", (.30, .10, 1, .72), "fantasma"),  # o Biel morto, no lugar do carniçal Zé Carlos
+    # capítulo 2, o Elísio do MASP (provisórios até o Peter gerar as poses)
+    "isadora": ("originais/Isadora__561446.png", (.10, .04, .90, .58), None),
+    "arnaldo": ("originais/Dr_Arnaldo__274012.png", (.08, .08, .92, 1), None),
+    "arnaldo_lamina": ("originais/Dr_Arnaldo__3bf5e7.png", (.10, .17, .90, .62), None),  # arte que já existe: a faca
+    "rocha": ("originais/Agente_Rocha__2ff3b8.png", (0, 0, 1, 1), None),  # pop art; o Peter vai refazer
+    "valentina": ("valentina.png", (.12, .08, .88, .60), None),
+    "luciana": ("originais/Luciana__d66572.png", (.20, .06, .86, .70), None),
 }
 
 
@@ -58,5 +65,6 @@ for chave in sys.argv[1:] or PERSONAGENS:
     out = out.crop(out.getbbox())
     if filtro == "fantasma":
         out = fantasma(out)
-    out.save(os.path.join(SAIDA, f"{chave}_neutro.png"))
+    # "arnaldo_lamina" já é uma expressão; o resto é o neutro do personagem
+    out.save(os.path.join(SAIDA, f"{chave}.png" if "_" in chave else f"{chave}_neutro.png"))
     print(chave, out.size)

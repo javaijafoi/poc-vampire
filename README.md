@@ -6,7 +6,8 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 
 | Pasta | O que é |
 | --- | --- |
-| `ink/jogo.ink` | Roteiro completo em Ink |
+| `ink/jogo.ink` | Roteiro em Ink: capítulo 1 (o Porão) e as funções comuns. No fim, `INCLUDE capitulo2.ink` |
+| `ink/capitulo2.ink` | Capítulo 2, O Custo do Esquecimento: a gala da Corte no Elísio do MASP |
 | `ink/rayo.ink` | A cena de teste antiga (só o Rayo), mantida para comparação com o Ren'Py |
 | `web/` | Interface web que roda o roteiro |
 | `dist/index.html` | Jogo web pronto, num arquivo só, com a música ao lado em `dist/musica/`. Abra no navegador (precisa de internet para o motor Ink e as fontes) |
@@ -31,6 +32,14 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - Hora falada e hora no caderno vêm do relógio do jogo: use `{hora_falada()}` ("Três e dez"), `{hora_digital()}` ("03h10") e `{tempo_falta()}` ("uma hora e vinte minutos"). Os avisos do Vincenzo entram em qualquer conversa com `-> avisos ->`.
 - Palavra com gênero falando com o protagonista: `forasteir{o}` ou `{o == "a":moça|moço}`. O `test_texto.cjs` joga com a Irene e a Joana e acusa masculino solto.
 - `@pistas` numa fala vira "N pistas", com o número do caderno.
+
+## Capítulos
+
+- Cada capítulo novo fica no seu arquivo e entra com `INCLUDE` no fim do `ink/jogo.ink` (o `compile.cjs` e o fluxograma colam o texto no lugar da linha).
+- O capítulo 1 guarda o final em `final_cap1` (B, C_corte, C_anarq, E, F, G, H ou S). O capítulo 2 começa no knot `capitulo_2` e muda o texto e quem te protege conforme esse final. Sem jogo do capítulo 1, `capitulo_2_novo` escolhe o personagem e começa como se fosse o final B.
+- `# capitulo: 2` no roteiro limpa o caderno e avisa na tela. Ao fim do capítulo 1 com o personagem vivo, a tela de fim oferece "Seguir para o capítulo 2" e guarda o estado em `localStorage` (`matusalem-cap1`); o botão "Capítulo 2" da capa começa dali.
+- Capítulo 2: dentro do salão (`dentro`) vale a lei do Elísio, e Disciplina ali põe você para fora (`expulso`). Do lado de fora, `acender(n)` sobe o `sinal` do chip; no 5, o BOES chega. O marcador Sinal aparece no topo a partir do capítulo 2.
+- `node test_cap2.cjs` joga o capítulo 2 partindo de cada final do 1, confere o caminho neutro (só conversa e provas) com os três personagens e o final S do capítulo 1.
 
 ## Fluxograma das escolhas
 
