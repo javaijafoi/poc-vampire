@@ -10,7 +10,7 @@
 //   Fora (vão livre, portaria, Paulista) vale tudo, mas o chip transmite: Disciplina sobe o Sinal em 2, briga em 1.
 //   Sinal 5: o BOES chega.
 //   Entrar ou sair do salão custa 20 minutos, passando pela portaria do Rocha.
-//   O relógio começa às 19h (hora_base) no loft: olhar as coisas custa tempo. A gala abre às 22h; o sol nasce às 05h40.
+//   O relógio começa às 19h (hora_base) no loft: olhar cada coisa custa 10 minutos. A gala abre às 22h; o sol nasce às 05h40.
 
 // Estado do capítulo
 VAR sinal = 0                 // o chip na língua: 0 a 5. No 5, o BOES chega
@@ -140,37 +140,37 @@ Você tem até o amanhecer para descobrir.
 -> loft_perguntas
 
 === loft_perguntas ===
-{ minutos >= 150 and minutos < 170:
+{ minutos >= 50 and minutos < 60:
     {hora_falada()}. A gala abre às dez. Se você quer chegar cedo, está na hora de sair.
 }
-+ {not p2_lama} [Olhar os sapatos (20 minutos)]
++ {not p2_lama} [Olhar os sapatos (10 minutos)]
     ~ p2_lama = true
-    ~ passar(20)
+    ~ passar(10)
     Os sapatos estão duros de lama preta. Não é barro de rua: cheira a esgoto velho e a ferro. # pista loft: Lama de esgoto nos seus sapatos. Você esteve embaixo da terra na noite apagada.
     -> loft_perguntas
-+ {not p2_ligacao} [Ver o celular (20 minutos)]
++ {not p2_ligacao} [Ver o celular (10 minutos)]
     ~ p2_ligacao = true
-    ~ passar(20)
+    ~ passar(10)
     Na lista de chamadas, uma ligação sua de um minuto, às 03h12 da noite apagada, para um número sem nome. Ninguém atende quando você liga de novo. # pista loft: Às 03h12 da noite apagada você ligou para um número sem nome. Ninguém atende.
     -> loft_perguntas
-+ {not loft_bolsos} [Revistar os bolsos (20 minutos)]
++ {not loft_bolsos} [Revistar os bolsos (10 minutos)]
     ~ loft_bolsos = true
-    ~ passar(20)
+    ~ passar(10)
     No bolso do casaco, um papel úmido e amassado: um tíquete de estacionamento do porto de Santos, entrada às 22h40 da noite apagada. Saída, nenhuma. # pista loft: Um tíquete de estacionamento do porto de Santos: você entrou lá às 22h40 da noite apagada e não há saída marcada.
     -> loft_perguntas
-+ {not loft_camisa} [Olhar a camisa no espelho (20 minutos)]
++ {not loft_camisa} [Olhar a camisa no espelho (10 minutos)]
     ~ loft_camisa = true
-    ~ passar(20)
+    ~ passar(10)
     A gola da camisa está dura de sangue seco. Não é seu. Cheira a óleo diesel e maresia, e tem um gosto amargo quando você lambe o dedo, como remédio. # pista loft: Sangue seco na gola da camisa, que não é seu: cheira a diesel e maresia e tem gosto amargo de remédio.
     -> loft_perguntas
-+ {ocultismo >= 2} {not p2_corte} [Ocultismo 2 :: Examinar o buraco na sua memória. (20 minutos)]
++ {ocultismo >= 2} {not p2_corte} [Ocultismo 2 :: Examinar o buraco na sua memória. (10 minutos)]
     ~ p2_corte = true
-    ~ passar(20)
+    ~ passar(10)
     Ocultismo 2 :: Droga deixa a memória borrada, como vidro embaçado. A sua não está borrada. Está cortada, reta, como papel cortado com régua. Isso é sangue. Dominação ou ritual. # pista loft: A sua noite não foi apagada por droga. Foi cortada a sangue, por Dominação ou ritual.
     -> loft_perguntas
-+ {tem_frasco} {not c2_bebeu_frasco} [Frasco :: Beber uma gota do sangue do Matusalém. (20 minutos)]
++ {tem_frasco} {not c2_bebeu_frasco} [Frasco :: Beber uma gota do sangue do Matusalém. (10 minutos)]
     ~ c2_bebeu_frasco = true
-    ~ passar(20)
+    ~ passar(10)
     ~ fome = 1
     ~ p2_luvas = true
     ~ p2_caixa = true
@@ -204,19 +204,19 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 - "F":
     Você sobe pela galeria do Bixiga até a grade da Treze de Maio e sai na rua de cabeça baixa, junto com o vapor do bueiro.
     ~ passar(40)
-    A cidade passa por você, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: bixiga pe 40
+    A cidade passa por você, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # fundo: vao_livre # trajeto: bixiga pe 40
 - "G":
     Você sacode a terra do corpo e sobe a Consolação a pé, pelo lado escuro da calçada, com o capuz puxado sobre as queimaduras.
     ~ passar(40)
-    A cidade passa por você, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: consolacao pe 40
+    A cidade passa por você, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # fundo: vao_livre # trajeto: consolacao pe 40
 - "C_anarq":
     O Rayo buzina lá embaixo. Você sobe na garupa da moto e ele corta os Jardins pela Augusta, rindo de cada sinal vermelho.
     ~ passar(20)
-    A cidade passa de lado, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: jardins moto 20
+    A cidade passa de lado, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # fundo: vao_livre # trajeto: jardins moto 20
 - else:
     Você desce, chama um táxi e manda subir a Augusta. O motorista olha você pelo retrovisor e não puxa assunto.
     ~ passar(30)
-    A cidade passa pela janela, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # trajeto: jardins taxi 30
+    A cidade passa pela janela, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # fundo: vao_livre # trajeto: jardins taxi 30
 }
 { minutos < 180:
     ~ minutos = 180
