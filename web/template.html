@@ -259,6 +259,22 @@ body {
 @keyframes flutua { 50% { transform: translateY(-2.5%); } }
 .lado[data-p="Biel"] .legenda { background: #2b4f7a; }
 
+/* trajeto: mapa recortado de jornal, a rota se desenha e um ponto anda até o MASP */
+.trajeto { position: absolute; inset: 0; z-index: 20; display: grid; place-items: center; background: rgb(10 5 8 / .6); cursor: pointer; opacity: 0; transition: opacity .5s; }
+.trajeto.on { opacity: 1; }
+.trajeto .mapa { position: relative; width: 70%; aspect-ratio: 16 / 9; background: #ece4d2; border: 1cqw solid #f6f0e2; box-shadow: .4cqw .8cqw 1.6cqw rgb(0 0 0 / .7); transform: rotate(-1.5deg); }
+.trajeto svg { width: 100%; height: 100%; display: block; }
+.trajeto .rua { fill: none; stroke: #b9ad95; stroke-width: 2.4; stroke-linecap: round; }
+.trajeto .rua.grande { stroke: #a39578; stroke-width: 4; }
+.trajeto .nome-rua { font: italic 3.2px Georgia, serif; fill: #6f6350; }
+.trajeto .rota { fill: none; stroke: #b3201c; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.trajeto .ponto { fill: #b3201c; stroke: #ece4d2; stroke-width: .8; }
+.trajeto .masp { fill: #c8281e; }
+.trajeto .rotulo { font: bold 4.2px Georgia, serif; fill: #2a1d16; }
+.trajeto .titulo { position: absolute; left: 4%; top: 4%; background: #1d1414; color: #ece4d2; font: italic 1.9cqw Georgia, serif; padding: .3em .7em; transform: rotate(-2deg); }
+.trajeto .relogio { position: absolute; right: 4%; bottom: 5%; background: #1d1414; color: #e8c37a; font: bold 2.4cqw ui-monospace, monospace; padding: .2em .6em; transform: rotate(1.5deg); }
+@media (max-aspect-ratio: 1/1) { .trajeto .mapa { width: 94%; } .trajeto .titulo { font-size: 3.4cqw; } .trajeto .relogio { font-size: 4cqw; } }
+
 /* ilustração de momento-chave: foto de jornal colada por cima da cena */
 .ilustracao { position: absolute; inset: 0; z-index: 3; display: grid; place-items: start center; padding-top: 3%; background: rgb(10 5 8 / .55); opacity: 0; pointer-events: none; transition: opacity .6s; }
 .ilustracao.on { opacity: 1; }
@@ -723,7 +739,7 @@ function salvar() {
   try {
     localStorage.setItem(SAVE, JSON.stringify({
       ink: story.state.toJson(), pistas, feitas: [...feitas], historico: historico.slice(-80), finalLetra, finalTexto, fundo: fundoAtual, ilustracao: ilustracaoAtual, musica: som.faixa,
-      cena: { esq: cena.esq, dir: cena.dir, expr: cena.expr }, nome: v['nome'], minutos: v['minutos'],
+      cena: { esq: cena.esq, dir: cena.dir, expr: cena.expr }, nome: v['nome'], minutos: v['minutos'], base: v['hora_base'],
     }));
   } catch (e) {}
 }
@@ -773,7 +789,7 @@ function atualizarHud() {
 }
 function pulsar(el) { el.classList.remove('pulso'); void el.offsetWidth; el.classList.add('pulso'); }
 
-function horaDe(min) { const h = (23 + Math.floor(min / 60)) % 24, m = min % 60; return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`; }
+function horaDe(min, base = story?.variablesState['hora_base'] ?? 23) { const h = (base + Math.floor(min / 60)) % 24, m = min % 60; return `${String(h).padStart(2, '0')}h${String(m).padStart(2, '0')}`; }
 function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(fimTimer); fimTimer = setTimeout(() => t.classList.remove('on'), 2600); }
 
 // Puxa a próxima linha do roteiro e trata efeitos (dados, tags) antes de mostrar.
@@ -793,6 +809,7 @@ function avancar() {
       if (chave === 'expr') { if (aba) { mostrarPersonagem(aba, val); exprAlvo = aba; } else exprPendente = val; }
       if (chave === 'musica') tocarMusica(val);
       if (chave === 'capitulo') comecarCapitulo(val);
+      if (chave === 'trajeto') fila.push({ tipo: 'trajeto', val });
       if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
     }
@@ -810,6 +827,7 @@ function avancar() {
 function mostrarEvento(ev) {
   if (ev.tipo === 'linha') return ev.texto ? mostrarLinha(ev.texto) : avancar();
   if (ev.tipo === 'dados') return mostrarDados(ev.r);
+  if (ev.tipo === 'trajeto') return mostrarTrajeto(ev.val);
   if (ev.tipo === 'despertar') { atualizarHud(); toast(ev.ok ? 'Teste de Despertar: a Fome se manteve' : 'Teste de Despertar: a Fome subiu'); return avancar(); }
 }
 
@@ -851,6 +869,48 @@ function mostrarDados(r) {
   mesa.addEventListener('click', e => { e.stopPropagation(); fechar(); }); setTimeout(() => document.addEventListener('keydown', tecla), 50);
   // a caixa de texto fica por baixo da mesa: clicar nela também segue
   $('dialogo').addEventListener('click', function f(e) { if (!mesa.isConnected) return $('dialogo').removeEventListener('click', f, true); e.stopPropagation(); fechar(); }, true);
+}
+
+// Trajeto até o MASP (# trajeto: origem modo minutos): um mapa de jornal com a rota se desenhando e o relógio correndo.
+// Clicar pula; no fim fecha sozinho e a história segue.
+const ROTAS = {
+  jardins: { nome: 'Jardins', x: 112, y: 80, d: 'M112 80 L98 70 L90 62 L80 50 L72 41' },
+  bixiga: { nome: 'Bixiga', x: 132, y: 78, d: 'M132 78 L126 66 L121 56 L118 51 L96 44 L72 41' },
+  consolacao: { nome: 'Consolação', x: 26, y: 80, d: 'M26 80 L30 60 L34 40 L36 33 L72 41' },
+};
+const MODOS = { taxi: 'de táxi', moto: 'na garupa do Rayo', pe: 'a pé' };
+function mostrarTrajeto(val) {
+  const [origem, modo, mins] = val.split(/\s+/); const r = ROTAS[origem] || ROTAS.jardins; const dur = +mins || 30;
+  const v = story.variablesState, fim = v['minutos'], ini = fim - dur;
+  const el = document.createElement('div'); el.className = 'trajeto';
+  el.innerHTML = `<div class="mapa" role="img" aria-label="Mapa: de ${r.nome} até o MASP, ${MODOS[modo] || ''}, ${dur} minutos">
+    <svg viewBox="0 0 160 90" aria-hidden="true">
+      <path class="rua grande" d="M4 26 L156 52"/><text class="nome-rua" x="118" y="40.5" transform="rotate(9.7 118 40.5)">Av. Paulista</text>
+      <path class="rua" d="M60 0 L104 90"/><text class="nome-rua" x="96" y="58" transform="rotate(63 96 58)">R. Augusta</text>
+      <path class="rua" d="M38 0 L24 90"/><text class="nome-rua" x="32" y="72" transform="rotate(-81 32 72)">R. da Consolação</text>
+      <path class="rua" d="M124 0 L132 90"/><path class="rua" d="M0 62 L160 74"/><path class="rua" d="M80 90 L150 30"/><path class="rua" d="M10 50 L60 90"/>
+      <path class="rota" d="${r.d}"/>
+      <rect class="masp" x="66" y="35" width="13" height="5" rx=".6"/><text class="rotulo" x="62" y="32">MASP</text>
+      <circle cx="${r.x}" cy="${r.y}" r="1.8" fill="#2a1d16"/><text class="rotulo" x="${r.x - 8}" y="${r.y + 7}">${r.nome}</text>
+      <circle class="ponto" r="2.2" cx="${r.x}" cy="${r.y}"/>
+    </svg>
+    <div class="titulo">${r.nome} → MASP, ${MODOS[modo] || ''}</div><div class="relogio">${horaDe(ini)}</div></div>`;
+  document.querySelector('.jogo').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('on'));
+  const rota = el.querySelector('.rota'), ponto = el.querySelector('.ponto'), relogio = el.querySelector('.relogio');
+  const total = rota.getTotalLength(), T = matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 3800;
+  const t0 = performance.now(); let feito = false, raf;
+  const quadro = agora => {
+    const k = T ? Math.min(1, (agora - t0) / T) : 1, e = k < .5 ? 2 * k * k : 1 - (-2 * k + 2) ** 2 / 2;
+    const p = rota.getPointAtLength(total * e); ponto.setAttribute('cx', p.x); ponto.setAttribute('cy', p.y);
+    rota.style.strokeDasharray = `${total * e} ${total}`;
+    relogio.textContent = horaDe(ini + Math.min(dur, Math.round(dur * e / 5) * 5));
+    if (k < 1) raf = requestAnimationFrame(quadro); else setTimeout(fechar, 900);
+  };
+  const fechar = () => { if (feito) return; feito = true; cancelAnimationFrame(raf); el.classList.remove('on'); document.removeEventListener('keydown', tecla); setTimeout(() => el.remove(), 500); avancar(); };
+  const tecla = e => { if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); fechar(); } };
+  el.addEventListener('click', e => { e.stopPropagation(); fechar(); }); setTimeout(() => document.addEventListener('keydown', tecla), 50);
+  raf = requestAnimationFrame(quadro);
 }
 
 function mostrarLinha(texto) {
@@ -1035,7 +1095,7 @@ function mostrarCapa() {
   // com jogo salvo, "Continuar" vira o botão principal e "Novo jogo" pede confirmação
   const s = lerSave(); $('menu').hidden = false; $('confirma').hidden = true;
   $('continuar').hidden = !s; $('novo-jogo').classList.toggle('sec', !!s);
-  $('salvo').textContent = s ? `Jogo salvo${s.nome ? ': ' + s.nome : ''}${s.minutos != null ? ', ' + horaDe(s.minutos) : ''}` : '';
+  $('salvo').textContent = s ? `Jogo salvo${s.nome ? ': ' + s.nome : ''}${s.minutos != null ? ', ' + horaDe(s.minutos, s.base ?? 23) : ''}` : '';
   (s ? $('continuar') : $('novo-jogo')).focus({ preventScroll: true });
 }
 function novoJogo() {
