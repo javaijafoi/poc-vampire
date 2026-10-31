@@ -124,6 +124,10 @@ body {
   background: transparent; border: 1px solid transparent; padding: .3cqw .8cqw; cursor: pointer; display: flex; gap: .8cqw; align-items: baseline;
 }
 .escolhas button:hover, .escolhas button:focus-visible { background: color-mix(in srgb, var(--acento) 12%, var(--folha)); border-color: color-mix(in srgb, var(--acento) 35%, var(--folha)); outline: none; }
+.escolhas.travada, .cartas.travada { pointer-events: none; opacity: .55; }
+.escolhas, .cartas { transition: opacity .25s; }
+.escolhas button.sem-volta { color: #8e1c14; font-weight: 600; }
+.escolhas button.sem-volta::before { content: "⚠"; order: 2; margin-left: .3em; }
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
 /* pergunta que você já fez: continua ali (e continua custando tempo), mas apagada */
 .escolhas button.feita { color: #8d7c6c; }
@@ -200,6 +204,8 @@ body {
 .caderno textarea:focus { outline: 2px solid #8f1d26; }
 .caderno h2 { font-family: var(--f-nome); font-weight: 600; font-size: max(16px, 2.2cqw); margin: 0 0 1cqw; }
 .caderno ol { margin: 0; padding-left: 1.4em; display: grid; gap: .6cqw; font-size: max(14px, 1.8cqw); line-height: 1.4; }
+.caderno h3 { font-family: var(--f-nome); font-weight: 600; font-size: max(15px, 1.9cqw); margin: 1.4cqw 0 .5cqw; color: var(--acento); }
+.caderno h3 small, .caderno li small.de { font-family: var(--f-tipo); font-weight: 400; font-size: .7em; color: #8a7462; }
 .caderno .vazio { font-style: italic; color: #6d5440; }
 .caderno .fechar { margin-top: 1.6cqw; font-family: var(--f-tipo); background: #2a1810; color: #e9dcc4; border: 0; padding: .6cqw 1.4cqw; cursor: pointer; font-size: max(13px, 1.5cqw); }
 
@@ -725,9 +731,9 @@ function jogarCapitulo2(daqui) {
     try { if (cap1) story.state.LoadJson(cap1); } catch (e) { cap1 = null; novaHistoria(); }
     story.ChoosePathString(cap1 ? 'capitulo_2' : 'capitulo_2_novo'); }
   else { story.ChoosePathString('capitulo_2'); finalTexto = finalLetra = null; }
-  pararAbertura(); $('abertura').hidden = true; $('capa').hidden = true;
   limparCena(); esconderIlustracao(); $('carimbo-final').classList.remove('on');
-  atualizarHud(); comecarPartida('capitulo_2'); avancar();
+  // abertura do capítulo 2: lembra como o capítulo 1 acabou (por enquanto, a versão padrão, do final B) e ambienta a noite apagada
+  tocarAbertura(() => { $('capa').hidden = true; atualizarHud(); comecarPartida('capitulo_2'); avancar(); }, QUADROS_CAP2);
 }
 
 // ---------- Jogo salvo: grava sozinho neste navegador antes de cada linha ----------
@@ -973,6 +979,7 @@ function abrirHistorico() {
 }
 
 const EMBLEMA = { Gangrel: 'G', Nosferatu: 'N', 'Ministério': 'M' };
+const TRAVA_MS = 450; let menuFixo = { k: '', h: 0 };
 function mostrarEscolhas(pergunta = '') {
   falando(null); $('nome').hidden = true; const c = $('conteudo');
   if (story.variablesState['nome'] === '') {
@@ -984,11 +991,19 @@ function mostrarEscolhas(pergunta = '') {
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
-      const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : '';
+      const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : / \(encerra o capítulo\)$/.test(ch.text) ? ' class="sem-volta"' : '';
       return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
   }
   const ficha = story.variablesState['nome'] === '';
-  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); ficha ? abrirFicha(+b.dataset.i) : escolher(+b.dataset.i); }));
+  // trava de clique: o clique que avançou o texto não pode cair numa opção que acabou de aparecer embaixo do dedo
+  const abertoEm = performance.now(); const lista = c.querySelector('.escolhas, .cartas');
+  if (lista) { lista.classList.add('travada'); setTimeout(() => lista.classList.remove('travada'), TRAVA_MS); }
+  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); if (performance.now() - abertoEm < TRAVA_MS) return; ficha ? abrirFicha(+b.dataset.i) : escolher(+b.dataset.i); }));
+  // o mesmo menu (salão, vão livre, conversa) não encolhe quando uma opção some: as outras ficam no mesmo lugar
+  const ul = c.querySelector('.escolhas');
+  if (ul) { const k = String(story.currentChoices[0]?.sourcePath || '').split('.')[0] + '|' + (pergunta || '');
+    const h = ul.getBoundingClientRect().height; if (k === menuFixo.k) ul.style.minHeight = Math.max(h, menuFixo.h) + 'px';
+    menuFixo = { k, h: Math.max(h, k === menuFixo.k ? menuFixo.h : 0) }; }
   // foco na caixa, não na primeira opção, para nenhuma parecer já escolhida; Tab e as teclas 1, 2, 3 continuam funcionando
   c.focus({ preventScroll: true });
 }
@@ -1036,9 +1051,13 @@ function mostrarFim() {
 let abaAtual = 'Dossiê', anotacoes = '';
 try { anotacoes = localStorage.getItem('porao-anotacoes') || ''; } catch (e) {}
 
+// Aba "Suspeitos" do caderno: junta as pistas que citam cada pessoa (capítulo 2)
+const SUSPEITOS = [['Luciana, a Senescal', /Luciana|Senescal|luvas pretas|Capela/i], ['Agente Rocha e a Inquisição', /Rocha|Inquisição|segurança da porta|leitor|sedativo/i],
+  ['Isadora, a anfitriã', /Isadora/i], ['O Príncipe Dante', /Príncipe|Dante/i]];
 function abrirCaderno() {
   registrar('abriu', { o_que: 'caderno' });
-  const abas = ['Dossiê', ...Object.values(ABAS_PISTA).filter(a => a !== 'Dossiê' && pistas.some(p => p.aba === a)), 'Anotações'];
+  const suspeitos = (story?.variablesState['capitulo'] || 1) < 2 ? [] : SUSPEITOS.filter(([, re]) => pistas.some(p => re.test(p.texto)));
+  const abas = ['Dossiê', ...(suspeitos.length ? ['Suspeitos'] : []), ...Object.values(ABAS_PISTA).filter(a => a !== 'Dossiê' && pistas.some(p => p.aba === a)), 'Anotações'];
   if (!abas.includes(abaAtual)) abaAtual = 'Dossiê';
   const el = document.createElement('div'); el.className = 'caderno';
   el.innerHTML = `<div class="bloco-folhas"><div class="abas" role="tablist">${abas.map(a =>
@@ -1052,6 +1071,10 @@ function abrirCaderno() {
       folha.innerHTML = `<h2>Minhas anotações</h2><textarea aria-label="Minhas anotações" placeholder="Escreva aqui o que quiser lembrar."></textarea>`;
       const t = folha.querySelector('textarea'); t.value = anotacoes;
       t.addEventListener('input', () => { anotacoes = t.value; try { localStorage.setItem('porao-anotacoes', anotacoes); } catch (e) {} });
+    } else if (aba === 'Suspeitos') {
+      // resumo: cada pessoa com as pistas que falam dela, de todas as abas
+      folha.innerHTML = `<h2>Suspeitos: o que aponta para cada um</h2>${suspeitos.map(([nome, re]) => { const ps = pistas.filter(p => re.test(p.texto));
+        return `<h3>${esc(nome)} <small>${ps.length} pista${ps.length === 1 ? '' : 's'}</small></h3><ol>${ps.map(p => `<li>${esc(p.texto)} <small class="de">(${esc(p.aba)})</small></li>`).join('')}</ol>`; }).join('')}`;
     } else {
       const lista = pistas.filter(p => p.aba === aba);
       folha.innerHTML = `<h2>${aba === 'Dossiê' ? 'Dossiê do Príncipe' : 'O que descobri: ' + esc(aba)}</h2>${lista.length ? `<ol>${lista.map(p => `<li>${esc(p.texto)}</li>`).join('')}</ol>` : '<p class="vazio">Nada anotado ainda.</p>'}`;
@@ -1115,9 +1138,18 @@ const QUADROS = [
   { fundo: 'corte', hora: '22h00', txt: 'Na noite seguinte, o Príncipe Dante quer um nome antes do amanhecer.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
   { fundo: 'rua', hora: '22h30', txt: 'E ele mandou chamar você.', bilhete: true },
 ];
+// Abertura do capítulo 2 (versão padrão). Quando houver imagens para cada final do capítulo 1, cada final ganha a sua.
+const QUADROS_CAP2 = [
+  { fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você apontou o traidor diante do Príncipe: o Cão, o Xerife da cidade.', rec: 'cao', quem: 'O CÃO · Xerife, traidor' },
+  { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'O Cão virou cinza no telhado. O Matusalém voltou para o cofre do Príncipe.', carimbo: 'CINZA' },
+  { fundo: 'corte', hora: 'Na noite seguinte', txt: 'O Príncipe Dante pagou a sua dívida. Agora você é útil a ele, e todo mundo sabe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+  { fundo: 'porto', hora: 'Terça, 22h40', txt: 'Na terça, o Príncipe te mandou fazer um trabalho no porto de Santos. Você foi.' },
+  { fundo: 'rua', escuro: true, hora: 'Terça, 03h12', txt: 'O que aconteceu depois disso, você não lembra. Ninguém conta. A noite inteira sumiu.', carimbo: 'APAGADO' },
+  { fundo: 'loft', hora: 'Hoje, 19h00', txt: 'Capítulo 2 · O Custo do Esquecimento. Você acorda com a boca ardendo e uma noite faltando.' },
+];
 let timersAbertura = [];
 function pararAbertura() { timersAbertura.forEach(clearTimeout); timersAbertura = []; }
-function tocarAbertura(depois) {
+function tocarAbertura(depois, QUADROS_AB = QUADROS) {
   pararAbertura();
   const ab = $('abertura'), qs = ab.querySelectorAll('.quadro'), rec = ab.querySelector('.recorte-ab');
   const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash'), quem = ab.querySelector('.quem-ab');
@@ -1129,11 +1161,11 @@ function tocarAbertura(depois) {
   $('pular').onclick = fim;
   let t = 0;
   const em = (ms, f) => timersAbertura.push(setTimeout(f, ms));
-  QUADROS.forEach((q, i) => {
+  QUADROS_AB.forEach((q, i) => {
     const dur = q.bilhete ? 5200 : 5000;
     em(t, () => {
       const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
-      if (!i || QUADROS[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
+      if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
       hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
       em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
       em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
