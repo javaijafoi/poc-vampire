@@ -618,7 +618,7 @@ const DESC_FUNDO = {
 };
 function mostrarIlustracao(nome) {
   const src = ARTE.fundos[nome]; if (!src) return;
-  antesIlustracao = cena ? { esq: cena.esq, dir: cena.dir } : null;
+  antesIlustracao = cena ? { esq: cena.esq, dir: cena.dir, expr: { ...cena.expr } } : null;
   limparCena(); ilustracaoAtual = nome;
   const il = $('ilustracao'); il.querySelector('img').src = src; il.querySelector('img').alt = 'Ilustração provisória: ' + nome.replace(/_/g, ' ');
   il.classList.add('on');
@@ -629,6 +629,7 @@ const ILUSTRACAO_DE_PASSAGEM = new Set(['constance_chega']);
 let antesIlustracao = null;
 function voltarDaIlustracao() {
   esconderIlustracao();
+  if (antesIlustracao) cena.expr = antesIlustracao.expr;  // quem volta, volta com a pose que tinha
   for (const k of [antesIlustracao?.esq, antesIlustracao?.dir]) if (k) mostrarPersonagem(k);
   antesIlustracao = null;
 }
@@ -637,7 +638,7 @@ function voltarDaIlustracao() {
 const TOQUE = matchMedia('(hover: none)').matches;
 const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
-let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
+let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
 let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
 
 function tipoBadge(g) {
@@ -744,7 +745,7 @@ function avancar() {
       if (chave === 'imagem') mostrarIlustracao(val);
       if (chave === 'entra') mostrarPersonagem(val, 'neutro');  // cada visita começa com o rosto de sempre
       // "# expr: medo" vale para quem fala nesta linha; "# expr cao: pego" troca o rosto de alguém numa narração
-      if (chave === 'expr') { if (aba) mostrarPersonagem(aba, val); else exprPendente = val; }
+      if (chave === 'expr') { if (aba) { mostrarPersonagem(aba, val); exprAlvo = aba; } else exprPendente = val; }
       if (chave === 'musica') tocarMusica(val);
       if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
@@ -816,7 +817,8 @@ function mostrarLinha(texto) {
   // personagem com arte: aparece no lado dele e o nome vai para a legenda; sem arte (você), o nome fica na caixa
   const comArte = chave && !$('ilustracao').classList.contains('on') && mostrarPersonagem(chave, exprPendente);
   exprPendente = null;
-  falando(comArte ? chave : null);
+  // narração com "# expr cao: ...": quem trocou de rosto fica aceso nesta linha
+  falando(comArte ? chave : (exprAlvo && cena[PERS[exprAlvo]?.lado] === exprAlvo ? exprAlvo : null)); exprAlvo = null;
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
   historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo }); if (historico.length > 200) historico.shift();
   const c = $('conteudo');
