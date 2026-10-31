@@ -121,27 +121,32 @@ O celular vibra no chão. Uma mensagem de voz, de agora há pouco.
 - "C_corte":
     Constance: Querid{o}. Na terça, alguém desceu ao esgoto da Consolação e levou uma coisa que a cidade inteira teme. Um Nosferatu jura que viu você saindo de um bueiro ali, às cinco da manhã, sujo até o joelho. # entra: constance # expr: seria
     Constance: Hoje, na gala, antes do sol, a Corte vai te perguntar o que você fez na terça. Eu presido. Não me faça passar vergonha.
+    Constance: Ah, e o Dr. Arnaldo abre o museu às oito para quem tem contas a prestar. Quem chega antes da festa fala com o Juiz a sós.
 - "C_anarq":
     Rayo: Ô, forasteir{o}. Tá todo mundo da Corte dizendo que você desceu no esgoto da Consolação na terça e saiu às cinco com alguma coisa deles. Um rato de terno jura que viu. # entra: rayo # expr: bravo
     Rayo: Eles vão te chamar na gala do MASP hoje, antes do sol, pra explicar. Se você não souber o que fez, eles inventam por você. E invenção de Camarilla acaba em estaca.
+    Rayo: Dica de graça: o Juiz deles abre o museu às oito pra quem quer se explicar antes da festa. Depois disso, é na frente de todo mundo.
 - "F":
     Arnaldo: Aqui é o Dr. Arnaldo, o Juiz do Elísio. Na terça, uma coisa que pertencia à Corte sumiu do esgoto da Consolação, e uma testemunha viu você saindo de um bueiro ali às cinco da manhã. # entra: arnaldo # expr: neutro
     Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
+    Arnaldo: Eu abro o museu às oito. Se chegar antes disso, eu te ouço a sós. Depois, só na frente da Corte.
 - "G":
     Arnaldo: Aqui é o Dr. Arnaldo, o Juiz do Elísio. Na terça, uma coisa que pertencia à Corte sumiu do esgoto da Consolação, e uma testemunha viu você saindo de um bueiro ali às cinco da manhã. # entra: arnaldo # expr: neutro
     Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
+    Arnaldo: Eu abro o museu às oito. Se chegar antes disso, eu te ouço a sós. Depois, só na frente da Corte.
 - else:
     Dante: Forasteir{o}. Na terça eu te mandei fazer um trabalho. Eu sei aonde te mandei. Não sei aonde você foi depois. # entra: dante # expr: calado
     Dante: Naquela madrugada, uma coisa que pertence à minha Corte sumiu do esgoto da Consolação, e um Nosferatu jura que viu você saindo de um bueiro ali às cinco da manhã. Hoje, na gala, antes do sol, você vai me dizer o que fez na terça. Se não souber, eu decido o que você fez.
+    Dante: O Dr. Arnaldo, o meu Juiz, abre o museu às oito para quem tem contas a prestar. Se você chegar antes, ele te ouve a sós.
 }
 # limpa
 Você não lembra de terça. E se você fez alguma coisa, a cidade inteira vai cobrar de você, não de quem mexeu na sua cabeça. # pista dossie: MISSÃO: descobrir o que você fez na terça, a noite apagada, e quem apagou ela. Ao amanhecer a Corte vai perguntar. Se você não souber responder, a Corte decide por você.
-Você tem até o amanhecer para descobrir.
+Você tem até o amanhecer para descobrir. Mas o Juiz só te ouve a sós se você chegar ao MASP até as oito. # pista dossie: O Dr. Arnaldo, o Juiz, recebe a sós no MASP até as 20h. Depois disso, só na gala, que abre às 22h.
 -> loft_perguntas
 
 === loft_perguntas ===
-{ minutos >= 50 and minutos < 60:
-    {hora_falada()}. A gala abre às dez. Se você quer chegar cedo, está na hora de sair.
+{ minutos >= 20 and minutos < 30:
+    {hora_falada()}. De carro, o MASP fica a meia hora daqui. Se quiser o Juiz a sós às oito, não dá para olhar tudo.
 }
 + {not p2_lama} [Olhar os sapatos (10 minutos)]
     ~ p2_lama = true
@@ -218,10 +223,28 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
     ~ passar(30)
     A cidade passa pela janela, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # fundo: vao_livre # trajeto: jardins taxi 30
 }
+{ minutos <= 60: -> juiz_cedo }
 { minutos < 180:
     ~ minutos = 180
     Você chega cedo e espera no vão livre, encostad{o} num pilar, até as portas abrirem às dez.
 }
+-> chegada
+
+// Quem sai cedo do loft (chega até as 20h) fala com o Juiz a sós: ganha duas pistas, mas deixou coisas sem olhar.
+=== juiz_cedo ===
+# fundo: vao_livre
+O museu ainda está escuro. Só uma porta lateral aberta, e um homem de terno cinza esperando nela, como quem espera um réu. # entra: arnaldo
+Arnaldo: Pontual. Isso conta a seu favor. Fale. # expr: vigia
+Você conta o que tem: o chip, a noite que falta, a mensagem.
+~ p2_quem_apaga = true
+~ p2_rocha_dante = true
+~ arn_falou = true
+Arnaldo: Apagar a noite de um convidado do Príncipe é crime contra a hospitalidade. E poucos sabem fazer sem deixar buraco. O Príncipe. A Senescal. # pista arnaldo: Arnaldo, a sós: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco.
+Arnaldo: Mais uma coisa. Hoje vai ter um segurança humano na porta, posto ali por ordem de cima. Eu não gosto disso. Fique de olho nele. # expr: aponta # pista arnaldo: Arnaldo, a sós: o segurança humano da porta foi posto ali "por ordem de cima". Ele não gosta disso.
+Arnaldo: Até a gala, eu não te vi. Na gala, eu vejo tudo. # expr: neutro
+~ minutos = 180
+# limpa
+Você espera no vão livre, encostad{o} num pilar, até as portas abrirem às dez.
 -> chegada
 
 === chegada ===
@@ -292,11 +315,14 @@ Quem você procura no salão?
     ~ passar(20)
     ~ dentro = false
     -> fora
-+ [Chamar quem preside a Corte e contar o que você fez na terça]
++ [Chamar quem preside a Corte e contar o que você fez na terça (encerra o capítulo)]
     -> confirmar_acusacao2
 
 === confirmar_acusacao2 ===
-Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois que a Corte ouvir, não tem volta.
+Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois que a Corte ouvir, o capítulo acaba. Não tem volta.
+{ not isa_falou or not arn_falou or not rocha_falou or val_falou == 0 or not luc_falou:
+    Ainda não ouvi :: {not isa_falou: · a Isadora}{not arn_falou: · o Dr. Arnaldo}{not rocha_falou: · o segurança da porta}{val_falou == 0: · a Valentina, na Paulista}{luciana_chegou and not luc_falou: · a Luciana}{not luciana_chegou: · a Senescal, que ainda não chegou}
+}
 + [Sim. Agora.]
     -> acusacao2
 + [Ainda não.]
@@ -371,7 +397,7 @@ Para onde você vai?
     ~ c2_pode_entrar = true
     Valentina: Cabeça baixa e sorriso bobo, querid{o}. Você é meu acompanhante. # entra: valentina # expr: rindo
     -> salao2
-+ [Chamar quem preside a Corte e contar o que você fez na terça]
++ [Chamar quem preside a Corte e contar o que você fez na terça (encerra o capítulo)]
     -> confirmar_acusacao2
 
 === boes ===
@@ -748,22 +774,72 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     ~ provas_max = MAX(provas_max - 1, 2)
     O Príncipe olha para você e lembra do favor que deve. Ele vai te ouvir com mais paciência.
 }
+-> acusacao2_escolha
+
+=== acusacao2_escolha ===
 + [Eu estava com a Luciana, a Senescal. Ela apagou a minha noite.]
-    ~ acusado = "luciana"
-    Você: Eu desci atrás de uma caixa, e não estava sozinh{o}. A Senescal estava lá. A Luciana me pegou e apagou a minha noite.
-    O salão inteiro olha para a mulher de luvas pretas. Ela não se mexe. # entra: luciana # expr: fria
-    -> provas2
+    -> confirma2("luciana")
 + [A Inquisição me drogou e me usou. O segurança da porta é deles.]
-    ~ acusado = "rocha"
-    Você: O segurança da porta é da Inquisição. Eles me drogaram no porto e apagaram a minha noite.
-    -> provas2
+    -> confirma2("rocha")
 + [Eu estava com a Isadora, a anfitriã. Ela apagou a minha noite.]
-    ~ acusado = "isadora"
-    Você: Foi a Isadora. Ela esteve na Capela, ela mentiu sobre isso.
-    Isadora: Eu?! # entra: isadora # expr: ofendida
-    -> provas2
+    -> confirma2("isadora")
 + [Admitir que não sabe]
-    -> final2_nao_sei
+    -> confirma2("nao_sei")
+
+// Resposta à Corte não tem volta: confirma antes, e avisa se as pistas fortes apontam para outro lado.
+=== confirma2(quem) ===
+~ temp fortes = 0
+{ p2_corte: 
+    ~ fortes += 1
+}
+{ p2_numero: 
+    ~ fortes += 1
+}
+{ p2_isa_capela: 
+    ~ fortes += 1
+}
+{ p2_luvas or p2_luvas_cheiro: 
+    ~ fortes += 1
+}
+{ p2_arquivo: 
+    ~ fortes += 1
+}
+{ p2_luciana_slip: 
+    ~ fortes += 1
+}
+{ quem:
+- "luciana": Você vai dizer à Corte que estava com a Senescal e que ela apagou a sua noite. Depois disso, ela é sua inimiga, com ou sem prova.
+- "rocha": Você vai dizer à Corte que a Inquisição apagou a sua noite e que o segurança da porta é deles.
+- "isadora": Você vai dizer à Corte que estava com a Isadora e que ela apagou a sua noite.
+- else: Você vai dizer à Corte que não sabe o que fez na terça.
+}
+{ quem != "luciana" and fortes >= 2:
+    Atenção :: {fortes} pistas fortes do seu caderno apontam para a Senescal, não para {quem == "nao_sei":o "não sei"|quem você vai acusar}.
+}
+{ quem == "nao_sei" and fortes >= 1:
+    Atenção :: Você tem pistas no caderno. Quem diz "não sei" diante da Corte fica sem proteção nenhuma.
+}
++ [Sim. É isso que eu vou dizer.]
+    { quem:
+    - "luciana":
+        ~ acusado = "luciana"
+        Você: Eu desci atrás de uma caixa, e não estava sozinh{o}. A Senescal estava lá. A Luciana me pegou e apagou a minha noite.
+        O salão inteiro olha para a mulher de luvas pretas. Ela não se mexe. # entra: luciana # expr: fria
+        -> provas2
+    - "rocha":
+        ~ acusado = "rocha"
+        Você: O segurança da porta é da Inquisição. Eles me drogaram no porto e apagaram a minha noite.
+        -> provas2
+    - "isadora":
+        ~ acusado = "isadora"
+        Você: Foi a Isadora. Ela esteve na Capela, ela mentiu sobre isso.
+        Isadora: Eu?! # entra: isadora # expr: ofendida
+        -> provas2
+    - else:
+        -> final2_nao_sei
+    }
++ [Não. Pensar de novo.]
+    -> acusacao2_escolha
 
 === provas2 ===
 { final_cap1 == "C_corte":
@@ -782,63 +858,90 @@ O que você mostra à Corte?
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: A Inquisição me drogou no porto, sim. Mas a droga deles só segura duas horas. Às duas eu acordei. Quem apagou o resto da noite foi outra pessoa.
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_corte} {not a2_corte} [A minha memória foi cortada a sangue, não por droga]
     ~ a2_corte = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: A minha noite não está borrada. Está cortada, reta. Isso é sangue. Humano nenhum faz isso.
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_numero} {not a2_numero} [Às 03h12 eu liguei para a Capela da Luciana]
     ~ a2_numero = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: Às três e doze da noite apagada, eu liguei para a Capela. Do meu celular. Eu estava com ela, ou indo atrás dela.
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_isa_capela} {not a2_capela} [A Luciana saiu da Capela às três e voltou suja de esgoto]
     ~ a2_capela = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: Às três ela cancelou a sessão da Isadora com uma emergência. Voltou de madrugada com a barra do vestido suja de esgoto. Como os meus sapatos.
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_luvas or p2_luvas_cheiro} {not a2_luvas} [A mulher de luvas que me levou pelo esgoto]
     ~ a2_luvas = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: {p2_luvas:Eu fui visto às quatro, de braço dado com uma mulher de luvas pretas, andando como sonâmbul{o}.|As luvas dela cheiram ao mesmo esgoto dos meus sapatos.} Olhe as mãos da Senescal.
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_arquivo} {not a2_arquivo} [O arquivo do Cão nos esgotos da Consolação]
     ~ a2_arquivo = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: O Cão guardava um seguro nos esgotos da Consolação. Os segredos de alguém. {p2_caixa:Uma mulher de luvas levou a caixa na terça.|Na terça alguém foi buscar.}
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_luciana_slip} {not a2_slip} [A Luciana sabia onde estava o arquivo sem ninguém dizer]
     ~ a2_slip = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
     Você: Eu perguntei do arquivo do Cão, e ela respondeu "embaixo da Consolação". Ninguém tinha dito onde era.
+    -> reage2(true) ->
     -> provas2_loop
 + {p2_lama} {not a2_lama} [A lama de esgoto nos meus sapatos]
     ~ a2_lama = true
     ~ provas_dadas += 1
     Você: Eu acordei com lama de esgoto nos sapatos.
     { acusado == "luciana": Luciana: Metade desta cidade anda no esgoto. Os Nosferatu moram lá. # expr: fria }
+    -> reage2(false) ->
     -> provas2_loop
 + {p2_scanner or p2_sedativo or p2_sinal_esgoto} {not a2_rocha} [O chip na minha língua e o segurança da porta]
     ~ a2_rocha = true
     ~ provas_dadas += 1
     Você: Tem um chip embaixo da minha língua, e o segurança da porta tem o leitor.
     O salão murmura. Ninguém gosta de ouvir a palavra Inquisição dentro do Elísio.
+    -> reage2(false) ->
     -> provas2_loop
 + {p2_isa_lista or p2_isa_ritual} {not a2_isadora} [A Isadora mentiu sobre a Capela]
     ~ a2_isadora = true
     ~ provas_dadas += 1
     Você: A Isadora disse que só ela e o Príncipe foram à Capela. Ela mentiu.
     { p2_isa_ritual: Isadora: Eu fui fazer um ritual de beleza! Satisfeit{o}? Agora a cidade inteira sabe. # entra: isadora # expr: ofendida }
+    -> reage2(false) ->
     -> provas2_loop
 + [{provas_dadas > 0:Isso é tudo o que eu tenho.|Não tenho prova nenhuma. Só a minha palavra.}]
     -> veredito2
+
+// Depois de cada prova: a Corte mostra se ela pegou ou não quem você acusou.
+=== reage2(forte) ===
+{ acusado == "luciana":
+    { forte:
+        Pegou :: A Senescal não responde. Os dedos dela apertam a luva. A Corte inteira viu.
+    - else:
+        Não pegou :: A Senescal nem pisca. Isso prova que alguma coisa aconteceu com você, não que foi ela.
+    }
+- else:
+    { forte:
+        Não encaixa :: Isso aponta para a Senescal, não para quem você acusou. A Corte se entreolha.
+    - else:
+        Não pegou :: Ninguém se abala. É pouco para acusar alguém diante da Corte.
+    }
+}
+->->
 
 === veredito2 ===
 { acusado:
