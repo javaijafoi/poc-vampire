@@ -90,3 +90,4 @@ Para ver onde os jogadores travam, o jogo publicado manda eventos anônimos ao P
 - Quase todo evento leva `lugar` (knot do Ink), `hora_no_jogo`, `escolhas`, `pistas`, `personagem` e `versao` (commit).
 - O jogador é um número sorteado guardado no navegador (`matusalem-jogador`). Nada do caderno, nenhum nome ou e-mail.
 - A chave do projeto PostHog fica em `build_web.cjs` (ou na variável `POSTHOG_CHAVE`). Sem chave, em `localhost`/`file:` ou com `?semregistro=1`, nada é enviado. Com `?registro=ver` os eventos aparecem no console em vez de sair.
+- Painel no PostHog: https://us.posthog.com/project/701411/dashboard/2287055 (recriar com `analise/painel_posthog.py`).
