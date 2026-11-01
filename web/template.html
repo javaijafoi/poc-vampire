@@ -341,18 +341,19 @@ body {
 @keyframes kb { from { transform: scale(1.02); } to { transform: scale(1.14) translate(-1.5%, -1%); } }
 .abertura .vinheta { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 45%, transparent 35%, rgb(8 3 6 / .85) 100%); }
 .abertura .hora-ab { position: absolute; left: 4%; top: 7%; font-family: var(--f-tipo); font-size: 3.4cqw; color: #ece4d2; background: #8f1d26; padding: .2cqw 1.2cqw; opacity: 0; transform: translateX(-30%); transition: opacity .5s, transform .5s; }
-.abertura .legenda-ab { position: absolute; left: 4%; bottom: 9%; max-width: 62%; font-family: var(--f-texto); font-size: 2.5cqw; line-height: 1.35; color: #2a1d16; background: #ece4d2; padding: 1cqw 1.8cqw;
+.abertura .legenda-ab { position: absolute; z-index: 1; left: 4%; bottom: 9%; max-width: 62%; font-family: var(--f-texto); font-size: 2.5cqw; line-height: 1.35; color: #2a1d16; background: #ece4d2; padding: 1cqw 1.8cqw;
   box-shadow: .3cqw .5cqw 1cqw rgb(0 0 0 / .6); opacity: 0; transform: translateY(20%) rotate(-.8deg); transition: opacity .5s, transform .5s; }
 .abertura .on-txt { opacity: 1 !important; transform: rotate(-.8deg) !important; }
 .abertura .recorte-ab { position: absolute; bottom: -3%; height: 82%; opacity: 0; transition: opacity .7s, transform 1.4s cubic-bezier(.2, .7, .2, 1); filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .7)); }
 .abertura .recorte-ab.dir { right: 5%; transform: translateX(25%) rotate(-2deg); }
 .abertura .recorte-ab.esq { right: 8%; transform: translateX(-15%) rotate(2deg); }
+.abertura .recorte-ab[data-p="dante"] { height: 76%; }
 .abertura .recorte-ab.on { opacity: 1; transform: rotate(-1.5deg); }
 .abertura .carimbo { position: absolute; left: 50%; top: 40%; white-space: nowrap; font-family: var(--f-tipo); font-size: 9cqw; color: #c8313f; border: .6cqw solid #c8313f; padding: 0 2cqw; opacity: 0;
   transform: translate(-50%, -50%) rotate(-12deg) scale(2.2); transition: opacity .25s, transform .35s cubic-bezier(.3, 1.6, .5, 1); mix-blend-mode: screen; }
 .abertura .quadro.escuro { filter: saturate(.5) brightness(.55); }
 /* etiqueta de quem é quem, presa embaixo do recorte */
-.abertura .quem-ab { position: absolute; right: 7%; top: 12%; font-family: var(--f-tipo); font-size: 1.9cqw; color: #f4e7d2; background: #8f1d26; padding: .3cqw 1.2cqw; rotate: 2deg;
+.abertura .quem-ab { position: absolute; left: 70%; top: 60%; translate: -50% 0; white-space: nowrap; font-family: var(--f-tipo); font-size: 1.9cqw; color: #f4e7d2; background: #8f1d26; padding: .3cqw 1.2cqw; rotate: 2deg;
   box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); opacity: 0; transform: translateY(-30%); transition: opacity .4s, transform .4s; z-index: 1; }
 .abertura .quem-ab.on { opacity: 1; transform: none; }
 .abertura .carimbo.on { opacity: .9; transform: translate(-50%, -50%) rotate(-12deg) scale(1); }
@@ -495,10 +496,14 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   /* abertura */
   .abertura .hora-ab { font-size: 7cqw; top: 6%; }
   .abertura .legenda-ab { font-size: 17px; max-width: 92%; bottom: 6%; padding: 10px 14px; }
-  .abertura .recorte-ab { height: 46%; bottom: 24%; }
-  .abertura .recorte-ab.dir { right: -6%; }
-  .abertura .recorte-ab.esq { right: 10%; }
-  .abertura .quem-ab { font-size: 13px; top: 14%; padding: 3px 10px; }
+  /* em pé: a abertura cobre a tela toda; o recorte fica no centro, com a cintura escondida atrás da legenda */
+  .abertura { position: fixed; }
+  .abertura .recorte-ab, .abertura .recorte-ab[data-p="dante"] { height: auto; max-height: 50%; width: auto; max-width: 92%; bottom: 11%; right: auto; left: 50%; translate: -50% 0; }
+  .abertura .recorte-ab.dir { transform: translateY(8%) rotate(-2deg); }
+  .abertura .recorte-ab.esq { transform: translateY(8%) rotate(2deg); }
+  .abertura .recorte-ab.on { transform: rotate(-1.5deg); }
+  .abertura .legenda-ab { left: 50%; translate: -50% 0; width: 88%; max-width: none; }
+  .abertura .quem-ab { font-size: 13px; padding: 3px 10px; }
   .abertura .carimbo { font-size: 15cqw; }
   .abertura .bilhete { width: 66%; font-size: 4.6cqw; top: 16%; padding: 16px 18px; }
   .abertura .bilhete b { width: 7cqw; }
@@ -1210,8 +1215,14 @@ function tocarAbertura(depois, QUADROS_AB = QUADROS) {
       hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
       em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
       em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
-      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec].neutro; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
-      if (q.quem) em(1500, () => { quem.textContent = q.quem; quem.classList.add('on'); });
+      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
+      if (q.quem) em(2300, () => {
+        // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
+        quem.textContent = q.quem;
+        const r = rec.getBoundingClientRect(), a = ab.getBoundingClientRect();
+        quem.style.left = (r.left - a.left + r.width / 2) + 'px'; quem.style.top = (r.top - a.top + r.height * .58) + 'px';
+        quem.classList.add('on');
+      });
       if (q.carimbo) em(1200, () => { carimbo.textContent = q.carimbo; carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
       if (q.bilhete) em(900, () => bilhete.classList.add('on'));
     });
