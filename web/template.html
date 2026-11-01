@@ -93,6 +93,7 @@ body {
 .hud .barra { height: 3px; background: color-mix(in srgb, var(--tinta-fraca) 30%, transparent); width: max(36px, 4.5cqw); }
 .hud .barra i { display: block; height: 100%; background: var(--acento); transition: width .4s; }
 .hud .grupo { display: flex; gap: .5cqw; align-items: center; }
+.hud .grupo[hidden] { display: none; }
 .fome { display: flex; gap: 2px; }
 .fome { transform-origin: center; }
 .fome i { width: max(9px, 1cqw); aspect-ratio: 1; border: 1.5px solid var(--sangue); }
@@ -296,7 +297,7 @@ body {
 .ilustracao img { position: static; width: 64%; aspect-ratio: 16 / 9; object-fit: cover; border: 1cqw solid #ece4d2; box-shadow: .4cqw .8cqw 1.6cqw rgb(0 0 0 / .7); transform: rotate(-1.2deg) scale(.96); transition: transform .8s; }
 .ilustracao.on img { transform: rotate(-1.2deg); }
 /* fim de capítulo: carimbo do final por cima da última ilustração */
-.carimbo-final { position: absolute; left: 50%; top: 38%; z-index: 3; margin: 0; text-align: center; pointer-events: none; font-family: var(--f-tipo); color: #c8313f;
+.carimbo-final { position: absolute; left: 50%; top: 28%; z-index: 3; margin: 0; text-align: center; pointer-events: none; font-family: var(--f-tipo); color: #c8313f;
   border: .5cqw solid currentColor; padding: .6cqw 2.4cqw; background: rgb(236 228 210 / .9); opacity: 0; transform: translate(-50%, -50%) rotate(-8deg) scale(1.8);
   transition: opacity .25s, transform .4s cubic-bezier(.3, 1.6, .5, 1); box-shadow: .3cqw .6cqw 1.2cqw rgb(0 0 0 / .6); }
 .carimbo-final.on { opacity: 1; transform: translate(-50%, -50%) rotate(-8deg); }
@@ -775,7 +776,7 @@ function jogarCapitulo2(daqui) {
     try { if (cap1) story.state.LoadJson(cap1); } catch (e) { cap1 = null; novaHistoria(); }
     story.ChoosePathString(cap1 ? 'capitulo_2' : 'capitulo_2_novo'); }
   else { story.ChoosePathString('capitulo_2'); finalTexto = finalLetra = null; }
-  limparCena(); esconderIlustracao(); $('carimbo-final').classList.remove('on');
+  limparCena(); esconderIlustracao(); $('carimbo-final').classList.remove('on'); $('hora').textContent = '19h00';
   // abertura do capítulo 2: lembra como o capítulo 1 acabou (por enquanto, a versão padrão, do final B) e ambienta a noite apagada
   tocarAbertura(() => { $('capa').hidden = true; atualizarHud(); comecarPartida('capitulo_2'); avancar(); }, QUADROS_CAP2);
 }
@@ -1320,7 +1321,7 @@ const FICHAS = {
     forte: 'escutar escondida, reparar em detalhes e entender de fantasmas', fraco: 'simpatia: quase ninguém confia nela de cara' },
   'Joana': { cla: 'Ministério', frase: 'Pastora de fala mansa. Vende salvação.', disciplina: 'Presença',
     notas: { carisma: 3, manipulacao: 3, subterfugio: 3, raciocinio: 2, intimidacao: 3, ocultismo: 2 },
-    forte: 'lábia, blefe e encantar as pessoas', fraco: 'força bruta e reparar em detalhes' },
+    forte: 'lábia, blefe e encantar as pessoas', fraco: 'ameaça e força (é quem rola menos dados para meter medo) e reparar em detalhes' },
 };
 const CLAS = {
   Gangrel: 'Vampiros selvagens, de estrada e de mato. Têm faro e jeito de bicho.',
@@ -1328,7 +1329,7 @@ const CLAS = {
   'Ministério': 'Um culto de vampiros que adora a Serpente. Prendem os outros pelos vícios e desejos.',
 };
 const NOTAS = [
-  ['carisma', 'Carisma', 'Simpatia e conversa franca. Ajuda a ganhar a confiança de alguém.'],
+  ['carisma', 'Carisma', 'Simpatia e conversa franca. Ajuda a ganhar a confiança de alguém. Nos testes de Carisma + Persuasão, você rola o Carisma e mais 1 dado.'],
   ['manipulacao', 'Manipulação', 'Convencer com mentira. Soma com o Subterfúgio quando você blefa.'],
   ['subterfugio', 'Subterfúgio', 'Esconder o que você sabe e mentir sem tremer.'],
   ['raciocinio', 'Raciocínio', 'Reparar em detalhes. Com nota alta, você percebe coisas sem precisar perguntar.'],
@@ -1496,7 +1497,7 @@ function dicaDe(g, texto, passiva) {
   if (m && m[1] === 'Fome') return `${passiva ? 'Você sentiu isto' : 'Só aparece'} porque a sua Fome está em ${m[2]} ou mais. Com fome, os sentidos de predador ficam mais aguçados.`;
   if (m) {
     const nota = NOTAS.find(n => n[1] === m[1]);
-    return `${passiva ? 'Você percebeu isto sozinho' : 'Só aparece'} porque o seu ${m[1]} é ${m[2]} ou mais.${nota ? ' ' + nota[1] + ': ' + nota[2].charAt(0).toLowerCase() + nota[2].slice(1) : ''}`;
+    return `${passiva ? 'Você percebeu isto sozinh' + (v['o'] === 'a' ? 'a' : 'o') : 'Só aparece'} porque o seu ${m[1]} é ${m[2]} ou mais.${nota ? ' ' + nota[1] + ': ' + nota[2].charAt(0).toLowerCase() + nota[2].slice(1) : ''}`;
   }
   return '';
 }

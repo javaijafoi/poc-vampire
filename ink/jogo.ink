@@ -182,7 +182,7 @@ Você: Por que eu? A cidade tem um Xerife.
 Dante: Porque o transporte passava pela segurança do Xerife. E porque você não tem amigos aqui. Ninguém vai pedir favor a você.
 Dante: Todos que tocaram na carga estão neste bar. O Rayo dirigiu o caminhão. A Harumi, do Ministério, recebeu o contêiner no porto. É ela quem manda nos estivadores de lá. O Cão recebeu no túnel.
 Dante: E a Nonna Benedetta, lá no fundo, diz que fala com os mortos. O Biel não aparece desde as três. Se ele virou cinza, talvez ainda tenha algo a dizer.
-Dante: Você tem até o amanhecer. Quando o sol estiver para nascer, eu volto com a Corte, e você me diz quem me traiu.
+Dante: Você tem até o amanhecer. Quando tiver um nome, mande me chamar. Se o sol estiver para nascer, eu desço com a Corte do mesmo jeito, e você me diz quem me traiu.
 Dante: Acerte, e sua dívida está paga. Erre, e você paga por ela.
 O Príncipe se levanta. Ninguém no bar olha para ele, mas todo mundo para de falar até a porta fechar. # expr dante: pe
 Vincenzo: Onze e meia, forasteir{o}. O relógio corre. # limpa
@@ -238,7 +238,7 @@ Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois qu
 }
 { minutos >= 240 and aviso_tempo < 1:
     ~ aviso_tempo = 1
-    Vincenzo: {hora_falada()}, forasteir{o}. Metade da noite já foi. Eu, no seu lugar, parava de conversar e começava a escolher.
+    Vincenzo: {hora_falada()}, forasteir{o}. Mais da metade da noite já foi. Eu, no seu lugar, parava de conversar e começava a escolher.
 }
 { minutos >= 300 and aviso_tempo < 2:
     ~ aviso_tempo = 2
@@ -998,7 +998,7 @@ O que você mostra à Corte?
     ~ a_bunker = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
-    Você: O Xerife tem um buraco novo embaixo dos trilhos da Linha Amarela. Esta noite ele mandou trancar.
+    Você: O Xerife tem um buraco novo embaixo dos trilhos da Linha Amarela. Faz um mês que está fechado, e esta noite ele mandou trancar de vez.
     -> provas_loop
 + {p_limpeza} {not a_limpeza} [A limpeza do Vincenzo, paga depois das três]
     ~ a_limpeza = true
@@ -1053,7 +1053,7 @@ O que você mostra à Corte?
 }
 { provas_fortes >= provas_max: -> cao_desmorona }
 { provas_fortes > 0:
-    Você tem peças, mas não o bastante. Na boca de um forasteir{o}, metade de uma prova é só suspeita.
+    Você tem peças, mas não o bastante. Na boca de {o == "a":uma|um} forasteir{o}, metade de uma prova é só suspeita.
 - else:
     Você tenta, mas tudo o que tem são suspeitas.
 }
@@ -1112,7 +1112,7 @@ Na noite seguinte, o porto de Santos tem uma nova dona. A antiga foi encontrada 
 === final_constance ===
 { p_envelope: Você: Ela mesma admitiu. Os homens dela abriram o baú na Serra. }
 Constance: Abri, e o caixão seguiu inteiro. {o == "a":A|O} forasteir{o} sabe disso. Só não sabe onde ele está.
-Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de um forasteir{o}. Ainda não.
+Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita Lasombra por causa de {o == "a":uma|um} forasteir{o}. Ainda não.
 # musica: final_triste
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
 { cla == "Nosferatu": -> irene_some_constance }

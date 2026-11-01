@@ -321,7 +321,7 @@ Elísio :: Lá dentro vale a lei do Elísio: nada de Disciplina, nada de violên
 }
 { minutos >= 480 and c2_aviso < 1:
     ~ c2_aviso = 1
-    {hora_falada()}. Os primeiros convidados começam a ir embora. Metade da noite já foi.
+    {hora_falada()}. Os primeiros convidados começam a ir embora. A maior parte da noite já foi.
 }
 { minutos >= 570 and c2_aviso < 2:
     ~ c2_aviso = 2
@@ -897,7 +897,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 === provas2_loop ===
 { provas_dadas >= provas_max: -> veredito2 }
 O que você mostra à Corte?
-+ {p2_sedativo} {not a2_sedativo} [O sedativo da Inquisição só me segurou até as 2h]
++ {p2_sedativo} {not a2_sedativo} [O sedativo da Inquisição só me segurou até as duas]
     ~ a2_sedativo = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
@@ -929,7 +929,7 @@ O que você mostra à Corte?
     ~ a2_luvas = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
-    Você: {p2_luvas:Eu fui visto às quatro, de braço dado com uma mulher de luvas pretas, andando como sonâmbul{o}.|As luvas dela cheiram ao mesmo esgoto dos meus sapatos.} Olhe as mãos da Senescal.
+    Você: {p2_luvas:Eu fui vist{o} às quatro, de braço dado com uma mulher de luvas pretas, andando como sonâmbul{o}.|As luvas dela cheiram ao mesmo esgoto dos meus sapatos.} Olhe as mãos da Senescal.
     -> reage2(true) ->
     -> provas2_loop
 + {p2_arquivo} {not a2_arquivo} [O arquivo do Cão nos esgotos da Consolação]
