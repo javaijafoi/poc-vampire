@@ -143,6 +143,16 @@ body {
 .escolhas button.sem-volta::before { content: "⚠"; order: 2; margin-left: .3em; }
 /* menu comprido (as provas na Corte): duas colunas no computador; no celular, uma coluna com rolagem */
 .escolhas.muitas { grid-template-columns: 1fr 1fr; column-gap: 1.2cqw; }
+/* no computador, quanto mais provas, menor a letra, para caber tudo sem cobrir a arte */
+@media (min-aspect-ratio: 1/1) and (min-height: 521px) {
+  .escolhas.muitas.n9 button { font-size: max(13px, 1.45cqw); }
+  .escolhas.muitas.n11 button { font-size: max(12px, 1.3cqw); line-height: 1.22; }
+}
+/* barrinha de rolagem desenhada (o celular esconde a do navegador): aparece quando tem mais coisa para baixo */
+.rolagem { position: absolute; right: 4px; width: 5px; border-radius: 3px; background: color-mix(in srgb, var(--tinta) 12%, transparent); pointer-events: none; z-index: 3; }
+.rolagem[hidden] { display: none; }
+.rolagem i { position: absolute; left: 0; right: 0; border-radius: 3px; background: var(--acento); opacity: .85; }
+.rolagem.mais::after { content: "▼"; position: absolute; left: 50%; bottom: -1.1em; translate: -50% 0; font-size: 10px; color: var(--acento); animation: pisca 1s steps(2) infinite; }
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
 /* pergunta que você já fez: continua ali (e continua custando tempo), mas apagada */
 .escolhas button.feita { color: #8d7c6c; }
@@ -560,6 +570,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 /* Paisagem no celular: a mesma tela do PC, com a cena usando toda a altura e o rodapé enxuto */
 @media (min-aspect-ratio: 1/1) and (max-height: 520px) {
   .escolhas.muitas { grid-template-columns: 1fr; }
+  .escolhas.muitas button { font-size: 16px; }
   #conteudo:has(.escolhas.muitas) { max-height: 40vh; max-height: 40dvh; overflow-y: auto; overscroll-behavior: contain; }
   body { padding: 4px max(8px, env(safe-area-inset-right, 0px)) 2px max(8px, env(safe-area-inset-left, 0px)); }
   .jogo { width: min(100%, calc((100vh - 44px) * 16 / 9)); width: min(100%, calc((100dvh - 44px) * 16 / 9)); }
@@ -598,6 +609,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     <span class="nome" id="nome" hidden></span>
     <figure class="eu" id="eu" hidden aria-hidden="true"><img alt=""></figure>
     <div id="conteudo" tabindex="-1"></div>
+    <div class="rolagem" id="rolagem" hidden aria-hidden="true"><i></i></div>
   </div>
 
   <section class="capa" id="capa" aria-label="Tela inicial" aria-roledescription="carrossel">
@@ -791,6 +803,19 @@ function custosDasEscolhas() {
   finally { story.state.LoadJson(salvo); simulando = false; fila.length = filaAntes; }
   return out;
 }
+// barrinha de rolagem da caixa de texto: no celular a do navegador some, então desenhamos uma quando há mais para baixo
+function atualizarRolagem() {
+  const c = $('conteudo'), r = $('rolagem'); if (!c || !r) return;
+  const sobra = c.scrollHeight - c.clientHeight;
+  if (sobra <= 4) { r.hidden = true; return; }
+  r.hidden = false; r.style.top = c.offsetTop + 'px'; r.style.height = c.clientHeight + 'px';
+  const t = r.firstElementChild; t.style.height = (100 * c.clientHeight / c.scrollHeight) + '%'; t.style.top = (100 * c.scrollTop / c.scrollHeight) + '%';
+  r.classList.toggle('mais', c.scrollTop < sobra - 4);
+}
+{ const c = $('conteudo');
+  c.addEventListener('scroll', atualizarRolagem, { passive: true });
+  new MutationObserver(() => requestAnimationFrame(atualizarRolagem)).observe(c, { childList: true, subtree: true });
+  if (window.ResizeObserver) new ResizeObserver(() => atualizarRolagem()).observe(c); }
 const textoCusto = m => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
 
 function novaHistoria() {
@@ -1142,7 +1167,7 @@ function mostrarEscolhas(pergunta = '') {
   } else {
     // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
     const custos = custosDasEscolhas();
-    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas${story.currentChoices.length > 6 ? ' muitas' : ''}">${story.currentChoices.map((ch, i) => {
+    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas${story.currentChoices.length > 6 ? ' muitas' : ''}${story.currentChoices.length > 10 ? ' n11' : story.currentChoices.length > 8 ? ' n9' : ''}">${story.currentChoices.map((ch, i) => {
       const custo = custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
