@@ -1467,7 +1467,7 @@ const QUADROS_CAP2 = [
   { fundo: 'corte', hora: 'Na noite seguinte', txt: 'O Príncipe Dante pagou a sua dívida. Agora você é útil a ele, e todo mundo sabe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
   { fundo: 'porto', hora: 'Terça, 22h40', txt: 'Na terça, o Príncipe te mandou fazer um trabalho no porto de Santos. Você foi.' },
   { fundo: 'rua', escuro: true, hora: 'Terça, 03h12', txt: 'O que aconteceu depois disso, você não lembra. Ninguém conta. A noite inteira sumiu.', carimbo: 'APAGADO' },
-  { fundo: 'loft', hora: 'Hoje, 19h00', titulo: ['CAPÍTULO 2', 'O Custo do Esquecimento'], txt: 'Você acorda com a boca ardendo e uma noite faltando.' },
+  { fundo: 'loft', hora: 'Hoje, 20h00', titulo: ['CAPÍTULO 2', 'O Custo do Esquecimento'], txt: 'Você acorda com a boca ardendo e uma noite faltando.' },
 ];
 // Os três primeiros quadros da abertura do capítulo 2 contam como o capítulo 1 acabou para você (null tira o quadro).
 const LEMBRA_CAP1 = {
@@ -1755,6 +1755,7 @@ function paradaDoTeste(nomeTeste) {
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];
+  if (/Prontidão/.test(nomeTeste)) return v['raciocinio'] + 2;
   return null;
 }
 function chanceDe(parada, fome, dif) {
