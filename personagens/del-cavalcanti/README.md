@@ -11,5 +11,7 @@
 - **Disciplinas-Chave:** _Celeridade 3_, _Ofuscação 2_, _Feitiçaria de Sangue 2_ (Quietus - venenos/silêncio).
 - **O Truque:** Se a Coterie quebrar a lei humana, Cavalcanti não manda o Xerife; ele manda uma viatura do GOE bater no refúgio de dia.
 
+**No jogo (decisão do Peter, 01/11/2026):** depois que o Cão vira cinza no fim do capítulo 1, o Cavalcanti é o novo Xerife de São Paulo, em todos os finais.
+
 ---
 _Texto e artes copiados do quadro Trello "Vampire - The Mascarade". Originais em alta resolução na pasta do projeto, em `trello/artes/originais/`._
