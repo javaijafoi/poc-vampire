@@ -1202,7 +1202,7 @@ function novoJogo() {
 const QUADROS = [
   // o Matusalém nunca tem rosto: só o sarcófago lacrado, no escuro
   { fundo: 'bunker', escuro: true, hora: '00h00', txt: 'Um sarcófago lacrado atravessa o oceano. Dentro dele dorme um Matusalém, mais velho que a cidade.', carimbo: 'NÃO ABRIR' },
-  { fundo: 'porto', hora: '00h10', txt: 'No Porto de Santos, a Harumi libera a carga. E abre o que não devia.', rec: 'harumi', quem: 'HARUMI · Ministério, porto' },
+  { fundo: 'porto', hora: '00h10', txt: 'No Porto de Santos, a Harumi libera a carga. E abre o que não devia.', rec: 'harumi', pose: 'manga', quem: 'HARUMI · Ministério, porto' },
   { fundo: 'serra', hora: '01h00', txt: 'Um caminhão sobe a Serra do Mar, na neblina, levando a carga para o cofre do Príncipe.', rec: 'rayo', quem: 'RAYO · Gangrel, motorista' },
   { fundo: 'tunel', hora: '02h40', txt: 'O portão do túnel da Vila Sônia. Alguém espera a carga no escuro.', rec: 'cao', quem: 'O CÃO · Xerife' },
   { fundo: 'tunel', hora: '03h30', txt: 'O caminhão chega vazio. O Matusalém sumiu, e o rapaz que vigiava a carga também.', carimbo: 'SUMIU' },
@@ -1240,7 +1240,7 @@ function tocarAbertura(depois, QUADROS_AB = QUADROS) {
       hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
       em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
       em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
-      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
+      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec][q.pose] || ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
       if (q.quem) em(2300, () => {
         // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
         quem.textContent = q.quem;
@@ -1532,7 +1532,7 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'e680a60' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: '828bdf2' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
   && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
