@@ -344,6 +344,29 @@ body {
 .capa .menu button.sec { background: #ece4d2; color: #2a1d16; font-size: max(13px, 1.6cqw); transform: rotate(.8deg); }
 .capa .menu button:hover, .capa .menu button:focus-visible { outline: 2px solid #ece4d2; outline-offset: 3px; }
 .capa .finais { position: absolute; right: 2.4cqw; bottom: 2cqw; margin: 0; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #c9b998; }
+/* Carrossel de capítulos: cada painel ocupa a capa inteira; o trilho anda de lado (arrastando, nas setas ou nas teclas ← →) */
+.capa { touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.capa .trilho { position: absolute; inset: 0; transition: transform .45s cubic-bezier(.2, .7, .2, 1); will-change: transform; }
+.capa .trilho.arrastando { transition: none; }
+.capa.arrastando, .capa.arrastando * { cursor: grabbing !important; }
+.capa .cap { position: absolute; top: 0; bottom: 0; width: 100%; overflow: hidden; }
+.capa .cap img { -webkit-user-drag: none; }
+.capa .num-cap { position: absolute; left: 50%; top: 3.2%; transform: translateX(-50%) rotate(-1.2deg); margin: 0; white-space: nowrap; font-family: var(--f-tipo); font-size: max(11px, 1.3cqw); letter-spacing: .25em;
+  color: #f4e7d2; background: #8f1d26; padding: .2cqw 1.2cqw; box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); }
+.capa .seta-cap { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2; display: grid; justify-items: center; gap: .2cqw; border: 0; cursor: pointer; padding: .8cqw .9cqw;
+  background: rgb(236 228 210 / .9); color: #2a1d16; font-family: var(--f-tipo); box-shadow: .2cqw .4cqw .8cqw rgb(0 0 0 / .6); }
+.capa .seta-cap span { font-size: max(26px, 3.4cqw); line-height: .8; }
+.capa .seta-cap small { font-size: max(10px, 1cqw); letter-spacing: .08em; white-space: nowrap; }
+.capa .seta-cap.ant { left: 1.2cqw; rotate: 1.5deg; }
+.capa .seta-cap.prox { right: 1.2cqw; rotate: -1.5deg; }
+.capa .seta-cap[hidden] { display: none; }
+.capa .seta-cap:hover, .capa .seta-cap:focus-visible { outline: 2px solid #ece4d2; outline-offset: 3px; background: #ece4d2; }
+.capa .pontos { position: absolute; left: 2.4cqw; bottom: 2cqw; z-index: 2; display: flex; gap: .8cqw; }
+.capa .pontos button { width: max(12px, 1.2cqw); aspect-ratio: 1; padding: 0; border: 2px solid #ece4d2; border-radius: 50%; background: transparent; cursor: pointer; box-shadow: 0 0 .5cqw rgb(0 0 0 / .8); }
+.capa .pontos button[aria-selected="true"] { background: #c8313f; border-color: #c8313f; }
+/* confirmação de apagar o jogo salvo: some o menu do painel e as setas, e o carrossel fica parado */
+.capa.confirmando .cap .menu, .capa.confirmando .seta-cap, .capa.confirmando .pontos { display: none; }
+@media (prefers-reduced-motion: reduce) { .capa .trilho { transition: none; } }
 
 /* Abertura animada: quadros com zoom lento, hora, legenda e recortes entrando */
 .abertura .quadro { opacity: 0; transition: opacity 1s; filter: saturate(.8); }
@@ -503,6 +526,13 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .capa .menu.confirma div { flex-direction: column; gap: 10px; }
   .capa .salvo { bottom: 2.4%; font-size: 12px; }
   .capa .finais { display: none; }
+  .capa .num-cap { font-size: 12px; padding: 3px 10px; top: 2.6%; }
+  .capa .seta-cap { padding: 8px 6px; }
+  .capa .seta-cap span { font-size: 26px; }
+  .capa .seta-cap small { display: none; }
+  .capa .seta-cap.ant { left: 6px; }
+  .capa .seta-cap.prox { right: 6px; }
+  .capa .pontos { left: 50%; transform: translateX(-50%); bottom: auto; top: 36%; gap: 10px; }
   /* abertura */
   .abertura .hora-ab { font-size: 7cqw; top: 6%; }
   .abertura .legenda-ab { font-size: 17px; max-width: 92%; bottom: 6%; padding: 10px 14px; }
@@ -565,23 +595,16 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     <div id="conteudo" tabindex="-1"></div>
   </div>
 
-  <section class="capa" id="capa" aria-label="Tela inicial">
-    <img class="capa-fundo" id="capa-fundo" alt="Rua do Bixiga à noite, na chuva, com a escada que desce para o Porão do Vincenzo.">
-    <div class="elenco" id="elenco"></div>
-    <h1 class="logo" id="logo" aria-label="O Matusalém Desaparecido"></h1>
-    <p class="sub">Vampiro: A Máscara · São Paulo · uma noite no Porão do Vincenzo</p>
-    <div class="menu" id="menu">
-      <button type="button" id="continuar" hidden>Continuar</button>
-      <button type="button" id="novo-jogo">Novo jogo</button>
-      <button type="button" class="sec" id="capitulo-2">Capítulo 2</button>
-      <button type="button" class="sec" id="ver-abertura">Ver a abertura</button>
-    </div>
+  <section class="capa" id="capa" aria-label="Tela inicial" aria-roledescription="carrossel">
+    <!-- um painel por capítulo, com fundo, elenco, título e menu próprios; arraste para os lados para trocar -->
+    <div class="trilho" id="trilho"></div>
+    <button type="button" class="seta-cap ant" id="cap-ant" aria-label="Capítulo anterior"><span aria-hidden="true">‹</span><small></small></button>
+    <button type="button" class="seta-cap prox" id="cap-prox" aria-label="Próximo capítulo"><span aria-hidden="true">›</span><small></small></button>
+    <div class="pontos" id="pontos" role="tablist" aria-label="Capítulos"></div>
     <div class="menu confirma" id="confirma" role="alertdialog" aria-labelledby="confirma-txt" hidden>
       <p id="confirma-txt">Começar do zero apaga o jogo salvo. Tem certeza?</p>
       <div><button type="button" id="confirma-sim">Apagar e começar</button><button type="button" class="sec" id="confirma-nao">Voltar</button></div>
     </div>
-    <p class="salvo" id="salvo"></p>
-    <p class="finais" id="finais"></p>
   </section>
 
   <section class="abertura" id="abertura" aria-label="Abertura" hidden>
@@ -806,6 +829,7 @@ function novaHistoria() {
   }, false);
 }
 function iniciar() {
+  capAtual = 1;
   novaHistoria();
   limparCena(); esconderIlustracao();
   fundoAtual = 'salao'; mostrarLugar('salao'); $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
@@ -818,12 +842,16 @@ function iniciar() {
 
 // ---------- Capítulos ----------
 // "# capitulo: 2" no roteiro: caderno novo (as pistas do capítulo anterior ficam para trás).
+// em que capítulo a partida está (vai no jogo salvo, para a capa abrir nele e mostrar o Continuar ali)
+let capAtual = 1;
 function comecarCapitulo(n) {
+  capAtual = +n || 1;
   pistas = []; feitas = new Set(); ultimasPistas = 0; ultimoSinal = null;
   toast(`Capítulo ${n}`); registrar('capitulo', { capitulo: +n });
 }
 // Começa o capítulo 2: do fim do capítulo 1 que você jogou (se houver) ou escolhendo o personagem.
 function jogarCapitulo2(daqui) {
+  capAtual = 2;
   if (!daqui) { novaHistoria(); let cap1 = null; try { cap1 = localStorage.getItem(CAP1); } catch (e) {}
     try { if (cap1) story.state.LoadJson(cap1); } catch (e) { cap1 = null; novaHistoria(); }
     story.ChoosePathString(cap1 ? 'capitulo_2' : 'capitulo_2_novo'); }
@@ -843,7 +871,7 @@ function salvar() {
   try {
     localStorage.setItem(SAVE, JSON.stringify({
       ink: story.state.toJson(), pistas, feitas: [...feitas], historico: historico.slice(-80), finalLetra, finalTexto, fundo: fundoAtual, ilustracao: ilustracaoAtual, musica: som.faixa,
-      cena: { esq: cena.esq, dir: cena.dir, expr: cena.expr }, nome: v['nome'], minutos: v['minutos'], base: v['hora_base'],
+      cena: { esq: cena.esq, dir: cena.dir, expr: cena.expr }, capitulo: capAtual, nome: v['nome'], minutos: v['minutos'], base: v['hora_base'],
     }));
   } catch (e) {}
 }
@@ -855,6 +883,7 @@ function continuar() {
   novaHistoria();
   try { story.state.LoadJson(s.ink); if (!story.canContinue && !story.currentChoices.length) throw new Error('save vazio'); }
   catch (e) { apagarSave(); iniciar(); toast('O jogo salvo não abriu nesta versão. Começando do zero.'); return; }
+  capAtual = capituloDoSave(s);
   pistas = s.pistas || []; feitas = new Set(s.feitas || []); historico = s.historico || []; ultimasPistas = pistas.length; finalLetra = s.finalLetra || null; finalTexto = s.finalTexto || null;
   limparCena(); esconderIlustracao(); cena.expr = (s.cena && s.cena.expr) || {};
   fundoAtual = ARTE.fundos[s.fundo] ? s.fundo : 'salao';
@@ -1243,34 +1272,137 @@ function letrasDeRecorte(texto) {
     n++; const giro = ((n * 37) % 11 - 5) * 1.1, sobe = ((n * 53) % 7 - 3) * .12;
     return `<span class="letra ${tipos[n % tipos.length]}" style="transform:rotate(${giro}deg) translateY(${sobe}em)">${ch}</span>`; }).join('')}</span>`).join(' ');
 }
-$('logo').innerHTML = `<span aria-hidden="true">${letrasDeRecorte('O MATUSALÉM DESAPARECIDO')}</span>`;
-$('capa-fundo').src = ARTE.fundos.rua;
-// elenco da capa: a Primogênita Lasombra, o Príncipe e o Xerife, sem um recorte cobrir o outro
-[['constance', 2, 2, 56], ['dante', 34, 0, 62], ['cao', 75, -2, 60]].forEach(([k, x, giro, alt]) => {
-  const src = ARTE.personagens[k]?.neutro; if (!src) return;
-  const img = document.createElement('img'); img.src = src; img.alt = '';
-  img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; $('elenco').appendChild(img);
+// Carrossel de capítulos: um painel por capítulo, com fundo, elenco (personagem, posição x %, giro, altura %), título e menu próprios.
+// Para pôr um capítulo novo na capa, basta mais uma entrada aqui e os botões dele em BOTOES_CAP.
+const CAPITULOS = [
+  { n: 1, titulo: 'O MATUSALÉM DESAPARECIDO', sub: 'Vampiro: A Máscara · São Paulo · uma noite no Porão do Vincenzo',
+    fundo: 'rua', alt: 'Rua do Bixiga à noite, na chuva, com a escada que desce para o Porão do Vincenzo.',
+    // a Primogênita Lasombra, o Príncipe e o Xerife, sem um recorte cobrir o outro
+    elenco: [['constance', 2, 2, 56], ['dante', 34, 0, 62], ['cao', 75, -2, 60]], finais: () => FINAIS },
+  { n: 2, titulo: 'O CUSTO DO ESQUECIMENTO', sub: 'Vampiro: A Máscara · São Paulo · uma noite apagada e o Elísio do MASP',
+    fundo: 'vao_livre', alt: 'O vão livre do MASP à noite, com os pilares vermelhos refletidos no chão molhado.',
+    // a Tremere que apaga memórias, o Guardião do Elísio e o agente da Inquisição
+    elenco: [['luciana', 3, 2, 56], ['arnaldo', 36, -1, 62], ['rocha', 74, -2, 60]], finais: () => FINAIS2 },
+];
+// botões de cada capítulo, na ordem; o primeiro que aparecer é o principal (vermelho), os outros em papel claro
+const BOTOES_CAP = {
+  1: [['novo-jogo', 'Novo jogo'], ['ver-abertura', 'Ver a abertura']],
+  2: [['capitulo-2', 'Jogar o capítulo 2'], ['ver-abertura-2', 'Ver a abertura']],
+};
+let capIdx = 0;
+// em que capítulo está o jogo salvo
+// (saves antigos não têm o campo: vale a variável "capitulo" do Ink, que só vai no estado quando muda do 1)
+function capituloDoSave(s) { if (s.capitulo) return s.capitulo; try { return JSON.parse(s.ink).variablesState?.capitulo || 1; } catch (e) { return 1; } }
+CAPITULOS.forEach((c, i) => {
+  const el = document.createElement('div');
+  el.className = 'cap'; el.dataset.cap = c.n; el.style.left = (i * 100) + '%';
+  el.setAttribute('role', 'group'); el.setAttribute('aria-roledescription', 'capítulo'); el.setAttribute('aria-label', `Capítulo ${c.n}`);
+  el.innerHTML = `<img class="capa-fundo" alt="${esc(c.alt)}"><div class="elenco"></div>
+    <p class="num-cap">CAPÍTULO ${c.n}</p>
+    <h1 class="logo" aria-label="${esc(c.titulo.charAt(0) + c.titulo.slice(1).toLowerCase())}"><span aria-hidden="true">${letrasDeRecorte(c.titulo)}</span></h1>
+    <p class="sub">${esc(c.sub)}</p><div class="menu"></div><p class="salvo"></p><p class="finais"></p>`;
+  el.querySelector('.capa-fundo').src = ARTE.fundos[c.fundo];
+  c.elenco.forEach(([k, x, giro, alt]) => {
+    const src = ARTE.personagens[k]?.neutro; if (!src) return;
+    const img = document.createElement('img'); img.src = src; img.alt = ''; img.draggable = false;
+    img.style.cssText = `left:${x}%;height:${alt}%;transform:rotate(${giro}deg)`; el.querySelector('.elenco').appendChild(img);
+  });
+  $('trilho').appendChild(el);
+  const ponto = document.createElement('button'); ponto.type = 'button'; ponto.setAttribute('role', 'tab'); ponto.setAttribute('aria-label', `Capítulo ${c.n}`);
+  ponto.addEventListener('click', () => irCapitulo(i, true)); $('pontos').appendChild(ponto);
 });
-// no celular em pé, a capa mostra um recorte de cada vez (o CSS só usa a classe "on" nesse caso)
-{ let i = 0; const elenco = [...$('elenco').children]; elenco[0]?.classList.add('on');
-  setInterval(() => { if ($('capa').hidden || !elenco.length) return; elenco[i].classList.remove('on'); i = (i + 1) % elenco.length; elenco[i].classList.add('on'); }, 4000); }
+const paineis = [...$('trilho').children];
+// no celular em pé, cada painel mostra um recorte de cada vez (o CSS só usa a classe "on" nesse caso)
+{ const giro = paineis.map(p => ({ imgs: [...p.querySelectorAll('.elenco img')], i: 0 }));
+  giro.forEach(g => g.imgs[0]?.classList.add('on'));
+  setInterval(() => { if ($('capa').hidden) return;
+    giro.forEach(g => { if (!g.imgs.length) return; g.imgs[g.i].classList.remove('on'); g.i = (g.i + 1) % g.imgs.length; g.imgs[g.i].classList.add('on'); }); }, 4000); }
+function irCapitulo(i, foco) {
+  capIdx = Math.max(0, Math.min(CAPITULOS.length - 1, i));
+  $('trilho').style.transform = `translateX(${-capIdx * 100}%)`;
+  paineis.forEach((p, k) => { p.inert = k !== capIdx; });
+  [...$('pontos').children].forEach((b, k) => b.setAttribute('aria-selected', k === capIdx));
+  const ant = CAPITULOS[capIdx - 1], prox = CAPITULOS[capIdx + 1];
+  $('cap-ant').hidden = !ant; $('cap-prox').hidden = !prox;
+  if (ant) $('cap-ant').querySelector('small').textContent = `CAP. ${ant.n}`;
+  if (prox) $('cap-prox').querySelector('small').textContent = `CAP. ${prox.n}`;
+  if (foco) paineis[capIdx].querySelector('.menu button')?.focus({ preventScroll: true });
+}
+// "Continuar" só aparece no capítulo em que o jogo salvo está, e vira o botão principal dele
+function montarMenu(c, s) {
+  const comSave = !!s && capituloDoSave(s) === c.n, p = paineis[CAPITULOS.indexOf(c)], menu = p.querySelector('.menu');
+  const bts = [...(comSave ? [['continuar', 'Continuar']] : []), ...BOTOES_CAP[c.n]];
+  menu.innerHTML = bts.map(([a, t], i) => `<button type="button" data-a="${a}"${i ? ' class="sec"' : ''}>${t}</button>`).join('');
+  menu.querySelectorAll('button').forEach(b => b.addEventListener('click', () => acaoCapa(b.dataset.a)));
+  p.querySelector('.salvo').textContent = comSave ? `Jogo salvo${s.nome ? ': ' + s.nome : ''}${s.minutos != null ? ', ' + horaDe(s.minutos, s.base ?? 23) : ''}` : '';
+  const lista = c.finais(), fv = finaisVistos().filter(f => lista.includes(f)).length;
+  p.querySelector('.finais').textContent = fv ? `Finais encontrados: ${fv} de ${lista.length}` : '';
+}
+function acaoCapa(a) {
+  if ($('capa').classList.contains('arrastou')) return;  // o clique que vem no fim de um arrasto não aperta botão
+  if (a === 'continuar') continuar();
+  else if (a === 'novo-jogo') novoJogo();
+  else if (a === 'capitulo-2') abrirCapitulo2();
+  else if (a === 'ver-abertura') tocarAbertura(mostrarCapa);
+  else if (a === 'ver-abertura-2') tocarAbertura(mostrarCapa, QUADROS_CAP2);
+}
+// Capítulo 2 pela capa. Quem morreu no fim do capítulo 1 não continua: o capítulo 2 começa com o final padrão, e o jogo avisa antes.
+function abrirCapitulo2() {
+  let morto = null; try { morto = !localStorage.getItem(CAP1) && localStorage.getItem(MORTE1); } catch (e) {}
+  if (!lerSave() && !morto) return jogarCapitulo2(false);
+  confirmaCap2 = true;
+  $('confirma-txt').textContent = morto ? `${morto} morreu no fim do capítulo 1. O capítulo 2 vai começar com o final padrão: o Cão acusado e virando cinza no telhado, e você escolhe o personagem de novo.${lerSave() ? ' O jogo salvo será apagado.' : ''}` : TXT_CONFIRMA;
+  $('confirma-sim').textContent = morto ? 'Começar com o final padrão' : 'Apagar e começar';
+  pedirConfirmacao();
+}
+function pedirConfirmacao() { $('capa').classList.add('confirmando'); $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); }
+// arrastar para os lados (dedo ou mouse): o painel acompanha; passou de 15% da largura ou foi um gesto rápido, troca de capítulo
+{ const capa = $('capa'), trilho = $('trilho'); let ini = null;
+  capa.addEventListener('pointerdown', e => {
+    if (e.button || capa.classList.contains('confirmando') || e.target.closest(".seta-cap, .pontos")) return;
+    ini = { x: e.clientX, y: e.clientY, t: Date.now(), dx: 0, id: e.pointerId, ativo: false }; capa.classList.remove('arrastou');
+  });
+  capa.addEventListener('pointermove', e => {
+    if (!ini || e.pointerId !== ini.id) return;
+    const dx = e.clientX - ini.x, dy = e.clientY - ini.y;
+    if (!ini.ativo) {
+      if (Math.abs(dy) > 14 && Math.abs(dy) > Math.abs(dx)) { ini = null; return; }  // gesto vertical: não é carrossel
+      if (Math.abs(dx) < 8) return;
+      ini.ativo = true; capa.setPointerCapture(e.pointerId); trilho.classList.add('arrastando'); capa.classList.add('arrastando', 'arrastou');
+    }
+    // nas pontas (antes do primeiro, depois do último) o painel resiste, como elástico
+    const naPonta = (capIdx === 0 && dx > 0) || (capIdx === CAPITULOS.length - 1 && dx < 0);
+    ini.dx = naPonta ? dx / 3 : dx;
+    trilho.style.transform = `translateX(calc(${-capIdx * 100}% + ${ini.dx}px))`;
+  });
+  const soltar = e => {
+    if (!ini || e.pointerId !== ini.id) return;
+    const { dx, t, ativo } = ini; ini = null;
+    trilho.classList.remove('arrastando'); capa.classList.remove('arrastando');
+    if (!ativo) return;
+    const rapido = Math.abs(dx) > 30 && Math.abs(dx) / Math.max(1, Date.now() - t) > .5;
+    irCapitulo(Math.abs(dx) > capa.clientWidth * .15 || rapido ? capIdx - Math.sign(dx) : capIdx);
+    setTimeout(() => capa.classList.remove('arrastou'), 0);
+  };
+  capa.addEventListener('pointerup', soltar); capa.addEventListener('pointercancel', soltar);
+  $('cap-ant').addEventListener('click', () => irCapitulo(capIdx - 1, true));
+  $('cap-prox').addEventListener('click', () => irCapitulo(capIdx + 1, true));
+}
 let abriuRegistrado = false;
 function mostrarCapa() {
   document.querySelector('.mesa-dados')?.remove();
   if (!abriuRegistrado) { abriuRegistrado = true; registrar('jogo_aberto', { tem_save: !!lerSave(), finais_vistos: finaisVistos().length, de_onde: document.referrer ? new URL(document.referrer).hostname : '' }); }
   else if (partida.ativa) { registrar('voltou_ao_menu'); partida.ativa = false; }
   pararAbertura(); $('abertura').hidden = true; $('capa').hidden = false; tocarMusica('capa');
-  const fv = finaisVistos(), v1 = fv.filter(f => FINAIS.includes(f)).length, v2 = fv.filter(f => FINAIS2.includes(f)).length;
-  $('finais').textContent = v1 || v2 ? `Finais encontrados: ${v1} de ${FINAIS.length}${v2 ? ` no capítulo 1, ${v2} de ${FINAIS2.length} no capítulo 2` : ''}` : '';
-  // com jogo salvo, "Continuar" vira o botão principal e "Novo jogo" pede confirmação
-  const s = lerSave(); $('menu').hidden = false; $('confirma').hidden = true;
-  $('continuar').hidden = !s; $('novo-jogo').classList.toggle('sec', !!s);
-  $('salvo').textContent = s ? `Jogo salvo${s.nome ? ': ' + s.nome : ''}${s.minutos != null ? ', ' + horaDe(s.minutos, s.base ?? 23) : ''}` : '';
-  (s ? $('continuar') : $('novo-jogo')).focus({ preventScroll: true });
+  $('capa').classList.remove('confirmando'); $('confirma').hidden = true;
+  // com jogo salvo, a capa abre no capítulo dele; sem save, no capítulo 1, como sempre
+  const s = lerSave();
+  CAPITULOS.forEach(c => montarMenu(c, s));
+  irCapitulo(s ? capituloDoSave(s) - 1 : 0, true);
 }
 function novoJogo() {
   confirmaCap2 = false;
-  if (lerSave()) { $('confirma-txt').textContent = TXT_CONFIRMA; $('confirma-sim').textContent = 'Apagar e começar'; $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
+  if (lerSave()) { $('confirma-txt').textContent = TXT_CONFIRMA; $('confirma-sim').textContent = 'Apagar e começar'; pedirConfirmacao(); return; }
   tocarAbertura(iniciar);
 }
 
@@ -1649,7 +1781,7 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'a3c6571' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: '1e5027e' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
   && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
@@ -1701,25 +1833,11 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ---------- Ligações ----------
-$('novo-jogo').addEventListener('click', novoJogo);
-$('continuar').addEventListener('click', continuar);
 $('confirma-sim').addEventListener('click', () => { apagarSave(); if (confirmaCap2) { confirmaCap2 = false; try { localStorage.removeItem(MORTE1); } catch (e) {} jogarCapitulo2(false); } else tocarAbertura(iniciar); });
 $('confirma-nao').addEventListener('click', mostrarCapa);
 // Capítulo 2 pela capa: com jogo salvo no meio, pede confirmação como o Novo jogo
 let confirmaCap2 = false;
 const TXT_CONFIRMA = 'Começar do zero apaga o jogo salvo. Tem certeza?';
-$('capitulo-2').addEventListener('click', () => {
-  // quem morreu no fim do capítulo 1 não continua: o capítulo 2 começa com o final padrão, e o jogo avisa antes
-  let morto = null; try { morto = !localStorage.getItem(CAP1) && localStorage.getItem(MORTE1); } catch (e) {}
-  if (lerSave() || morto) {
-    confirmaCap2 = true; $('menu').hidden = true; $('confirma').hidden = false;
-    $('confirma-txt').textContent = morto ? `${morto} morreu no fim do capítulo 1. O capítulo 2 vai começar com o final padrão: o Cão acusado e virando cinza no telhado, e você escolhe o personagem de novo.${lerSave() ? ' O jogo salvo será apagado.' : ''}` : TXT_CONFIRMA;
-    $('confirma-sim').textContent = morto ? 'Começar com o final padrão' : 'Apagar e começar';
-    $('confirma-nao').focus({ preventScroll: true }); return;
-  }
-  jogarCapitulo2(false);
-});
-$('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));
 $('dialogo').addEventListener('click', clicarDialogo);
 $('palco').addEventListener('click', e => { if (!e.target.closest('button') && $('txt')) clicarDialogo(); });
 // tela cheia: só onde o navegador deixa (Android); no iPhone, "Adicionar à Tela de Início" abre sem a barra
@@ -1735,7 +1853,11 @@ ajustarOpcoes();
 document.addEventListener('keydown', e => {
   if ((e.key === 'm' || e.key === 'M') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { som.ligado = !som.ligado; ajustarSom(); return; }
   if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
-  if (!$('capa').hidden) { if (e.key === 'Escape' && !$('confirma').hidden) mostrarCapa(); return; }
+  if (!$('capa').hidden) {
+    if (e.key === 'Escape' && !$('confirma').hidden) mostrarCapa();
+    // ← → trocam de capítulo na capa
+    else if ($('confirma').hidden && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) irCapitulo(capIdx + (e.key === 'ArrowRight' ? 1 : -1), true);
+    return; }
   if ((e.key === 'h' || e.key === 'H') && !document.querySelector('.dados, .caderno') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { abrirHistorico(); return; }
   if (e.key === '?' && !document.querySelector('.dados, .caderno') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { abrirAjuda(); return; }
   if (document.querySelector('.dados, .caderno')) { if (e.key === 'Escape') document.querySelector('.caderno')?.remove(); return; }
