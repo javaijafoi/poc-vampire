@@ -16,6 +16,8 @@ for (let run = 0; run < N; run++) {
     while (s.canContinue) {
       const d0 = dados, t = s.Continue().trim(), tags = s.currentTags;
       if (!t) continue;
+      // pergunta curta logo antes das opções vira o título delas, não uma caixa de texto
+      if (!s.canContinue && s.currentChoices.length && t.length < 60 && !/: /.test(t) && !/ :: /.test(t)) continue;
       linhas++;
       const q = quem(t), ok = grupo && q !== null && (q === grupo.q || !q) && dados === d0 && grupo.n < 3 && tags.every(x => /^\s*pista\b/.test(x)) && grupo.len + t.length <= MAX;
       if (ok) { grupo.n++; grupo.len += t.length; } else { caixas++; grupo = q === null ? null : { q, n: 1, len: t.length }; }

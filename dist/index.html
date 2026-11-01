@@ -777,12 +777,13 @@ function tipoBadge(g) {
 }
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// Quanto tempo cada opção vai custar: joga a opção num rascunho do estado do Ink (sem dados nem avisos) e mede o relógio.
+// Quanto tempo cada opção vai custar: joga a opção num rascunho do estado do Ink (sem dados nem avisos) até a próxima escolha
+// e mede o relógio. Vai até a escolha seguinte para contar também o tempo cobrado depois das falas (como a ameaça da Luciana).
 let simulando = false;
 function custosDasEscolhas() {
   const n = story.currentChoices.length, m0 = story.variablesState['minutos'], salvo = story.state.ToJson(), filaAntes = fila.length, out = [];
   simulando = true;
-  try { for (let i = 0; i < n; i++) { story.state.LoadJson(salvo); story.ChooseChoiceIndex(i); let k = 0; while (story.canContinue && k++ < 3) story.Continue(); out.push(story.variablesState['minutos'] - m0); } }
+  try { for (let i = 0; i < n; i++) { story.state.LoadJson(salvo); story.ChooseChoiceIndex(i); let k = 0; while (story.canContinue && k++ < 60) story.Continue(); out.push(story.variablesState['minutos'] - m0); } }
   catch (e) { out.length = 0; }
   finally { story.state.LoadJson(salvo); simulando = false; fila.length = filaAntes; }
   return out;
@@ -1648,7 +1649,7 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'e0fd7c8' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'a3c6571' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
   && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));

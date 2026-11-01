@@ -752,12 +752,13 @@ function tipoBadge(g) {
 }
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
-// Quanto tempo cada opção vai custar: joga a opção num rascunho do estado do Ink (sem dados nem avisos) e mede o relógio.
+// Quanto tempo cada opção vai custar: joga a opção num rascunho do estado do Ink (sem dados nem avisos) até a próxima escolha
+// e mede o relógio. Vai até a escolha seguinte para contar também o tempo cobrado depois das falas (como a ameaça da Luciana).
 let simulando = false;
 function custosDasEscolhas() {
   const n = story.currentChoices.length, m0 = story.variablesState['minutos'], salvo = story.state.ToJson(), filaAntes = fila.length, out = [];
   simulando = true;
-  try { for (let i = 0; i < n; i++) { story.state.LoadJson(salvo); story.ChooseChoiceIndex(i); let k = 0; while (story.canContinue && k++ < 3) story.Continue(); out.push(story.variablesState['minutos'] - m0); } }
+  try { for (let i = 0; i < n; i++) { story.state.LoadJson(salvo); story.ChooseChoiceIndex(i); let k = 0; while (story.canContinue && k++ < 60) story.Continue(); out.push(story.variablesState['minutos'] - m0); } }
   catch (e) { out.length = 0; }
   finally { story.state.LoadJson(salvo); simulando = false; fila.length = filaAntes; }
   return out;

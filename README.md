@@ -33,7 +33,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - Hora falada e hora no caderno vêm do relógio do jogo: use `{hora_falada()}` ("Três e dez"), `{hora_digital()}` ("03h10") e `{tempo_falta()}` ("uma hora e vinte minutos"). Os avisos do Vincenzo entram em qualquer conversa com `-> avisos ->`.
 - Palavra com gênero falando com o protagonista: `forasteir{o}` ou `{o == "a":moça|moço}`. O `test_texto.cjs` joga com a Irene e a Joana e acusa masculino solto.
 - `@pistas` numa fala vira "N pistas", com o número do caderno.
-- Falas seguidas da mesma pessoa (ou narrações logo depois) entram juntas na mesma caixa, até 3 linhas e 300 letras, para o jogador clicar menos. Uma linha com tag de cena, rosto, música, final ou dados quebra o grupo. `node test_cliques.cjs` mede quantos cliques de avanço isso economiza.
+- Falas seguidas da mesma pessoa (ou narrações logo depois) entram juntas na mesma caixa, até 3 linhas e 300 letras, para o jogador clicar menos. Uma linha com tag de cena, rosto, música, final ou dados quebra o grupo. `node test_cliques.cjs` mede (sem contar as perguntas que viram título das opções) quantos cliques de avanço isso economiza.
 - Cada opção mostra quanto tempo custa quando passa de 10 minutos (o jogo testa a opção num rascunho do estado do Ink). Se o texto da opção já diz os minutos, a etiqueta não aparece.
 
 ## Capítulos
