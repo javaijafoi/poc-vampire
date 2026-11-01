@@ -114,6 +114,8 @@ FUNDO_VERMELHO = {"harumi"}
 VERMELHO_GERAL = {"vincenzo"}
 # imagem de corpo inteiro: corta na cintura (fração da altura que fica), como os outros retratos
 CORTE_ALTURA = {"nonna_neutro": 0.6}
+# arte que olha para o lado errado: espelha (a Nonna fica à esquerda e precisa olhar para a direita)
+ESPELHAR = {"nonna"}
 # poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
 INTERSECAO = {"harumi_taco"}
 
@@ -203,6 +205,8 @@ for prancha in sys.argv[1:] or POSES:
         if nome in CORTE_ALTURA:
             out = out.crop((0, 0, out.width, int(out.height * CORTE_ALTURA[nome])))
             out = out.crop(out.getbbox())
+        if prancha in ESPELHAR:
+            out = ImageOps.mirror(out)
         if prancha == "biel":
             out = fantasma(out)
         out.save(os.path.join(SAIDA, nome + ".png"))
