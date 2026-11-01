@@ -3,6 +3,8 @@
 Uso: python3 art/ilustracoes.py
 - constance_chega -> art/cena/fundo_constance_chega.webp: a arte sentada da Constance (Trello, Constance__751a47),
   diferente do retrato que aparece quando ela fala, colada como recorte de revista sobre a escada do bar.
+- luciana_chega / luciana_chega_fora -> a arte da Luciana na Capela (Trello, Luciana__d66572), colada sobre a gala
+  (você está no salão) ou sobre o vão livre (você está lá embaixo). Mesmo esquema da chegada da Constance.
 """
 import os
 import sys
@@ -28,21 +30,31 @@ def carimbo(img, texto, x, y, tam=40, giro=-3):
     img.paste(faixa, (x, y), faixa)
 
 
-def constance_chega():
-    base = Image.open(os.path.join(FONTES, "gerado", "escada.jpg")).convert("RGB").resize(TAM, Image.LANCZOS)
+def chegada(fundo, foto_arq, titulo, nome, seed=21):
+    base = Image.open(os.path.join(FONTES, "gerado", fundo)).convert("RGB").resize(TAM, Image.LANCZOS)
     base = ImageEnhance.Brightness(ImageEnhance.Color(base).enhance(0.6)).enhance(0.5).convert("RGBA")
-    foto = recorte(os.path.join(FONTES, "ilustracoes", "constance_chegada.jpg"), None, 470, borda=14, seed=21)
+    foto = recorte(os.path.join(FONTES, "ilustracoes", foto_arq), None, 470, borda=14, seed=seed)
     foto = foto.rotate(3, expand=True, resample=Image.BICUBIC)
     sombra = Image.new("RGBA", foto.size, (0, 0, 0, 150))
     sombra.putalpha(foto.getchannel("A").point(lambda v: v * 150 // 255))
     x, y = TAM[0] - foto.width - 90, 40
     base.alpha_composite(sombra, (x + 14, y + 18))
     base.alpha_composite(foto, (x, y))
-    carimbo(base, "A PRIMOGÊNITA CHEGA", 70, 90)
-    carimbo(base, "CONSTANCE · LASOMBRA", 110, 190, tam=30, giro=2)
+    carimbo(base, titulo, 70, 90)
+    carimbo(base, nome, 110, 190, tam=30, giro=2)
     return base.convert("RGB")
+
+
+def constance_chega():
+    return chegada("escada.jpg", "constance_chegada.jpg", "A PRIMOGÊNITA CHEGA", "CONSTANCE · LASOMBRA")
+
+
+def luciana_chega(fundo="gala.jpg"):
+    return chegada(fundo, "luciana_chegada.jpg", "A SENESCAL CHEGA", "LUCIANA · TREMERE", seed=33)
 
 
 if __name__ == "__main__":
     constance_chega().save(os.path.join(CENA, "fundo_constance_chega.webp"), quality=78)
-    print("ilustração constance_chega")
+    luciana_chega().save(os.path.join(CENA, "fundo_luciana_chega.webp"), quality=78)
+    luciana_chega("vao_livre.jpg").save(os.path.join(CENA, "fundo_luciana_chega_fora.webp"), quality=78)
+    print("ilustrações constance_chega, luciana_chega, luciana_chega_fora")
