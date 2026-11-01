@@ -1675,7 +1675,7 @@ function tutorialVisto() { try { return !!localStorage.getItem(TUT); } catch (e)
 // Dica de uma linha sobre cada etiqueta: o que ela faz ou por que a opção apareceu.
 function paradaDoTeste(nomeTeste) {
   const v = story.variablesState;
-  if (/Briga|Furtividade|Carisma \+ Subterfúgio/.test(nomeTeste)) return v['parada_caca'];  // caça, pelo tipo de predador
+  if (/Briga|Furtividade|Carisma \+ Subterfúgio/.test(nomeTeste)) return v['parada_caca'] || (v['nome'] === 'Joana' ? 6 : 5);  // caça, pelo tipo de predador
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];

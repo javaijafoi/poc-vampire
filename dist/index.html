@@ -1700,7 +1700,7 @@ function tutorialVisto() { try { return !!localStorage.getItem(TUT); } catch (e)
 // Dica de uma linha sobre cada etiqueta: o que ela faz ou por que a opção apareceu.
 function paradaDoTeste(nomeTeste) {
   const v = story.variablesState;
-  if (/Briga|Furtividade|Carisma \+ Subterfúgio/.test(nomeTeste)) return v['parada_caca'];  // caça, pelo tipo de predador
+  if (/Briga|Furtividade|Carisma \+ Subterfúgio/.test(nomeTeste)) return v['parada_caca'] || (v['nome'] === 'Joana' ? 6 : 5);  // caça, pelo tipo de predador
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];
@@ -1790,7 +1790,7 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'b1e6603' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: '965cc63' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
   && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
