@@ -229,14 +229,6 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 }
 
 === caca ===
-// saves de antes (inclusive os do meio do capítulo 2) do tipo de predador: completa pela personagem
-{ parada_caca == 0:
-    { nome:
-    - "Tomás": ~ parada_caca = 5
-    - "Irene": ~ parada_caca = 5
-    - else: ~ parada_caca = 6
-    }
-}
 { cacadas == 0:
     A Fome arranha a garganta por dentro. A noite apagada te deixou seco, e a gala vai estar cheia de gente viva. Entrar assim é deixar a Besta escolher por você.
 }
@@ -253,6 +245,13 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
     - "Tomás": Você deixa o faro te levar pelas ruas dos fundos, atrás de alguém que não vai fazer falta por uma hora. Gato de beco não pede licença: encurrala e segura.
     - "Irene": Você desce pelo bueiro mais perto e sobe embaixo do viaduto, onde dorme quem ninguém procura. Ninguém te vê chegar.
     - else: Você entra num bar de esquina, sorri para quem está sozinh{o == "a":a|o} no balcão e oferece uma bênção de graça. Quem aceita sai com você para a calçada.
+    }
+    // saves de antes do tipo de predador (inclusive do meio do capítulo 2): completa pela personagem
+    { parada_caca == 0:
+        ~ parada_caca = 5
+        { nome == "Joana":
+            ~ parada_caca = 6
+        }
     }
     ~ temp r = rolar(parada_caca, fome, 2)
     { r == 1 or r == 2 or r == 3:
