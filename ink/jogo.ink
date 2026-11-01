@@ -1057,6 +1057,11 @@ O que você mostra à Corte?
 - else:
     Você tenta, mas tudo o que tem são suspeitas.
 }
+// O que não se sustentou, sem dizer qual era a prova certa
+{ a_selo and not p_selo: O selo não se sustentou: você não sabia onde ele tinha queimado, e o Cão disse que leu no relatório. }
+{ a_olho and not p_olho: A fera de olho amarelo não se sustentou: ninguém ali sabia de que cor é o olho do Rayo. }
+{ a_rayo or a_harumi or a_constance or a_doutora: Parte do que você mostrou é verdade, mas não aponta para o Cão. }
+{ provas_dadas < provas_max: Você ainda tinha chance de mostrar mais {provas_max - provas_dadas == 1:uma coisa|coisas}, e parou antes. }
 Dante: Você me traz um palpite na frente da Corte inteira?
 -> final_sem_provas
 
@@ -1170,7 +1175,7 @@ Antes que você chegue à escada, as mãos do Cão estão nos seus ombros. # exp
 Quando você abre os olhos, tem correntes nos pulsos, no telhado da cantina, olhando o céu do Bixiga ficar cor de laranja.
 { cla == "Gangrel": -> tomas_foge }
 É a última coisa que você vê.
-FINAL D · SEM PROVAS. Você acusou o culpado sem ter como provar. # final: D
+FINAL D · SEM PROVAS. Você acusou o culpado sem ter como provar: só {provas_fortes} de {provas_max} provas se sustentaram diante da Corte. # final: D
 -> END
 
 === tomas_foge ===

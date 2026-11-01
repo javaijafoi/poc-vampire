@@ -94,6 +94,8 @@ body {
 .hud .barra i { display: block; height: 100%; background: var(--acento); transition: width .4s; }
 .hud .grupo { display: flex; gap: .5cqw; align-items: center; }
 .hud .grupo[hidden] { display: none; }
+.hud .lugar { font-family: var(--f-tipo); color: var(--acento); border: 1px solid currentColor; padding: 0 .5em; font-size: .85em; }
+.hud .lugar.fora { color: #8a6a1c; }
 .fome { display: flex; gap: 2px; }
 .fome { transform-origin: center; }
 .fome i { width: max(9px, 1cqw); aspect-ratio: 1; border: 1.5px solid var(--sangue); }
@@ -142,6 +144,11 @@ body {
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
 /* pergunta que você já fez: continua ali (e continua custando tempo), mas apagada */
 .escolhas button.feita { color: #8d7c6c; }
+.quem-e-quem p { display: flex; gap: .6em; align-items: center; margin: .35em 0; }
+.quem-e-quem img { width: 3.2em; height: 3.2em; object-fit: cover; object-position: top; border-radius: 50%; background: #2a1219; flex: none; }
+.em-breve { font-family: var(--f-tipo); color: var(--acento); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 .6em; }
+.escolhas .custo { font-family: var(--f-tipo); font-size: .72em; color: var(--tinta-fraca); white-space: nowrap; }
+.escolhas .custo::before { content: "⏱ "; }
 .escolhas button.feita .porque { opacity: .6; }
 .escolhas button.feita::after { content: "já perguntou"; margin-left: auto; padding-left: 1em; font-family: var(--f-tipo); font-size: .7em; color: #9c8b7a; white-space: nowrap; }
 /* O porquê da opção vem depois dela, no mesmo texto, entre parênteses e na cor do tipo. */
@@ -546,6 +553,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </div>
   <div class="dialogo" id="dialogo" aria-live="polite">
     <div class="hud">
+      <span class="grupo lugar" data-dica="lugar" id="lugar" hidden></span>
       <span class="grupo" data-dica="hora"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span><span class="amanhecer">sol 05h40</span></span>
       <span class="grupo" data-dica="fome"><span>Fome</span><span class="fome" id="fome"></span></span>
       <span class="grupo" data-dica="sinal" id="grupo-sinal" hidden><span>Sinal</span><span class="fome sinal" id="sinal"></span></span>
@@ -631,6 +639,7 @@ const FINAIS2 = ['2A', '2B', '2C', '2D', '2E', '2F', '2G', '2H', '2J', '2K', '2X
 // finais do capítulo 1 que seguem para o capítulo 2 (A e D são morte)
 const SEGUEM = new Set(['B', 'C', 'E', 'F', 'G', 'H', 'S']);
 const CAP1 = 'matusalem-cap1';  // o estado do Ink no fim do capítulo 1, para começar o 2 dali
+const MORTE1 = 'matusalem-cap1-morte';  // nome de quem morreu no fim do capítulo 1 (o botão do capítulo 2 avisa)
 let cena;
 
 // Poses em close (o rosto fica maior que nas outras) ou muito largas: encolhem para o rosto ficar do tamanho de sempre
@@ -682,8 +691,11 @@ function limparCena() {
   for (const lado of ['esq', 'dir']) $(lado).classList.remove('on', 'calado', 'troca');
 }
 
+// Capítulo 2: o HUD diz se você está dentro do Elísio (vale a lei do Juiz) ou do lado de fora
+const LUGAR = { gala: 'Elísio · lá dentro', vao_livre: 'Lado de fora', paulista: 'Lado de fora' };
+function mostrarLugar(nome) { const l = $('lugar'); l.textContent = LUGAR[nome] || ''; l.hidden = !LUGAR[nome]; l.classList.toggle('fora', LUGAR[nome] === 'Lado de fora'); }
 function trocarFundo(nome) {
-  esconderIlustracao();
+  esconderIlustracao(); mostrarLugar(nome);
   if (MUSICA_FUNDO[nome]) tocarMusica(MUSICA_FUNDO[nome]);
   const src = ARTE.fundos[nome]; if (!src || $('fundo').getAttribute('src') === src) return;
   fundoAtual = nome;
@@ -740,14 +752,28 @@ function tipoBadge(g) {
 }
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+// Quanto tempo cada opção vai custar: joga a opção num rascunho do estado do Ink (sem dados nem avisos) e mede o relógio.
+let simulando = false;
+function custosDasEscolhas() {
+  const n = story.currentChoices.length, m0 = story.variablesState['minutos'], salvo = story.state.ToJson(), filaAntes = fila.length, out = [];
+  simulando = true;
+  try { for (let i = 0; i < n; i++) { story.state.LoadJson(salvo); story.ChooseChoiceIndex(i); let k = 0; while (story.canContinue && k++ < 3) story.Continue(); out.push(story.variablesState['minutos'] - m0); } }
+  catch (e) { out.length = 0; }
+  finally { story.state.LoadJson(salvo); simulando = false; fila.length = filaAntes; }
+  return out;
+}
+const textoCusto = m => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
+
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
   fila = []; proxima = null; pistas = []; finalTexto = finalLetra = null; cena = null;
   feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
+    if (simulando) return 0;
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
   }, false);
   story.BindExternalFunction('despertar', () => {
+    if (simulando) return;
     const ok = V5.despertarV5();
     if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
     fila.push({ tipo: 'despertar', ok });
@@ -756,7 +782,7 @@ function novaHistoria() {
 function iniciar() {
   novaHistoria();
   limparCena(); esconderIlustracao();
-  fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
+  fundoAtual = 'salao'; mostrarLugar('salao'); $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
   $('carimbo-final').classList.remove('on');
   atualizarHud();
   comecarPartida('nova');
@@ -778,7 +804,8 @@ function jogarCapitulo2(daqui) {
   else { story.ChoosePathString('capitulo_2'); finalTexto = finalLetra = null; }
   limparCena(); esconderIlustracao(); $('carimbo-final').classList.remove('on'); $('hora').textContent = '19h00';
   // abertura do capítulo 2: lembra como o capítulo 1 acabou (por enquanto, a versão padrão, do final B) e ambienta a noite apagada
-  tocarAbertura(() => { $('capa').hidden = true; atualizarHud(); comecarPartida('capitulo_2'); avancar(); }, QUADROS_CAP2);
+  const novo = !story.variablesState['final_cap1'];
+  tocarAbertura(() => { $('capa').hidden = true; atualizarHud(); comecarPartida('capitulo_2'); avancar(); if (novo) mostrarNoiteAnterior(); }, quadrosCap2(story.variablesState['final_cap1'] || 'B'));
 }
 
 // ---------- Jogo salvo: grava sozinho neste navegador antes de cada linha ----------
@@ -805,7 +832,7 @@ function continuar() {
   pistas = s.pistas || []; feitas = new Set(s.feitas || []); historico = s.historico || []; ultimasPistas = pistas.length; finalLetra = s.finalLetra || null; finalTexto = s.finalTexto || null;
   limparCena(); esconderIlustracao(); cena.expr = (s.cena && s.cena.expr) || {};
   fundoAtual = ARTE.fundos[s.fundo] ? s.fundo : 'salao';
-  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').dataset.f = fundoAtual; $('fundo').alt = DESC_FUNDO[fundoAtual] || '';
+  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').dataset.f = fundoAtual; $('fundo').alt = DESC_FUNDO[fundoAtual] || ''; mostrarLugar(fundoAtual);
   $('carimbo-final').classList.remove('on');
   if (s.ilustracao) mostrarIlustracao(s.ilustracao);
   else for (const lado of ['esq', 'dir']) if (s.cena && s.cena[lado]) mostrarPersonagem(s.cena[lado]);
@@ -1000,6 +1027,7 @@ function mostrarTrajeto(val) {
 }
 
 function mostrarLinha(texto, extras = []) {
+  esconderDica();
   texto = texto.replace('@pistas', `${pistas.length} pista${pistas.length === 1 ? '' : 's'}`);
   const v = story.variablesState; let nome = null, chave = null, corpo = texto, classe = 'narracao', passiva = null;
   const m = texto.match(/^([A-ZÀ-Ú][a-zà-ú]+): (.*)$/);
@@ -1069,6 +1097,7 @@ const chaveArte = nome => (nome || '').normalize('NFD').replace(/[\u0300-\u036f]
 const retratoDe = nome => ARTE.personagens[chaveArte(nome)]?.neutro;
 const TRAVA_MS = 450; let menuFixo = { k: '', h: 0 };
 function mostrarEscolhas(pergunta = '') {
+  esconderDica();
   falando(null); mostrarEu(null); $('nome').hidden = true; const c = $('conteudo');
   if (story.variablesState['nome'] === '') {
     // escolha de personagem: "Nome · Clã ;; descrição ;; ficha"
@@ -1076,11 +1105,14 @@ function mostrarEscolhas(pergunta = '') {
       const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || ''; const foto = retratoDe(titulo.split(' · ')[0]);
       return `<button class="carta" data-i="${i}" type="button">${foto ? `<span class="emblema foto" aria-hidden="true"><img src="${foto}" alt=""></span>` : `<span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span>`}<b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
   } else {
+    // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
+    const custos = custosDasEscolhas();
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
+      const custo = custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
       const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : / \(encerra o capítulo\)$/.test(ch.text) ? ' class="sem-volta"' : '';
-      return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
+      return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}${custo}</span></button></li>`; }).join('')}</ul>`;
   }
   const ficha = story.variablesState['nome'] === '';
   // trava de clique: o clique que avançou o texto não pode cair numa opção que acabou de aparecer embaixo do dedo
@@ -1123,10 +1155,11 @@ function mostrarFim() {
   const vistos = finaisVistos().filter(f => lista.includes(f)).length;
   // fim do capítulo 1 com o personagem vivo: guarda onde parou e oferece o capítulo 2
   const segue = cap === 1 && SEGUEM.has(finalLetra);
-  if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); } catch (e) {}
+  if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); localStorage.removeItem(MORTE1); } catch (e) {}
+  else if (cap === 1) try { localStorage.removeItem(CAP1); localStorage.setItem(MORTE1, story.variablesState['nome'] || 'Seu personagem'); } catch (e) {}
   const ops = [...(segue ? [['cap2', 'Seguir para o capítulo 2']] : []), ['caderno', 'Ver o caderno'], ['de-novo', 'Jogar de novo com outro personagem'], ['menu', 'Voltar ao menu']];
   $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo ${cap}</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
-    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>
+    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>${cap >= 2 ? `<p class="em-breve">Capítulo 3 · em breve</p>` : ''}
     <ul class="escolhas">${ops.map(([a, t], i) => `<li><button type="button" data-a="${a}"><span class="num">${i + 1}</span><span>${t}</span></button></li>`).join('')}</ul>`;
   if (segue) $('conteudo').querySelector('[data-a=cap2]').addEventListener('click', e => { e.stopPropagation(); jogarCapitulo2(true); });
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
@@ -1211,7 +1244,7 @@ function mostrarCapa() {
 }
 function novoJogo() {
   confirmaCap2 = false;
-  if (lerSave()) { $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
+  if (lerSave()) { $('confirma-txt').textContent = TXT_CONFIRMA; $('confirma-sim').textContent = 'Apagar e começar'; $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
   tocarAbertura(iniciar);
 }
 
@@ -1235,6 +1268,44 @@ const QUADROS_CAP2 = [
   { fundo: 'rua', escuro: true, hora: 'Terça, 03h12', txt: 'O que aconteceu depois disso, você não lembra. Ninguém conta. A noite inteira sumiu.', carimbo: 'APAGADO' },
   { fundo: 'loft', hora: 'Hoje, 19h00', txt: 'Capítulo 2 · O Custo do Esquecimento. Você acorda com a boca ardendo e uma noite faltando.' },
 ];
+// Os três primeiros quadros da abertura do capítulo 2 contam como o capítulo 1 acabou para você (null tira o quadro).
+const LEMBRA_CAP1 = {
+  C_corte: [undefined, { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'O Cão virou cinza. Mas a Corte inteira ouviu que o Príncipe deixou o Matusalém escapar.', carimbo: 'CINZA' },
+    { fundo: 'corte', hora: 'Na noite seguinte', txt: 'A Constance e a Primogenitura tomaram as rédeas da cidade. O Dante ainda é Príncipe, mas só no nome.', rec: 'constance', quem: 'CONSTANCE · Primogênita Lasombra' }],
+  C_anarq: [undefined, { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'O Cão virou cinza. Os Anarquistas souberam da verdade antes da Corte.', carimbo: 'CINZA' },
+    { fundo: 'rua', hora: 'Na noite seguinte', txt: 'O Rayo espalhou a história pela cidade. Para os Anarquistas, agora você é um dos deles.', rec: 'rayo', quem: 'RAYO · Gangrel, Anarquista' }],
+  E: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você não acusou ninguém diante do Príncipe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+    { fundo: 'corte', hora: 'Três noites seguidas', txt: 'O Príncipe te deu o sangue dele. Agora você é servo dele pelo Laço de Sangue.', carimbo: 'LAÇO' }, null],
+  H: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você não acusou ninguém diante do Príncipe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+    { fundo: 'corte', hora: 'Três noites seguidas', txt: 'O Príncipe acha que te prendeu pelo Laço de Sangue. Você enganou o Laço e virou espiã dentro da Corte.', carimbo: 'ESPIÃ' }, null],
+  F: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você acusou a pessoa errada diante do Príncipe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+    { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'A Ofuscação te salvou do sol. A cidade acha que você virou cinza. Você vive nos esgotos do Bixiga.', carimbo: 'MORTA' }, null],
+  G: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você acusou o Cão sem provas.', rec: 'cao', quem: 'O CÃO · Xerife' },
+    { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'A Besta te arrancou do sol e te enterrou num terreno da Consolação. Para o Príncipe, você virou cinza.', carimbo: 'FUGITIVO' }, null],
+  S: [undefined, undefined, { fundo: 'corte', hora: 'Na noite seguinte', txt: 'O Príncipe te deve um favor. E você guarda um frasco que ninguém sabe que existe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' }],
+};
+function quadrosCap2(f) {
+  const troca = LEMBRA_CAP1[f] || [];
+  return QUADROS_CAP2.map((q, i) => i < 3 && troca[i] !== undefined ? troca[i] : q).filter(Boolean);
+}
+// Para quem começa direto no capítulo 2: quem é quem na cidade, com rosto
+const NOITE_ANTERIOR = [
+  ['dante', 'Dante', 'Príncipe de São Paulo. Você deve um favor a ele.'],
+  ['luciana', 'Luciana', 'A Senescal, braço direito do Príncipe. Tremere, dona da Capela, onde se faz magia de sangue.'],
+  ['constance', 'Constance', 'Primogênita Lasombra, a mais poderosa da Corte depois do Príncipe. Quer o lugar dele.'],
+  ['arnaldo', 'Dr. Arnaldo', 'O Juiz do Elísio. Dentro do museu, ninguém usa Disciplina sem ele ver.'],
+  ['isadora', 'Isadora', 'Toreador, dona da festa. Sabe de tudo e conta para todos.'],
+  ['rayo', 'Rayo', 'Gangrel, o motorista que levava o Matusalém. Anda com os Anarquistas, que não obedecem ao Príncipe.'],
+  ['rocha', 'Agente Rocha', 'Segurança humano da porta. Trabalha para a Inquisição, caçadores de vampiros comandados pela Doutora.'],
+];
+function mostrarNoiteAnterior() {
+  registrar('abriu', { o_que: 'noite_anterior' });
+  abrirJanela('Na noite anterior', [], 'n', (a, mostrar, fechar) => ({ html: `<h2>Na noite anterior</h2>
+    <p>No capítulo 1, um Matusalém, um vampiro antiquíssimo, sumiu a caminho do cofre do Príncipe. Você descobriu que o traidor era o Cão, o Xerife, e ele virou cinza. Agora a Corte sabe quem você é.</p>
+    <div class="quem-e-quem">${NOITE_ANTERIOR.map(([k, nome, txt]) => `<p>${ARTE.personagens[k]?.neutro ? `<img src="${ARTE.personagens[k].neutro}" alt="">` : ''}<span><b>${esc(nome)}.</b> ${esc(txt)}</span></p>`).join('')}</div>`,
+    botoes: [['Começar', 'principal', fechar]] }));
+}
+
 let timersAbertura = [];
 function pararAbertura() { timersAbertura.forEach(clearTimeout); timersAbertura = []; }
 function tocarAbertura(depois, QUADROS_AB = QUADROS) {
@@ -1504,6 +1575,7 @@ function dicaDe(g, texto, passiva) {
 
 const DICAS_HUD = {
   hora: 'Hora da noite. Cada pergunta custa minutos, mesmo se você repetir: uns 20 com as testemunhas e 10 com o fantasma. A sessão da Nonna custa 1 hora. O sol nasce às 05h40, e aí o Príncipe desce.',
+  lugar: 'Onde você está. Dentro do Elísio vale a lei do Juiz: nada de Disciplina, nada de violência. Do lado de fora pode tudo, mas o chip na sua língua escuta.',
   sinal: 'O chip na sua língua, de 0 a 5. Do lado de fora do Elísio, cada Disciplina faz ele transmitir (sobe 2), e briga sobe 1. Com 5, a Inquisição vem buscar você. Dentro do salão o chip não importa, mas o Dr. Arnaldo põe para fora quem usar Disciplina.',
   fome: 'Fome, de 0 a 5. Usar Disciplina pode subir 1, e a Disciplina forte sobe 2 de uma vez. Cada ponto vira um dado vermelho nos testes. Com 4, a Besta aparece; com 5, a conversa com jeitinho some e a Corte desconfia de você.',
   caderno: 'Caderno: as pistas que você juntou, uma folha por testemunha, e uma folha para anotar.',
@@ -1518,14 +1590,15 @@ function mostrarDica(el) {
   pop.style.left = Math.max(0, Math.min(jogo.width - w, r.left - jogo.left + r.width / 2 - w / 2)) + 'px';
   pop.style.top = top + 'px';
 }
-function esconderDica() { $('dica-pop').classList.remove('on'); }
+function esconderDica() { const p = $('dica-pop'); p.classList.remove('on'); p.textContent = ''; }
 // no toque, o navegador também dispara mouseover e focusin: esses ficam de fora, e quem manda é o toque
 let ultimoToque = 0, segurou = false, seguraTimer;
 const tocouAgora = () => performance.now() - ultimoToque < 900;
 document.querySelector('.jogo').addEventListener('mouseover', e => { if (!tocouAgora()) mostrarDica(e.target.closest('[data-dica]')); });
 document.querySelector('.jogo').addEventListener('mouseleave', esconderDica);
 // teclado: com a opção em foco, mostra a dica da etiqueta dela
-document.querySelector('.jogo').addEventListener('focusin', e => { if (tocouAgora()) return; const el = e.target.closest?.('[data-dica]') || e.target.querySelector?.('[data-dica]'); el ? mostrarDica(el) : esconderDica(); });
+// (só quando o foco cai numa opção, nunca na caixa inteira: senão a dica da primeira etiqueta aparece sozinha em toda tela de escolhas)
+document.querySelector('.jogo').addEventListener('focusin', e => { if (tocouAgora()) return; const el = e.target.closest?.('[data-dica]') || (e.target.matches?.('button') && e.target.querySelector('[data-dica]')); el ? mostrarDica(el) : esconderDica(); });
 addEventListener('pointerdown', esconderDica, true);
 const jogoEl = document.querySelector('.jogo');
 jogoEl.addEventListener('pointerdown', e => {
@@ -1604,12 +1677,20 @@ document.addEventListener('visibilitychange', () => {
 // ---------- Ligações ----------
 $('novo-jogo').addEventListener('click', novoJogo);
 $('continuar').addEventListener('click', continuar);
-$('confirma-sim').addEventListener('click', () => { apagarSave(); if (confirmaCap2) { confirmaCap2 = false; jogarCapitulo2(false); } else tocarAbertura(iniciar); });
+$('confirma-sim').addEventListener('click', () => { apagarSave(); if (confirmaCap2) { confirmaCap2 = false; try { localStorage.removeItem(MORTE1); } catch (e) {} jogarCapitulo2(false); } else tocarAbertura(iniciar); });
 $('confirma-nao').addEventListener('click', mostrarCapa);
 // Capítulo 2 pela capa: com jogo salvo no meio, pede confirmação como o Novo jogo
 let confirmaCap2 = false;
+const TXT_CONFIRMA = 'Começar do zero apaga o jogo salvo. Tem certeza?';
 $('capitulo-2').addEventListener('click', () => {
-  if (lerSave()) { confirmaCap2 = true; $('menu').hidden = true; $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); return; }
+  // quem morreu no fim do capítulo 1 não continua: o capítulo 2 começa com o final padrão, e o jogo avisa antes
+  let morto = null; try { morto = !localStorage.getItem(CAP1) && localStorage.getItem(MORTE1); } catch (e) {}
+  if (lerSave() || morto) {
+    confirmaCap2 = true; $('menu').hidden = true; $('confirma').hidden = false;
+    $('confirma-txt').textContent = morto ? `${morto} morreu no fim do capítulo 1. O capítulo 2 vai começar com o final padrão: o Cão acusado e virando cinza no telhado, e você escolhe o personagem de novo.${lerSave() ? ' O jogo salvo será apagado.' : ''}` : TXT_CONFIRMA;
+    $('confirma-sim').textContent = morto ? 'Começar com o final padrão' : 'Apagar e começar';
+    $('confirma-nao').focus({ preventScroll: true }); return;
+  }
   jogarCapitulo2(false);
 });
 $('ver-abertura').addEventListener('click', () => tocarAbertura(mostrarCapa));

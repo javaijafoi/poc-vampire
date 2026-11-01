@@ -47,6 +47,8 @@ VAR p2_constance_dica = false // Constance: a Senescal anda nervosa desde terça
 VAR isa_falou = false
 VAR isa_fechada = false
 VAR isa_varanda = false
+VAR isa_conta = false        // a Isadora contou que repassa tudo à Luciana
+VAR luc_provas = 0           // provas mostradas à Luciana antes da Corte
 VAR arn_falou = false
 VAR rocha_falou = false
 VAR rocha_fechado = false
@@ -512,13 +514,14 @@ FINAL 2X · O SINAL. Você usou Disciplina demais com o chip na língua, e a Inq
 
 // Na varanda, fora do Elísio: vale apertar, mas a Isadora sabe que você a tirou da proteção.
 === isadora_varanda ===
-~ passar(20)
+~ passar(10)
 ~ isa_varanda = true
 # fundo: vao_livre
 # entra: isadora
 Você leva a Isadora até a varanda, longe do Juiz. Ela percebe tarde, no último degrau.
 Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 + {not p2_isa_capela} [Teste: Força + Intimidação, dif. 3 :: Encostar ela no parapeito.]
+    ~ passar(10)
     ~ acender(1)
     ~ temp r = rolar(intimidacao, fome, 3)
     { r == 1 or r == 2 or r == 3:
@@ -529,6 +532,13 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
         Ela grita, e o salão inteiro ouve. Com você, ela não fala mais.
     }
     ~ isa_fechada = true
+    -> fora
++ {not isa_conta} [Perguntar quem mais sabe que você anda fazendo perguntas.]
+    ~ passar(10)
+    ~ isa_conta = true
+    Isadora: Querid{o}, eu conto tudo para todos. É o meu charme. # expr: vaidosa
+    Isadora: O que você me perguntou lá dentro, a Luciana já sabe. Ela me pediu, com aquela luva, que eu avisasse se alguém falasse da Capela. # expr: cochicho # pista isadora: A Isadora conta tudo para todos: o que você perguntou a ela, a Luciana já sabe. A Senescal pediu para ser avisada se alguém falasse da Capela.
+    Ela volta para o salão sem esperar resposta.
     -> fora
 + [Deixar ela voltar. Não vale o escândalo.]
     Isadora: Sábia decisão. # expr: ofendida
@@ -545,6 +555,9 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 === arnaldo_perguntas ===
 { minutos >= limite: -> amanhecer2 }
 -> avisos2 ->
+{ p2_quem_apaga and (p2_arquivo or not p2_lama) and (p2_rocha_dante or not p2_scanner):
+    Arnaldo: Eu já disse o que podia dizer a quem é convidad{o} do Príncipe. O resto, você ouve na frente da Corte. # expr: neutro
+}
 + {not p2_quem_apaga} [Quem nesta cidade consegue apagar uma noite inteira de alguém?]
     ~ passar(20)
     ~ p2_quem_apaga = true
@@ -761,6 +774,7 @@ Rayo: Fica de olho na Toreador de vermelho, a Valentina. Ela caça na Paulista t
     Luciana: Aquele lixo embaixo da Consolação já não... # expr: abalada
     Ela para. Você não disse onde era. Ninguém disse. # pista luciana: A Luciana falou "embaixo da Consolação" sem ninguém dizer onde ficava o arquivo do Cão.
     Luciana: Já não interessa a ninguém. O Cão está morto. Os segredos dele também. # expr: fria
+    -> luciana_reage ->
     -> luciana_perguntas
 + {cla == "Nosferatu"} {not p2_luciana_slip} [Nosferatu :: Os ratos de baixo dizem que alguém com chave Tremere abriu a galeria da Consolação.]
     ~ passar(20)
@@ -777,6 +791,7 @@ Rayo: Fica de olho na Toreador de vermelho, a Valentina. Ela caça na Paulista t
 + {p2_isa_capela} [Prova :: Capela: a senhora cancelou a Isadora às três e voltou suja de esgoto.]
     ~ passar(20)
     Luciana: Emergências acontecem. E a Isadora conta tudo para todos, por isso ninguém ouve. # expr: fria
+    -> luciana_reage ->
     -> luciana_perguntas
 + {p2_luvas or p2_luvas_cheiro} {p2_luciana_slip} [Encarar: "Era a senhora. De luvas, no esgoto, comigo."]
     ~ passar(20)
@@ -788,6 +803,20 @@ Rayo: Fica de olho na Toreador de vermelho, a Valentina. Ela caça na Paulista t
 + [Voltar]
     { expulso or not dentro: -> fora }
     -> salao2
+
+// Cada prova mostrada à Luciana antes da Corte: ela ameaça, e a noite fica mais cara.
+=== luciana_reage ===
+~ luc_provas += 1
+{ luc_provas:
+- 1:
+    Luciana: {isa_conta or isa_falou:A Isadora já me contou o que você anda perguntando, querid{o}. |}Pergunta demais quem tem pouco tempo. # expr: ameaca
+    Ela chama um garçom e te prende numa conversa vazia sobre o vinho, longa, educada, de propósito. Dez minutos que você não tem. # pista luciana: A Luciana sabe que você está investigando e te fez perder tempo de propósito.
+    ~ passar(10)
+- else:
+    Luciana: Na terça você também fez perguntas. Olhe onde isso te levou. # expr: ameaca
+    Ela alisa a luva, devagar. Do outro lado do salão, um carniçal dela para de dançar e fica olhando para você até o fim da noite. # pista luciana: Na segunda prova, a Luciana disse: "Na terça você também fez perguntas." Um carniçal dela passou a te vigiar.
+}
+->->
 
 // ------------------------------------------------------------------ ACUSAÇÃO E FINAIS
 === amanhecer2 ===
@@ -1051,7 +1080,9 @@ Na saída, o segurança da portaria abre a porta para você e passa o leitor per
 Rocha: Até a próxima. A gente sabe onde você dorme.
 Na Paulista, uma moto encosta no meio-fio. É o Rayo. # entra: rayo # expr: neutro
 Rayo: A bruxa apagou a sua noite pra esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente, forasteir{o}. E essa gente tem informante no meio da gente. Abre o olho.
-Continua no capítulo 3.
+A moto some na Augusta. Você fica sozinh{o} no vão livre, com o chip quieto embaixo da língua. # limpa
+A noite de terça voltou quase inteira. Falta só o pedaço que alguém ainda guarda, e quem guarda sabe que você está procurando. # imagem: amanhecer
+No fim da Paulista, o céu começa a clarear. Você tem o tempo de chegar em casa. Amanhã é outra noite.
 ->->
 
 === final2_dante ===
@@ -1107,7 +1138,6 @@ FINAL 2A · A ISCA QUE FALOU. Você acusou a Inquisição diante da Corte e ela 
 Você desce pela primeira grade de esgoto que vê. Embaixo da terra, o chip perde o sinal, como perdeu na terça.
 # imagem: tunel
 Lá em cima, as vans pretas rodam a Paulista inteira procurando uma morta que já estava morta.
-Continua no capítulo 3.
 FINAL 2F · A RATA SEM SINAL. Irene acusou a pessoa errada, mas embaixo da terra o chip não alcança. # final: 2F
 -> END
 
@@ -1137,7 +1167,6 @@ A Besta não aceita ordem de ninguém. Ela morde a ordem no meio, como morde cor
 Você empurra a Senescal, quebra a janela de vidro do museu e cai no vão livre, dois andares abaixo, rolando. # musica: final_triste
 # imagem: serra
 Atrás de você, o Elísio grita. Na sua frente, a Paulista inteira. O chip ferve na sua boca. Você corre para o mato, para longe do sinal.
-Continua no capítulo 3.
 FINAL 2G · O BICHO NÃO ESQUECE. Tomás acusou sem provas, mas a Besta não deixou a Senescal apagar ele. Agora ele é procurado também pela Capela. # final: 2G
 -> END
 
@@ -1164,6 +1193,5 @@ Você: Por bem, irmão. Eu sempre vou por bem. Diga à Doutora que eu tenho muit
 Ele hesita. Ninguém nunca ofereceu antes.
 # imagem: van
 Na van preta, você conta à Inquisição três mentiras e uma verdade, e volta para casa antes do sol com um número de telefone novo.
-Continua no capítulo 3.
 FINAL 2H · A AGENTE DUPLA. Joana não soube responder, mas se ofereceu à Inquisição antes que a levassem. Agora ela espiona os dois lados. # final: 2H
 -> END
