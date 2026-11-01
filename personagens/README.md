@@ -2,6 +2,13 @@
 
 Fichas montadas a partir do quadro Trello "Vampire - The Mascarade", com as artes de cada card. Cada pasta tem a ficha (`README.md`), o `retrato.jpg` e as outras artes em até 1400 px. Os PNGs originais ficam na pasta do projeto, em `trello/artes/`.
 
+## Cânone do projeto
+
+- **Saída do Sabá:** o Sabá mandou em São Paulo até o começo dos anos 2010 e foi embora para a Guerra da Gehenna, no Oriente Médio. Dante, Constance e os Anarchs subiram nesse vácuo.
+- **Chip da Inquisição:** embaixo da língua. Lê calor e sangue correndo, não Disciplina. Ver [Segunda Inquisição](segunda-inquisicao/).
+- **BOES:** batalhão de operações especiais no molde da ROTA e do BOPE; ninguém de fora sabe a treta. Ver [Segunda Inquisição](segunda-inquisicao/).
+- **Anarchs:** Hecata e Ministério são Independentes no V5, mas em São Paulo andam com os Anarchs. O Rayo é o idealista do grupo e, ao longo da história, sobe no lugar do Guga. Ver [Anarchs](anarchs/).
+
 ## Camarilla
 
 [Visão geral: Camarilla](camarilla/)

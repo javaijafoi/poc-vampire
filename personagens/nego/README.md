@@ -32,7 +32,7 @@ Nego era um sobrevivente. Antes do Abraço, era segurança de bicheiro; depois, 
 
 #### **O Gatilho Animal (Horror Hook para a Mesa)**
 
-O horror do Nego é a **Simbiose Parasitária**. Ele protege os moradores de rua e os viciados, mas ele _os consome_. Ele usa _Animalismo_ para comandar não apenas os ratos e cães vadios do centro, mas também para incitar a turba humana. Se a Coterie for ao território dele exigir algo ou agir com arrogância, Nego não precisa levantar um dedo; uma multidão de cinquenta dependentes químicos armados com pedaços de pau, facões e pedras os cerca, com os olhos vidrados pela Fome transferida do Barão.
+O horror do Nego é a **Simbiose Parasitária**. Ele protege os moradores de rua e os viciados, mas ele _os consome_. Ele usa _Animalismo_ para comandar os ratos e cães vadios do centro, que são os olhos dele em cada esquina. A turba humana não precisa de Disciplina: vem da lealdade e do medo de quem só tem o Nego como proteção. Se a Coterie for ao território dele exigir algo ou agir com arrogância, Nego não precisa levantar um dedo; os cães rosnam primeiro, e depois uma multidão de cinquenta pessoas armadas com pedaços de pau, facões e pedras os cerca, porque o Barão é a única coisa entre eles e o despejo.
 
 ---
 
@@ -63,7 +63,7 @@ _(Para quando a diplomacia falhar ou se ele lutar ao lado da Coterie contra a SI
   - _Metamorfose (Shapechange):_ Ele pode virar um cão de rua monstruoso ou um morcego para fugir.
   - _Fusão com a Terra (Earth Meld):_ Se a SI cercar o prédio de dia, ele afunda no concreto quebrado ou no asfalto e desaparece.
 - **Fortitude 3:** * _Resiliência / Tenacidade:_ Subtrai o dano recebido. Ele é o cara que toma um tiro de escopeta da Inquisição no peito, ri, arranca o estilhaço e continua andando.
-- **Animalismo 3:** * _Sentir a Besta / Subjugar a Besta:_ Nego sabe exatamente o quão faminta a Coterie está assim que eles pisam no prédio dele. Ele também pode acalmar o frenesi de um jogador ou jogar a própria Besta dele na turba, incitando um motim.
+- **Animalismo 3:** * _Sentir a Besta / Subjugar a Besta:_ Nego sabe exatamente o quão faminta a Coterie está assim que eles pisam no prédio dele. Ele também pode acalmar o frenesi de um jogador, ou soltar a matilha de cães do Centro contra quem o desafia.
 - **O Exército dos Ralos:** A qualquer momento em seu território, Nego tem pelo menos meia dúzia de Sangues-Ralos ou capangas humanos (como o **Rato**) dispostos a morrer por ele.
 
 ---

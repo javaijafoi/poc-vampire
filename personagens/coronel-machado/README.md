@@ -17,7 +17,7 @@ Aqui está a ficha do homem que comprou a Coterie no Porto de Santos.
 - **Organização:** Comando Militar do Sudeste / BOES (Os Sagrados).
 - **Idade:** 54 anos.
 - **Posição:** Comandante de Operações (Operação Veritas).
-- **Fachada:** Oficial linha-dura do Exército focado no combate ao narcotráfico e contrabando de armas nas fronteiras e portos.
+- **Fachada:** Comandante do BOES, batalhão de operações especiais no molde da ROTA e do BOPE, famoso por caçar os grandes criminosos do estado (facções, contrabando de armas no porto). Para o público e para a própria polícia, é só mais uma tropa de elite linha-dura. Ninguém de fora sabe qual é a treta de verdade.
 - **Realidade:** O estrategista frio que orquestra a erradicação metódica dos "Corpos Vazios" (vampiros) em São Paulo, usando a Faria Lima e os Anarquistas uns contra os outros.
 
 #### **História Resumida**
@@ -32,13 +32,13 @@ Machado era um tenente nos anos 90, época em que o Sabá dominava São Paulo e 
 
 #### **O Gatilho da Memória (Horror Hook para a Mesa)**
 
-Sempre que a Coterie ouvir a voz grave do Coronel Machado — seja na televisão, em uma gravação do hacker Dígito, ou pessoalmente — **a tatuagem no lábio deles queima imediatamente**. É o trauma do Porto de Santos gritando no subconsciente. O corpo deles lembra do Coronel, mesmo que a mente tenha sido apagada pela Luciana.
+Sempre que a Coterie ouvir a voz grave do Coronel Machado — seja na televisão, em uma gravação do hacker Dígito, ou pessoalmente — **o chip embaixo da língua deles queima imediatamente**. É o trauma do Porto de Santos gritando no subconsciente. O corpo deles lembra do Coronel, mesmo que a mente tenha sido apagada pela Luciana.
 
 ---
 
 ### **Descrição Visual (Para ler na mesa)**
 
-> "O homem na tela (ou do outro lado do pátio) exala uma autoridade pesada, do tipo que não precisa gritar para ser obedecido. Ele tem o cabelo grisalho cortado no padrão militar impecável, e o rosto é uma máscara de granito com rugas de expressão profundas ao redor dos olhos e da boca. Ele veste a farda de combate camuflada ou um traje tático preto com a insígnia do batalhão. A postura é rigidamente ereta, as mãos cruzadas para trás. Mas são os olhos dele que gelam o sangue de vocês: são olhos analíticos, frios e mortos. Ele não olha para suspeitos; ele olha para alvos. Quando ele fala, a voz dele é um trovão contido, uma cadência militar que faz o subconsciente de vocês entrar em pânico e a marca na gengiva de vocês latejar com gosto de sangue e cinzas."
+> "O homem na tela (ou do outro lado do pátio) exala uma autoridade pesada, do tipo que não precisa gritar para ser obedecido. Ele tem o cabelo grisalho cortado no padrão militar impecável, e o rosto é uma máscara de granito com rugas de expressão profundas ao redor dos olhos e da boca. Ele veste a farda de combate camuflada ou um traje tático preto com a insígnia do batalhão. A postura é rigidamente ereta, as mãos cruzadas para trás. Mas são os olhos dele que gelam o sangue de vocês: são olhos analíticos, frios e mortos. Ele não olha para suspeitos; ele olha para alvos. Quando ele fala, a voz dele é um trovão contido, uma cadência militar que faz o subconsciente de vocês entrar em pânico e o chip embaixo da língua de vocês latejar com gosto de sangue e cinzas."
 
 ---
 
@@ -56,11 +56,11 @@ _(Se a Coterie for estúpida o suficiente para atacá-lo de frente)_
 
 **Equipamento Especial & Táticas do BOES:**
 
-- **Imunidade de Comando:** Devido ao treinamento anti-terror extremo e doutrinação, Machado recebe +3 Dados para resistir a _Dominação_, _Presença_ ou _Ofuscação_. (Se um vampiro tentar desaparecer na frente dele, a mente tática dele deduz a trajetória).
+- **Protocolo de Comando:** Não existe treino que torne alguém imune à Dominação. O que o Machado tem é protocolo: nunca olha nos olhos de um suspeito, fala com eles por rádio ou através de um operador, e cada ordem dele é confirmada por um segundo oficial. Na prática, quase nunca há como usar _Dominação_ ou _Presença_ nele, e quem tenta se denuncia para a equipe. Contra _Ofuscação_, a equipe confia em câmera térmica e em contar cabeças, não nos próprios olhos.
 - **O Enxame (Escolta Constante):** Machado _nunca_ anda sozinho. Ele sempre tem pelo menos 3 a 5 Operativos do BOES com ele (use a ficha do Agente Rocha, mas armados com fuzis e granadas flashbang).
-- **Fuzil Tático (Munição Fósforo Branco/Dragon's Breath):** Se Machado sacar a arma primária (um fuzil customizado), ele não atira chumbo. Ele atira projéteis incendiários. Dano da arma é +3, e causa **Dano Agravado** imediato em vampiros devido ao fogo/química.
+- **Fogo, não bala:** A equipe sabe que chumbo não basta. Leva escopetas com munição incendiária e lança-chamas portátil para a hora de "limpar" um covil. Fogo causa **Dano Agravado** em vampiros. No relatório oficial, vira "incêndio durante confronto com facção".
 - **Ação de Liderança - "Fogo de Supressão":** Em combate, em vez de atacar, Machado pode rolar Liderança para coordenar sua equipe. Todos os capangas dele ganham +2 dados nos ataques daquele turno e as rolagens de Furtividade dos vampiros falham automaticamente devido à cobertura tática.
-- **Suporte Aéreo (Rádio):** Se ele acionar o rádio no ombro, em 3 turnos um drone da SI equipado com metralhadora ou luz UV pesada desce sobre a área.
+- **Reforço e luz do dia (Rádio):** Se ele acionar o rádio no ombro, em poucos minutos as vans pretas do BOES fecham o quarteirão, e um drone sem armas, com câmera térmica, segue quem fugir até o refúgio. O BOES prefere voltar de dia, quando o vampiro dorme: a batida de verdade é ao amanhecer, com a imprensa avisada de que foi "operação contra o crime organizado".
 
 ---
 

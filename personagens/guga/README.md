@@ -68,6 +68,8 @@ _(Para quando as negociações virarem tiroteio em ambiente industrial)_
 
 **Dica de Narrador:** O Guga é o bilhete de ida da Coterie para o caos armado. Se eles perderem o apoio do Príncipe e da Constance (a elite), o Guga é o cara que tem o poder de fogo para bater de frente com a Segunda Inquisição. Mas aliar-se a ele significa aceitar táticas de guerrilha urbana: sequestro, bombas e execução em praça pública. Ele é a revolução suja de sangue.
 
+**Arco na história (decisão do Peter, 2026-11-01):** o Guga cai ao longo dos capítulos. Ele é o informante anarquista do capítulo 3, e quando a base dele (motoboys, motoristas de aplicativo, peões) descobre que o Barão virou o patrão que dizia combater, ela troca de líder. Quem sobe no lugar dele é o [Rayo](../rayo/).
+
 ## Outras artes
 
 <img src="arte-2.jpg" width="260">

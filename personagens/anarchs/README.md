@@ -10,6 +10,10 @@
 
 Aqui está a teia de intrigas e facadas nas costas do submundo paulistano.
 
+**Hecata e Ministério em São Paulo (decisão do Peter, 2026-11-01):** no V5, Hecata (Vincenzo, Nonna) e Ministério (Harumi, Paizão) são clãs Independentes. Em São Paulo não existe espaço para ficar no meio, então eles andam com os Anarchs: são a ala que faz negócio, os mais independentes dos Anarchs. Isso não quebra a lógica do V5, onde os Independentes escolhem lado conforme a cidade. O Porão do Vincenzo continua neutro como território, mesmo com o dono sendo Anarch.
+
+**Os grandes Anarchs:** Nego, Guga, Vincenzo, Harumi, Iara e Rayo. Ao longo da história o Guga cai e o [Rayo](../rayo/) sobe no lugar dele.
+
 ---
 
 ### **A Teia Anarquista e Independente (Fogo Amigo)**

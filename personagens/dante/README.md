@@ -19,7 +19,7 @@
 
 #### **História Resumida**
 
-Dante foi um barão do café que entendeu, antes de seus pares, que a terra morre, mas o capital é eterno. Ele sobreviveu à transição do Brasil Imperial para o Republicano manipulando o fluxo de crédito. No Mundo das Trevas, ele ascendeu durante o vácuo de poder deixado pela saída do Sabá de São Paulo nos anos 90/2000. Ele não conquistou a cidade com guerra, mas com execuções hipotecárias de refúgios e controle do sistema financeiro que os outros clãs usavam.
+Dante foi um barão do café que entendeu, antes de seus pares, que a terra morre, mas o capital é eterno. Ele sobreviveu à transição do Brasil Imperial para o Republicano manipulando o fluxo de crédito. No Mundo das Trevas, ele ascendeu durante o vácuo de poder deixado pela saída do Sabá de São Paulo no começo dos anos 2010, quando a Guerra da Gehenna levou o Sabá para o Oriente Médio. Ele não conquistou a cidade com guerra, mas com execuções hipotecárias de refúgios e controle do sistema financeiro que os outros clãs usavam.
 
 #### **Percepção dos Outros**
 

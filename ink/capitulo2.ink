@@ -441,7 +441,7 @@ Dois carniçais te acompanham até o vão livre. O segurança da porta sorri qua
 -> avisos2 ->
 { sinal > 0 and not sinal_explicado:
     ~ sinal_explicado = true
-    Sinal {sinal} :: O chip esquenta embaixo da sua língua, como uma moeda deixada no sol. Cada vez que você usa Disciplina aqui fora, ele transmite. Se esquentar demais, alguém vem buscar.
+    Sinal {sinal} :: O chip esquenta embaixo da sua língua, como uma moeda deixada no sol. Ele não sabe o que é Disciplina: lê calor e sangue correndo. Corpo de vampiro é frio, e cada vez que você queima sangue aqui fora, a sua boca esquenta e ele transmite. Se esquentar demais, alguém vem buscar.
 }
 Para onde você vai?
 + [O segurança da portaria]

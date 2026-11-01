@@ -6,7 +6,7 @@
 
 **Veredito:** Isadora é o veneno adoçado da sua crônica. Em uma cidade brutal como São Paulo, a Toreador que controla os Elísios (locais de trégua) é essencial. Dante a usa como sua "Relações Públicas", mas o horror nela não é a política; é a **Fome Insaciável**. Com Humanidade baixa (4), ela está a um passo de se tornar uma aberração. Ela não vê os humanos como pessoas, mas como "obras de arte" ou "suco de uva" com pernas. Ela é a prova de que a beleza na V5 é uma máscara para um monstro faminto.
 
-Aqui está a ficha da sua Arauto.
+Aqui está a ficha da sua Guardiã do Elísio.
 
 ---
 
@@ -14,10 +14,10 @@ Aqui está a ficha da sua Arauto.
 
 - **Clã:** Toreador (10ª Geração).
 - **Idade:** ~120 anos (Aparenta ter 28. Abraçada em 1905, durante a _Belle Époque_ paulista).
-- **Posição:** Arauto de São Paulo e Guardiã do Elísio (MASP/Museu do Ipiranga).
+- **Posição:** Guardiã do Elísio de São Paulo (MASP/Museu do Ipiranga).
 - **Atributos de Destaque:** Charisma 5 (Beleza hipnótica), Manipulação 4 (Politicagem social), Compostura 4 (Fachada inabalável).
 - **Disciplinas:** Presença 4 (Awe, Entrancement, Summon - para controlar a Corte), Auspícios 3 (Para ler as intenções e fraquezas dos rivais), Celeridade 2 (Graça e movimento sobrenatural).
-- **Predição (Bane):** _Obsessão pela Beleza_. Se Isadora não estiver cercada por algo verdadeiramente belo (arte, arquitetura ou um sangue raro), ela sofre penalidades drásticas em todas as suas ações. _Compulsão:_ _Encanto_. Isadora é compelida a fazer com que a Coterie (ou qualquer um) a adore intensamente, muitas vezes através de bajulação predatória ou hospitalidade avassaladora que mascara sua periculosidade.
+- **Predição (Bane):** _Obsessão pela Beleza_. Se Isadora não estiver cercada por algo verdadeiramente belo (arte, arquitetura ou um sangue raro), ela sofre penalidades drásticas em todas as suas ações. _Compulsão:_ _Obsessão_. Isadora se fixa em algo ou alguém belo e não consegue largar até possuí-lo; na prática, quase sempre isso vira a necessidade de ser adorada intensamente, muitas vezes através de bajulação predatória ou hospitalidade avassaladora que mascara sua periculosidade.
 - **Humanidade:** 4 (Ela está deslizando para a Besta. Ela é cruel, vazia e vê os mortais como ferramentas descartáveis).
 
 #### **História Resumida**
