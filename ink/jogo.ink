@@ -1207,7 +1207,7 @@ Dante: Você me serviu bem, forasteir{o}. Sua dívida está paga.
 }
 # imagem: cao_morto
 # musica: final_verdade
-O Cão é levado escada acima. Ao amanhecer, a cidade tem um novo Xerife, e o antigo vira cinza no telhado.
+O Cão é levado escada acima. Ao amanhecer, o antigo Xerife vira cinza no telhado, e a cidade tem um novo: o Delegado Cavalcanti, que caça Anarquistas de distintivo e viatura.
 Os carniçais do Príncipe buscam o sarcófago no bunker antes do sol.
 # imagem: van
 Três noites depois, uma van preta sem placa estaciona no porto de Santos. Homens de terno e crachá carregam um sarcófago com um selo queimado.
