@@ -10,7 +10,7 @@
 //   Fora (vão livre, portaria, Paulista) vale tudo, mas o chip transmite: Disciplina sobe o Sinal em 2, briga em 1.
 //   Sinal 5: o BOES chega.
 //   Entrar ou sair do salão custa 20 minutos, passando pela portaria do Rocha.
-//   O relógio começa às 19h (hora_base) no loft: olhar cada coisa custa 10 minutos. O Juiz recebe a sós até as 22h e a gala abre às 22h30. Antes de sair, dá para caçar até três vezes (30 minutos cada); o sol nasce às 05h40.
+//   O relógio começa às 19h (hora_base) no loft: olhar cada coisa custa 10 minutos. O Juiz recebe a sós até as 21h30 e a gala abre às 22h30. Antes de sair, dá para caçar até três vezes (30 minutos cada); o sol nasce às 05h40.
 
 // Estado do capítulo
 VAR sinal = 0                 // o chip na língua: 0 a 5. No 5, o BOES chega
@@ -105,6 +105,10 @@ VAR a2_isadora = false
 // Para quem não jogou o capítulo 1: escolhe o personagem e começa como se tivesse feito o final B.
 === capitulo_2_novo ===
 ~ final_cap1 = "B"
+// o relógio e a Fome já ficam como no capítulo 2 na tela de escolha de personagem
+~ hora_base = 19
+~ minutos = 0
+~ fome = 4
 -> escolha_personagem(-> capitulo_2)
 
 === loft ===
@@ -124,32 +128,32 @@ O celular vibra no chão. Uma mensagem de voz, de agora há pouco.
 - "C_corte":
     Constance: Querid{o}. Na terça, alguém desceu ao esgoto da Consolação e levou uma coisa que a cidade inteira teme. Um Nosferatu jura que viu você saindo de um bueiro ali, às cinco da manhã, sujo até o joelho. # entra: constance # expr: seria
     Constance: Hoje, na gala, antes do sol, a Corte vai te perguntar o que você fez na terça. Eu presido. Não me faça passar vergonha.
-    Constance: Ah, e o Dr. Arnaldo abre o museu às dez para quem tem contas a prestar. Quem chega até lá, antes da festa, fala com o Juiz a sós.
+    Constance: Ah, e o Dr. Arnaldo abre o museu às nove e meia para quem tem contas a prestar. Quem chega até lá, antes da festa, fala com o Juiz a sós.
 - "C_anarq":
     Rayo: Ô, forasteir{o}. Tá todo mundo da Corte dizendo que você desceu no esgoto da Consolação na terça e saiu às cinco com alguma coisa deles. Um rato de terno jura que viu. # entra: rayo # expr: bravo
     Rayo: Eles vão te chamar na gala do MASP hoje, antes do sol, pra explicar. Se você não souber o que fez, eles inventam por você. E invenção de Camarilla acaba em estaca.
-    Rayo: Dica de graça: o Juiz deles abre o museu às dez pra quem quer se explicar antes da festa. Depois disso, é na frente de todo mundo.
+    Rayo: Dica de graça: o Juiz deles abre o museu às nove e meia pra quem quer se explicar antes da festa. Depois disso, é na frente de todo mundo.
 - "F":
     Arnaldo: Aqui é o Dr. Arnaldo, o Juiz do Elísio. Na terça, uma coisa que pertencia à Corte sumiu do esgoto da Consolação, e uma testemunha viu você saindo de um bueiro ali às cinco da manhã. # entra: arnaldo # expr: neutro
     Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
-    Arnaldo: Eu abro o museu às dez. Se chegar até lá, eu te ouço a sós. Depois, só na frente da Corte.
+    Arnaldo: Eu abro o museu às nove e meia. Se chegar até lá, eu te ouço a sós. Depois, só na frente da Corte.
 - "G":
     Arnaldo: Aqui é o Dr. Arnaldo, o Juiz do Elísio. Na terça, uma coisa que pertencia à Corte sumiu do esgoto da Consolação, e uma testemunha viu você saindo de um bueiro ali às cinco da manhã. # entra: arnaldo # expr: neutro
     Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
-    Arnaldo: Eu abro o museu às dez. Se chegar até lá, eu te ouço a sós. Depois, só na frente da Corte.
+    Arnaldo: Eu abro o museu às nove e meia. Se chegar até lá, eu te ouço a sós. Depois, só na frente da Corte.
 - else:
     Dante: Forasteir{o}. Na terça eu te mandei fazer um trabalho. Eu sei aonde te mandei. Não sei aonde você foi depois. # entra: dante # expr: calado
     Dante: Naquela madrugada, uma coisa que pertence à minha Corte sumiu do esgoto da Consolação, e um Nosferatu jura que viu você saindo de um bueiro ali às cinco da manhã. Hoje, na gala, antes do sol, você vai me dizer o que fez na terça. Se não souber, eu decido o que você fez.
-    Dante: O Dr. Arnaldo, o meu Juiz, abre o museu às dez para quem tem contas a prestar. Se você chegar antes, ele te ouve a sós.
+    Dante: O Dr. Arnaldo, o meu Juiz, abre o museu às nove e meia para quem tem contas a prestar. Se você chegar antes, ele te ouve a sós.
 }
 # limpa
 Você não lembra de terça. E se você fez alguma coisa, a cidade inteira vai cobrar de você, não de quem mexeu na sua cabeça. # pista dossie: MISSÃO: descobrir o que você fez na terça, a noite apagada, e quem apagou ela. Ao amanhecer a Corte vai perguntar. Se você não souber responder, a Corte decide por você.
-Você tem até o amanhecer para descobrir. Mas o Juiz só te ouve a sós se você chegar ao MASP até as dez. # pista dossie: O Dr. Arnaldo, o Juiz, recebe a sós no MASP até as 22h. Depois disso, só na gala, que abre às 22h30.
+Você tem até o amanhecer para descobrir. Mas o Juiz só te ouve a sós se você chegar ao MASP até as nove e meia. # pista dossie: O Dr. Arnaldo, o Juiz, recebe a sós no MASP até as 21h30. Depois disso, só na gala, que abre às 22h30.
 -> loft_perguntas
 
 === loft_perguntas ===
-{ minutos + viagem() <= 180 and minutos + 10 + 30 + viagem() > 180:
-    {hora_falada()}. O MASP fica a {viagem()} minutos daqui. Se olhar mais alguma coisa e ainda caçar, você não chega até as dez, e o Juiz não te recebe a sós.
+{ minutos + viagem() <= 150 and minutos + 10 + 30 + viagem() > 150:
+    {hora_falada()}. O MASP fica a {viagem()} minutos daqui. Se olhar mais alguma coisa e ainda caçar, você não chega até as nove e meia, e o Juiz não te recebe a sós.
 }
 + {not p2_lama} [Olhar os sapatos (10 minutos)]
     ~ p2_lama = true
@@ -207,13 +211,21 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 
 // ------------------------------------------------------------------ CAÇA
 // A noite apagada te deixou com Fome 4. Antes da gala dá para caçar até três vezes, 30 minutos cada:
-// sucesso baixa 2 de Fome, falha baixa 1. Cada caçada empurra a chegada ao MASP (o Juiz só recebe a sós até as 22h).
+// sucesso baixa 2 de Fome, falha baixa 1. Cada caçada empurra a chegada ao MASP (o Juiz só recebe a sós até as 21h30).
 === function viagem() ===
 { final_cap1:
 - "F": ~ return 40
 - "G": ~ return 40
 - "C_anarq": ~ return 20
 - else: ~ return 30
+}
+
+// O teste de caça segue o tipo de predador de cada personagem (Módulo Básico, pág. 175).
+=== function teste_caca() ===
+{ nome:
+- "Tomás": ~ return "Força + Briga"
+- "Irene": ~ return "Destreza + Furtividade"
+- else: ~ return "Carisma + Lábia"
 }
 
 === caca ===
@@ -223,18 +235,25 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 { cacadas > 0 and fome >= 4:
     A Fome continua alta. A Besta anda de um lado para o outro atrás das suas costelas.
 }
-{ cacadas < 3 and fome > 0 and minutos + viagem() <= 180 and minutos + 30 + viagem() > 180:
-    {hora_falada()}. Se caçar de novo, você não chega ao MASP até as dez, e o Juiz não te recebe a sós.
+{ cacadas < 3 and fome > 0 and minutos + viagem() <= 150 and minutos + 30 + viagem() > 150:
+    {hora_falada()}. Se caçar de novo, você não chega ao MASP até as nove e meia, e o Juiz não te recebe a sós.
 }
-+ {cacadas < 3} {fome > 0} [Teste: Raciocínio + Caça, dif. 2 :: Caçar na rua. (30 minutos)]
++ {cacadas < 3} {fome > 0} [Teste: {teste_caca()}, dif. 2 :: Caçar na rua. (30 minutos)]
     ~ passar(30)
     ~ cacadas += 1
     { nome:
-    - "Tomás": Você deixa o faro te levar pelas ruas dos fundos, atrás de alguém que não vai fazer falta por uma hora.
-    - "Irene": Você desce pelo bueiro mais perto e espera, no escuro, alguém que corte caminho pela passagem errada.
-    - else: Você entra num bar de esquina, sorri para quem está sozinh{o == "a":a|o} no balcão e oferece uma bênção de graça.
+    - "Tomás": Você deixa o faro te levar pelas ruas dos fundos, atrás de alguém que não vai fazer falta por uma hora. Gato de beco não pede licença: encurrala e segura.
+    - "Irene": Você desce pelo bueiro mais perto e sobe embaixo do viaduto, onde dorme quem ninguém procura. Ninguém te vê chegar.
+    - else: Você entra num bar de esquina, sorri para quem está sozinh{o == "a":a|o} no balcão e oferece uma bênção de graça. Quem aceita sai com você para a calçada.
     }
-    ~ temp r = rolar(raciocinio + 2, fome, 2)
+    // saves de antes do tipo de predador (inclusive do meio do capítulo 2): completa pela personagem
+    { parada_caca == 0:
+        ~ parada_caca = 5
+        { nome == "Joana":
+            ~ parada_caca = 6
+        }
+    }
+    ~ temp r = rolar(parada_caca, fome, 2)
     { r == 1 or r == 2 or r == 3:
         ~ fome = MAX(fome - 2, 0)
         Você bebe devagar, sem matar, e deixa a pessoa encostada num canto, tonta, achando que bebeu demais. A Fome recua dois passos.
@@ -243,7 +262,7 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
         A pessoa se assusta e você precisa soltar cedo. Deu para tirar o pior, não mais que isso. A Fome recua um passo.
     }
     -> caca
-+ [Ir para o MASP{fome >= 4: com fome}.]
++ [Ir para o MASP{fome >= 4: com fome} ({viagem()} minutos de viagem)]
     -> trajeto
 
 // O caminho até o MASP: uma animação de mapa (tag # trajeto: origem modo minutos) no lugar do corte seco.
@@ -267,14 +286,14 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
     ~ passar(30)
     A cidade passa pela janela, acesa, molhada, cheia de gente viva que não sabe de nada. Lá no alto, o MASP aparece vermelho em cima da Paulista. # fundo: vao_livre # trajeto: jardins taxi 30
 }
-{ minutos <= 180: -> juiz_cedo }
+{ minutos <= 150: -> juiz_cedo }
 { minutos < 210:
     ~ minutos = 210
     O museu já fechou a porta do Juiz. Você espera no vão livre, encostad{o} num pilar, até a gala abrir, às dez e meia.
 }
 -> chegada
 
-// Quem chega até as 22h fala com o Juiz a sós: ganha duas pistas, mas deixou coisas sem olhar.
+// Quem chega até as 21h30 fala com o Juiz a sós: ganha duas pistas, mas deixou coisas sem olhar.
 === juiz_cedo ===
 # fundo: vao_livre
 O museu ainda está escuro. Só uma porta lateral aberta, e um homem de terno cinza esperando nela, como quem espera um réu. # entra: arnaldo
