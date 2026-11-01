@@ -10,7 +10,7 @@ import os
 import sys
 
 import numpy as np
-from PIL import Image
+from PIL import Image, ImageOps
 from scipy import ndimage
 from rembg import new_session, remove
 
@@ -46,12 +46,54 @@ POSES = {
         "harumi_brava": (362, 432, 680, 640),
         "harumi_desdem": (700, 432, 1020, 745),
     },
+    # capítulo 1 (2026-10-31): Cão de frente, Vincenzo, Constance, Biel e a Nonna (imagem avulsa, só a neutra)
+    "cao": {
+        "cao_neutro": (35, 50, 340, 420),
+        "cao_desdem": (415, 50, 700, 376),
+        "cao_pego": (738, 48, 1030, 350),
+        "cao_arrebatado": (1065, 48, 1340, 332),
+        "cao_encurralado": (355, 405, 598, 690),
+        "cao_sorriso": (612, 415, 860, 712),
+        "cao_ataque": (878, 405, 1338, 712),
+    },
+    "vincenzo": {
+        "vincenzo_neutro": (30, 45, 672, 370),
+        "vincenzo_bracos": (705, 45, 1345, 370),
+        "vincenzo_copo": (30, 432, 672, 740),
+        "vincenzo_aponta": (705, 432, 1345, 740),
+    },
+    "constance": {
+        "constance_neutro": (20, 15, 452, 357),
+        "constance_riso": (470, 15, 905, 357),
+        "constance_seria": (922, 15, 1357, 357),
+        "constance_furia": (302, 393, 678, 725),
+        "constance_sussurro": (697, 393, 1357, 728),
+    },
+    "biel": {  # das três "confused", a 1
+        "biel_neutro": (40, 76, 345, 372),
+        "biel_confuso": (442, 76, 675, 372),
+        "biel_chorando": (172, 395, 452, 735),
+        "biel_sorriso": (592, 395, 895, 735),
+        "biel_encolhido": (918, 395, 1340, 735),
+    },
+    "nonna": {"nonna_neutro": None},  # imagem avulsa inteira
 }
 # pranchas de fundo vermelho chapado: o vermelho que aparece nos vãos (entre o braço e o corpo) também sai,
 # e o recorte usa o modelo de ilustração (isnet-anime), que guarda o taco e os dedos finos
 FUNDO_VERMELHO = {"harumi"}
+# fundo vermelho, mas com o modelo geral (o terno risca de giz sai melhor nele): só apaga o vermelho dos vãos
+VERMELHO_GERAL = {"vincenzo"}
 # poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
 INTERSECAO = {"harumi_taco"}
+
+
+def fantasma(im):
+    """O Biel é o morto que a Nonna chama: duotone azul e branco, um pouco transparente (igual ao recortar_personagens.py)."""
+    alfa = im.getchannel("A")
+    cinza = ImageOps.autocontrast(im.convert("L"), cutoff=1)
+    cor = ImageOps.colorize(cinza, black=(8, 22, 58), mid=(70, 130, 200), white=(240, 248, 255))
+    cor.putalpha(Image.fromarray((np.array(alfa) * 0.88).astype(np.uint8)))
+    return cor
 
 
 def limpar(im, limiar=30):
@@ -87,8 +129,9 @@ for prancha in sys.argv[1:] or POSES:
     img = Image.open(os.path.join(PRANCHAS, prancha + ".jpg")).convert("RGB")
     for nome, caixa in POSES[prancha].items():
         # amplia 2x antes do rembg: a prancha é pequena e o recorte fica mais limpo
-        parte = img.crop(caixa)
-        parte = parte.resize((parte.width * 2, parte.height * 2), Image.LANCZOS)
+        parte = img.crop(caixa) if caixa else img
+        if caixa:
+            parte = parte.resize((parte.width * 2, parte.height * 2), Image.LANCZOS)
         if prancha in FUNDO_VERMELHO:
             out = limpar(remove(parte, session=sessao_ilustra), 128)
             if nome in INTERSECAO:
@@ -97,6 +140,10 @@ for prancha in sys.argv[1:] or POSES:
             out = tirar_vermelho(out)
         else:
             out = limpar(remove(parte, session=sessao))
+            if prancha in VERMELHO_GERAL:
+                out = tirar_vermelho(out)
         out = out.crop(out.getbbox())
+        if prancha == "biel":
+            out = fantasma(out)
         out.save(os.path.join(SAIDA, nome + ".png"))
         print(nome, out.size)
