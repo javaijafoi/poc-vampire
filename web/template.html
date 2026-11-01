@@ -496,14 +496,16 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .legenda { font-size: 15px; padding: 3px 12px; }
   .ilustracao img { width: 94%; margin-top: 4%; }
   .carimbo-final b { font-size: 11cqw; }
-  .dialogo { position: relative; inset: auto; flex: 1; min-height: 0; margin: 22px 10px 10px; padding: 36px 16px 14px; transform: none; display: flex; flex-direction: column; }
+  .dialogo { position: relative; inset: auto; flex: 1; min-height: 0; margin: 26px 10px 10px; padding: 54px 16px 22px; transform: none; display: flex; flex-direction: column; }
   #conteudo { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
-  .nome { left: 12px; font-size: 15px; padding: 3px 12px; }
-  .eu { height: 104px; left: 8px; top: 40px; bottom: auto; }
+  /* o nome fica todo acima do rasgo do papel, sem encostar na hora */
+  .nome { left: 12px; font-size: 15px; padding: 3px 12px; transform: translateY(-88%); }
+  /* o rosto acompanha o texto, que fica no meio da caixa */
+  .eu { height: 104px; left: 8px; top: calc(50% + 16px); bottom: auto; translate: 0 -50%; }
   .eu img { max-width: 120px; }
   .dialogo.com-eu { padding-left: calc(16px + var(--eu-larg, 84px)); }
   .dialogo.com-eu .nome { left: calc(8px + var(--eu-larg, 84px)); }
-  .hud { top: 12px; right: 14px; gap: 12px; font-size: 13px; }
+  .hud { top: 20px; right: 14px; gap: 12px; font-size: 13px; }
   .hud .amanhecer { display: none; }
   .fala { font-size: 17px; }
   .escolhas { gap: 2px; }
@@ -511,7 +513,8 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .escolhas button { font-size: 16px; }
   .titulo { font-size: 13px; margin-bottom: 8px; }
   .seta { right: 12px; bottom: 8px; font-size: 14px; }
-  .toast { max-width: 86%; font-size: 13px; padding: 4px 10px; }
+  /* o aviso sai do lado direito, para não cobrir o nome de quem fala */
+  .toast { max-width: 60%; font-size: 13px; padding: 4px 10px; left: auto; right: 10px; translate: 0 -115%; }
   .cartas, .cartas.tres { grid-template-columns: 1fr; gap: 8px; }
   .carta { padding: 10px 12px; column-gap: 12px; }
   .carta .emblema { width: 44px; font-size: 20px; }
@@ -584,6 +587,15 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .rodape .acoes { flex-wrap: wrap; justify-content: center; gap: 6px; }
 }
 
+/* Celular (em pé e deitado): texto curto fica no meio da caixa, não grudado no topo. As duas "molas" encolhem até zero
+   quando o texto é comprido, e aí a rolagem começa do topo, como antes. */
+@media (max-aspect-ratio: 1/1), (min-aspect-ratio: 1/1) and (max-height: 520px) {
+  #conteudo { display: flex; flex-direction: column; }
+  #conteudo::before, #conteudo::after { content: ""; flex: 1 1 0; }
+  #conteudo > * { flex: none; }
+  .fala { min-height: 0; }
+}
+
 /* Paisagem no celular: a mesma tela do PC, com a cena usando toda a altura e o rodapé enxuto */
 @media (min-aspect-ratio: 1/1) and (max-height: 520px) {
   .escolhas.muitas { grid-template-columns: 1fr; }
@@ -594,8 +606,11 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .rodape { margin-top: 4px; justify-content: center; }
   .rodape > span:first-child, .rodape input[type=range] { display: none; }
   .rodape button { padding: 3px 10px; }
-  .dialogo { min-height: 30%; padding: 22px 18px 12px; }
-  #conteudo { max-height: calc(100vh - 110px); max-height: calc(100dvh - 110px); overflow-y: auto; overscroll-behavior: contain; }
+  .dialogo { min-height: 30%; padding: 34px 18px 16px; display: flex; flex-direction: column; }
+  .hud { top: 10px; }
+  #conteudo { flex: 1; max-height: calc(100vh - 122px); max-height: calc(100dvh - 122px); overflow-y: auto; overscroll-behavior: contain; }
+  /* a caixa cobre a parte de baixo da cena: o nome do personagem sobe para não ficar escondido atrás dela */
+  .legenda { bottom: 47%; }
   .escolhas button { min-height: 30px; padding: 3px 8px; }
   .caderno .bloco-folhas, .caderno .bloco-folhas:has(.folha.longa) { width: 94%; max-height: 96%; }
   .caderno .folha { padding: 12px 18px; }
