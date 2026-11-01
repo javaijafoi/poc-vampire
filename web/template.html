@@ -94,6 +94,8 @@ body {
 .hud .barra i { display: block; height: 100%; background: var(--acento); transition: width .4s; }
 .hud .grupo { display: flex; gap: .5cqw; align-items: center; }
 .hud .grupo[hidden] { display: none; }
+.hud .lugar { font-family: var(--f-tipo); color: var(--acento); border: 1px solid currentColor; padding: 0 .5em; font-size: .85em; }
+.hud .lugar.fora { color: #8a6a1c; }
 .fome { display: flex; gap: 2px; }
 .fome { transform-origin: center; }
 .fome i { width: max(9px, 1cqw); aspect-ratio: 1; border: 1.5px solid var(--sangue); }
@@ -111,6 +113,8 @@ body {
 .nome { position: absolute; top: 0; left: 2.4cqw; transform: translateY(-60%); font-family: var(--f-nome); font-weight: 600;
   background: var(--acento); color: #f4e7d2; padding: .25cqw 1.2cqw; font-size: max(13px, 1.7cqw); letter-spacing: .04em; }
 .nome[hidden] { display: none; }
+.fala.extra { margin-top: .4em; min-height: 0; }
+.fala:has(+ .fala.extra) { min-height: 0; }
 .fala { font-size: max(15px, 2.05cqw); line-height: 1.45; max-width: 70ch; min-height: 2.9em; text-wrap: pretty; }
 .fala.narracao { font-style: italic; color: var(--tinta-fraca); }
 .fala.voce { color: #6a2a12; }
@@ -140,6 +144,11 @@ body {
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
 /* pergunta que você já fez: continua ali (e continua custando tempo), mas apagada */
 .escolhas button.feita { color: #8d7c6c; }
+.quem-e-quem p { display: flex; gap: .6em; align-items: center; margin: .35em 0; }
+.quem-e-quem img { width: 3.2em; height: 3.2em; object-fit: cover; object-position: top; border-radius: 50%; background: #2a1219; flex: none; }
+.em-breve { font-family: var(--f-tipo); color: var(--acento); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 .6em; }
+.escolhas .custo { font-family: var(--f-tipo); font-size: .72em; color: var(--tinta-fraca); white-space: nowrap; }
+.escolhas .custo::before { content: "⏱ "; }
 .escolhas button.feita .porque { opacity: .6; }
 .escolhas button.feita::after { content: "já perguntou"; margin-left: auto; padding-left: 1em; font-family: var(--f-tipo); font-size: .7em; color: #9c8b7a; white-space: nowrap; }
 /* O porquê da opção vem depois dela, no mesmo texto, entre parênteses e na cor do tipo. */
@@ -574,6 +583,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </div>
   <div class="dialogo" id="dialogo" aria-live="polite">
     <div class="hud">
+      <span class="grupo lugar" data-dica="lugar" id="lugar" hidden></span>
       <span class="grupo" data-dica="hora"><span class="hora" id="hora">23h00</span><span class="barra"><i id="barra"></i></span><span class="amanhecer">sol 05h40</span></span>
       <span class="grupo" data-dica="fome"><span>Fome</span><span class="fome" id="fome"></span></span>
       <span class="grupo" data-dica="sinal" id="grupo-sinal" hidden><span>Sinal</span><span class="fome sinal" id="sinal"></span></span>
@@ -652,6 +662,7 @@ const FINAIS2 = ['2A', '2B', '2C', '2D', '2E', '2F', '2G', '2H', '2J', '2K', '2X
 // finais do capítulo 1 que seguem para o capítulo 2 (A e D são morte)
 const SEGUEM = new Set(['B', 'C', 'E', 'F', 'G', 'H', 'S']);
 const CAP1 = 'matusalem-cap1';  // o estado do Ink no fim do capítulo 1, para começar o 2 dali
+const MORTE1 = 'matusalem-cap1-morte';  // nome de quem morreu no fim do capítulo 1 (o botão do capítulo 2 avisa)
 let cena;
 
 // Poses em close (o rosto fica maior que nas outras) ou muito largas: encolhem para o rosto ficar do tamanho de sempre
@@ -703,8 +714,11 @@ function limparCena() {
   for (const lado of ['esq', 'dir']) $(lado).classList.remove('on', 'calado', 'troca');
 }
 
+// Capítulo 2: o HUD diz se você está dentro do Elísio (vale a lei do Juiz) ou do lado de fora
+const LUGAR = { gala: 'Elísio · lá dentro', vao_livre: 'Lado de fora', paulista: 'Lado de fora' };
+function mostrarLugar(nome) { const l = $('lugar'); l.textContent = LUGAR[nome] || ''; l.hidden = !LUGAR[nome]; l.classList.toggle('fora', LUGAR[nome] === 'Lado de fora'); }
 function trocarFundo(nome) {
-  esconderIlustracao();
+  esconderIlustracao(); mostrarLugar(nome);
   if (MUSICA_FUNDO[nome]) tocarMusica(MUSICA_FUNDO[nome]);
   const src = ARTE.fundos[nome]; if (!src || $('fundo').getAttribute('src') === src) return;
   fundoAtual = nome;
@@ -761,14 +775,29 @@ function tipoBadge(g) {
 }
 const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
+// Quanto tempo cada opção vai custar: joga a opção num rascunho do estado do Ink (sem dados nem avisos) até a próxima escolha
+// e mede o relógio. Vai até a escolha seguinte para contar também o tempo cobrado depois das falas (como a ameaça da Luciana).
+let simulando = false;
+function custosDasEscolhas() {
+  const n = story.currentChoices.length, m0 = story.variablesState['minutos'], salvo = story.state.ToJson(), filaAntes = fila.length, out = [];
+  simulando = true;
+  try { for (let i = 0; i < n; i++) { story.state.LoadJson(salvo); story.ChooseChoiceIndex(i); let k = 0; while (story.canContinue && k++ < 60) story.Continue(); out.push(story.variablesState['minutos'] - m0); } }
+  catch (e) { out.length = 0; }
+  finally { story.state.LoadJson(salvo); simulando = false; fila.length = filaAntes; }
+  return out;
+}
+const textoCusto = m => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
+
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
-  fila = []; pistas = []; finalTexto = finalLetra = null; cena = null;
+  fila = []; proxima = null; pistas = []; finalTexto = finalLetra = null; cena = null;
   feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
+    if (simulando) return 0;
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
   }, false);
   story.BindExternalFunction('despertar', () => {
+    if (simulando) return;
     const ok = V5.despertarV5();
     if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
     fila.push({ tipo: 'despertar', ok });
@@ -778,7 +807,7 @@ function iniciar() {
   capAtual = 1;
   novaHistoria();
   limparCena(); esconderIlustracao();
-  fundoAtual = 'salao'; $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
+  fundoAtual = 'salao'; mostrarLugar('salao'); $('fundo').src = ARTE.fundos.salao; $('fundo').dataset.f = 'salao'; tocarMusica('salao');
   $('carimbo-final').classList.remove('on');
   atualizarHud();
   comecarPartida('nova');
@@ -804,7 +833,8 @@ function jogarCapitulo2(daqui) {
   else { story.ChoosePathString('capitulo_2'); finalTexto = finalLetra = null; }
   limparCena(); esconderIlustracao(); $('carimbo-final').classList.remove('on'); $('hora').textContent = '19h00';
   // abertura do capítulo 2: lembra como o capítulo 1 acabou (por enquanto, a versão padrão, do final B) e ambienta a noite apagada
-  tocarAbertura(() => { $('capa').hidden = true; atualizarHud(); comecarPartida('capitulo_2'); avancar(); }, QUADROS_CAP2);
+  const novo = !story.variablesState['final_cap1'];
+  tocarAbertura(() => { $('capa').hidden = true; atualizarHud(); comecarPartida('capitulo_2'); avancar(); if (novo) mostrarNoiteAnterior(); }, quadrosCap2(story.variablesState['final_cap1'] || 'B'));
 }
 
 // ---------- Jogo salvo: grava sozinho neste navegador antes de cada linha ----------
@@ -832,7 +862,7 @@ function continuar() {
   pistas = s.pistas || []; feitas = new Set(s.feitas || []); historico = s.historico || []; ultimasPistas = pistas.length; finalLetra = s.finalLetra || null; finalTexto = s.finalTexto || null;
   limparCena(); esconderIlustracao(); cena.expr = (s.cena && s.cena.expr) || {};
   fundoAtual = ARTE.fundos[s.fundo] ? s.fundo : 'salao';
-  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').dataset.f = fundoAtual; $('fundo').alt = DESC_FUNDO[fundoAtual] || '';
+  $('fundo').src = ARTE.fundos[fundoAtual]; $('fundo').dataset.f = fundoAtual; $('fundo').alt = DESC_FUNDO[fundoAtual] || ''; mostrarLugar(fundoAtual);
   $('carimbo-final').classList.remove('on');
   if (s.ilustracao) mostrarIlustracao(s.ilustracao);
   else for (const lado of ['esq', 'dir']) if (s.cena && s.cena[lado]) mostrarPersonagem(s.cena[lado]);
@@ -871,12 +901,35 @@ function horaDe(min, base = story?.variablesState['hora_base'] ?? 23) { const h 
 function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(fimTimer); fimTimer = setTimeout(() => t.classList.remove('on'), 2600); }
 
 // Puxa a próxima linha do roteiro e trata efeitos (dados, tags) antes de mostrar.
-function avancar() {
-  if (fila.length) return mostrarEvento(fila.shift());
-  if (story.canContinue) {
-    salvar(); marcarLugar();
-    let texto = story.Continue().trim();
-    for (const tag of story.currentTags) {
+// Uma linha do Ink lida, com as tags dela (que só valem quando a linha vai para a tela).
+function lerLinha() { const texto = story.Continue().trim(); return { texto, tags: [...story.currentTags] }; }
+// Linha já lida do Ink e ainda não mostrada (ficou de fora de um agrupamento).
+let proxima = null;
+// Quem fala numa linha: o nome ("Você", "Rayo"...), '' para narração, null para etiqueta ("Gatilho :: texto")
+function falanteDe(t) {
+  if (/ :: /.test(t)) return null;
+  const m = t.match(/^([A-ZÀ-Ú][a-zà-ú]+): /); return m && (m[1] === 'Você' || CHAVE[m[1]]) ? m[1] : '';
+}
+// Junta na mesma caixa até 3 linhas seguidas: a primeira, mais falas da mesma pessoa ou narrações, até 300 letras,
+// para o jogador não clicar a cada frase. Não junta se a linha seguinte troca cena, rosto, música, final ou rola dados.
+// Devolve as linhas extras como parágrafos { narracao, corpo }. test_cliques.cjs mede o efeito.
+const AGRUPA_MAX = 300;
+function agrupar(texto) {
+  const quem = falanteDe(texto), extras = []; if (quem === null) return extras;
+  let total = texto.length;
+  for (let n = 1; n < 3 && story.canContinue && !fila.length; n++) {
+    const prox = lerLinha(), q = falanteDe(prox.texto);
+    const soPistas = prox.tags.every(t => /^\s*pista\b/.test(t));
+    const pergunta = !story.canContinue && story.currentChoices.length && prox.texto.length < 60 && !/: /.test(prox.texto);
+    if (fila.length || !prox.texto || !soPistas || pergunta || q === null || (q && q !== quem) || total + prox.texto.length > AGRUPA_MAX) { proxima = prox; break; }
+    aplicarTags(prox); total += prox.texto.length;
+    extras.push({ narracao: !q, corpo: q ? prox.texto.slice(q.length + 2) : prox.texto });
+  }
+  return extras;
+}
+
+function aplicarTags(l) {
+    for (const tag of l.tags) {
       const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
       const [chave, aba] = k.trim().split(/\s+/);
       if (chave === 'fundo') trocarFundo(val);
@@ -889,15 +942,26 @@ function avancar() {
       if (chave === 'musica') tocarMusica(val);
       if (chave === 'capitulo') comecarCapitulo(val);
       if (chave === 'trajeto') fila.push({ tipo: 'trajeto', val });
-      if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
+      if (chave === 'final') { finalLetra = val; finalTexto = l.texto; l.texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
     }
+}
+
+function avancar() {
+  if (fila.length) return mostrarEvento(fila.shift());
+  if (proxima || story.canContinue) {
+    let l = proxima; proxima = null;
+    if (!l) { salvar(); marcarLugar(); l = lerLinha(); }
+    aplicarTags(l);
     atualizarHud();
+    let texto = l.texto;
     if (fila.length) { fila.push({ tipo: 'linha', texto }); return avancar(); }
     if (!texto) return avancar();
     // pergunta curta logo antes das opções ("Para onde você vai?") vira o título das opções
-    if (!story.canContinue && story.currentChoices.length && texto.length < 60 && !/: /.test(texto) && !/ :: /.test(texto)) return mostrarEscolhas(texto);
-    return mostrarLinha(texto);
+    if (!proxima && !story.canContinue && story.currentChoices.length && texto.length < 60 && !/: /.test(texto) && !/ :: /.test(texto)) return mostrarEscolhas(texto);
+    const extras = proxima ? [] : agrupar(texto);
+    atualizarHud();
+    return mostrarLinha(texto, extras);
   }
   if (story.currentChoices.length) return mostrarEscolhas();
   mostrarFim();
@@ -992,7 +1056,8 @@ function mostrarTrajeto(val) {
   raf = requestAnimationFrame(quadro);
 }
 
-function mostrarLinha(texto) {
+function mostrarLinha(texto, extras = []) {
+  esconderDica();
   texto = texto.replace('@pistas', `${pistas.length} pista${pistas.length === 1 ? '' : 's'}`);
   const v = story.variablesState; let nome = null, chave = null, corpo = texto, classe = 'narracao', passiva = null;
   const m = texto.match(/^([A-ZÀ-Ú][a-zà-ú]+): (.*)$/);
@@ -1005,23 +1070,28 @@ function mostrarLinha(texto) {
   // narração com "# expr cao: ...": quem trocou de rosto fica aceso nesta linha
   falando(comArte ? chave : (exprAlvo && cena[PERS[exprAlvo]?.lado] === exprAlvo ? exprAlvo : null)); exprAlvo = null;
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
-  historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo }); if (historico.length > 200) historico.shift();
+  historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo });
+  extras.forEach(x => historico.push({ nome: x.narracao ? null : nome, texto: x.corpo })); while (historico.length > 200) historico.shift();
   const c = $('conteudo');
-  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
+  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div>${extras.map(x => `<div class="fala extra ${x.narracao ? 'narracao' : classe}" hidden>${esc(x.corpo)}</div>`).join('')}<span class="seta" aria-hidden="true">▼</span>`;
   digitar(corpo);
 }
 
 function digitar(t) {
   const alvo = $('txt'); alvoTexto = t; let i = 0; clearInterval(digitando);
-  if (opcoes.instantaneo || pulando || matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; mostradoEm = performance.now(); return; }
-  digitando = setInterval(() => { i += 3; alvo.textContent = t.slice(0, i); if (i >= t.length) { clearInterval(digitando); mostradoEm = performance.now(); } }, 16);
+  if (opcoes.instantaneo || pulando || matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; completou(); return; }
+  digitando = setInterval(() => { i += 3; alvo.textContent = t.slice(0, i); if (i >= t.length) { clearInterval(digitando); completou(); } }, 16);
+}
+// a fala terminou de aparecer: os parágrafos agrupados com ela entram juntos
+function completou() {
+  mostradoEm = performance.now(); document.querySelectorAll('#conteudo .fala.extra[hidden]').forEach(e => { e.hidden = false; });
 }
 
 // 1º clique completa a frase, o seguinte avança. Um clique que chega logo depois de a frase completar
 // é ignorado, para clique rápido não pular uma fala sem ler.
 function clicarDialogo() {
   const alvo = $('txt'); if (!alvo) return;
-  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; mostradoEm = performance.now(); return; }
+  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; completou(); return; }
   if (!pulando && performance.now() - mostradoEm < 250) return;
   avancar();
 }
@@ -1037,7 +1107,7 @@ addEventListener('keyup', e => { if (e.key === 'Control') pular(false); });
 addEventListener('blur', () => pular(false));
 
 // Opções do jogador, guardadas neste navegador
-const opcoes = { instantaneo: false };
+const opcoes = { instantaneo: true };  // texto instantâneo vem ligado; quem quiser o efeito de digitação desliga
 try { Object.assign(opcoes, JSON.parse(localStorage.getItem('matusalem-opcoes') || '{}')); } catch (e) {}
 function ajustarOpcoes() {
   $('instantaneo').setAttribute('aria-pressed', opcoes.instantaneo);
@@ -1057,6 +1127,7 @@ const chaveArte = nome => (nome || '').normalize('NFD').replace(/[\u0300-\u036f]
 const retratoDe = nome => ARTE.personagens[chaveArte(nome)]?.neutro;
 const TRAVA_MS = 450; let menuFixo = { k: '', h: 0 };
 function mostrarEscolhas(pergunta = '') {
+  esconderDica();
   falando(null); mostrarEu(null); $('nome').hidden = true; const c = $('conteudo');
   if (story.variablesState['nome'] === '') {
     // escolha de personagem: "Nome · Clã ;; descrição ;; ficha"
@@ -1064,11 +1135,14 @@ function mostrarEscolhas(pergunta = '') {
       const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || ''; const foto = retratoDe(titulo.split(' · ')[0]);
       return `<button class="carta" data-i="${i}" type="button">${foto ? `<span class="emblema foto" aria-hidden="true"><img src="${foto}" alt=""></span>` : `<span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span>`}<b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
   } else {
+    // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
+    const custos = custosDasEscolhas();
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
+      const custo = custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
       const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : / \(encerra o capítulo\)$/.test(ch.text) ? ' class="sem-volta"' : '';
-      return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}</span></button></li>`; }).join('')}</ul>`;
+      return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}${custo}</span></button></li>`; }).join('')}</ul>`;
   }
   const ficha = story.variablesState['nome'] === '';
   // trava de clique: o clique que avançou o texto não pode cair numa opção que acabou de aparecer embaixo do dedo
@@ -1111,10 +1185,11 @@ function mostrarFim() {
   const vistos = finaisVistos().filter(f => lista.includes(f)).length;
   // fim do capítulo 1 com o personagem vivo: guarda onde parou e oferece o capítulo 2
   const segue = cap === 1 && SEGUEM.has(finalLetra);
-  if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); } catch (e) {}
+  if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); localStorage.removeItem(MORTE1); } catch (e) {}
+  else if (cap === 1) try { localStorage.removeItem(CAP1); localStorage.setItem(MORTE1, story.variablesState['nome'] || 'Seu personagem'); } catch (e) {}
   const ops = [...(segue ? [['cap2', 'Seguir para o capítulo 2']] : []), ['caderno', 'Ver o caderno'], ['de-novo', 'Jogar de novo com outro personagem'], ['menu', 'Voltar ao menu']];
   $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo ${cap}</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
-    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>
+    <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>${cap >= 2 ? `<p class="em-breve">Capítulo 3 · em breve</p>` : ''}
     <ul class="escolhas">${ops.map(([a, t], i) => `<li><button type="button" data-a="${a}"><span class="num">${i + 1}</span><span>${t}</span></button></li>`).join('')}</ul>`;
   if (segue) $('conteudo').querySelector('[data-a=cap2]').addEventListener('click', e => { e.stopPropagation(); jogarCapitulo2(true); });
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
@@ -1242,9 +1317,18 @@ function acaoCapa(a) {
   if ($('capa').classList.contains('arrastou')) return;  // o clique que vem no fim de um arrasto não aperta botão
   if (a === 'continuar') continuar();
   else if (a === 'novo-jogo') novoJogo();
-  else if (a === 'capitulo-2') { if (lerSave()) { confirmaCap2 = true; pedirConfirmacao(); } else jogarCapitulo2(false); }
+  else if (a === 'capitulo-2') abrirCapitulo2();
   else if (a === 'ver-abertura') tocarAbertura(mostrarCapa);
   else if (a === 'ver-abertura-2') tocarAbertura(mostrarCapa, QUADROS_CAP2);
+}
+// Capítulo 2 pela capa. Quem morreu no fim do capítulo 1 não continua: o capítulo 2 começa com o final padrão, e o jogo avisa antes.
+function abrirCapitulo2() {
+  let morto = null; try { morto = !localStorage.getItem(CAP1) && localStorage.getItem(MORTE1); } catch (e) {}
+  if (!lerSave() && !morto) return jogarCapitulo2(false);
+  confirmaCap2 = true;
+  $('confirma-txt').textContent = morto ? `${morto} morreu no fim do capítulo 1. O capítulo 2 vai começar com o final padrão: o Cão acusado e virando cinza no telhado, e você escolhe o personagem de novo.${lerSave() ? ' O jogo salvo será apagado.' : ''}` : TXT_CONFIRMA;
+  $('confirma-sim').textContent = morto ? 'Começar com o final padrão' : 'Apagar e começar';
+  pedirConfirmacao();
 }
 function pedirConfirmacao() { $('capa').classList.add('confirmando'); $('confirma').hidden = false; $('confirma-nao').focus({ preventScroll: true }); }
 // arrastar para os lados (dedo ou mouse): o painel acompanha; passou de 15% da largura ou foi um gesto rápido, troca de capítulo
@@ -1293,7 +1377,7 @@ function mostrarCapa() {
 }
 function novoJogo() {
   confirmaCap2 = false;
-  if (lerSave()) { pedirConfirmacao(); return; }
+  if (lerSave()) { $('confirma-txt').textContent = TXT_CONFIRMA; $('confirma-sim').textContent = 'Apagar e começar'; pedirConfirmacao(); return; }
   tocarAbertura(iniciar);
 }
 
@@ -1317,6 +1401,44 @@ const QUADROS_CAP2 = [
   { fundo: 'rua', escuro: true, hora: 'Terça, 03h12', txt: 'O que aconteceu depois disso, você não lembra. Ninguém conta. A noite inteira sumiu.', carimbo: 'APAGADO' },
   { fundo: 'loft', hora: 'Hoje, 19h00', txt: 'Capítulo 2 · O Custo do Esquecimento. Você acorda com a boca ardendo e uma noite faltando.' },
 ];
+// Os três primeiros quadros da abertura do capítulo 2 contam como o capítulo 1 acabou para você (null tira o quadro).
+const LEMBRA_CAP1 = {
+  C_corte: [undefined, { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'O Cão virou cinza. Mas a Corte inteira ouviu que o Príncipe deixou o Matusalém escapar.', carimbo: 'CINZA' },
+    { fundo: 'corte', hora: 'Na noite seguinte', txt: 'A Constance e a Primogenitura tomaram as rédeas da cidade. O Dante ainda é Príncipe, mas só no nome.', rec: 'constance', quem: 'CONSTANCE · Primogênita Lasombra' }],
+  C_anarq: [undefined, { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'O Cão virou cinza. Os Anarquistas souberam da verdade antes da Corte.', carimbo: 'CINZA' },
+    { fundo: 'rua', hora: 'Na noite seguinte', txt: 'O Rayo espalhou a história pela cidade. Para os Anarquistas, agora você é um dos deles.', rec: 'rayo', quem: 'RAYO · Gangrel, Anarquista' }],
+  E: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você não acusou ninguém diante do Príncipe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+    { fundo: 'corte', hora: 'Três noites seguidas', txt: 'O Príncipe te deu o sangue dele. Agora você é servo dele pelo Laço de Sangue.', carimbo: 'LAÇO' }, null],
+  H: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você não acusou ninguém diante do Príncipe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+    { fundo: 'corte', hora: 'Três noites seguidas', txt: 'O Príncipe acha que te prendeu pelo Laço de Sangue. Você enganou o Laço e virou espiã dentro da Corte.', carimbo: 'ESPIÃ' }, null],
+  F: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você acusou a pessoa errada diante do Príncipe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
+    { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'A Ofuscação te salvou do sol. A cidade acha que você virou cinza. Você vive nos esgotos do Bixiga.', carimbo: 'MORTA' }, null],
+  G: [{ fundo: 'salao', hora: 'Três noites atrás', txt: 'No Porão do Vincenzo, você acusou o Cão sem provas.', rec: 'cao', quem: 'O CÃO · Xerife' },
+    { fundo: 'cao_morto', hora: 'Ao amanhecer', txt: 'A Besta te arrancou do sol e te enterrou num terreno da Consolação. Para o Príncipe, você virou cinza.', carimbo: 'FUGITIVO' }, null],
+  S: [undefined, undefined, { fundo: 'corte', hora: 'Na noite seguinte', txt: 'O Príncipe te deve um favor. E você guarda um frasco que ninguém sabe que existe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' }],
+};
+function quadrosCap2(f) {
+  const troca = LEMBRA_CAP1[f] || [];
+  return QUADROS_CAP2.map((q, i) => i < 3 && troca[i] !== undefined ? troca[i] : q).filter(Boolean);
+}
+// Para quem começa direto no capítulo 2: quem é quem na cidade, com rosto
+const NOITE_ANTERIOR = [
+  ['dante', 'Dante', 'Príncipe de São Paulo. Você deve um favor a ele.'],
+  ['luciana', 'Luciana', 'A Senescal, braço direito do Príncipe. Tremere, dona da Capela, onde se faz magia de sangue.'],
+  ['constance', 'Constance', 'Primogênita Lasombra, a mais poderosa da Corte depois do Príncipe. Quer o lugar dele.'],
+  ['arnaldo', 'Dr. Arnaldo', 'O Juiz do Elísio. Dentro do museu, ninguém usa Disciplina sem ele ver.'],
+  ['isadora', 'Isadora', 'Toreador, dona da festa. Sabe de tudo e conta para todos.'],
+  ['rayo', 'Rayo', 'Gangrel, o motorista que levava o Matusalém. Anda com os Anarquistas, que não obedecem ao Príncipe.'],
+  ['rocha', 'Agente Rocha', 'Segurança humano da porta. Trabalha para a Inquisição, caçadores de vampiros comandados pela Doutora.'],
+];
+function mostrarNoiteAnterior() {
+  registrar('abriu', { o_que: 'noite_anterior' });
+  abrirJanela('Na noite anterior', [], 'n', (a, mostrar, fechar) => ({ html: `<h2>Na noite anterior</h2>
+    <p>No capítulo 1, um Matusalém, um vampiro antiquíssimo, sumiu a caminho do cofre do Príncipe. Você descobriu que o traidor era o Cão, o Xerife, e ele virou cinza. Agora a Corte sabe quem você é.</p>
+    <div class="quem-e-quem">${NOITE_ANTERIOR.map(([k, nome, txt]) => `<p>${ARTE.personagens[k]?.neutro ? `<img src="${ARTE.personagens[k].neutro}" alt="">` : ''}<span><b>${esc(nome)}.</b> ${esc(txt)}</span></p>`).join('')}</div>`,
+    botoes: [['Começar', 'principal', fechar]] }));
+}
+
 let timersAbertura = [];
 function pararAbertura() { timersAbertura.forEach(clearTimeout); timersAbertura = []; }
 function tocarAbertura(depois, QUADROS_AB = QUADROS) {
@@ -1327,32 +1449,32 @@ function tocarAbertura(depois, QUADROS_AB = QUADROS) {
   $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true }); tocarMusica('abertura', false);
   // o clique em Pular chega aqui duas vezes (botão e abertura); só a primeira vale
   const fim = () => { if (ab.hidden) return; pararAbertura(); ab.hidden = true; depois(); };
-  ab.onclick = e => { if (e.target.id === 'pular') fim(); };
+  // clicar na abertura passa para o próximo quadro; Pular encerra
+  let atualQ = -1;
+  ab.onclick = e => { if (e.target.id === 'pular') return fim(); mostrarQ(atualQ + 1); };
   $('pular').onclick = fim;
-  let t = 0;
   const em = (ms, f) => timersAbertura.push(setTimeout(f, ms));
-  QUADROS_AB.forEach((q, i) => {
-    const dur = q.bilhete ? 5200 : 5000;
-    em(t, () => {
-      const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
-      if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
-      hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
-      em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
-      em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
-      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec][q.pose] || ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
-      if (q.quem) em(2300, () => {
-        // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
-        quem.textContent = q.quem;
-        const r = rec.getBoundingClientRect(), a = ab.getBoundingClientRect();
-        quem.style.left = (r.left - a.left + r.width / 2) + 'px'; quem.style.top = (r.top - a.top + r.height * .58) + 'px';
-        quem.classList.add('on');
-      });
-      if (q.carimbo) em(1200, () => { carimbo.textContent = q.carimbo; carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
-      if (q.bilhete) em(900, () => bilhete.classList.add('on'));
+  const mostrarQ = i => {
+    pararAbertura(); if (i >= QUADROS_AB.length) return fim();
+    atualQ = i; const q = QUADROS_AB[i], dur = q.bilhete ? 5200 : 5000;
+    const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
+    if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
+    hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
+    em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
+    em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
+    if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec][q.pose] || ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
+    if (q.quem) em(2300, () => {
+      // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
+      quem.textContent = q.quem;
+      const r = rec.getBoundingClientRect(), a = ab.getBoundingClientRect();
+      quem.style.left = (r.left - a.left + r.width / 2) + 'px'; quem.style.top = (r.top - a.top + r.height * .58) + 'px';
+      quem.classList.add('on');
     });
-    t += dur;
-  });
-  em(t, fim);
+    if (q.carimbo) em(1200, () => { carimbo.textContent = q.carimbo; carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
+    if (q.bilhete) em(900, () => bilhete.classList.add('on'));
+    em(dur, () => mostrarQ(i + 1));
+  };
+  mostrarQ(0);
 }
 
 // ---------- Música: uma faixa por cena (musica/<nome>.mp3), com fade na troca ----------
@@ -1547,6 +1669,7 @@ function paradaDoTeste(nomeTeste) {
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];
+  if (/Caça/.test(nomeTeste)) return v['raciocinio'] + 2;
   return null;
 }
 function chanceDe(parada, fome, dif) {
@@ -1585,6 +1708,7 @@ function dicaDe(g, texto, passiva) {
 
 const DICAS_HUD = {
   hora: 'Hora da noite. Cada pergunta custa minutos, mesmo se você repetir: uns 20 com as testemunhas e 10 com o fantasma. A sessão da Nonna custa 1 hora. O sol nasce às 05h40, e aí o Príncipe desce.',
+  lugar: 'Onde você está. Dentro do Elísio vale a lei do Juiz: nada de Disciplina, nada de violência. Do lado de fora pode tudo, mas o chip na sua língua escuta.',
   sinal: 'O chip na sua língua, de 0 a 5. Do lado de fora do Elísio, cada Disciplina faz ele transmitir (sobe 2), e briga sobe 1. Com 5, a Inquisição vem buscar você. Dentro do salão o chip não importa, mas o Dr. Arnaldo põe para fora quem usar Disciplina.',
   fome: 'Fome, de 0 a 5. Usar Disciplina pode subir 1, e a Disciplina forte sobe 2 de uma vez. Cada ponto vira um dado vermelho nos testes. Com 4, a Besta aparece; com 5, a conversa com jeitinho some e a Corte desconfia de você.',
   caderno: 'Caderno: as pistas que você juntou, uma folha por testemunha, e uma folha para anotar.',
@@ -1599,14 +1723,15 @@ function mostrarDica(el) {
   pop.style.left = Math.max(0, Math.min(jogo.width - w, r.left - jogo.left + r.width / 2 - w / 2)) + 'px';
   pop.style.top = top + 'px';
 }
-function esconderDica() { $('dica-pop').classList.remove('on'); }
+function esconderDica() { const p = $('dica-pop'); p.classList.remove('on'); p.textContent = ''; }
 // no toque, o navegador também dispara mouseover e focusin: esses ficam de fora, e quem manda é o toque
 let ultimoToque = 0, segurou = false, seguraTimer;
 const tocouAgora = () => performance.now() - ultimoToque < 900;
 document.querySelector('.jogo').addEventListener('mouseover', e => { if (!tocouAgora()) mostrarDica(e.target.closest('[data-dica]')); });
 document.querySelector('.jogo').addEventListener('mouseleave', esconderDica);
 // teclado: com a opção em foco, mostra a dica da etiqueta dela
-document.querySelector('.jogo').addEventListener('focusin', e => { if (tocouAgora()) return; const el = e.target.closest?.('[data-dica]') || e.target.querySelector?.('[data-dica]'); el ? mostrarDica(el) : esconderDica(); });
+// (só quando o foco cai numa opção, nunca na caixa inteira: senão a dica da primeira etiqueta aparece sozinha em toda tela de escolhas)
+document.querySelector('.jogo').addEventListener('focusin', e => { if (tocouAgora()) return; const el = e.target.closest?.('[data-dica]') || (e.target.matches?.('button') && e.target.querySelector('[data-dica]')); el ? mostrarDica(el) : esconderDica(); });
 addEventListener('pointerdown', esconderDica, true);
 const jogoEl = document.querySelector('.jogo');
 jogoEl.addEventListener('pointerdown', e => {
@@ -1683,10 +1808,11 @@ document.addEventListener('visibilitychange', () => {
 });
 
 // ---------- Ligações ----------
-$('confirma-sim').addEventListener('click', () => { apagarSave(); if (confirmaCap2) { confirmaCap2 = false; jogarCapitulo2(false); } else tocarAbertura(iniciar); });
+$('confirma-sim').addEventListener('click', () => { apagarSave(); if (confirmaCap2) { confirmaCap2 = false; try { localStorage.removeItem(MORTE1); } catch (e) {} jogarCapitulo2(false); } else tocarAbertura(iniciar); });
 $('confirma-nao').addEventListener('click', mostrarCapa);
 // Capítulo 2 pela capa: com jogo salvo no meio, pede confirmação como o Novo jogo
 let confirmaCap2 = false;
+const TXT_CONFIRMA = 'Começar do zero apaga o jogo salvo. Tem certeza?';
 $('dialogo').addEventListener('click', clicarDialogo);
 $('palco').addEventListener('click', e => { if (!e.target.closest('button') && $('txt')) clicarDialogo(); });
 // tela cheia: só onde o navegador deixa (Android); no iPhone, "Adicionar à Tela de Início" abre sem a barra

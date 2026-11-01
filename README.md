@@ -33,6 +33,8 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - Hora falada e hora no caderno vêm do relógio do jogo: use `{hora_falada()}` ("Três e dez"), `{hora_digital()}` ("03h10") e `{tempo_falta()}` ("uma hora e vinte minutos"). Os avisos do Vincenzo entram em qualquer conversa com `-> avisos ->`.
 - Palavra com gênero falando com o protagonista: `forasteir{o}` ou `{o == "a":moça|moço}`. O `test_texto.cjs` joga com a Irene e a Joana e acusa masculino solto.
 - `@pistas` numa fala vira "N pistas", com o número do caderno.
+- Falas seguidas da mesma pessoa (ou narrações logo depois) entram juntas na mesma caixa, até 3 linhas e 300 letras, para o jogador clicar menos. Uma linha com tag de cena, rosto, música, final ou dados quebra o grupo. `node test_cliques.cjs` mede (sem contar as perguntas que viram título das opções) quantos cliques de avanço isso economiza.
+- Cada opção mostra quanto tempo custa quando passa de 10 minutos (o jogo testa a opção num rascunho do estado do Ink). Se o texto da opção já diz os minutos, a etiqueta não aparece.
 
 ## Capítulos
 
@@ -40,9 +42,9 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - O capítulo 1 guarda o final em `final_cap1` (B, C_corte, C_anarq, E, F, G, H ou S). O capítulo 2 começa no knot `capitulo_2` e muda o texto e quem te protege conforme esse final. Sem jogo do capítulo 1, `capitulo_2_novo` escolhe o personagem e começa como se fosse o final B.
 - `# capitulo: 2` no roteiro limpa o caderno e avisa na tela. Ao fim do capítulo 1 com o personagem vivo, a tela de fim oferece "Seguir para o capítulo 2" e guarda o estado em `localStorage` (`matusalem-cap1`); o botão "Capítulo 2" da capa começa dali.
 - Capítulo 2: dentro do salão (`dentro`) vale a lei do Elísio, e Disciplina ali põe você para fora (`expulso`). Do lado de fora, `acender(n)` sobe o `sinal` do chip; no 5, o BOES chega. O marcador Sinal aparece no topo a partir do capítulo 2.
-- Relógio: `minutos` conta a partir de `hora_base` (capítulo 1: 23h; capítulo 2: 19h, com `limite` 640, sol às 05h40). O loft custa 10 minutos por coisa olhada e a gala abre às 22h.
+- Relógio: `minutos` conta a partir de `hora_base` (capítulo 1: 23h; capítulo 2: 19h, com `limite` 640, sol às 05h40). O loft custa 10 minutos por coisa olhada. O capítulo 2 começa com Fome 4, e antes de sair dá para caçar até três vezes (`caca`, 30 minutos cada; sucesso baixa 2 de Fome, falha baixa 1). O Juiz recebe a sós até as 22h e a gala abre às 22h30.
 - `# trajeto: origem modo minutos` (origem jardins, bixiga ou consolacao; modo taxi, moto ou pe) mostra o mapa do caminho até o MASP com o relógio correndo. Ponha a tag na linha depois do `passar()` da viagem.
-- Abertura do capítulo 2: `QUADROS_CAP2` no `web/template.html` (versão padrão, do final B). Quem sai do loft até as 20h fala com o Juiz a sós (`juiz_cedo`). A resposta à Corte pede confirmação (`confirma2`) e cada prova mostra se pegou (`reage2`). O caderno ganha a aba Suspeitos no capítulo 2.
+- Abertura do capítulo 2: `QUADROS_CAP2` no `web/template.html` (versão padrão, do final B). Quem chega ao MASP até as 22h fala com o Juiz a sós (`juiz_cedo`); o loft e a caça avisam antes da escolha que faria perder essa janela. A resposta à Corte pede confirmação (`confirma2`) e cada prova mostra se pegou (`reage2`). O caderno ganha a aba Suspeitos no capítulo 2.
 - `node test_cap2.cjs` joga o capítulo 2 partindo de cada final do 1, confere o caminho neutro (só conversa e provas) com os três personagens e o final S do capítulo 1.
 
 ## Fluxograma das escolhas
