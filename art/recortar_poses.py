@@ -77,14 +77,68 @@ POSES = {
         "biel_encolhido": (918, 395, 1340, 735),
     },
     "nonna": {"nonna_neutro": None},  # imagem avulsa inteira
+    # protagonistas (2026-11-01)
+    "tomas": {
+        "tomas_neutro": (145, 15, 370, 345),
+        "tomas_ameaca": (550, 20, 875, 345),
+        "tomas_chama": (935, 15, 1300, 345),
+        "tomas_lingua": (140, 390, 415, 712),
+        "tomas_dor": (595, 390, 825, 712),
+        "tomas_medo": (1005, 390, 1280, 712),
+    },
+    "joana": {  # rótulos em inglês: delights = encanta, preaches = prega, tongue = lingua
+        "joana_neutro": (100, 20, 370, 335),
+        "joana_encanta": (545, 20, 835, 335),
+        "joana_prega": (955, 40, 1310, 335),
+        "joana_lingua": (30, 395, 400, 718),
+        "joana_dor": (555, 400, 830, 718),
+        "joana_medo": (1015, 400, 1325, 718),
+    },
+    "irene": {  # a prancha mais nova das duas de neutro/escuta/bravo/medo; os quadros têm o esgoto de fundo
+        "irene_neutro": (150, 30, 520, 328),
+        "irene_escuta": (770, 30, 1215, 328),
+        "irene_bravo": (100, 400, 600, 700),
+        "irene_medo": (720, 400, 1340, 700),
+    },
+    "irene2": {
+        "irene_pensa": (180, 30, 470, 328),
+        "irene_desconfia": (880, 30, 1170, 328),
+        "irene_dor": (190, 400, 450, 700),
+        "irene_some": (900, 400, 1180, 700),
+    },
 }
 # pranchas de fundo vermelho chapado: o vermelho que aparece nos vãos (entre o braço e o corpo) também sai,
 # e o recorte usa o modelo de ilustração (isnet-anime), que guarda o taco e os dedos finos
 FUNDO_VERMELHO = {"harumi"}
 # fundo vermelho, mas com o modelo geral (o terno risca de giz sai melhor nele): só apaga o vermelho dos vãos
 VERMELHO_GERAL = {"vincenzo"}
+# imagem de corpo inteiro: corta na cintura (fração da altura que fica), como os outros retratos
+CORTE_ALTURA = {"nonna_neutro": 0.6}
 # poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
 INTERSECAO = {"harumi_taco"}
+
+
+# pranchas de fundo liso escuro (azul-marinho): o rembg às vezes deixa um pedaço do fundo num vão que encosta na borda
+FUNDO_LISO = {"tomas", "joana"}
+
+
+def tirar_fundo_borda(im, cor, tol=28, minimo=150):
+    """Apaga manchas da cor do fundo da prancha que encostam na borda do recorte."""
+    a = np.array(im.convert("RGB")).astype(np.int16)
+    perto = np.abs(a - np.array(cor)).max(axis=2) <= tol
+    perto &= (a[..., 2] - a[..., 0]) >= (cor[2] - cor[0]) / 2  # só o azulado: o terninho vinho da Joana é quase tão escuro quanto o fundo
+    if max(cor) < 30:  # fundo quase preto (Tomás): vale qualquer pixel quase preto
+        perto |= a.max(axis=2) < 32
+    perto &= np.array(im.getchannel("A")) > 0
+    rot, n = ndimage.label(perto)
+    if n:
+        borda = set(np.unique(np.concatenate([rot[0], rot[-1], rot[:, 0], rot[:, -1]]))) - {0}
+        tam = np.bincount(rot.ravel())
+        tira = np.isin(rot, [r for r in borda if tam[r] >= minimo])
+        tira = ndimage.binary_dilation(tira, iterations=2)
+        alfa = np.array(im.getchannel("A")); alfa[tira] = 0
+        im.putalpha(Image.fromarray(alfa))
+    return im
 
 
 def fantasma(im):
@@ -142,7 +196,13 @@ for prancha in sys.argv[1:] or POSES:
             out = limpar(remove(parte, session=sessao))
             if prancha in VERMELHO_GERAL:
                 out = tirar_vermelho(out)
+            if prancha in FUNDO_LISO:
+                cor = np.median(np.array(img.crop((caixa[0], caixa[1], caixa[0] + 12, caixa[1] + 12))).reshape(-1, 3), axis=0)
+                out = limpar(tirar_fundo_borda(out, cor))
         out = out.crop(out.getbbox())
+        if nome in CORTE_ALTURA:
+            out = out.crop((0, 0, out.width, int(out.height * CORTE_ALTURA[nome])))
+            out = out.crop(out.getbbox())
         if prancha == "biel":
             out = fantasma(out)
         out.save(os.path.join(SAIDA, nome + ".png"))
