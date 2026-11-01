@@ -59,12 +59,12 @@ body {
               radial-gradient(ellipse at 60% 40%, transparent 40%, rgb(10 4 8 / .75) 100%); mix-blend-mode: multiply; }
 /* Personagens: recortes "colados" na cena, um de cada lado. Rayo à direita, os outros à esquerda.
    Quem não está falando escurece; trocar de expressão troca só a imagem. */
-.lado { position: absolute; bottom: -3%; height: 98%; margin: 0; opacity: 0; --giro: 1.5deg; transform: rotate(var(--giro)) translateY(4%);
+.lado { position: absolute; bottom: -3%; height: calc(98% * var(--esc, 1)); margin: 0; opacity: 0; --giro: 1.5deg; transform: rotate(var(--giro)) translateY(4%);
   transition: opacity .5s, transform .5s, filter .3s; filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); }
 .lado.esq { left: 4%; }
 .lado.dir { right: 4%; --giro: -1.5deg; }
 /* escala por personagem, para os rostos ficarem do mesmo tamanho (a arte do Vincenzo é um close) */
-.lado[data-p="Vincenzo"] { height: 90%; bottom: 4%; }
+.lado[data-p="Vincenzo"] { height: calc(90% * var(--esc, 1)); bottom: 4%; }
 .lado.on { opacity: 1; transform: rotate(var(--giro)); }
 .lado.calado { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.5) saturate(.6); }
 .palco .lado img { position: static; display: block; height: 100%; width: auto; }
@@ -113,6 +113,14 @@ body {
 .fala { font-size: max(15px, 2.05cqw); line-height: 1.45; max-width: 70ch; min-height: 2.9em; text-wrap: pretty; }
 .fala.narracao { font-style: italic; color: var(--tinta-fraca); }
 .fala.voce { color: #6a2a12; }
+/* o seu rosto (o protagonista): uma foto presa no canto da caixa de texto, quando você fala ou reage */
+.eu { position: absolute; left: 1.2cqw; bottom: .9cqw; height: 17cqw; margin: 0; transform: rotate(-2deg); pointer-events: none; z-index: 1;
+  filter: drop-shadow(.2cqw .5cqw .6cqw rgb(0 0 0 / .45)); }
+.eu[hidden] { display: none; }
+.eu img { height: 100%; width: auto; max-width: 19cqw; object-fit: contain; object-position: 0 100%; display: block; }
+.eu.troca { animation: troca .25s; }
+.dialogo.com-eu { padding-left: calc(2.6cqw + var(--eu-larg, 13cqw)); }
+.dialogo.com-eu .nome { left: calc(1.4cqw + var(--eu-larg, 13cqw)); }
 .seta { position: absolute; right: 1.6cqw; bottom: 1.2cqw; font-family: var(--f-tipo); color: var(--acento); font-size: max(12px, 1.5cqw); animation: pisca 1s steps(2) infinite; }
 @keyframes pisca { 50% { opacity: 0; } }
 .passiva { display: inline-block; font-family: var(--f-tipo); font-style: normal; font-size: .72em; padding: .05em .5em; margin-right: .5em;
@@ -370,6 +378,9 @@ body {
 .dica-pop b { font-family: var(--f-tipo); font-weight: 400; color: var(--ambar); }
 [data-dica] { cursor: help; }
 .porque[data-dica], .passiva[data-dica] { text-decoration: underline dotted; text-underline-offset: .2em; }
+.carta .emblema.foto { width: max(64px, 8cqw); border-width: 2px; overflow: hidden; background: #1b1714; }
+.carta .emblema.foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; transform: scale(1.35); transform-origin: 50% 0; }
+.ficha-foto { float: right; width: min(34%, 220px); margin: 0 0 1cqw 1.5cqw; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
 .carta .ver { font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: var(--acento); }
 /* ficha, ajuda e tutorial usam a mesma folha do caderno */
 .caderno .folha.longa { min-height: 0; }
@@ -422,6 +433,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .palco .lado { scale: .78; transform-origin: 50% 100%; }
   .lado.esq { left: -14%; }
   .lado.dir { right: -14%; }
+  .lado[data-p="Nonna"] { left: -3%; }
   .lado:not(.calado) { z-index: 1; }
   .legenda { font-size: 15px; padding: 3px 12px; }
   .ilustracao img { width: 94%; margin-top: 4%; }
@@ -429,6 +441,10 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .dialogo { position: relative; inset: auto; flex: 1; min-height: 0; margin: 22px 10px 10px; padding: 36px 16px 14px; transform: none; display: flex; flex-direction: column; }
   #conteudo { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
   .nome { left: 12px; font-size: 15px; padding: 3px 12px; }
+  .eu { height: 104px; left: 8px; top: 40px; bottom: auto; }
+  .eu img { max-width: 120px; }
+  .dialogo.com-eu { padding-left: calc(16px + var(--eu-larg, 84px)); }
+  .dialogo.com-eu .nome { left: calc(8px + var(--eu-larg, 84px)); }
   .hud { top: 12px; right: 14px; gap: 12px; font-size: 13px; }
   .hud .amanhecer { display: none; }
   .fala { font-size: 17px; }
@@ -440,6 +456,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .cartas, .cartas.tres { grid-template-columns: 1fr; gap: 8px; }
   .carta { padding: 10px 12px; column-gap: 12px; }
   .carta .emblema { width: 44px; font-size: 20px; }
+  .carta .emblema.foto { width: 64px; }
   .carta b { font-size: 18px; } .carta span { font-size: 14px; } .carta small { font-size: 12px; } .carta .ver { font-size: 12px; }
   /* caderno, ficha, ajuda e tutorial: quase a tela toda */
   .caderno .bloco-folhas, .caderno .bloco-folhas:has(.folha.longa) { width: 94%; max-height: 94%; }
@@ -528,6 +545,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     </div>
     <div class="toast" id="toast" role="status"></div>
     <span class="nome" id="nome" hidden></span>
+    <figure class="eu" id="eu" hidden aria-hidden="true"><img alt=""></figure>
     <div id="conteudo" tabindex="-1"></div>
   </div>
 
@@ -607,6 +625,8 @@ const SEGUEM = new Set(['B', 'C', 'E', 'F', 'G', 'H', 'S']);
 const CAP1 = 'matusalem-cap1';  // o estado do Ink no fim do capítulo 1, para começar o 2 dali
 let cena;
 
+// Poses em close (o rosto fica maior que nas outras) ou muito largas: encolhem para o rosto ficar do tamanho de sempre
+const ESCALA = { cao_arrebatado: .72, cao_ataque: .82, rayo_olho: .78, biel_encolhido: .85, vincenzo_aponta: .92 };
 // Põe o personagem no lado dele (troca quem estava lá). Devolve false se ele não tem arte.
 function mostrarPersonagem(chave, expr) {
   const p = PERS[chave], a = ARTE.personagens[chave];
@@ -618,12 +638,29 @@ function mostrarPersonagem(chave, expr) {
     el.querySelector('.legenda').textContent = p.nome; img.alt = p.desc + ', recortado como foto de revista.';
   }
   if (expr) cena.expr[chave] = expr;
+  el.style.setProperty('--esc', ESCALA[chave + '_' + (expr || cena.expr[chave] || 'neutro')] || 1);
   if (img.getAttribute('src') !== src) {
     const trocou = img.getAttribute('src'); img.src = src;
     if (trocou && el.classList.contains('on')) { el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca'); }
   }
   el.classList.add('on');
   return true;
+}
+
+// O protagonista não entra no palco: o rosto dele aparece no canto da caixa de texto quando ele fala ("Você: ...")
+// ou numa reação marcada com "# expr voce: pose". A pose é a mesma para os três; quem não tem aquela, usa a parecida.
+const POSE_EU = { irene: { ameaca: 'bravo', chama: 'escuta' }, joana: { ameaca: 'prega', chama: 'prega' }, tomas: { encanta: 'neutro' } };
+function mostrarEu(pose) {
+  const quem = chaveArte(story?.variablesState['nome']), a = ARTE.personagens[quem], el = $('eu');
+  if (!pose || !a || $('ilustracao').classList.contains('on')) { el.hidden = true; $('dialogo').classList.remove('com-eu'); return; }
+  const nome = POSE_EU[quem]?.[pose] || pose, src = a[nome] || a.neutro, img = el.querySelector('img');
+  if (img.getAttribute('src') !== src) {
+    const trocou = !el.hidden && img.getAttribute('src'); img.src = src;
+    if (trocou) { el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca'); }
+  }
+  el.hidden = false; $('dialogo').classList.add('com-eu');
+  const larg = () => { if (img.naturalHeight) $('dialogo').style.setProperty('--eu-larg', el.getBoundingClientRect().width + 'px'); };
+  img.complete ? larg() : img.addEventListener('load', larg, { once: true });
 }
 
 // Quem fala fica aceso; o outro lado escurece. Quem está à esquerda só fica em cena enquanto fala ou é respondido.
@@ -660,6 +697,7 @@ const DESC_FUNDO = {
   paulista: 'A calçada da Avenida Paulista à noite, na chuva, com uma grade de esgoto no meio-fio.',
 };
 function mostrarIlustracao(nome) {
+  mostrarEu(null);
   const src = ARTE.fundos[nome]; if (!src) return;
   antesIlustracao = cena ? { esq: cena.esq, dir: cena.dir, expr: { ...cena.expr } } : null;
   limparCena(); ilustracaoAtual = nome;
@@ -682,7 +720,7 @@ const TOQUE = matchMedia('(hover: none)').matches;
 const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
 let ultimoSinal = null;
-let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
+let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, euPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
 let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
 
 function tipoBadge(g) {
@@ -811,7 +849,8 @@ function avancar() {
       if (chave === 'imagem') mostrarIlustracao(val);
       if (chave === 'entra') mostrarPersonagem(val, 'neutro');  // cada visita começa com o rosto de sempre
       // "# expr: medo" vale para quem fala nesta linha; "# expr cao: pego" troca o rosto de alguém numa narração
-      if (chave === 'expr') { if (aba) { mostrarPersonagem(aba, val); exprAlvo = aba; } else exprPendente = val; }
+      if (chave === 'expr' && aba === 'voce') euPendente = val;
+      else if (chave === 'expr') { if (aba) { mostrarPersonagem(aba, val); exprAlvo = aba; } else exprPendente = val; }
       if (chave === 'musica') tocarMusica(val);
       if (chave === 'capitulo') comecarCapitulo(val);
       if (chave === 'trajeto') fila.push({ tipo: 'trajeto', val });
@@ -927,7 +966,7 @@ function mostrarLinha(texto) {
   if (!nome && p) { passiva = p[1]; corpo = p[2]; }
   // personagem com arte: aparece no lado dele e o nome vai para a legenda; sem arte (você), o nome fica na caixa
   const comArte = chave && !$('ilustracao').classList.contains('on') && mostrarPersonagem(chave, exprPendente);
-  exprPendente = null;
+  mostrarEu(euPendente || (classe === 'voce' ? exprPendente || 'neutro' : null)); euPendente = exprPendente = null;
   // narração com "# expr cao: ...": quem trocou de rosto fica aceso nesta linha
   falando(comArte ? chave : (exprAlvo && cena[PERS[exprAlvo]?.lado] === exprAlvo ? exprAlvo : null)); exprAlvo = null;
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
@@ -978,14 +1017,17 @@ function abrirHistorico() {
 }
 
 const EMBLEMA = { Gangrel: 'G', Nosferatu: 'N', 'Ministério': 'M' };
+// retrato neutro do protagonista (art/cena/<nome>_neutro.webp), usado na escolha e na ficha
+const chaveArte = nome => (nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+const retratoDe = nome => ARTE.personagens[chaveArte(nome)]?.neutro;
 const TRAVA_MS = 450; let menuFixo = { k: '', h: 0 };
 function mostrarEscolhas(pergunta = '') {
-  falando(null); $('nome').hidden = true; const c = $('conteudo');
+  falando(null); mostrarEu(null); $('nome').hidden = true; const c = $('conteudo');
   if (story.variablesState['nome'] === '') {
     // escolha de personagem: "Nome · Clã ;; descrição ;; ficha"
     c.innerHTML = `<div class="titulo">${esc(pergunta || 'Quem é você?')}</div><div class="cartas tres">${story.currentChoices.map((ch, i) => {
-      const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || '';
-      return `<button class="carta" data-i="${i}" type="button"><span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span><b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
+      const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || ''; const foto = retratoDe(titulo.split(' · ')[0]);
+      return `<button class="carta" data-i="${i}" type="button">${foto ? `<span class="emblema foto" aria-hidden="true"><img src="${foto}" alt=""></span>` : `<span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span>`}<b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
   } else {
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
       const p = ch.text.match(/^(.+?) :: (.*)$/);
@@ -1256,7 +1298,8 @@ const pontos = n => '●'.repeat(n) + '○'.repeat(Math.max(0, 5 - n));
 
 function fichaHTML(nome) {
   const f = FICHAS[nome]; if (!f) return '<p class="vazio">Você ainda não escolheu um personagem.</p>';
-  return `<h2>${esc(nome)} · ${esc(f.cla)}</h2><p class="lead">${esc(f.frase)}</p>
+  const foto = retratoDe(nome);
+  return `${foto ? `<img class="ficha-foto" src="${foto}" alt="">` : ''}<h2>${esc(nome)} · ${esc(f.cla)}</h2><p class="lead">${esc(f.frase)}</p>
     <h3>Clã ${esc(f.cla)}</h3><p>${esc(CLAS[f.cla])} Algumas falas só aparecem para quem é ${esc(f.cla)}.</p>
     <h3>Notas</h3><table class="ficha-tab">${NOTAS.map(([k, rot, desc]) => `<tr><th>${rot}</th><td class="pontos">${pontos(f.notas[k])}</td><td>${desc}</td></tr>`).join('')}</table>
     <p style="margin-top:.8cqw">Quando a cena pede um teste, cada ponto vira um dado. Nota alta também abre falas que outros personagens não têm.</p>

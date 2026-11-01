@@ -259,7 +259,7 @@ Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois qu
 ~ quebrou_regra += 2
 ~ p_concreto = true
 ~ p_tunel = true
-Você fecha os olhos e chama. Não um bicho: todos. A Besta sai inteira pela sua boca, num chiado que só os ratos escutam.
+Você fecha os olhos e chama. Não um bicho: todos. A Besta sai inteira pela sua boca, num chiado que só os ratos escutam. # expr voce: chama
 Eles vêm de baixo do assoalho, das frestas da adega, do forro. Dezenas. O bar inteiro sente o cheiro e se cala.
 Os ratos falam por cima uns dos outros. Um homem de olho amarelo e cigarro apagado voltou depois das três com as botas sujas de concreto novo, o pó cinza das obras da Linha Amarela. # pista bar: Os ratos do Porão: um homem de olho amarelo voltou depois das três com as botas sujas de concreto novo, da Linha Amarela.
 E embaixo dos trilhos, num túnel com eco e água pingando, um rapaz de jaqueta de entregador gritou e parou de gritar. # pista biel: Os ratos ouviram o rapaz de jaqueta de entregador morrer num túnel embaixo dos trilhos.
@@ -275,11 +275,11 @@ Vincenzo não pigarreia desta vez. Ele larga o pano no balcão e fica olhando pa
 ~ p_limpeza = true
 ~ p_tunel = true
 # fundo: balcao
-Você entra no banheiro do Porão e sai de lá com o capuz, a jaqueta de couro e os olhos amarelos do Xerife. A Ofuscação não esconde você: ela veste você de outra pessoa.
+Você entra no banheiro do Porão e sai de lá com o capuz, a jaqueta de couro e os olhos amarelos do Xerife. A Ofuscação não esconde você: ela veste você de outra pessoa. # expr voce: some
 Você para no balcão e bate o nó dos dedos na madeira, do jeito que o Cão bate.
 Vincenzo: Xerife. Ficou tudo limpo, como o senhor pediu. A lama de obra saiu das rodas do carro.
 Vincenzo: E o túnel não tem mais cheiro de moleque. Ninguém vai achar nada. # pista bar: Enganado pela Ofuscação, o Vincenzo disse ao "Xerife" que a limpeza ficou pronta: lama de obra nas rodas, e o túnel sem "cheiro de moleque".
-Você se afasta antes que a máscara escorregue. A Fome sobe de uma vez, seca, como se você não comesse há uma semana.
+Você se afasta antes que a máscara escorregue. A Fome sobe de uma vez, seca, como se você não comesse há uma semana. # expr voce: medo
 Lá do outro lado do bar, o Cão de verdade continua embaixo da escada. O Vincenzo olha de um para o outro. Agora ele sabe o que você fez.
 -> salao
 
@@ -288,7 +288,7 @@ Lá do outro lado do bar, o Cão de verdade continua embaixo da escada. O Vincen
 ~ fome = MAX(fome - 2, 1)
 ~ quebrou_regra += 1
 Você desce a escadinha da adega. O rapaz que lava os copos levanta a cabeça, vê os seus olhos e não grita. Ninguém grita no Porão.
-Três goles. Quatro. A Besta se deita de novo, satisfeita, e você lambe a ferida do pescoço dele até ela fechar.
+Três goles. Quatro. A Besta se deita de novo, satisfeita, e você lambe a ferida do pescoço dele até ela fechar. # expr voce: lingua
 Quando você sobe, o Vincenzo está no pé da escada, de braços cruzados.
 Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. # expr: bracos
 -> salao
@@ -412,7 +412,7 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
 + {p_rayo_versao} {not rayo_confessou} {disciplina == "Presença"} [Disciplina: Presença :: Sorrir como quem já é amigo dele há cem anos.]
     ~ passar(20)
     ~ despertar()
-    Você deixa o calor da Presença escorrer pela voz. O Rayo relaxa os ombros sem saber por quê.
+    Você deixa o calor da Presença escorrer pela voz. O Rayo relaxa os ombros sem saber por quê. # expr voce: encanta
     Vincenzo pigarreia do outro lado do balcão. Ele percebeu.
     ~ quebrou_regra += 1
     -> rayo_confissao
@@ -509,7 +509,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
 + {disciplina == "Ofuscação"} {not p_bunker} [Disciplina: Ofuscação :: Sumir na sombra da escada e escutar.]
     ~ passar(20)
     ~ despertar()
-    Você sai da conversa, dá dois passos e deixa de ser vista. O Cão pisca, procura você, e pega o celular.
+    Você sai da conversa, dá dois passos e deixa de ser vista. O Cão pisca, procura você, e pega o celular. # expr voce: some
     Cão: Sou eu. Tranca a porta do bunker, embaixo dos trilhos. Ninguém desce até eu voltar. Ninguém. # pista cao: O Cão mandou trancar um bunker "embaixo dos trilhos".
     O Vincenzo, do balcão, olha exatamente para onde você está. Ele não diz nada, mas sabe.
     ~ p_bunker = true
@@ -518,7 +518,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
 + {disciplina == "Animalismo"} {not p_bunker} [Disciplina: Animalismo :: Chamar o rato que dorme no casaco dele.]
     ~ passar(20)
     ~ despertar()
-    Um rato cinza sai da gola do Cão e desce pela escada até o seu sapato. Na língua dos bichos, ele reclama de um buraco novo e frio, embaixo dos trilhos amarelos, onde agora tem uma caixa que cheira a morte velha. # pista cao: O rato do Cão fala de um buraco novo embaixo dos trilhos, com uma caixa que cheira a morte velha.
+    Um rato cinza sai da gola do Cão e desce pela escada até o seu sapato. Na língua dos bichos, ele reclama de um buraco novo e frio, embaixo dos trilhos amarelos, onde agora tem uma caixa que cheira a morte velha. # pista cao: O rato do Cão fala de um buraco novo embaixo dos trilhos, com uma caixa que cheira a morte velha. # expr voce: chama
     Cão: Que é isso? Volta aqui, bicho.
     ~ p_bunker = true
     ~ quebrou_regra += 1
@@ -526,7 +526,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
 + {disciplina == "Presença"} {not cao_irritado} [Disciplina: Presença :: Ganhar a confiança dele com charme.]
     ~ passar(20)
     ~ despertar()
-    Cão: Guarda esse charme pra Toreador, pastora. Eu já fui mordido por coisa mais bonita. # expr: desdem
+    Cão: Guarda esse charme pra Toreador, pastora. Eu já fui mordido por coisa mais bonita. # expr: desdem # expr voce: encanta
     Ele cospe no chão. Agora ele sabe que você usa Disciplina dentro do Porão. # pista cao: O Cão resiste à Presença. Ele tem a vontade muito forte.
     ~ cao_irritado = true
     ~ quebrou_regra += 1
@@ -538,7 +538,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
     ~ quebrou_regra += 2
     ~ p_bunker = true
     ~ p_concreto = true
-    Você não sorri desta vez. Você deixa a Presença inteira sair de uma vez, como quem abre a porta de um forno.
+    Você não sorri desta vez. Você deixa a Presença inteira sair de uma vez, como quem abre a porta de um forno. # expr voce: prega
     O cigarro cai da boca do Cão. Por um instante, o Xerife olha para você como um cachorro olha para o dono. # expr cao: arrebatado
     Cão: Eu guardei... eu guardei pra proteger a cidade. Embaixo da Linha Amarela. Ninguém desce lá. A poeira da obra não sai da bota.
     Ele pisca. A vontade dele volta, e com ela a raiva. # pista cao: Arrebatado pela Presença, o Cão disse que "guardou" algo embaixo da Linha Amarela. A bota dele tem poeira da obra. # expr cao: desdem
@@ -548,7 +548,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
     -> cao_perguntas
 + {p_cao_versao} {not cao_irritado} [Teste: Força + Intimidação, dif. 5 :: Encostar o Xerife na parede.]
     ~ passar(20)
-    Você: Você recebeu a carga e está mentindo para o seu Príncipe.
+    Você: Você recebeu a carga e está mentindo para o seu Príncipe. # expr voce: ameaca
     ~ temp r = rolar(intimidacao, fome, 5)
     { r == 1 or r == 2 or r == 3:
         O Cão recua um passo, sem perceber. Por um instante o Xerife parece um bicho encurralado. # expr cao: encurralado
@@ -617,20 +617,20 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão ficou sem re
     -> harumi_pressionar
 + {cla == "Ministério"} {not p_frasco} [Ministério :: Irmã, a Serpente ensina que todo segredo tem preço.]
     ~ passar(20)
-    Você: Irmã, nós servimos à mesma Serpente. Ela ensina que todo segredo tem preço. Me diga o seu.
+    Você: Irmã, nós servimos à mesma Serpente. Ela ensina que todo segredo tem preço. Me diga o seu. # expr voce: encanta
     Harumi: ...Alguém da Serpente. Logo hoje. Tá bom. Eu tirei um pouquinho. Só um frasco, pros meus clientes mais especiais. O velho nem vai sentir falta. # pista harumi: A Harumi admitiu que abriu o sarcófago e tirou um frasco de sangue para vender. # expr: manga
     ~ p_frasco = true
     -> harumi_perguntas
 + {not harumi_fechado} {not harumi_confessou} [Teste: Força + Intimidação, dif. 4 :: Segurar o taco dela e falar baixo.]
     ~ passar(20)
-    Você segura o taco de sinuca no meio da tacada dela.
+    Você segura o taco de sinuca no meio da tacada dela. # expr voce: ameaca
     ~ temp r = rolar(intimidacao, fome, 4)
     {
     - r == 1 or r == 2 or r == 3:
         Harumi: Solta. Solta o taco, eu falo. Ninguém encosta em mim aqui dentro. # expr: brava
         -> harumi_confissao
     - r == 4:
-        A Besta empurra e você quebra o taco ao meio. O bar inteiro fica quieto. O Vincenzo pousa o copo devagar.
+        A Besta empurra e você quebra o taco ao meio. O bar inteiro fica quieto. O Vincenzo pousa o copo devagar. # expr voce: ameaca
         ~ quebrou_regra += 1
         ~ harumi_fechado = true
         Harumi: Vincenzo! Seu convidado está quebrando a regra da casa. # expr: brava
@@ -643,7 +643,7 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão ficou sem re
 + {disciplina == "Presença"} {not harumi_confessou} [Disciplina: Presença :: Fazer ela querer contar tudo para você.]
     ~ passar(20)
     ~ despertar()
-    Você deixa a Presença tomar a sala. A Harumi, que vive de seduzir os outros, se pega sorrindo para você como para uma velha amizade.
+    Você deixa a Presença tomar a sala. A Harumi, que vive de seduzir os outros, se pega sorrindo para você como para uma velha amizade. # expr voce: encanta
     ~ quebrou_regra += 1
     -> harumi_confissao
 + {disciplina == "Animalismo"} {not harumi_confessou} [Disciplina: Animalismo :: Farejar o medo dela.]
@@ -694,7 +694,7 @@ Nonna: Sangue de vampiro chama morto mais forte. Com ele, o rapaz vem mais intei
     ~ nonna_sangue = true
     ~ biel_max = 4
     ~ fome = MIN(fome + 1, 5)
-    A Nonna corta a ponta do seu dedo com uma tesourinha de unha e deixa pingar num frasco de remédio, sem pressa. Ela tampa, beija o vidro e guarda no decote. # expr nonna: frasco
+    A Nonna corta a ponta do seu dedo com uma tesourinha de unha e deixa pingar num frasco de remédio, sem pressa. Ela tampa, beija o vidro e guarda no decote. # expr nonna: frasco # expr voce: dor
     Nonna: Agora uma parte de você fica comigo, filh{o}. Não se preocupa. Por enquanto.
     -> sessao
 + [Ficar devendo um favor. "Um favor. Combinado."]
@@ -868,7 +868,7 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
     ~ despertar()
     ~ quebrou_regra += 1
     ~ p_constance_ordem = true
-    Você deixa de ser vista e para atrás da cadeira dela. Constance se inclina para o carniçal da esquerda. # expr constance: sussurro
+    Você deixa de ser vista e para atrás da cadeira dela. Constance se inclina para o carniçal da esquerda. # expr constance: sussurro # expr voce: escuta
     Constance: Se {o == "a":a|o} forasteir{o} chegar no Cão, deixa chegar. Se chegar em mim, resolve antes do sol. # pista constance: A Constance mandou o carniçal "resolver" você se a investigação chegar nela. Se chegar no Cão, ela deixa.
     A sombra dela se estica pelo chão até o seu pé, e para ali. Talvez ela saiba que você está ouvindo. Talvez não.
     -> constance_perguntas
@@ -877,7 +877,7 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
     ~ despertar()
     ~ quebrou_regra += 1
     ~ constance_hostil = true
-    Constance ri, um riso curto e sem graça nenhuma. # expr constance: riso
+    Constance ri, um riso curto e sem graça nenhuma. # expr constance: riso # expr voce: encanta
     Constance: Isso funciona com motoqueiro, pastora. Eu tenho trezentos anos. Não faça de novo.
     -> constance_perguntas
 + {disciplina == "Animalismo"} {not c_animal} [Disciplina: Animalismo :: Farejar a Besta dela.]
@@ -1065,11 +1065,11 @@ O Cão olha para a escada. Dois carniçais do Príncipe já estão lá.
 Cão: Tá bom. Tá no bunker, embaixo da Linha Amarela. Intacto. Eu ia devolver quando a poeira baixasse. # expr: encurralado
 Cão: E o moleque viu o que não devia. Fiz o que um Xerife faz.
 Dante: Você fez o que um traidor faz.
-O Cão não espera os carniçais. Ele salta por cima da mesa, e em meio segundo as unhas dele estão na sua garganta. O seu sangue pinga no chão do Porão. # expr cao: ataque
+O Cão não espera os carniçais. Ele salta por cima da mesa, e em meio segundo as unhas dele estão na sua garganta. O seu sangue pinga no chão do Porão. # expr cao: ataque # expr voce: dor
 Dante: Pare. # expr: ordem
 Uma palavra só. O Cão congela no ar, como cachorro que ouviu o dono. Os carniçais o arrastam para longe de você.
 Dante: Ninguém toca em quem me serve. Pelo menos esta noite.
-Você leva a mão ao pescoço. Mais um segundo e não sobrava nada para o Príncipe proteger.
+Você leva a mão ao pescoço. Mais um segundo e não sobrava nada para o Príncipe proteger. # expr voce: dor
 { p_boes:
     Constance não tira os olhos de você. Ela percebe que você sabe mais do que disse.
     Você tem o carimbo do BOES no bolso. O Príncipe ia entregar o Matusalém para os caçadores. O que você faz?
@@ -1116,14 +1116,14 @@ Dante olha para ela por um longo tempo. Ele não pode derrubar a Primogênita La
 # musica: final_triste
 Dante: Saia da minha cidade antes da próxima noite. Sua dívida não está paga.
 { cla == "Nosferatu": -> irene_some_constance }
-Você não chega à próxima noite. Na escada da pensão, a sua própria sombra se levanta da parede e fecha a sua boca.
+Você não chega à próxima noite. Na escada da pensão, a sua própria sombra se levanta da parede e fecha a sua boca. # expr voce: medo
 # imagem: amanhecer
 Os Lasombra não deixam acusação sem resposta. De manhã, sobra uma mancha de cinza no degrau e um lenço cor-de-rosa.
 -> final_a_epilogo
 
 === morte_bode ===
 {denunciado:Na mesma noite|Três noites depois}, alguém bate na porta da sua pensão. É o Cão, com o cigarro que ele não traga.
-Cão: Bom trabalho, forasteir{o}. Bom até demais. Gente esperta não dura nesta cidade. # expr: sorriso
+Cão: Bom trabalho, forasteir{o}. Bom até demais. Gente esperta não dura nesta cidade. # expr: sorriso # expr voce: medo
 { cla == "Nosferatu": -> irene_some_cao }
 # imagem: amanhecer
 Ninguém pergunta por você. Você não tinha amigos aqui, como o Príncipe disse.
@@ -1138,14 +1138,14 @@ FINAL A · O BODE EXPIATÓRIO. Você acusou a pessoa errada e pagou com a vida. 
 
 === irene_some_cao ===
 O Cão empurra a porta. O quarto está vazio: cama feita, mala aberta, janela fechada.
-Você está a meio metro dele, encostada na parede, e ele não vê. A Ofuscação nunca foi tão fácil.
+Você está a meio metro dele, encostada na parede, e ele não vê. A Ofuscação nunca foi tão fácil. # expr voce: some
 Cão: Rato. Eu sei que você está aqui.
 Ele fareja o ar e vai embora. Ele vai voltar. Mas até lá, você já desceu pelo ralo do banheiro.
 -> final_irene_esgoto
 
 === irene_some_constance ===
 Na escada da pensão, a sua sombra se levanta da parede para fechar a sua boca, e não encontra boca nenhuma.
-Você já não estava ali. Uma Nosferatu aprende a sumir antes de aprender a andar.
+Você já não estava ali. Uma Nosferatu aprende a sumir antes de aprender a andar. # expr voce: some
 -> final_irene_esgoto
 
 === final_irene_esgoto ===
@@ -1164,7 +1164,7 @@ FINAL F · A MORTA NOS ESGOTOS. Irene errou a acusação, mas a Ofuscação a sa
 O Cão sorri, mostrando os dentes tortos. # expr cao: sorriso
 Cão: Príncipe, alguém de fora que acusa o Xerife sem prova é alguém que trabalha para alguém.
 Dante: Concordo.{denunciado: E que ainda quebra a regra do Vincenzo.}
-Antes que você chegue à escada, as mãos do Cão estão nos seus ombros.
+Antes que você chegue à escada, as mãos do Cão estão nos seus ombros. # expr voce: medo
 # imagem: amanhecer
 # musica: final_triste
 Quando você abre os olhos, tem correntes nos pulsos, no telhado da cantina, olhando o céu do Bixiga ficar cor de laranja.
@@ -1175,7 +1175,7 @@ FINAL D · SEM PROVAS. Você acusou o culpado sem ter como provar. # final: D
 
 === tomas_foge ===
 ~ final_cap1 = "G"
-A Besta acorda antes de você. As unhas viram garras, e a corrente, feita para gente, não para bicho, estoura no terceiro puxão.
+A Besta acorda antes de você. As unhas viram garras, e a corrente, feita para gente, não para bicho, estoura no terceiro puxão. # expr voce: ameaca
 Você pula do telhado com a pele já fumegando, atravessa a rua e enterra o corpo no barro de um terreno baldio, como os velhos Gangrel do Sul ensinaram.
 # imagem: serra
 # musica: final_triste
