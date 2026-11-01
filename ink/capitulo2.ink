@@ -86,14 +86,6 @@ VAR a2_isadora = false
 ~ limite = 640
 ~ fome = 4
 ~ cacadas = 0
-// saves de antes do tipo de predador: completa pela personagem
-{ parada_caca == 0:
-    { nome:
-    - "Tomás": ~ parada_caca = 5
-    - "Irene": ~ parada_caca = 5
-    - else: ~ parada_caca = 6
-    }
-}
 ~ quebrou_regra = 0
 ~ denunciado = false
 ~ poder_forte = false
@@ -237,6 +229,14 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 }
 
 === caca ===
+// saves de antes (inclusive os do meio do capítulo 2) do tipo de predador: completa pela personagem
+{ parada_caca == 0:
+    { nome:
+    - "Tomás": ~ parada_caca = 5
+    - "Irene": ~ parada_caca = 5
+    - else: ~ parada_caca = 6
+    }
+}
 { cacadas == 0:
     A Fome arranha a garganta por dentro. A noite apagada te deixou seco, e a gala vai estar cheia de gente viva. Entrar assim é deixar a Besta escolher por você.
 }
