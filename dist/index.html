@@ -837,7 +837,7 @@ function voltarDaIlustracao() {
 const TOQUE = matchMedia('(hover: none)').matches;
 const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
-let ultimoSinal = null;
+let ultimoSinal = null, despertando = false;
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, euPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
 let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
 
@@ -882,13 +882,13 @@ function novaHistoria() {
   feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     if (simulando) return 0;
-    const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
+    const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r, hud: fotoHud() }); return r.resultado;
   }, false);
   story.BindExternalFunction('despertar', () => {
     if (simulando) return;
-    const ok = V5.despertarV5();
+    const ok = V5.despertarV5(), hud = fotoHud();
     if (!ok) story.variablesState['fome'] = Math.min(5, story.variablesState['fome'] + 1);
-    fila.push({ tipo: 'despertar', ok });
+    fila.push({ tipo: 'despertar', ok, hud });
   }, false);
 }
 function iniciar() {
@@ -960,24 +960,28 @@ function continuar() {
   avancar();
 }
 
+// Fome e Sinal como estavam na hora de um teste. O Ink já muda a Fome na mesma linha em que rola os dados
+// (caça: "rolar" e logo "fome - 2"); o HUD só pode mostrar o novo valor depois que os dados aparecem.
+function fotoHud() { const v = story.variablesState; return { fome: v['fome'], sinal: v['sinal'] || 0 }; }
 function atualizarHud() {
   const v = story.variablesState, min = v['minutos'];
+  const espera = fila.find(e => e.hud), hud = espera ? espera.hud : fotoHud();
   $('hora').textContent = horaDe(min);
   $('hora').classList.toggle('urgente', min >= v['limite'] - 100);
   $('sol').style.setProperty('--sol', Math.max(0, Math.min(1, (min - (v['limite'] - 160)) / 160)).toFixed(2));
   $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
-  $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= v['fome'] ? 'cheio' : ''}"></i>`).join('');
+  $('fome').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= hud.fome ? 'cheio' : ''}"></i>`).join('');
   $('n-pistas').textContent = pistas.length;
   // o chip na língua (capítulo 2): 0 a 5
-  const sn = v['sinal'] || 0; $('grupo-sinal').hidden = v['capitulo'] < 2;
+  const sn = hud.sinal; $('grupo-sinal').hidden = v['capitulo'] < 2;
   $('sinal').innerHTML = [1, 2, 3, 4, 5].map(i => `<i class="${i <= sn ? 'cheio' : ''}"></i>`).join('');
   if (ultimoSinal != null && sn > ultimoSinal) { pulsar($('sinal')); toast(sn >= 5 ? 'O chip está queimando' : `O chip transmitiu. Sinal ${sn}`); }
   ultimoSinal = sn;
-  const f = v['fome'];
+  const f = hud.fome;
   if (ultimaFome != null && f !== ultimaFome) {
     pulsar($('fome'));
-    // o teste de Despertar tem o aviso dele; os outros (Disciplina forte, sangue da Nonna, beber) avisam aqui
-    if (!fila.some(e => e.tipo === 'despertar')) toast(f > ultimaFome ? `A Fome subiu para ${f}` : `A Fome baixou para ${f}`);
+    // o teste de Despertar tem o aviso dele; os outros (Disciplina forte, sangue da Nonna, beber, caça) avisam aqui
+    if (!despertando) toast(f > ultimaFome ? `A Fome subiu para ${f}` : `A Fome baixou para ${f}`);
   }
   ultimaFome = f;
   if (pistas.length > ultimasPistas) pulsar($('n-pistas'));
@@ -1036,7 +1040,7 @@ function aplicarTags(l) {
 }
 
 function avancar() {
-  if (fila.length) return mostrarEvento(fila.shift());
+  if (fila.length) { atualizarHud(); return mostrarEvento(fila.shift()); }
   if (proxima || story.canContinue) {
     let l = proxima; proxima = null;
     if (!l) { salvar(); marcarLugar(); l = lerLinha(); }
@@ -1059,7 +1063,7 @@ function mostrarEvento(ev) {
   if (ev.tipo === 'linha') return ev.texto ? mostrarLinha(ev.texto) : avancar();
   if (ev.tipo === 'dados') return mostrarDados(ev.r);
   if (ev.tipo === 'trajeto') return mostrarTrajeto(ev.val);
-  if (ev.tipo === 'despertar') { atualizarHud(); toast(ev.ok ? 'Teste de Despertar: a Fome se manteve' : 'Teste de Despertar: a Fome subiu'); return avancar(); }
+  if (ev.tipo === 'despertar') { despertando = true; atualizarHud(); despertando = false; toast(ev.ok ? 'Teste de Despertar: a Fome se manteve' : 'Teste de Despertar: a Fome subiu'); return avancar(); }
 }
 
 // Os dados caem na mesa, giram mostrando números ao acaso e param um a um no valor tirado; depois vem o carimbo do resultado.
@@ -1863,7 +1867,7 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: '11051f5' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'd698840' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
   && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
