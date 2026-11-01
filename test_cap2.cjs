@@ -70,9 +70,9 @@ function caminho(personagem, partida, passos, esperado) {
   console.log(`${final === esperado ? 'ok ' : 'FALHOU'} caminho neutro ${s.variablesState['nome']} partindo de ${partida}: final ${final} (esperado ${esperado})`);
   if (final !== esperado) process.exitCode = 1;
 }
-const NEUTRO = [/sapatos/, /celular/, /bolsos/, /camisa/, /convite/, /Ir para o MASP/, /^Isadora/, /Ligação/, /Voltar ao salão/, /^Dr. Arnaldo/, /Lama: eu estive/, /Voltar ao salão/,
+const NEUTRO = [/sapatos/, /celular/, /bolsos/, /camisa/, /convite/, /Ir para o MASP/, Object.assign(/Esperar a gala abrir/, { opcional: true }), /^Isadora/, /Ligação/, /Voltar ao salão/, /^Dr. Arnaldo/, /Lama: eu estive/, /Voltar ao salão/,
   /Descer para o vão/, /Valentina/, /me viu/, /Lama: eu voltei/, /Voltar ao vão/, /Subir para o salão/,
-  /^Dr. Arnaldo/, Object.assign(/Quem nesta cidade/, { opcional: true }), // quem chega até as 22h já ouviu isso do Juiz a sós
+  /^Dr. Arnaldo/, Object.assign(/Quem nesta cidade/, { opcional: true }), // quem chega até as 21h já ouviu isso do Juiz a sós
   Object.assign(/segurança da porta é humano/, { opcional: true }), /Voltar ao salão/,
   /Descer para o vão/, /Subir para o salão/, /Descer para o vão/, /Subir para o salão/,
   /^Luciana/, /Arquivo:/, /^Voltar$/, /Chamar quem preside/, /^Sim/, /com a Luciana/, /^Sim. É isso/, /03h12/, /saiu da Capela/, /mulher de luvas/];
@@ -82,6 +82,10 @@ caminho(2, 'E', [...NEUTRO, /Dr. Arnaldo, o Juiz/], '2J');
 // de moto chega cedo e fala com o Juiz a sós: sobra tempo, então desce e sobe mais uma vez antes da Luciana chegar
 { const k = NEUTRO.findIndex(r => r.source === '^Luciana');
   caminho(0, 'C_anarq', [...NEUTRO.slice(0, k), /Descer para o vão/, /Subir para o salão/, /Descer para o vão/, /Subir para o salão/, ...NEUTRO.slice(k), /A ninguém/], '2K'); }
+
+// na espera do vão livre: vigia a porta e fala com quem chegou cedo, e a gala abre sozinha às 22h30
+{ const k = NEUTRO.findIndex(r => r.source === 'Esperar a gala abrir');
+  caminho(1, 'B', [...NEUTRO.slice(0, k), /Vigiar a porta/, /Falar com o Rayo/, ...NEUTRO.slice(k), /Ao Príncipe/], '2B'); }
 
 // Final S do capítulo 1 (O Cofre Aberto): com carimbo, informante, Constance aliada, frasco e sem quebrar regra, a opção aparece e leva ao S.
 {
