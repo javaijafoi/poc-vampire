@@ -418,7 +418,19 @@ body {
 .abertura .flash.on { animation: flash 1.2s; }
 @keyframes flash { 10% { opacity: .9; } 100% { opacity: 0; } }
 .abertura .pular { position: absolute; right: 2cqw; top: 2cqw; z-index: 2; font-family: var(--f-tipo); font-size: max(12px, 1.3cqw); background: rgb(236 228 210 / .85); color: #2a1d16; border: 0; padding: .4cqw 1.2cqw; cursor: pointer; }
-@media (prefers-reduced-motion: reduce) { .abertura .quadro.on, .capa .capa-fundo, .lado[data-p="Biel"] img { animation: none; } }
+/* quadro que já é um recorte de jornal pronto (manchete e figura na imagem): entra inteiro, como papel na mesa, sem cortar a manchete */
+.abertura .quadro.jornal { inset: auto; left: 9%; top: 12%; width: 82%; height: 66%; object-fit: contain; filter: saturate(.8) drop-shadow(.4cqw .8cqw 1.2cqw rgb(0 0 0 / .8)); }
+.abertura .quadro.jornal.on { animation: kbj 8s ease-out forwards; }
+@keyframes kbj { from { transform: scale(.94) rotate(-2.5deg); } to { transform: scale(1) rotate(-1deg); } }
+.abertura .carimbo.canto { left: 78%; top: 70%; font-size: 6cqw; }
+/* cartão de título do capítulo, no último quadro */
+.abertura .titulo-ab { position: absolute; left: 50%; top: 42%; translate: -50% -50%; width: 90%; text-align: center; color: #ece4d2; opacity: 0; transform: scale(1.08); transition: opacity 1.2s, transform 2.4s ease-out; pointer-events: none; text-shadow: 0 .3cqw 1.4cqw rgb(0 0 0 / .9); }
+.abertura .titulo-ab small { display: inline-block; font-family: var(--f-tipo); font-size: 2.4cqw; letter-spacing: .3em; background: #8f1d26; padding: .3cqw 1.4cqw; }
+.abertura .titulo-ab b { display: block; font-family: var(--f-tipo); font-weight: normal; font-size: 6.4cqw; line-height: 1.1; margin-top: 1.2cqw; }
+.abertura .titulo-ab.on { opacity: 1; transform: none; }
+/* fim da abertura: ela some devagar por cima da cena que já começou */
+.abertura.saindo { opacity: 0; transition: opacity .9s; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .abertura .quadro.on, .abertura .quadro.jornal.on, .capa .capa-fundo, .lado[data-p="Biel"] img { animation: none; } }
 
 /* ---------- Ajuda para quem não joga Vampiro: ficha, botão "?", dicas e tutorial ---------- */
 /* botão "?" no canto de cima da cena, longe dos rostos */
@@ -584,6 +596,11 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .abertura .legenda-ab { left: 50%; translate: -50% 0; width: 88%; max-width: none; }
   .abertura .quem-ab { font-size: 13px; padding: 3px 10px; }
   .abertura .carimbo { font-size: 15cqw; }
+  .abertura .quadro.jornal { left: 3%; top: 22%; width: 94%; height: 44%; }
+  .abertura .carimbo.canto { left: 62%; top: 62%; font-size: 11cqw; }
+  .abertura .titulo-ab { top: 40%; }
+  .abertura .titulo-ab small { font-size: 4.4cqw; padding: 3px 12px; }
+  .abertura .titulo-ab b { font-size: 11cqw; margin-top: 10px; }
   .abertura .bilhete { width: 66%; font-size: 4.6cqw; top: 16%; padding: 16px 18px; }
   .abertura .bilhete b { width: 7cqw; }
   .abertura .pular { font-size: 14px; padding: 8px 14px; top: 12px; right: 12px; }
@@ -656,6 +673,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     <div class="vinheta"></div>
     <img class="recorte-ab" alt="">
     <div class="carimbo">SUMIU</div>
+    <div class="titulo-ab"><small></small><b></b></div>
     <div class="quem-ab"></div>
     <div class="bilhete">Porão do Vincenzo, Bixiga.<br>Onze horas.<br>Venha sem ninguém.<br>— D.<b></b></div>
     <div class="flash"></div>
@@ -1407,7 +1425,8 @@ function acaoCapa(a) {
   else if (a === 'novo-jogo') novoJogo();
   else if (a === 'capitulo-2') abrirCapitulo2();
   else if (a === 'ver-abertura') tocarAbertura(mostrarCapa);
-  else if (a === 'ver-abertura-2') tocarAbertura(mostrarCapa, QUADROS_CAP2);
+  // no fim, volta para o painel do capítulo 2 (antes voltava sempre para o 1)
+  else if (a === 'ver-abertura-2') tocarAbertura(() => { mostrarCapa(); irCapitulo(1, true); }, QUADROS_CAP2);
 }
 // Capítulo 2 pela capa. Quem morreu no fim do capítulo 1 não continua: o capítulo 2 começa com o final padrão, e o jogo avisa antes.
 function abrirCapitulo2() {
@@ -1487,7 +1506,7 @@ const QUADROS_CAP2 = [
   { fundo: 'corte', hora: 'Na noite seguinte', txt: 'O Príncipe Dante pagou a sua dívida. Agora você é útil a ele, e todo mundo sabe.', rec: 'dante', quem: 'DANTE · Príncipe de São Paulo' },
   { fundo: 'porto', hora: 'Terça, 22h40', txt: 'Na terça, o Príncipe te mandou fazer um trabalho no porto de Santos. Você foi.' },
   { fundo: 'rua', escuro: true, hora: 'Terça, 03h12', txt: 'O que aconteceu depois disso, você não lembra. Ninguém conta. A noite inteira sumiu.', carimbo: 'APAGADO' },
-  { fundo: 'loft', hora: 'Hoje, 19h00', txt: 'Capítulo 2 · O Custo do Esquecimento. Você acorda com a boca ardendo e uma noite faltando.' },
+  { fundo: 'loft', hora: 'Hoje, 19h00', titulo: ['CAPÍTULO 2', 'O Custo do Esquecimento'], txt: 'Você acorda com a boca ardendo e uma noite faltando.' },
 ];
 // Os três primeiros quadros da abertura do capítulo 2 contam como o capítulo 1 acabou para você (null tira o quadro).
 const LEMBRA_CAP1 = {
@@ -1528,15 +1547,25 @@ function mostrarNoiteAnterior() {
 }
 
 let timersAbertura = [];
+// fundos que já são um recorte de jornal pronto (manchete na imagem): entram inteiros, sem corte, e o carimbo vai para o canto
+const FUNDOS_JORNAL = new Set(['cao_morto']);
 function pararAbertura() { timersAbertura.forEach(clearTimeout); timersAbertura = []; }
 function tocarAbertura(depois, QUADROS_AB = QUADROS) {
   pararAbertura();
   const ab = $('abertura'), qs = ab.querySelectorAll('.quadro'), rec = ab.querySelector('.recorte-ab');
   const hora = ab.querySelector('.hora-ab'), leg = ab.querySelector('.legenda-ab'), carimbo = ab.querySelector('.carimbo'), bilhete = ab.querySelector('.bilhete'), flash = ab.querySelector('.flash'), quem = ab.querySelector('.quem-ab');
-  [rec, carimbo, bilhete, quem].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
+  const titulo = ab.querySelector('.titulo-ab');
+  [rec, carimbo, bilhete, quem, titulo].forEach(e => e.classList.remove('on')); qs.forEach(q => q.classList.remove('on')); hora.classList.remove('on-txt'); leg.classList.remove('on-txt');
+  clearTimeout(ab._saida); ab.classList.remove('saindo');
   $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true }); tocarMusica('abertura', false);
-  // o clique em Pular chega aqui duas vezes (botão e abertura); só a primeira vale
-  const fim = () => { if (ab.hidden) return; pararAbertura(); ab.hidden = true; depois(); };
+  // a abertura do capítulo 2 tem legendas mais longas: cada quadro fica o tempo de ler (a do capítulo 1 segue com 5 s, no compasso da música)
+  const lento = QUADROS_AB !== QUADROS;
+  // o clique em Pular chega aqui duas vezes (botão e abertura); só a primeira vale.
+  // A cena seguinte começa por baixo e a abertura some devagar por cima dela, sem corte seco.
+  const fim = () => {
+    if (ab.hidden || ab.classList.contains('saindo')) return; pararAbertura(); depois();
+    ab.hidden = false; ab.classList.add('saindo'); ab._saida = setTimeout(() => { ab.hidden = true; ab.classList.remove('saindo'); }, 900);
+  };
   // clicar na abertura passa para o próximo quadro; Pular encerra
   let atualQ = -1;
   ab.onclick = e => { if (e.target.id === 'pular') return fim(); mostrarQ(atualQ + 1); };
@@ -1544,12 +1573,15 @@ function tocarAbertura(depois, QUADROS_AB = QUADROS) {
   const em = (ms, f) => timersAbertura.push(setTimeout(f, ms));
   const mostrarQ = i => {
     pararAbertura(); if (i >= QUADROS_AB.length) return fim();
-    atualQ = i; const q = QUADROS_AB[i], dur = q.bilhete ? 5200 : 5000;
+    atualQ = i; const q = QUADROS_AB[i], jornal = FUNDOS_JORNAL.has(q.fundo);
+    const dur = (q.bilhete ? 5200 : lento ? Math.max(6000, 1800 + q.txt.length * 50) : 5000) + (q.titulo ? 2500 : 0);
     const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
-    if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
-    hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
+    if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.toggle('jornal', jornal); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
+    hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on'); titulo.classList.remove('on');
+    carimbo.classList.toggle('canto', jornal);
+    if (q.titulo) em(500, () => { titulo.querySelector('small').textContent = q.titulo[0]; titulo.querySelector('b').textContent = q.titulo[1]; titulo.classList.add('on'); });
     em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
-    em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
+    em(q.titulo ? 1800 : 700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
     if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec][q.pose] || ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
     if (q.quem) em(2300, () => {
       // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
@@ -1919,7 +1951,7 @@ $('instantaneo').addEventListener('click', () => { opcoes.instantaneo = !opcoes.
 ajustarOpcoes();
 document.addEventListener('keydown', e => {
   if ((e.key === 'm' || e.key === 'M') && !/INPUT|TEXTAREA/.test(document.activeElement?.tagName)) { som.ligado = !som.ligado; ajustarSom(); return; }
-  if (!$('abertura').hidden) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
+  if (!$('abertura').hidden && !$('abertura').classList.contains('saindo')) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { e.preventDefault(); $('pular').click(); } return; }
   if (!$('capa').hidden) {
     if (e.key === 'Escape' && !$('confirma').hidden) mostrarCapa();
     // ← → trocam de capítulo na capa
