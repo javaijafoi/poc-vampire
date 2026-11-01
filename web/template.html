@@ -110,6 +110,8 @@ body {
 .nome { position: absolute; top: 0; left: 2.4cqw; transform: translateY(-60%); font-family: var(--f-nome); font-weight: 600;
   background: var(--acento); color: #f4e7d2; padding: .25cqw 1.2cqw; font-size: max(13px, 1.7cqw); letter-spacing: .04em; }
 .nome[hidden] { display: none; }
+.fala.extra { margin-top: .4em; min-height: 0; }
+.fala:has(+ .fala.extra) { min-height: 0; }
 .fala { font-size: max(15px, 2.05cqw); line-height: 1.45; max-width: 70ch; min-height: 2.9em; text-wrap: pretty; }
 .fala.narracao { font-style: italic; color: var(--tinta-fraca); }
 .fala.voce { color: #6a2a12; }
@@ -739,7 +741,7 @@ const esc = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&
 
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
-  fila = []; pistas = []; finalTexto = finalLetra = null; cena = null;
+  fila = []; proxima = null; pistas = []; finalTexto = finalLetra = null; cena = null;
   feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r }); return r.resultado;
@@ -841,12 +843,35 @@ function horaDe(min, base = story?.variablesState['hora_base'] ?? 23) { const h 
 function toast(txt) { const t = $('toast'); t.textContent = txt; t.classList.add('on'); clearTimeout(fimTimer); fimTimer = setTimeout(() => t.classList.remove('on'), 2600); }
 
 // Puxa a próxima linha do roteiro e trata efeitos (dados, tags) antes de mostrar.
-function avancar() {
-  if (fila.length) return mostrarEvento(fila.shift());
-  if (story.canContinue) {
-    salvar(); marcarLugar();
-    let texto = story.Continue().trim();
-    for (const tag of story.currentTags) {
+// Uma linha do Ink lida, com as tags dela (que só valem quando a linha vai para a tela).
+function lerLinha() { const texto = story.Continue().trim(); return { texto, tags: [...story.currentTags] }; }
+// Linha já lida do Ink e ainda não mostrada (ficou de fora de um agrupamento).
+let proxima = null;
+// Quem fala numa linha: o nome ("Você", "Rayo"...), '' para narração, null para etiqueta ("Gatilho :: texto")
+function falanteDe(t) {
+  if (/ :: /.test(t)) return null;
+  const m = t.match(/^([A-ZÀ-Ú][a-zà-ú]+): /); return m && (m[1] === 'Você' || CHAVE[m[1]]) ? m[1] : '';
+}
+// Junta na mesma caixa até 3 linhas seguidas: a primeira, mais falas da mesma pessoa ou narrações, até 300 letras,
+// para o jogador não clicar a cada frase. Não junta se a linha seguinte troca cena, rosto, música, final ou rola dados.
+// Devolve as linhas extras como parágrafos { narracao, corpo }. test_cliques.cjs mede o efeito.
+const AGRUPA_MAX = 300;
+function agrupar(texto) {
+  const quem = falanteDe(texto), extras = []; if (quem === null) return extras;
+  let total = texto.length;
+  for (let n = 1; n < 3 && story.canContinue && !fila.length; n++) {
+    const prox = lerLinha(), q = falanteDe(prox.texto);
+    const soPistas = prox.tags.every(t => /^\s*pista\b/.test(t));
+    const pergunta = !story.canContinue && story.currentChoices.length && prox.texto.length < 60 && !/: /.test(prox.texto);
+    if (fila.length || !prox.texto || !soPistas || pergunta || q === null || (q && q !== quem) || total + prox.texto.length > AGRUPA_MAX) { proxima = prox; break; }
+    aplicarTags(prox); total += prox.texto.length;
+    extras.push({ narracao: !q, corpo: q ? prox.texto.slice(q.length + 2) : prox.texto });
+  }
+  return extras;
+}
+
+function aplicarTags(l) {
+    for (const tag of l.tags) {
       const [k, ...resto] = tag.split(':'); const val = resto.join(':').trim();
       const [chave, aba] = k.trim().split(/\s+/);
       if (chave === 'fundo') trocarFundo(val);
@@ -859,15 +884,26 @@ function avancar() {
       if (chave === 'musica') tocarMusica(val);
       if (chave === 'capitulo') comecarCapitulo(val);
       if (chave === 'trajeto') fila.push({ tipo: 'trajeto', val });
-      if (chave === 'final') { finalLetra = val; finalTexto = texto; texto = ''; }
+      if (chave === 'final') { finalLetra = val; finalTexto = l.texto; l.texto = ''; }
       if (chave === 'pista') { pistas.push({ aba: ABAS_PISTA[aba] || 'Dossiê', texto: val }); toast('Nova pista no caderno'); }
     }
+}
+
+function avancar() {
+  if (fila.length) return mostrarEvento(fila.shift());
+  if (proxima || story.canContinue) {
+    let l = proxima; proxima = null;
+    if (!l) { salvar(); marcarLugar(); l = lerLinha(); }
+    aplicarTags(l);
     atualizarHud();
+    let texto = l.texto;
     if (fila.length) { fila.push({ tipo: 'linha', texto }); return avancar(); }
     if (!texto) return avancar();
     // pergunta curta logo antes das opções ("Para onde você vai?") vira o título das opções
-    if (!story.canContinue && story.currentChoices.length && texto.length < 60 && !/: /.test(texto) && !/ :: /.test(texto)) return mostrarEscolhas(texto);
-    return mostrarLinha(texto);
+    if (!proxima && !story.canContinue && story.currentChoices.length && texto.length < 60 && !/: /.test(texto) && !/ :: /.test(texto)) return mostrarEscolhas(texto);
+    const extras = proxima ? [] : agrupar(texto);
+    atualizarHud();
+    return mostrarLinha(texto, extras);
   }
   if (story.currentChoices.length) return mostrarEscolhas();
   mostrarFim();
@@ -962,7 +998,7 @@ function mostrarTrajeto(val) {
   raf = requestAnimationFrame(quadro);
 }
 
-function mostrarLinha(texto) {
+function mostrarLinha(texto, extras = []) {
   texto = texto.replace('@pistas', `${pistas.length} pista${pistas.length === 1 ? '' : 's'}`);
   const v = story.variablesState; let nome = null, chave = null, corpo = texto, classe = 'narracao', passiva = null;
   const m = texto.match(/^([A-ZÀ-Ú][a-zà-ú]+): (.*)$/);
@@ -975,23 +1011,28 @@ function mostrarLinha(texto) {
   // narração com "# expr cao: ...": quem trocou de rosto fica aceso nesta linha
   falando(comArte ? chave : (exprAlvo && cena[PERS[exprAlvo]?.lado] === exprAlvo ? exprAlvo : null)); exprAlvo = null;
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
-  historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo }); if (historico.length > 200) historico.shift();
+  historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo });
+  extras.forEach(x => historico.push({ nome: x.narracao ? null : nome, texto: x.corpo })); while (historico.length > 200) historico.shift();
   const c = $('conteudo');
-  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div><span class="seta" aria-hidden="true">▼</span>`;
+  c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div>${extras.map(x => `<div class="fala extra ${x.narracao ? 'narracao' : classe}" hidden>${esc(x.corpo)}</div>`).join('')}<span class="seta" aria-hidden="true">▼</span>`;
   digitar(corpo);
 }
 
 function digitar(t) {
   const alvo = $('txt'); alvoTexto = t; let i = 0; clearInterval(digitando);
-  if (opcoes.instantaneo || pulando || matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; mostradoEm = performance.now(); return; }
-  digitando = setInterval(() => { i += 3; alvo.textContent = t.slice(0, i); if (i >= t.length) { clearInterval(digitando); mostradoEm = performance.now(); } }, 16);
+  if (opcoes.instantaneo || pulando || matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; completou(); return; }
+  digitando = setInterval(() => { i += 3; alvo.textContent = t.slice(0, i); if (i >= t.length) { clearInterval(digitando); completou(); } }, 16);
+}
+// a fala terminou de aparecer: os parágrafos agrupados com ela entram juntos
+function completou() {
+  mostradoEm = performance.now(); document.querySelectorAll('#conteudo .fala.extra[hidden]').forEach(e => { e.hidden = false; });
 }
 
 // 1º clique completa a frase, o seguinte avança. Um clique que chega logo depois de a frase completar
 // é ignorado, para clique rápido não pular uma fala sem ler.
 function clicarDialogo() {
   const alvo = $('txt'); if (!alvo) return;
-  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; mostradoEm = performance.now(); return; }
+  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; completou(); return; }
   if (!pulando && performance.now() - mostradoEm < 250) return;
   avancar();
 }
@@ -1007,7 +1048,7 @@ addEventListener('keyup', e => { if (e.key === 'Control') pular(false); });
 addEventListener('blur', () => pular(false));
 
 // Opções do jogador, guardadas neste navegador
-const opcoes = { instantaneo: false };
+const opcoes = { instantaneo: true };  // texto instantâneo vem ligado; quem quiser o efeito de digitação desliga
 try { Object.assign(opcoes, JSON.parse(localStorage.getItem('matusalem-opcoes') || '{}')); } catch (e) {}
 function ajustarOpcoes() {
   $('instantaneo').setAttribute('aria-pressed', opcoes.instantaneo);
@@ -1203,32 +1244,32 @@ function tocarAbertura(depois, QUADROS_AB = QUADROS) {
   $('capa').hidden = true; ab.hidden = false; $('pular').focus({ preventScroll: true }); tocarMusica('abertura', false);
   // o clique em Pular chega aqui duas vezes (botão e abertura); só a primeira vale
   const fim = () => { if (ab.hidden) return; pararAbertura(); ab.hidden = true; depois(); };
-  ab.onclick = e => { if (e.target.id === 'pular') fim(); };
+  // clicar na abertura passa para o próximo quadro; Pular encerra
+  let atualQ = -1;
+  ab.onclick = e => { if (e.target.id === 'pular') return fim(); mostrarQ(atualQ + 1); };
   $('pular').onclick = fim;
-  let t = 0;
   const em = (ms, f) => timersAbertura.push(setTimeout(f, ms));
-  QUADROS_AB.forEach((q, i) => {
-    const dur = q.bilhete ? 5200 : 5000;
-    em(t, () => {
-      const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
-      if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
-      hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
-      em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
-      em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
-      if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec][q.pose] || ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
-      if (q.quem) em(2300, () => {
-        // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
-        quem.textContent = q.quem;
-        const r = rec.getBoundingClientRect(), a = ab.getBoundingClientRect();
-        quem.style.left = (r.left - a.left + r.width / 2) + 'px'; quem.style.top = (r.top - a.top + r.height * .58) + 'px';
-        quem.classList.add('on');
-      });
-      if (q.carimbo) em(1200, () => { carimbo.textContent = q.carimbo; carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
-      if (q.bilhete) em(900, () => bilhete.classList.add('on'));
+  const mostrarQ = i => {
+    pararAbertura(); if (i >= QUADROS_AB.length) return fim();
+    atualQ = i; const q = QUADROS_AB[i], dur = q.bilhete ? 5200 : 5000;
+    const atual = qs[i % 2], antigo = qs[(i + 1) % 2];
+    if (!i || QUADROS_AB[i - 1].fundo !== q.fundo) { atual.src = ARTE.fundos[q.fundo]; atual.classList.toggle('escuro', !!q.escuro); atual.classList.remove('on'); void atual.offsetWidth; atual.classList.add('on'); antigo.classList.remove('on'); }
+    hora.classList.remove('on-txt'); leg.classList.remove('on-txt'); rec.classList.remove('on'); carimbo.classList.remove('on'); quem.classList.remove('on');
+    em(300, () => { hora.textContent = q.hora; hora.classList.add('on-txt'); });
+    em(700, () => { leg.textContent = q.txt; leg.classList.add('on-txt'); });
+    if (q.rec) em(900, () => { rec.src = ARTE.personagens[q.rec][q.pose] || ARTE.personagens[q.rec].neutro; rec.dataset.p = q.rec; rec.className = 'recorte-ab ' + (i % 2 ? 'dir' : 'esq'); void rec.offsetWidth; rec.classList.add('on'); });
+    if (q.quem) em(2300, () => {
+      // a etiqueta fica no peito de quem aparece, medida depois que o recorte termina de entrar
+      quem.textContent = q.quem;
+      const r = rec.getBoundingClientRect(), a = ab.getBoundingClientRect();
+      quem.style.left = (r.left - a.left + r.width / 2) + 'px'; quem.style.top = (r.top - a.top + r.height * .58) + 'px';
+      quem.classList.add('on');
     });
-    t += dur;
-  });
-  em(t, fim);
+    if (q.carimbo) em(1200, () => { carimbo.textContent = q.carimbo; carimbo.classList.add('on'); flash.classList.remove('on'); void flash.offsetWidth; flash.classList.add('on'); });
+    if (q.bilhete) em(900, () => bilhete.classList.add('on'));
+    em(dur, () => mostrarQ(i + 1));
+  };
+  mostrarQ(0);
 }
 
 // ---------- Música: uma faixa por cena (musica/<nome>.mp3), com fade na troca ----------
@@ -1423,6 +1464,7 @@ function paradaDoTeste(nomeTeste) {
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];
+  if (/Caça/.test(nomeTeste)) return v['raciocinio'] + 2;
   return null;
 }
 function chanceDe(parada, fome, dif) {
