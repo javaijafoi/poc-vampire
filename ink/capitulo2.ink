@@ -122,6 +122,10 @@ VAR a2_isadora = false
 - "G": Você acorda enterrad{o} até o peito num terreno baldio da Consolação, com a pele ainda repuxada das queimaduras e a boca ardendo como se tivesse mastigado brasa.
 - else: Você acorda no chão do loft que o Príncipe te emprestou nos Jardins, de roupa, de sapato, com a boca ardendo como se tivesse mastigado brasa.
 }
+{ final_cap1:
+- "F": Na primeira noite depois do Porão, um rato do Dígito, o novo dono dos esgotos, te trouxe a notícia: os carniçais do Príncipe acharam o bunker da Linha Amarela sem a sua ajuda. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
+- "G": Na primeira noite depois do Porão, um catador que vendia sangue ao Cão te contou, com medo de você: o Príncipe achou o bunker da Linha Amarela sem ajuda de ninguém. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
+}
 Já passa das oito da noite. Três noites se passaram desde o Porão. Você lembra de duas. A terceira é um buraco liso, sem borda.
 Você passa a língua nos dentes e sente um relevo. No espelho, embaixo da língua, tem uma tatuagem: um código de barras, fino, prateado. E por baixo da pele, uma coisa dura do tamanho de um grão de arroz.
 Você tenta arrancar com a unha. A carne cede, o chip não. Está costurado por dentro, onde o seu sangue fecha tudo de novo. # pista loft: Um chip embaixo da língua, com um código de barras tatuado por cima. Não dá para arrancar.
@@ -660,6 +664,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
     ~ passar(20)
     ~ p2_arquivo = true
     Arnaldo: Esgoto é território de Nosferatu. E de um Xerife que não está mais entre nós.
+    Arnaldo: Os ratos de lá agora respondem ao Dígito. E o Xerife novo, o Cavalcanti, não suja o sapato em bueiro.
     Arnaldo: O Cão tinha um seguro. Um arquivo, numa galeria embaixo da Consolação. Se ele caísse, os segredos de alguém iam para a rua. # pista arnaldo: Arnaldo: o Cão tinha um "seguro", um arquivo numa galeria embaixo da Consolação. Se ele caísse, os segredos de alguém iam para a rua.
     Arnaldo: Pergunte a quem ficou mais aliviad{o} quando ele caiu. Não fui eu.
     -> arnaldo_perguntas
