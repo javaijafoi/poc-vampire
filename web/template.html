@@ -141,6 +141,8 @@ body {
 .escolhas, .cartas { transition: opacity .25s; }
 .escolhas button.sem-volta { color: #8e1c14; font-weight: 600; }
 .escolhas button.sem-volta::before { content: "⚠"; order: 2; margin-left: .3em; }
+/* menu comprido (as provas na Corte): duas colunas no computador; no celular, uma coluna com rolagem */
+.escolhas.muitas { grid-template-columns: 1fr 1fr; column-gap: 1.2cqw; }
 .escolhas .num { font-family: var(--f-tipo); color: #8a7462; min-width: 1.2em; }
 /* pergunta que você já fez: continua ali (e continua custando tempo), mas apagada */
 .escolhas button.feita { color: #8d7c6c; }
@@ -483,6 +485,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .hud .amanhecer { display: none; }
   .fala { font-size: 17px; }
   .escolhas { gap: 2px; }
+  .escolhas.muitas { grid-template-columns: 1fr; }
   .escolhas button { font-size: 16px; }
   .titulo { font-size: 13px; margin-bottom: 8px; }
   .seta { right: 12px; bottom: 8px; font-size: 14px; }
@@ -556,6 +559,8 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
 
 /* Paisagem no celular: a mesma tela do PC, com a cena usando toda a altura e o rodapé enxuto */
 @media (min-aspect-ratio: 1/1) and (max-height: 520px) {
+  .escolhas.muitas { grid-template-columns: 1fr; }
+  #conteudo:has(.escolhas.muitas) { max-height: 40vh; max-height: 40dvh; overflow-y: auto; overscroll-behavior: contain; }
   body { padding: 4px max(8px, env(safe-area-inset-right, 0px)) 2px max(8px, env(safe-area-inset-left, 0px)); }
   .jogo { width: min(100%, calc((100vh - 44px) * 16 / 9)); width: min(100%, calc((100dvh - 44px) * 16 / 9)); }
   .rodape { margin-top: 4px; justify-content: center; }
@@ -1137,7 +1142,7 @@ function mostrarEscolhas(pergunta = '') {
   } else {
     // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
     const custos = custosDasEscolhas();
-    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas">${story.currentChoices.map((ch, i) => {
+    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas${story.currentChoices.length > 6 ? ' muitas' : ''}">${story.currentChoices.map((ch, i) => {
       const custo = custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
@@ -1519,12 +1524,15 @@ ajustarSom();
 const FICHAS = {
   'Tomás': { cla: 'Gangrel', frase: 'Caminhoneiro do Sul. Rude, com faro de bicho.', disciplina: 'Animalismo',
     notas: { carisma: 2, manipulacao: 2, subterfugio: 2, raciocinio: 3, intimidacao: 6, ocultismo: 1 },
+    predador: ['Gato de Beco', 'Força + Briga', 'Pega quem passa sozinho na rua, à força, e bebe antes que a pessoa entenda.'],
     forte: 'meter medo (é quem rola mais dados para ameaçar) e sentir o que os outros sentem', fraco: 'conversa com jeitinho, mentira e assuntos do outro mundo' },
   'Irene': { cla: 'Nosferatu', frase: 'Ex-espiã dos esgotos de Curitiba. Ouve tudo.', disciplina: 'Ofuscação',
     notas: { carisma: 1, manipulacao: 2, subterfugio: 3, raciocinio: 3, intimidacao: 4, ocultismo: 2 },
+    predador: ['Sandman', 'Destreza + Furtividade', 'Bebe de quem está dormindo, sem acordar ninguém.'],
     forte: 'escutar escondida, reparar em detalhes e entender de fantasmas', fraco: 'simpatia: quase ninguém confia nela de cara' },
   'Joana': { cla: 'Ministério', frase: 'Pastora de fala mansa. Vende salvação.', disciplina: 'Presença',
     notas: { carisma: 3, manipulacao: 3, subterfugio: 3, raciocinio: 2, intimidacao: 3, ocultismo: 2 },
+    predador: ['Sereia', 'Carisma + Subterfúgio', 'Seduz quem está sozinho e bebe num momento a sós.'],
     forte: 'lábia, blefe e encantar as pessoas', fraco: 'ameaça e força (é quem rola menos dados para meter medo) e reparar em detalhes' },
 };
 const CLAS = {
@@ -1561,6 +1569,7 @@ function fichaHTML(nome) {
     <h3>Notas</h3><table class="ficha-tab">${NOTAS.map(([k, rot, desc]) => `<tr><th>${rot}</th><td class="pontos">${pontos(f.notas[k])}</td><td>${desc}</td></tr>`).join('')}</table>
     <p style="margin-top:.8cqw">Quando a cena pede um teste, cada ponto vira um dado. Nota alta também abre falas que outros personagens não têm.</p>
     <h3>Disciplina: ${esc(f.disciplina)}</h3><p>Disciplina é um poder de vampiro. ${esc(DISC[f.disciplina].longa)}</p><p>${CUSTO_DISC}</p><p>Uma vez por noite, dá para usar a versão forte. ${CUSTO_FORTE.replace(/^É a versão forte, uma vez por noite: r/, 'R')}</p>
+    ${f.predador ? `<h3>Tipo de predador: ${esc(f.predador[0])}</h3><p>${esc(f.predador[2])} Quando caça, rola ${esc(f.predador[1])}.</p>` : ''}
     <h3>Em resumo</h3><p><b>Bom em:</b> ${esc(f.forte)}.<br><b>Fraco em:</b> ${esc(f.fraco)}.</p>`;
 }
 
@@ -1666,10 +1675,10 @@ function tutorialVisto() { try { return !!localStorage.getItem(TUT); } catch (e)
 // Dica de uma linha sobre cada etiqueta: o que ela faz ou por que a opção apareceu.
 function paradaDoTeste(nomeTeste) {
   const v = story.variablesState;
+  if (/Briga|Furtividade|Carisma \+ Subterfúgio/.test(nomeTeste)) return v['parada_caca'];  // caça, pelo tipo de predador
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];
-  if (/Caça/.test(nomeTeste)) return v['raciocinio'] + 2;
   return null;
 }
 function chanceDe(parada, fome, dif) {

@@ -28,6 +28,8 @@ VAR manipulacao = 0
 VAR subterfugio = 0
 VAR intimidacao = 0   // parada de Força + Intimidação
 VAR ocultismo = 0
+VAR parada_caca = 0        // parada do teste de caça, pelo tipo de predador (Módulo Básico, pág. 175)
+VAR predador = ""
 VAR disciplina = ""
 VAR fome = 2
 VAR o = "o"         // terminação de gênero do protagonista: forasteir{o}
@@ -139,6 +141,8 @@ Quem é você?
     ~ intimidacao = 6
     ~ ocultismo = 1
     ~ disciplina = "Animalismo"
+    ~ predador = "Gato de Beco"
+    ~ parada_caca = 5
 * [Irene · Nosferatu ;; Ex-espiã dos esgotos de Curitiba. Ouve tudo. ;; Carisma 1 · Raciocínio 3 · Ocultismo 2 · Ofuscação]
     ~ nome = "Irene"
     ~ cla = "Nosferatu"
@@ -149,6 +153,8 @@ Quem é você?
     ~ intimidacao = 4
     ~ ocultismo = 2
     ~ disciplina = "Ofuscação"
+    ~ predador = "Sandman"
+    ~ parada_caca = 5
     ~ o = "a"
 * [Joana · Ministério ;; Pastora de fala mansa. Vende salvação. ;; Carisma 3 · Manipulação 3 · Ocultismo 2 · Presença]
     ~ nome = "Joana"
@@ -161,6 +167,8 @@ Quem é você?
     ~ intimidacao = 3
     ~ ocultismo = 2
     ~ disciplina = "Presença"
+    ~ predador = "Sereia"
+    ~ parada_caca = 6
 - -> depois
 
 === prologo ===
