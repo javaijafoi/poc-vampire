@@ -1557,7 +1557,7 @@ const FICHAS = {
     forte: 'escutar escondida, reparar em detalhes e entender de fantasmas', fraco: 'simpatia: quase ninguém confia nela de cara' },
   'Joana': { cla: 'Ministério', frase: 'Pastora de fala mansa. Vende salvação.', disciplina: 'Presença',
     notas: { carisma: 3, manipulacao: 3, subterfugio: 3, raciocinio: 2, intimidacao: 3, ocultismo: 2 },
-    predador: ['Sereia', 'Carisma + Subterfúgio', 'Seduz quem está sozinho e bebe num momento a sós.'],
+    predador: ['Sereia', 'Carisma + Lábia (a nota de Subterfúgio)', 'Seduz quem está sozinho e bebe num momento a sós.'],
     forte: 'lábia, blefe e encantar as pessoas', fraco: 'ameaça e força (é quem rola menos dados para meter medo) e reparar em detalhes' },
 };
 const CLAS = {
@@ -1700,7 +1700,7 @@ function tutorialVisto() { try { return !!localStorage.getItem(TUT); } catch (e)
 // Dica de uma linha sobre cada etiqueta: o que ela faz ou por que a opção apareceu.
 function paradaDoTeste(nomeTeste) {
   const v = story.variablesState;
-  if (/Briga|Furtividade|Carisma \+ Subterfúgio/.test(nomeTeste)) return v['parada_caca'] || (v['nome'] === 'Joana' ? 6 : 5);  // caça, pelo tipo de predador
+  if (/Briga|Furtividade|Carisma \+ Lábia/.test(nomeTeste)) return v['parada_caca'] || (v['nome'] === 'Joana' ? 6 : 5);  // caça, pelo tipo de predador
   if (/Persuasão/.test(nomeTeste)) return v['carisma'] + 1;
   if (/Subterfúgio/.test(nomeTeste)) return v['manipulacao'] + v['subterfugio'];
   if (/Intimidação/.test(nomeTeste)) return v['intimidacao'];

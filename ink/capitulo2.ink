@@ -225,7 +225,7 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 { nome:
 - "Tomás": ~ return "Força + Briga"
 - "Irene": ~ return "Destreza + Furtividade"
-- else: ~ return "Carisma + Subterfúgio"
+- else: ~ return "Carisma + Lábia"
 }
 
 === caca ===
