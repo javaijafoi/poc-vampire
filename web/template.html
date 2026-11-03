@@ -613,6 +613,25 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .rodape .acoes { flex-wrap: wrap; justify-content: center; gap: 6px; }
 }
 
+/* Celular em pé com pouco espaço: tela pequena, zoom do Safari ou letra grande no aparelho (a tela "encolhe" em pixels).
+   A cena diminui para a caixa de texto ganhar espaço, a hora e a Fome ficam numa linha só, sem invadir o texto,
+   e o rodapé fica numa linha com botões menores. */
+@media (max-aspect-ratio: 1/1) and (max-width: 340px), (max-aspect-ratio: 1/1) and (max-height: 560px) {
+  .palco { height: min(36%, 60vw); }
+  .dialogo { margin: 20px 6px 6px; padding: 12px 10px 16px; }
+  /* a linha da hora entra no fluxo da caixa: se precisar quebrar, empurra o texto para baixo em vez de cobrir */
+  .hud { position: static; flex: none; flex-wrap: wrap; justify-content: space-between; gap: 4px 8px; margin-bottom: 8px; font-size: 12px; white-space: nowrap; }
+  .hud .barra { display: none; }
+  .fome i { width: 8px; }
+  .eu { height: 64px; } .eu img { max-width: 64px; } .eu figcaption { display: none; }
+  .dialogo.com-eu { padding-left: calc(12px + var(--eu-larg, 56px)); }
+  .fala { font-size: 16px; line-height: 1.4; }
+  .escolhas button { font-size: 15px; }
+  .rodape { padding: 0 4px 4px; }
+  .rodape .acoes { gap: 4px; }
+  .rodape button { padding: 3px 5px; font-size: 10px; min-height: 0; white-space: nowrap; }
+}
+
 /* Celular (em pé e deitado): texto curto fica no meio da caixa, não grudado no topo. As duas "molas" encolhem até zero
    quando o texto é comprido, e aí a rolagem começa do topo, como antes. */
 @media (max-aspect-ratio: 1/1), (min-aspect-ratio: 1/1) and (max-height: 520px) {
@@ -1170,6 +1189,7 @@ function mostrarLinha(texto, extras = []) {
   extras.forEach(x => historico.push({ nome: x.narracao ? null : nome, texto: x.corpo })); while (historico.length > 200) historico.shift();
   const c = $('conteudo');
   c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div>${extras.map(x => `<div class="fala extra ${x.narracao ? 'narracao' : classe}" hidden>${esc(x.corpo)}</div>`).join('')}<span class="seta" aria-hidden="true">▼</span>`;
+  c.scrollTop = 0;
   digitar(corpo);
 }
 
@@ -1189,6 +1209,9 @@ function clicarDialogo() {
   const alvo = $('txt'); if (!alvo) return;
   if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; completou(); return; }
   if (!pulando && performance.now() - mostradoEm < 250) return;
+  // texto maior que a caixa (tela pequena ou letra grande): o toque primeiro mostra o resto, depois avança
+  const c = $('conteudo');
+  if (!pulando && c && c.scrollHeight - c.clientHeight - c.scrollTop > 20) { c.scrollBy({ top: c.clientHeight * .8, behavior: 'smooth' }); return; }
   avancar();
 }
 
