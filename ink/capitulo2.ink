@@ -412,9 +412,9 @@ Elísio :: Lá dentro vale a lei do Elísio: nada de Disciplina, nada de violên
 { minutos >= 390 and not luciana_chegou:
     ~ luciana_chegou = true
     { expulso or not dentro:
-        Lá em cima, pelo vidro do museu, você vê a gala parar. Uma mulher de cabelo curto, vestido escuro e luvas pretas sobe a escada. A Senescal chegou. # imagem: luciana_chega_fora # pista dossie: À {hora_digital()} a Luciana, a Senescal, chegou à gala.
+        Lá em cima, pelo vidro do museu, você vê a gala parar. Uma mulher de cabelo curto, blazer escuro sobre camisa vinho sobe a escada. A Senescal chegou. # imagem: luciana_chega_fora # pista dossie: À {hora_digital()} a Luciana, a Senescal, chegou à gala.
     - else:
-        A música para meio compasso. Uma mulher de cabelo curto, vestido escuro e luvas pretas atravessa o salão sem cumprimentar ninguém. A Senescal chegou. # imagem: luciana_chega # pista dossie: À {hora_digital()} a Luciana, a Senescal, chegou à gala. Ela usa luvas pretas.
+        A música para meio compasso. Uma mulher de cabelo curto, blazer escuro sobre camisa vinho atravessa o salão sem cumprimentar ninguém. A Senescal chegou. # imagem: luciana_chega # pista dossie: À {hora_digital()} a Luciana, a Senescal, chegou à gala.
     }
 }
 { minutos >= 480 and c2_aviso < 1:
