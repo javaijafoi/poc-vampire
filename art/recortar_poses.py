@@ -104,6 +104,26 @@ POSES = {
         "irene_bravo": (100, 400, 600, 700),
         "irene_medo": (720, 400, 1340, 700),
     },
+    # isadora (2026-11-03): cinco imagens avulsas de corpo inteiro, com o cenário do Elísio ao fundo
+    "isadora_cochicho": {"isadora_cochicho": None},
+    "isadora_ofendida": {"isadora_ofendida": None},
+    "isadora_aponta": {"isadora_aponta": None},
+    "isadora_medo": {"isadora_medo": None},
+    "isadora_vaidosa": {"isadora_vaidosa": None},
+    # valentina (2026-11-03): duas imagens avulsas de corpo inteiro (estilo retícula, moldura de cartaz ao fundo)
+    "valentina_assustada": {"valentina_assustada": None},
+    "valentina_rindo": {"valentina_rindo": None},
+    # luciana (2026-11-03): quatro imagens avulsas de corpo inteiro, fundo branco
+    "luciana_fria": {"luciana_fria": None},
+    "luciana_ritual": {"luciana_ritual": None},
+    "luciana_ameaca": {"luciana_ameaca": None},
+    "luciana_abalada": {"luciana_abalada": None},
+    # arnaldo (2026-11-03): neutra nova, refeita pelo Peter (imagem avulsa de corpo inteiro)
+    "arnaldo_neutro": {"arnaldo_neutro": None},
+    "arnaldo": {  # vigia e aponta numa prancha só, com o nome escrito embaixo (o rótulo fica fora da caixa)
+        "arnaldo_vigia": (240, 40, 470, 715),
+        "arnaldo_aponta": (720, 40, 1160, 715),
+    },
     "irene2": {
         "irene_pensa": (180, 30, 470, 328),
         "irene_desconfia": (880, 30, 1170, 328),
@@ -116,8 +136,18 @@ POSES = {
 FUNDO_VERMELHO = {"harumi"}
 # fundo vermelho, mas com o modelo geral (o terno risca de giz sai melhor nele): só apaga o vermelho dos vãos
 VERMELHO_GERAL = {"vincenzo"}
+APAGAR = {
+    "isadora_ofendida": [(0.58, 0.45, 1.0, 1.0), (0.0, 0.8, 1.0, 1.0)],  # a mão que toca a escultura
+    "isadora_medo": [(0.75, 0.4, 1.0, 1.0)],       # escultura solta ao lado
+    "isadora_vaidosa": [(0.0, 0.3, 0.2, 1.0)],     # pedaço de escultura no canto
+    "isadora_aponta": [(0.38, 0.1, 0.43, 0.25)],    # restos do cenário atrás da cabeça
+}
 # imagem de corpo inteiro: corta na cintura (fração da altura que fica), como os outros retratos
+<<<<<<< HEAD
 CORTE_ALTURA = {"nonna_neutro": 0.6, "nonna_severa": 0.6, "nonna_frasco": 0.6}
+=======
+CORTE_ALTURA = {"arnaldo_vigia": 0.5, "arnaldo_aponta": 0.5, "arnaldo_neutro": 0.5, "luciana_fria": 0.5, "luciana_ritual": 0.5, "luciana_ameaca": 0.5, "luciana_abalada": 0.5, "valentina_assustada": 0.5, "valentina_rindo": 0.5, "nonna_neutro": 0.6, "isadora_cochicho": 0.5, "isadora_ofendida": 0.42, "isadora_aponta": 0.5, "isadora_medo": 0.5, "isadora_vaidosa": 0.5}
+>>>>>>> origin/claude/project-thread-6p1g0f
 # arte que olha para o lado errado: espelha (a Nonna fica à esquerda e precisa olhar para a direita)
 # (severa já olha para a direita; frasco e velas olham para a esquerda)
 ESPELHAR = {"nonna", "nonna_frasco", "nonna_velas"}
@@ -168,6 +198,18 @@ def limpar(im, limiar=30):
     return im
 
 
+def soltar_cenario(im, raio=7):
+    """Esculturas do cenário coladas na personagem: erode, fica a maior mancha, dilata de volta dentro do recorte."""
+    alfa = np.array(im.getchannel("A"))
+    nucleo = ndimage.binary_erosion(alfa > 128, iterations=raio)
+    rot, n = ndimage.label(nucleo)
+    if n > 1:
+        nucleo = rot == (np.argmax(np.bincount(rot.ravel())[1:]) + 1)
+    volta = ndimage.binary_dilation(nucleo, iterations=raio + 2) & (alfa > 0)
+    im.putalpha(Image.fromarray(np.where(volta, alfa, 0).astype(np.uint8)))
+    return im
+
+
 def tirar_vermelho(im, minimo=150):
     """Apaga manchas grandes do vermelho do fundo que ficaram dentro do recorte (o rembg preenche os vãos)."""
     a = np.array(im).astype(np.int16)
@@ -206,6 +248,14 @@ for prancha in sys.argv[1:] or POSES:
             if prancha in FUNDO_LISO:
                 cor = np.median(np.array(img.crop((caixa[0], caixa[1], caixa[0] + 12, caixa[1] + 12))).reshape(-1, 3), axis=0)
                 out = limpar(tirar_fundo_borda(out, cor))
+        if nome.startswith("isadora_"):
+            out = soltar_cenario(out)
+            for x0, y0, x1, y1 in APAGAR.get(nome, []):  # restos do cenário que não saem sozinhos (frações da caixa)
+                alfa = np.array(out.getchannel("A")); h, w = alfa.shape
+                alfa[int(y0 * h):int(y1 * h), int(x0 * w):int(x1 * w)] = 0
+                out.putalpha(Image.fromarray(alfa))
+            out = limpar(out)  # sobra solta do cenário (ex.: pedaço de escultura ao lado) some: fica só a maior mancha
+            out = out.crop(out.getbbox())
         out = out.crop(out.getbbox())
         if nome in CORTE_ALTURA:
             out = out.crop((0, 0, out.width, int(out.height * CORTE_ALTURA[nome])))
