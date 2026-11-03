@@ -931,7 +931,7 @@ Vincenzo: Acabou o tempo, forasteir{o}. O céu já está clareando lá fora. O P
 === acusacao ===
 # fundo: corte
 # limpa
-A Corte desce a escada. O Príncipe Dante senta no meio do salão. Ao lado dele, de terno rosa, a Primogênita Lasombra Constance observa você sem piscar.
+A Corte desce a escada. O Príncipe Dante para no meio do salão. Ao lado dele, de terno rosa, a Primogênita Lasombra Constance observa você sem piscar.
 Dante: Então, forasteir{o}. Quem me traiu?
 { quebrou_regra >= 2:
     ~ denunciado = true

@@ -120,6 +120,8 @@ POSES = {
     "luciana_abalada": {"luciana_abalada": None},
     # arnaldo (2026-11-03): neutra nova, refeita pelo Peter (imagem avulsa de corpo inteiro)
     "arnaldo_neutro": {"arnaldo_neutro": None},
+    # dante (2026-11-03): neutra nova, de pé (a antiga era sentado numa cadeira)
+    "dante_neutro": {"dante_neutro": None},
     "arnaldo": {  # vigia e aponta numa prancha só, com o nome escrito embaixo (o rótulo fica fora da caixa)
         "arnaldo_vigia": (240, 40, 470, 715),
         "arnaldo_aponta": (720, 40, 1160, 715),
@@ -143,11 +145,7 @@ APAGAR = {
     "isadora_aponta": [(0.38, 0.1, 0.43, 0.25)],    # restos do cenário atrás da cabeça
 }
 # imagem de corpo inteiro: corta na cintura (fração da altura que fica), como os outros retratos
-<<<<<<< HEAD
-CORTE_ALTURA = {"nonna_neutro": 0.6, "nonna_severa": 0.6, "nonna_frasco": 0.6}
-=======
-CORTE_ALTURA = {"arnaldo_vigia": 0.5, "arnaldo_aponta": 0.5, "arnaldo_neutro": 0.5, "luciana_fria": 0.5, "luciana_ritual": 0.5, "luciana_ameaca": 0.5, "luciana_abalada": 0.5, "valentina_assustada": 0.5, "valentina_rindo": 0.5, "nonna_neutro": 0.6, "isadora_cochicho": 0.5, "isadora_ofendida": 0.42, "isadora_aponta": 0.5, "isadora_medo": 0.5, "isadora_vaidosa": 0.5}
->>>>>>> origin/claude/project-thread-6p1g0f
+CORTE_ALTURA = {"arnaldo_vigia": 0.5, "arnaldo_aponta": 0.5, "arnaldo_neutro": 0.5, "luciana_fria": 0.5, "luciana_ritual": 0.5, "luciana_ameaca": 0.5, "luciana_abalada": 0.5, "valentina_assustada": 0.5, "valentina_rindo": 0.5, "nonna_neutro": 0.6, "isadora_cochicho": 0.5, "isadora_ofendida": 0.42, "isadora_aponta": 0.5, "isadora_medo": 0.5, "isadora_vaidosa": 0.5, "nonna_severa": 0.6, "nonna_frasco": 0.6, "dante_neutro": 0.5}
 # arte que olha para o lado errado: espelha (a Nonna fica à esquerda e precisa olhar para a direita)
 # (severa já olha para a direita; frasco e velas olham para a esquerda)
 ESPELHAR = {"nonna", "nonna_frasco", "nonna_velas"}
@@ -233,7 +231,7 @@ for prancha in sys.argv[1:] or POSES:
     for nome, caixa in POSES[prancha].items():
         # amplia 2x antes do rembg: a prancha é pequena e o recorte fica mais limpo
         parte = img.crop(caixa) if caixa else img
-        if caixa:
+        if caixa or max(parte.size) < 1500:  # imagem avulsa pequena (1376 x 768, de corpo inteiro) também amplia
             parte = parte.resize((parte.width * 2, parte.height * 2), Image.LANCZOS)
         if prancha in FUNDO_VERMELHO:
             out = limpar(remove(parte, session=sessao_ilustra), 128)

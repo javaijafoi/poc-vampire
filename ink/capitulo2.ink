@@ -503,7 +503,7 @@ Isadora: Você é a única pessoa interessante desta festa. Quer um segredo? A L
 ~ expulso = true
 ~ dentro = false
 # limpa
-Uma mão seca pousa no seu ombro. # entra: arnaldo # expr: aponta
+Uma mão seca pousa no seu ombro. # entra: arnaldo # expr arnaldo: aponta
 Arnaldo: No meu Elísio, não. Nem uma gota. Você sabe a regra, e eu sei o que vi.
 Arnaldo: Para fora. Esta noite você não sobe mais esta escada. E o Príncipe vai saber.
 Dois carniçais te acompanham até o vão livre. O segurança da porta sorri quando você passa. # expr rocha: sorriso
@@ -750,7 +750,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
     { ri == 1 or ri == 2 or ri == 3:
         -> rocha_conta
     - else:
-        Ele não tem medo. Ele aperta o ponto no ouvido e fala uma palavra que você não entende. O chip esquenta. # expr: radio
+        Ele não tem medo. Ele aperta o ponto no ouvido e fala uma palavra que você não entende. O chip esquenta. # expr rocha: radio
         ~ acender(1)
         ~ rocha_fechado = true
         -> fora
@@ -929,7 +929,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     A Corte se reúne no último andar do museu, entre os quadros. A Constance preside, de pé. # entra: constance
     Constance: Terça à noite, querid{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem?
 - else:
-    A Corte se reúne no último andar do museu, entre os quadros. O Príncipe Dante senta numa cadeira de acrílico, como num trono. # entra: dante
+    A Corte se reúne no último andar do museu, entre os quadros. O Príncipe Dante fica de pé ao lado de uma cadeira de acrílico, que faz as vezes de trono. # entra: dante
     Dante: Terça à noite, forasteir{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem? Diga à Corte. Agora.
 }
 { expulso:
@@ -995,7 +995,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     - "luciana":
         ~ acusado = "luciana"
         Você: Eu desci atrás de uma caixa, e não estava sozinh{o}. A Senescal estava lá. A Luciana me pegou e apagou a minha noite.
-        O salão inteiro olha para a mulher de luvas pretas. Ela não se mexe. # entra: luciana # expr: fria
+        O salão inteiro olha para a mulher de luvas pretas. Ela não se mexe. # entra: luciana # expr luciana: fria
         -> provas2
     - "rocha":
         ~ acusado = "rocha"
@@ -1133,7 +1133,7 @@ O que você mostra à Corte?
 Luciana: ...Sim. Fui eu. # entra: luciana # expr: abalada
 Luciana: O Cão guardava os segredos da minha Capela num buraco do esgoto, com ordem de soltar tudo se ele morresse. Ele morreu. Alguém tinha que buscar antes dos ratos.
 Luciana: E você estava lá, forasteir{o}. Drogad{o}, com um chip na boca, seguindo o cheiro do Cão como um cachorro. Eu apaguei a sua noite para você não lembrar do que viu. Foi misericórdia. # expr: fria
-Ela tira uma luva. Os dedos dela estão vermelhos, e o sangue na sua veia começa a ferver. # expr: ritual
+Ela tira uma luva. Os dedos dela estão vermelhos, e o sangue na sua veia começa a ferver. # expr luciana: ritual
 Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por qualquer lugar.
 { final_cap1:
 - "C_corte":
@@ -1143,7 +1143,7 @@ Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por
     Constance: Na minha Corte, ninguém mata convidado meu. Nem você, Luciana.
 - "C_anarq":
     ~ aliado_cap2 = "rayo"
-    O vidro da janela estoura. O Rayo entra pela escada de incêndio, capacete na mão, e acerta o capacete na mão nua da Senescal. # entra: rayo # expr: bravo
+    O vidro da janela estoura. O Rayo entra pela escada de incêndio, capacete na mão, e acerta o capacete na mão nua da Senescal. # entra: rayo # expr rayo: bravo
     Rayo: Mexeu com quem anda comigo, bruxa.
 - "F":
     ~ aliado_cap2 = "arnaldo"
@@ -1174,9 +1174,9 @@ Agora a pergunta é outra: para quem você leva essa verdade?
 
 === saida2_rayo ===
 # fundo: vao_livre
-Na saída, o segurança da portaria abre a porta para você e passa o leitor perto da sua boca. Bip. # entra: rocha # expr: sorriso
+Na saída, o segurança da portaria abre a porta para você e passa o leitor perto da sua boca. Bip. # entra: rocha # expr rocha: sorriso
 Rocha: Até a próxima. A gente sabe onde você dorme.
-Na Paulista, uma moto encosta no meio-fio. É o Rayo. # entra: rayo # expr: neutro
+Na Paulista, uma moto encosta no meio-fio. É o Rayo. # entra: rayo # expr rayo: neutro
 Rayo: A bruxa apagou a sua noite pra esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente, forasteir{o}. E essa gente tem informante no meio da gente. Abre o olho.
 A moto some na Augusta. Você fica sozinh{o} no vão livre, com o chip quieto embaixo da língua. # limpa
 A noite de terça voltou quase inteira. Falta só o pedaço que alguém ainda guarda, e quem guarda sabe que você está procurando. # imagem: amanhecer
@@ -1251,7 +1251,7 @@ FINAL 2A · A NOITE INTEIRA. Você acusou a pessoa errada, e a Senescal terminou
 
 === final2_sem_provas ===
 Luciana: Uma acusação de quem não lembra nem onde dormiu. # entra: luciana # expr: fria
-Ela tira a luva e encosta dois dedos na sua testa, na frente de todo mundo. Ninguém a impede. # expr: ritual
+Ela tira a luva e encosta dois dedos na sua testa, na frente de todo mundo. Ninguém a impede. # expr luciana: ritual
 { cla == "Gangrel": -> tomas_resiste }
 A sala some. O seu nome some. Você sorri para a Senescal como quem sorri para a mãe.
 # musica: final_triste
@@ -1276,7 +1276,7 @@ Você: Eu não sei. Não lembro.
     Dante: Então você é inútil para mim, forasteir{o}. # entra: dante # expr: calado
 }
 Ninguém te expulsa. Pior: ninguém olha mais para você.
-Na saída, o segurança da porta segura o seu braço com gentileza. # entra: rocha # expr: sorriso
+Na saída, o segurança da porta segura o seu braço com gentileza. # entra: rocha # expr rocha: sorriso
 Rocha: A Doutora quer conversar. Pode ser por bem.
 # musica: final_triste
 { cla == "Ministério": -> joana_dupla }
