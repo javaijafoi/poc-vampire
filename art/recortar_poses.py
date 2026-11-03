@@ -116,6 +116,10 @@ POSES = {
     "luciana_abalada": {"luciana_abalada": None},
     # arnaldo (2026-11-03): neutra nova, refeita pelo Peter (imagem avulsa de corpo inteiro)
     "arnaldo_neutro": {"arnaldo_neutro": None},
+    "arnaldo": {  # vigia e aponta numa prancha só, com o nome escrito embaixo (o rótulo fica fora da caixa)
+        "arnaldo_vigia": (240, 40, 470, 715),
+        "arnaldo_aponta": (720, 40, 1160, 715),
+    },
     "irene2": {
         "irene_pensa": (180, 30, 470, 328),
         "irene_desconfia": (880, 30, 1170, 328),
@@ -135,7 +139,7 @@ APAGAR = {
     "isadora_aponta": [(0.38, 0.1, 0.43, 0.25)],    # restos do cenário atrás da cabeça
 }
 # imagem de corpo inteiro: corta na cintura (fração da altura que fica), como os outros retratos
-CORTE_ALTURA = {"arnaldo_neutro": 0.5, "luciana_fria": 0.5, "luciana_ritual": 0.5, "luciana_ameaca": 0.5, "luciana_abalada": 0.5, "valentina_assustada": 0.5, "valentina_rindo": 0.5, "nonna_neutro": 0.6, "isadora_cochicho": 0.5, "isadora_ofendida": 0.42, "isadora_aponta": 0.5, "isadora_medo": 0.5, "isadora_vaidosa": 0.5}
+CORTE_ALTURA = {"arnaldo_vigia": 0.5, "arnaldo_aponta": 0.5, "arnaldo_neutro": 0.5, "luciana_fria": 0.5, "luciana_ritual": 0.5, "luciana_ameaca": 0.5, "luciana_abalada": 0.5, "valentina_assustada": 0.5, "valentina_rindo": 0.5, "nonna_neutro": 0.6, "isadora_cochicho": 0.5, "isadora_ofendida": 0.42, "isadora_aponta": 0.5, "isadora_medo": 0.5, "isadora_vaidosa": 0.5}
 # arte que olha para o lado errado: espelha (a Nonna fica à esquerda e precisa olhar para a direita)
 ESPELHAR = {"nonna"}
 # poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
