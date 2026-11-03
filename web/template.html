@@ -1931,8 +1931,18 @@ function marcarLugar() {
 }
 function comecarPartida(modo) {
   Object.assign(partida, { escolhas: 0, inicio: Date.now(), lugar: '', ativa: true, ultimaEscolha: '' });
-  registrar('partida_iniciada', { modo }); marcarLugar();
+  registrar('partida_iniciada', { modo, navegador: navigator.userAgent }); marcarLugar();
 }
+// erro: se algo quebrar no meio da partida (um aparelho que trava e a gente não consegue reproduzir), manda a mensagem e o navegador.
+// No máximo 5 por sessão, sem repetir a mesma mensagem.
+const errosVistos = new Set();
+function registrarErro(msg, onde) {
+  msg = String(msg || 'erro sem mensagem').slice(0, 300);
+  if (errosVistos.has(msg) || errosVistos.size >= 5) return; errosVistos.add(msg);
+  try { registrar('erro', { mensagem: msg, onde: String(onde || '').slice(0, 200), navegador: navigator.userAgent, tela: `${innerWidth}x${innerHeight}` }); } catch (e) {}
+}
+addEventListener('error', e => registrarErro(e.message, `${(e.filename || '').split('/').pop()}:${e.lineno}:${e.colno}`));
+addEventListener('unhandledrejection', e => registrarErro(e.reason && (e.reason.message || e.reason), 'promise'));
 // parado: ninguém clicou nem apertou tecla por 2 minutos no meio da partida (um aviso por pausa)
 let paradoTimer;
 function mexeu() {

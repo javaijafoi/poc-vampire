@@ -1925,7 +1925,7 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'f39d2a9' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: 'e0f37b9' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
   && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
@@ -1956,8 +1956,18 @@ function marcarLugar() {
 }
 function comecarPartida(modo) {
   Object.assign(partida, { escolhas: 0, inicio: Date.now(), lugar: '', ativa: true, ultimaEscolha: '' });
-  registrar('partida_iniciada', { modo }); marcarLugar();
+  registrar('partida_iniciada', { modo, navegador: navigator.userAgent }); marcarLugar();
 }
+// erro: se algo quebrar no meio da partida (um aparelho que trava e a gente não consegue reproduzir), manda a mensagem e o navegador.
+// No máximo 5 por sessão, sem repetir a mesma mensagem.
+const errosVistos = new Set();
+function registrarErro(msg, onde) {
+  msg = String(msg || 'erro sem mensagem').slice(0, 300);
+  if (errosVistos.has(msg) || errosVistos.size >= 5) return; errosVistos.add(msg);
+  try { registrar('erro', { mensagem: msg, onde: String(onde || '').slice(0, 200), navegador: navigator.userAgent, tela: `${innerWidth}x${innerHeight}` }); } catch (e) {}
+}
+addEventListener('error', e => registrarErro(e.message, `${(e.filename || '').split('/').pop()}:${e.lineno}:${e.colno}`));
+addEventListener('unhandledrejection', e => registrarErro(e.reason && (e.reason.message || e.reason), 'promise'));
 // parado: ninguém clicou nem apertou tecla por 2 minutos no meio da partida (um aviso por pausa)
 let paradoTimer;
 function mexeu() {
