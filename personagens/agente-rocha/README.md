@@ -25,10 +25,10 @@ _(Use estas paradas de dados quando os jogadores interagirem com ele ou entrarem
 
 **Equipamento Especial & "Disciplinas" da Inquisição:**
 
-- **Condicionamento de Estado (Mente Inescrutável):** Rocha recebe +2 Dados (+2 de Dificuldade para o jogador) para resistir a qualquer poder de _Dominação_ ou _Presença_. Se o poder falhar, ele sabe imediatamente que tentaram mexer na mente dele.
+- **Protocolo (Mente Fechada):** Rocha não tem resistência sobrenatural. Tem protocolo: fone no ouvido com a central falando o tempo todo, nunca olha nos olhos de quem vigia, e um parceiro no rádio que confere cada coisa estranha que ele faz. Use +2 de Dificuldade para _Dominação_ ou _Presença_ nele. Se ele de repente mudar de comportamento, a central percebe na hora que mexeram na mente dele.
 - **O Bastão "Scanner":** O que parece ser um detector de metais comum é, na verdade, um leitor térmico e de radiofrequência (RFID) sintonizado para o chip da Coterie.
 - **Lentes de Contato Termais:** Ele usa lentes especiais (ou óculos escuros de segurança) que anulam penalidades de escuridão total e permitem ver assinaturas de calor. Vampiros aparecem como "buracos azuis" na visão dele, a menos que usem _Rubor de Vida (Blush of Life)_. Se um vampiro usar Vitae (aumentando a temperatura) perto dele, ele enxerga o brilho na hora.
-- **Armamento Oculto:** Ele carrega uma pistola 9mm sob o paletó (dano +2). Se a situação for letal e ele precisar quebrar o disfarce, o carregador secundário tem balas de Fósforo Branco (causam Dano Agravado em Membros).
+- **Armamento Oculto:** Ele carrega uma pistola 9mm sob o paletó (dano +2). Se a situação for letal e ele precisar quebrar o disfarce, o carregador secundário tem munição incendiária (causa Dano Agravado em Membros). É o último recurso: tiro de incendiária no meio da Paulista vira notícia, e o BOES detesta notícia.
 
 ---
 

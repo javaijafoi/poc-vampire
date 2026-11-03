@@ -7,6 +7,7 @@
 #### **Mãe Silvia (Tremere) - A Consultora da Cura**
 
 - **Função:** Dona de terreiro em Interlagos (fachada). A médica clandestina da sociedade vampírica.
+- **Casa Tremere:** Casa Carna, a casa Tremere do V5 que rompeu com a rigidez da Pirâmide e aceita outras tradições de magia. Por isso o terreiro e a Feitiçaria de Sangue convivem nela; a Luciana, criada na Pirâmide, olha isso com desdém.
 - **Paradas Excepcionais:** Ocultismo (Ervas/Magia) 8, Medicina 7, Empatia 7.
 - **Disciplinas-Chave:** _Feitiçaria de Sangue 3_ (Rituais de Cura/Proteção), _Auspícios 2_.
 - **O Truque:** As queimaduras químicas do Coronel Machado ou da Tatuagem UV não curam sozinhas. A Mãe Silvia faz cataplasmas de cinzas e Vitae que estancam a dor, mas exigem que a Coterie participe de seus rituais estranhos.

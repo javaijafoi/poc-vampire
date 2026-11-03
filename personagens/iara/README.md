@@ -67,6 +67,8 @@ _(Para quando a Coterie precisar lidar com as ilusões dela, tentar rastreá-la 
 
 **Dica de Narrador:** No Capítulo 4, se os jogadores precisarem invadir um local altamente protegido (como a base do BOES ou a capela da Luciana), eles podem não ter poder de fogo para entrar atirando, nem furtividade para entrar escondidos. Mas eles podem contratar a Iara. A Iara pode forjar uma "ameaça terrorista" ou uma "quebra de Máscara escandalosa" do outro lado da cidade, fazendo o BOES ou o Xerife correrem para lá, deixando o caminho livre para a Coterie. O preço dela? A Coterie vai ter que ajudá-la a humilhar a Camarilla publicamente de alguma forma.
 
+**O risco (para todo mundo):** no V5, celular e rede social foram justamente o caminho pelo qual a Segunda Inquisição achou os vampiros. Cada ilusão que a Iara viraliza é uma pista solta na internet. A Corte e os outros Barões não acham isso só "estilo": acham que ela pode queimar a cidade inteira. O Guga a chama de irresponsável, a Camarilla cobra o Nego por abrigar gente como ela, e até quem a contrata tem medo de aparecer no fundo de um vídeo.
+
 ## Outras artes
 
 <img src="arte-2.jpg" width="260">

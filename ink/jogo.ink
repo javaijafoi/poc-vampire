@@ -886,7 +886,7 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
     ~ quebrou_regra += 1
     ~ constance_hostil = true
     Constance ri, um riso curto e sem graça nenhuma. # expr constance: riso # expr voce: encanta
-    Constance: Isso funciona com motoqueiro, pastora. Eu tenho trezentos anos. Não faça de novo.
+    Constance: Isso funciona com motoqueiro, pastora. Eu sobrevivi ao Sabá. Não faça de novo.
     -> constance_perguntas
 + {disciplina == "Animalismo"} {not c_animal} [Disciplina: Animalismo :: Farejar a Besta dela.]
     ~ passar(20)
@@ -907,7 +907,7 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
 + {not v_neutro} [Alguém usou os seus serviços esta noite?]
     ~ passar(20)
     ~ v_neutro = true
-    Vincenzo: O Porão é neutro. Eu não pergunto, e não conto.
+    Vincenzo: Em São Paulo ninguém fica no meio, forasteir{o}. Eu ando com os Anarquistas porque eles pagam em dia. Mas aqui embaixo o Porão é neutro. Eu não pergunto, e não conto.
     Vincenzo: Aqui embaixo eu sirvo bebida e, quando pagam bem, limpo a sujeira dos outros. Volte quando souber de que sujeira você quer falar. # pista bar: Vincenzo: "Quando pagam bem, eu limpo a sujeira dos outros." Ele sabe de alguma coisa, mas só responde a pergunta certa.
     -> salao
 + {v_neutro} {p_tunel or p_concreto or p_bunker} {not p_limpeza} [Prova :: Sujeira: alguém morreu embaixo da terra esta noite. Quem pagou a limpeza?]
