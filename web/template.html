@@ -1,3 +1,6 @@
+<!doctype html>
+<html lang="pt-BR" translate="no">
+<meta name="google" content="notranslate">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#120a0e">
@@ -860,7 +863,7 @@ const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
 let ultimoSinal = null, despertando = false;
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, euPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
-let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0;
+let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0, digitandoAgora = false;
 
 function tipoBadge(g) {
   if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra|Ministério)/.test(g)) return 'cla';
@@ -1193,20 +1196,21 @@ function mostrarLinha(texto, extras = []) {
 }
 
 function digitar(t) {
-  const alvo = $('txt'); alvoTexto = t; let i = 0; clearInterval(digitando);
+  const alvo = $('txt'); alvoTexto = t; let i = 0; clearInterval(digitando); digitandoAgora = true;
   if (opcoes.instantaneo || pulando || matchMedia('(prefers-reduced-motion: reduce)').matches) { alvo.textContent = t; completou(); return; }
   digitando = setInterval(() => { i += 3; alvo.textContent = t.slice(0, i); if (i >= t.length) { clearInterval(digitando); completou(); } }, 16);
 }
 // a fala terminou de aparecer: os parágrafos agrupados com ela entram juntos
 function completou() {
-  mostradoEm = performance.now(); document.querySelectorAll('#conteudo .fala.extra[hidden]').forEach(e => { e.hidden = false; });
+  digitandoAgora = false; mostradoEm = performance.now(); document.querySelectorAll('#conteudo .fala.extra[hidden]').forEach(e => { e.hidden = false; });
 }
 
 // 1º clique completa a frase, o seguinte avança. Um clique que chega logo depois de a frase completar
 // é ignorado, para clique rápido não pular uma fala sem ler.
 function clicarDialogo() {
   const alvo = $('txt'); if (!alvo) return;
-  if (alvo.textContent.length < alvoTexto.length) { clearInterval(digitando); alvo.textContent = alvoTexto; completou(); return; }
+  // ainda digitando? (não compara o tamanho do texto na tela: um tradutor automático troca o texto e o jogo nunca avançava)
+  if (digitandoAgora) { clearInterval(digitando); alvo.textContent = alvoTexto; completou(); return; }
   if (!pulando && performance.now() - mostradoEm < 250) return;
   // texto maior que a caixa (tela pequena ou letra grande): o toque primeiro mostra o resto, depois avança
   const c = $('conteudo');
