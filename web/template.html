@@ -119,11 +119,19 @@ body {
 .fala.narracao { font-style: italic; color: var(--tinta-fraca); }
 .fala.voce { color: #6a2a12; }
 /* o seu rosto (o protagonista): uma foto presa no canto da caixa de texto, quando você fala ou reage */
-.eu { position: absolute; left: 1.2cqw; bottom: .9cqw; height: 17cqw; margin: 0; transform: rotate(-2deg); pointer-events: none; z-index: 1;
-  filter: drop-shadow(.2cqw .5cqw .6cqw rgb(0 0 0 / .45)); }
+.eu { position: absolute; left: 1cqw; bottom: .6cqw; height: 25cqw; margin: 0; transform: rotate(-2deg); pointer-events: none; z-index: 5;
+  filter: drop-shadow(.3cqw .7cqw .8cqw rgb(0 0 0 / .55)); transform-origin: 30% 100%; }
 .eu[hidden] { display: none; }
-.eu img { height: 100%; width: auto; max-width: 19cqw; object-fit: contain; object-position: 0 100%; display: block; }
+.eu img { height: 100%; width: auto; max-width: 24cqw; object-fit: contain; object-position: 0 100%; display: block; }
 .eu.troca { animation: troca .25s; }
+/* quando o seu rosto aparece (depois de sumir), ele "pula" para a frente, para ficar claro que é você */
+.eu.chega { animation: eu-chega .45s cubic-bezier(.3, 1.5, .5, 1); }
+@keyframes eu-chega { from { opacity: 0; transform: rotate(-6deg) translateY(10%) scale(.85); } }
+.eu figcaption { position: absolute; left: 50%; top: 4%; transform: translateX(-50%) rotate(4deg); font-family: var(--f-tipo); font-size: max(10px, 1.15cqw); letter-spacing: .14em;
+  background: #f4e7d2; color: var(--acento); border: 2px solid var(--acento); padding: .3em .55em .1em; line-height: 1.2; box-shadow: .1cqw .2cqw .4cqw rgb(0 0 0 / .45); }
+@media (prefers-reduced-motion: reduce) { .eu.chega { animation: none; } }
+/* celular deitado: a caixa é baixa, o retrato não pode cobrir o palco inteiro */
+@media (max-height: 500px) and (min-aspect-ratio: 1/1) { .eu { height: 20cqw; } .eu img { max-width: 19cqw; } }
 .dialogo.com-eu { padding-left: calc(2.6cqw + var(--eu-larg, 13cqw)); }
 .dialogo.com-eu .nome { left: calc(1.4cqw + var(--eu-larg, 13cqw)); }
 .seta { position: absolute; right: 1.6cqw; bottom: 1.2cqw; font-family: var(--f-tipo); color: var(--acento); font-size: max(12px, 1.5cqw); animation: pisca 1s steps(2) infinite; }
@@ -440,6 +448,20 @@ body {
 .carta .emblema.foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; transform: scale(1.35); transform-origin: 50% 0; }
 .ficha-foto { float: right; width: min(34%, 220px); margin: 0 0 1cqw 1.5cqw; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
 .carta .ver { font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: var(--acento); }
+/* escolha de personagem: os três protagonistas grandes no palco, um em cima de cada carta; o da carta apontada acende */
+.elenco-escolha { position: absolute; inset: 0 0 var(--sob-caixa, 0px); z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; padding: 0 4%; pointer-events: none; }
+.elenco-escolha[hidden] { display: none; }
+.elenco-escolha figure { margin: 0; height: 92%; position: relative; display: flex; justify-content: center; align-items: flex-end; cursor: pointer; pointer-events: auto;
+  opacity: 0; transform: translateY(8%) rotate(var(--giro, 0deg)); animation: elenco-entra .6s cubic-bezier(.2, .8, .3, 1) forwards; animation-delay: var(--atraso, 0s);
+  filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); transition: filter .25s, scale .25s; }
+.elenco-escolha img { position: static; height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: 50% 100%; display: block; }
+.elenco-escolha figcaption { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%) rotate(-1.5deg); white-space: nowrap; font-family: var(--f-nome);
+  font-size: max(13px, 1.8cqw); background: var(--acento); color: #f4e7d2; padding: .2cqw 1.1cqw; box-shadow: .1cqw .3cqw .5cqw rgb(0 0 0 / .5); }
+.elenco-escolha.apontando figure { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.45) saturate(.5); }
+.elenco-escolha.apontando figure.on { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); scale: 1.04; }
+@keyframes elenco-entra { to { opacity: 1; transform: rotate(var(--giro, 0deg)); } }
+.carta.acesa { border-color: var(--acento); }
+@media (prefers-reduced-motion: reduce) { .elenco-escolha figure { animation: none; opacity: 1; transform: none; } }
 /* ficha, ajuda e tutorial usam a mesma folha do caderno */
 .caderno .folha.longa { min-height: 0; }
 .caderno:has(.folha.longa) { grid-template-rows: 100%; }
@@ -503,6 +525,10 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   /* o rosto acompanha o texto, que fica no meio da caixa */
   .eu { height: 104px; left: 8px; top: calc(50% + 16px); bottom: auto; translate: 0 -50%; }
   .eu img { max-width: 120px; }
+  .eu figcaption { font-size: 10px; }
+  .elenco-escolha { padding: 0; }
+  .elenco-escolha figure { height: 84%; }
+  .elenco-escolha figcaption { font-size: 14px; bottom: 6%; padding: 2px 10px; }
   .dialogo.com-eu { padding-left: calc(16px + var(--eu-larg, 84px)); }
   .dialogo.com-eu .nome { left: calc(8px + var(--eu-larg, 84px)); }
   .hud { top: 20px; right: 14px; gap: 12px; font-size: 13px; }
@@ -623,6 +649,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     <div class="reticula"></div>
     <figure class="lado esq" id="esq"><img alt=""><figcaption class="legenda"></figcaption></figure>
     <figure class="lado dir" id="dir"><img alt=""><figcaption class="legenda"></figcaption></figure>
+    <div class="elenco-escolha" id="elenco-escolha" hidden></div>
     <div class="ilustracao" id="ilustracao"><img alt=""></div>
     <p class="carimbo-final" id="carimbo-final" aria-hidden="true"></p>
     <div class="sol" id="sol" aria-hidden="true"></div>
@@ -639,7 +666,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
     </div>
     <div class="toast" id="toast" role="status"></div>
     <span class="nome" id="nome" hidden></span>
-    <figure class="eu" id="eu" hidden aria-hidden="true"><img alt=""></figure>
+    <figure class="eu" id="eu" hidden aria-hidden="true"><img alt=""><figcaption>VOCÊ</figcaption></figure>
     <div id="conteudo" tabindex="-1"></div>
     <div class="rolagem" id="rolagem" hidden aria-hidden="true"><i></i></div>
   </div>
@@ -748,6 +775,7 @@ function mostrarEu(pose) {
     const trocou = !el.hidden && img.getAttribute('src'); img.src = src;
     if (trocou) { el.classList.remove('troca'); void el.offsetWidth; el.classList.add('troca'); }
   }
+  if (el.hidden) { el.classList.remove('chega'); void el.offsetWidth; el.classList.add('chega'); }
   el.hidden = false; $('dialogo').classList.add('com-eu');
   const larg = () => { if (img.naturalHeight) $('dialogo').style.setProperty('--eu-larg', el.getBoundingClientRect().width + 'px'); };
   img.complete ? larg() : img.addEventListener('load', larg, { once: true });
@@ -798,8 +826,8 @@ function mostrarIlustracao(nome) {
   il.classList.add('on');
 }
 function esconderIlustracao() { ilustracaoAtual = null; $('ilustracao').classList.remove('on'); }
-// A chegada da Constance pode interromper uma conversa: na escolha seguinte a ilustração sai e quem estava em cena volta.
-const ILUSTRACAO_DE_PASSAGEM = new Set(['constance_chega']);
+// A chegada da Constance (cap 1) e a da Luciana (cap 2) podem interromper uma conversa: na escolha seguinte a ilustração sai e quem estava em cena volta.
+const ILUSTRACAO_DE_PASSAGEM = new Set(['constance_chega', 'luciana_chega', 'luciana_chega_fora']);
 let antesIlustracao = null;
 function voltarDaIlustracao() {
   esconderIlustracao();
@@ -853,6 +881,7 @@ const textoCusto = m => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 
 
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
+  esconderElencoEscolha();
   fila = []; proxima = null; pistas = []; finalTexto = finalLetra = null; cena = null;
   feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
@@ -1193,6 +1222,33 @@ const EMBLEMA = { Gangrel: 'G', Nosferatu: 'N', 'Ministério': 'M' };
 const chaveArte = nome => (nome || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
 const retratoDe = nome => ARTE.personagens[chaveArte(nome)]?.neutro;
 const TRAVA_MS = 450; let menuFixo = { k: '', h: 0 };
+// Na escolha de personagem, os três aparecem de corpo inteiro no palco, cada um em cima da sua carta.
+// Apontar (ou focar) uma carta acende o retrato dela; tocar no retrato abre a ficha, como a carta.
+const GIRO_ELENCO = ['-2deg', '1deg', '2.5deg'];
+function mostrarElencoEscolha() {
+  const el = $('elenco-escolha');
+  el.innerHTML = story.currentChoices.map((ch, i) => {
+    const nome = ch.text.split(' ;; ')[0].split(' · ')[0], foto = retratoDe(nome);
+    return foto ? `<figure data-i="${i}" style="--giro:${GIRO_ELENCO[i % 3]};--atraso:${i * .12}s"><img src="${foto}" alt="${esc(nome)}"><figcaption>${esc(nome)}</figcaption></figure>` : '<figure></figure>';
+  }).join('');
+  el.hidden = false; ajustarElenco();
+  const acender = i => { el.classList.toggle('apontando', i != null); el.querySelectorAll('figure').forEach(f => f.classList.toggle('on', f.dataset.i === String(i)));
+    document.querySelectorAll('.carta').forEach(c => c.classList.toggle('acesa', c.dataset.i === String(i))); };
+  document.querySelectorAll('.carta').forEach(c => {
+    c.addEventListener('mouseenter', () => acender(c.dataset.i)); c.addEventListener('focus', () => acender(c.dataset.i));
+    c.addEventListener('mouseleave', () => acender(null)); c.addEventListener('blur', () => acender(null)); });
+  el.querySelectorAll('figure[data-i]').forEach(f => {
+    f.addEventListener('mouseenter', () => acender(f.dataset.i)); f.addEventListener('mouseleave', () => acender(null));
+    f.addEventListener('click', e => { e.stopPropagation(); abrirFicha(+f.dataset.i); }); });
+}
+// os retratos ficam na parte do palco que a caixa de texto não cobre (no PC a caixa fica por cima do palco)
+function ajustarElenco() {
+  const el = $('elenco-escolha'); if (el.hidden) return;
+  const p = $('palco').getBoundingClientRect(), d = $('dialogo').getBoundingClientRect();
+  el.style.setProperty('--sob-caixa', Math.max(0, p.bottom - d.top) + 'px');
+}
+addEventListener('resize', ajustarElenco);
+function esconderElencoEscolha() { const el = $('elenco-escolha'); el.hidden = true; el.innerHTML = ''; }
 function mostrarEscolhas(pergunta = '') {
   esconderDica();
   falando(null); mostrarEu(null); $('nome').hidden = true; const c = $('conteudo');
@@ -1201,6 +1257,7 @@ function mostrarEscolhas(pergunta = '') {
     c.innerHTML = `<div class="titulo">${esc(pergunta || 'Quem é você?')}</div><div class="cartas tres">${story.currentChoices.map((ch, i) => {
       const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || ''; const foto = retratoDe(titulo.split(' · ')[0]);
       return `<button class="carta" data-i="${i}" type="button">${foto ? `<span class="emblema foto" aria-hidden="true"><img src="${foto}" alt=""></span>` : `<span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span>`}<b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
+    mostrarElencoEscolha();
   } else {
     // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
     const custos = custosDasEscolhas();
@@ -1235,6 +1292,7 @@ function escolher(i) {
   if (story.variablesState['nome'] === '') registrar('personagem_escolhido', { escolhido: txt.split(' · ')[0] });
   else { partida.escolhas++; partida.ultimaEscolha = p ? p[2] : txt; registrar('escolha', { lugar, opcao: partida.ultimaEscolha, etiqueta: p ? p[1] : '', repetida: !!document.querySelector(`#conteudo [data-i="${i}"].feita`) }); }
   if (ILUSTRACAO_DE_PASSAGEM.has(ilustracaoAtual)) voltarDaIlustracao();
+  esconderElencoEscolha();
   story.ChooseChoiceIndex(i); atualizarHud(); avancar();
 }
 
