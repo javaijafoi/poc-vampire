@@ -130,6 +130,7 @@ FUNDO_VERMELHO = {"harumi"}
 VERMELHO_GERAL = {"vincenzo"}
 APAGAR = {
     "isadora_ofendida": [(0.58, 0.45, 1.0, 1.0), (0.0, 0.8, 1.0, 1.0)],  # a mão que toca a escultura
+    "isadora_medo": [(0.75, 0.4, 1.0, 1.0)],       # escultura solta ao lado
     "isadora_vaidosa": [(0.0, 0.3, 0.2, 1.0)],     # pedaço de escultura no canto
     "isadora_aponta": [(0.38, 0.1, 0.43, 0.25)],    # restos do cenário atrás da cabeça
 }
@@ -240,6 +241,7 @@ for prancha in sys.argv[1:] or POSES:
                 alfa = np.array(out.getchannel("A")); h, w = alfa.shape
                 alfa[int(y0 * h):int(y1 * h), int(x0 * w):int(x1 * w)] = 0
                 out.putalpha(Image.fromarray(alfa))
+            out = limpar(out)  # sobra solta do cenário (ex.: pedaço de escultura ao lado) some: fica só a maior mancha
             out = out.crop(out.getbbox())
         out = out.crop(out.getbbox())
         if nome in CORTE_ALTURA:
