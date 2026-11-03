@@ -77,6 +77,10 @@ POSES = {
         "biel_encolhido": (918, 395, 1340, 735),
     },
     "nonna": {"nonna_neutro": None},  # imagem avulsa inteira
+    # Nonna, 2026-11-03: três imagens avulsas inteiras (severa, frasco, velas)
+    "nonna_severa": {"nonna_severa": None},
+    "nonna_frasco": {"nonna_frasco": None},
+    "nonna_velas": {"nonna_velas": (740, 330, 1560, 1500)},  # só ela: a mesa e as velas ficam de fora, o recorte as embaralha
     # protagonistas (2026-11-01)
     "tomas": {
         "tomas_neutro": (145, 15, 370, 345),
@@ -113,9 +117,10 @@ FUNDO_VERMELHO = {"harumi"}
 # fundo vermelho, mas com o modelo geral (o terno risca de giz sai melhor nele): só apaga o vermelho dos vãos
 VERMELHO_GERAL = {"vincenzo"}
 # imagem de corpo inteiro: corta na cintura (fração da altura que fica), como os outros retratos
-CORTE_ALTURA = {"nonna_neutro": 0.6}
+CORTE_ALTURA = {"nonna_neutro": 0.6, "nonna_severa": 0.6, "nonna_frasco": 0.6}
 # arte que olha para o lado errado: espelha (a Nonna fica à esquerda e precisa olhar para a direita)
-ESPELHAR = {"nonna"}
+# (severa já olha para a direita; frasco e velas olham para a esquerda)
+ESPELHAR = {"nonna", "nonna_frasco", "nonna_velas"}
 # poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
 INTERSECAO = {"harumi_taco"}
 
