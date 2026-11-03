@@ -125,6 +125,7 @@ VAR a2_isadora = false
 { final_cap1:
 - "F": Na primeira noite depois do Porão, um rato do Dígito, o novo dono dos esgotos, te trouxe a notícia: os carniçais do Príncipe acharam o bunker da Linha Amarela sem a sua ajuda. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
 - "G": Na primeira noite depois do Porão, um catador que vendia sangue ao Cão te contou, com medo de você: o Príncipe achou o bunker da Linha Amarela sem ajuda de ninguém. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
+- else: Na rua, antes de dormir, você ouviu a notícia que já corria entre os carniçais: o Xerife agora é o Delegado Cavalcanti.
 }
 Já passa das oito da noite. Três noites se passaram desde o Porão. Você lembra de duas. A terceira é um buraco liso, sem borda.
 Você passa a língua nos dentes e sente um relevo. No espelho, embaixo da língua, tem uma tatuagem: um código de barras, fino, prateado. E por baixo da pele, uma coisa dura do tamanho de um grão de arroz.
