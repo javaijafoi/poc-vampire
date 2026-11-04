@@ -259,7 +259,7 @@ let knotsSimulados = [], chavesSimuladas = [];
 const capitulos = JSON.parse(fs.readFileSync(path.join(__dirname, 'capitulos.json'), 'utf8'));
 const lidos = {};
 const saida = { gerado: new Date().toISOString(), titulosFinais: {}, capitulos: [] };
-const frase = t => t.charAt(0) + t.slice(1).toLowerCase().replace(/príncipe/g, 'Príncipe').replace(/corte/g, 'Corte').replace(/anarquistas/g, 'Anarquistas');
+const frase = t => t.charAt(0) + t.slice(1).toLowerCase().replace(/príncipe/g, 'Príncipe').replace(/corte/g, 'Corte').replace(/anarquistas/g, 'Anarquistas').replace(/constance/g, 'Constance');
 for (const c of capitulos) {
   const cap = { n: c.n, titulo: c.titulo, resumo: c.resumo || '', arquivo: c.arquivo || null, knots: [], vars: {}, sim: null };
   if (c.arquivo) {
@@ -280,6 +280,13 @@ for (const c of capitulos) {
   }
   console.log(`capítulo ${c.n}: ${cap.knots.length} cenas, ${cap.knots.reduce((a, k) => a + k.escolhas.length, 0)} opções`);
   saida.capitulos.push(cap);
+}
+// Mapa da história (primeira aba): texto à mão em fluxo/visao.json. Avisa se algum final do roteiro ficou de fora.
+saida.visao = JSON.parse(fs.readFileSync(path.join(__dirname, 'visao.json'), 'utf8'));
+{
+  const noMapa = new Set(saida.visao.capitulos.flatMap(c => c.grupos.flatMap(g => g.finais.map(f => f.letra))));
+  const faltam = Object.keys(saida.titulosFinais).filter(f => !noMapa.has(f));
+  if (faltam.length) console.log(`AVISO: finais do roteiro que não estão no mapa da história (fluxo/visao.json): ${faltam.join(', ')}`);
 }
 const json = JSON.stringify(saida);
 fs.writeFileSync(path.join(__dirname, 'fluxo.json'), JSON.stringify(saida, null, 1));

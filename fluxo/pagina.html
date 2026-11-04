@@ -99,9 +99,48 @@ td.n { text-align: right; }
   .ferramentas { margin-left: 0; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+/* Mapa da história: leitura de cima para baixo, sem setas cruzadas */
+#visao { display: none; overflow: auto; min-height: 0; }
+.app.modo-visao #visao { display: block; }
+.app.modo-visao main, .app.modo-visao .ferramentas { display: none; }
+.v-wrap { max-width: 1080px; margin: 0 auto; padding: 20px max(16px, env(safe-area-inset-left, 0px)) 60px; }
+.v-intro { font: 14px/1.5 var(--f-ui); color: var(--tinta-fraca); max-width: 70ch; margin: 0 0 8px; }
+.v-cap { margin-top: 28px; }
+.v-cap > h2 { font: 26px/1.15 var(--f-titulo); margin: 0; text-wrap: balance; }
+.v-cap > h2 small { display: block; font: 13px var(--f-ui); color: var(--tinta-fraca); margin-top: 4px; }
+.v-etapas { list-style: none; margin: 16px 0 0; padding: 0; counter-reset: etapa; }
+.v-etapas > li { position: relative; padding: 0 0 18px 44px; counter-increment: etapa; }
+.v-etapas > li::before { content: counter(etapa); position: absolute; left: 0; top: 0; width: 30px; height: 30px; border-radius: 50%;
+  background: var(--tinta); color: var(--noite); display: grid; place-items: center; font: 600 14px var(--f-ui); }
+.v-etapas > li::after { content: ""; position: absolute; left: 14px; top: 32px; bottom: 2px; border-left: 2px dashed var(--linha); }
+.v-etapas b { font: 17px var(--f-titulo); display: block; padding-top: 4px; }
+.v-etapas p { margin: 4px 0 6px; font-size: 15px; }
+.v-etapas .chips { gap: 6px; }
+.v-etapas .chip { font-size: 13px; padding: 3px 9px; }
+.v-grupos { display: grid; gap: 14px; margin-left: 44px; }
+.v-grupo { border: 1px solid var(--linha); border-left: 5px solid var(--cor); border-radius: 4px; background: var(--papel); padding: 12px 14px; }
+.v-grupo.certo { --cor: var(--verde); } .v-grupo.meio { --cor: var(--ambar); } .v-grupo.errado { --cor: var(--sangue); }
+.v-grupo h3 { margin: 0 0 4px; font: 600 14px var(--f-ui); color: var(--cor); }
+.v-grupo .nota { font: 13px/1.45 var(--f-ui); color: var(--tinta-fraca); margin: 0 0 6px; }
+.v-finais { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 10px; margin-top: 8px; }
+.v-final { background: var(--painel); border: 1px solid var(--linha); border-radius: 4px; padding: 9px 11px; display: flex; flex-direction: column; gap: 4px; }
+.v-final .tt { font: 600 14px/1.3 var(--f-ui); }
+.v-final .tt .letra { display: inline-block; min-width: 26px; text-align: center; background: var(--cor); color: var(--papel); border-radius: 3px; padding: 0 5px; margin-right: 6px; }
+.v-final p { margin: 0; font: 13px/1.45 var(--f-ui); }
+.v-final .rod { margin-top: auto; padding-top: 4px; display: flex; flex-wrap: wrap; gap: 4px 8px; font: 12px var(--f-ui); color: var(--tinta-fraca); }
+.v-final .segue { color: var(--azul); font-weight: 600; }
+.v-final .quem { color: var(--ambar); font-weight: 600; }
+.v-ponte { margin-top: 32px; border: 1px solid var(--linha); border-radius: 4px; background: var(--papel); padding: 14px; }
+.v-ponte h2 { font: 22px var(--f-titulo); margin: 0 0 4px; }
+.v-ponte .tab { overflow-x: auto; margin-top: 10px; }
+.v-ponte table { min-width: 640px; }
+.v-ponte td:first-child { font-weight: 600; white-space: nowrap; }
+.v-seta { text-align: center; font: 13px var(--f-ui); color: var(--tinta-fraca); margin: 18px 0 0 44px; }
+@media (max-width: 600px) { .v-grupos, .v-seta { margin-left: 0; } .v-cap > h2 { font-size: 22px; } }
 </style>
 
-<div class="app">
+<div class="app" id="app">
   <header>
     <h1>Fluxograma das escolhas<small id="gerado"></small></h1>
     <nav class="caps" id="caps" aria-label="Capítulos"></nav>
@@ -131,6 +170,7 @@ td.n { text-align: right; }
       <div class="corpo" id="corpo"></div>
     </aside>
   </main>
+  <div id="visao"></div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.30.2/cytoscape.min.js"></script>
@@ -490,7 +530,58 @@ document.addEventListener('change', ev => {
 });
 for (const b of document.querySelectorAll('.abas button')) b.addEventListener('click', () => { aba = b.id.slice(4); renderPainel(); });
 
+// ------------------------------------------------------------------ mapa da história (visão geral)
+function pctFinal(n, letra) {
+  const c = DADOS.capitulos.find(x => x.n === n);
+  if (!c || !c.sim) return null;
+  const rs = Object.values(c.sim), tot = rs.reduce((a, r) => a + r.partidas, 0);
+  return rs.reduce((a, r) => a + (r.finais[letra] || 0), 0) / tot;
+}
+function dificuldade(p) {
+  if (p === null) return '';
+  if (p === 0) return 'raríssimo: nenhuma partida ao acaso chegou';
+  if (p < 0.02) return 'difícil de achar';
+  if (p < 0.1) return 'médio';
+  return 'fácil de cair';
+}
+function abrirVisao() {
+  const V = DADOS.visao;
+  $('#app').classList.add('modo-visao');
+  for (const b of document.querySelectorAll('#caps button')) b.setAttribute('aria-pressed', String(b.dataset.n === '0'));
+  const ponteNome = { B: 'B', C_corte: 'C diante da Corte', C_anarq: 'C pelos Anarquistas', S: 'S', E: 'E', H: 'H', F: 'F', G: 'G' };
+  let h = `<div class="v-wrap"><p class="v-intro">O jogo inteiro, de cima para baixo: o que você faz em cada capítulo e onde cada caminho termina. Os finais verdes seguem para o próximo capítulo; os vermelhos acabam a história (menos as fugas de cada personagem). Para ver cada cena e opção, abra a aba do capítulo lá em cima.</p>`;
+  V.capitulos.forEach((c, i) => {
+    h += `<section class="v-cap"><h2>Capítulo ${c.n} · ${esc(c.titulo)}<small>${esc(c.onde)}</small></h2><ol class="v-etapas">`;
+    for (const e of c.etapas) h += `<li><b>${esc(e.nome)}</b><p>${esc(e.texto)}</p>${e.itens ? `<div class="chips">${e.itens.map(x => `<span class="chip">${esc(x)}</span>`).join('')}</div>` : ''}</li>`;
+    h += `<li><b>Final</b></li></ol><div class="v-grupos">`;
+    for (const g of c.grupos) {
+      h += `<div class="v-grupo ${g.tipo}"><h3>${esc(g.nome)}</h3>${g.nota ? `<p class="nota">${esc(g.nota)}</p>` : ''}<div class="v-finais">`;
+      for (const f of g.finais) {
+        const titulo = (DADOS.titulosFinais || {})[f.letra] || '';
+        const p = f.variante ? null : pctFinal(c.n, f.letra);
+        h += `<div class="v-final"><div class="tt"><span class="letra">${esc(f.letra)}</span>${esc(titulo)}${f.variante ? ` · ${esc(f.variante)}` : ''}</div><p>${esc(f.como)}</p><div class="rod">`
+          + (f.quem ? `<span class="quem">só ${esc(f.quem)}</span>` : '')
+          + (f.segue ? `<span class="segue">→ continua no cap. ${c.n + 1}</span>` : '')
+          + (f.aliado ? `<span class="segue">→ protege no cap. ${c.n + 1}: ${esc(f.aliado)}</span>` : '')
+          + (p !== null ? `<span title="partidas de teste com escolhas ao acaso">${esc(dificuldade(p))}</span>` : '')
+          + `</div></div>`;
+      }
+      h += `</div></div>`;
+    }
+    h += `</div></section>`;
+    if (i === 0 && V.ponte) {
+      const P = V.ponte;
+      h += `<div class="v-seta">↓ os finais verdes, amarelos e as fugas seguem para o capítulo 2 ↓</div><section class="v-ponte"><h2>${esc(P.titulo)}</h2><p class="v-intro">${esc(P.nota)}</p><div class="tab"><table><thead><tr>${P.colunas.map(x => `<th>${esc(x)}</th>`).join('')}</tr></thead><tbody>`
+        + P.linhas.map(l => `<tr>${l.map(x => `<td>${esc(x)}</td>`).join('')}</tr>`).join('') + `</tbody></table></div></section>`;
+    }
+  });
+  h += `<p class="v-intro" style="margin-top:28px">Capítulos 3 e 4: ainda sem roteiro. Quem te protege no capítulo 3 é quem você escolheu no fim do capítulo 2.</p></div>`;
+  $('#visao').innerHTML = h;
+  $('#visao').scrollTop = 0;
+}
+
 function abrirCapitulo(n) {
+  $('#app').classList.remove('modo-visao');
   cap = DADOS.capitulos.find(c => c.n === n);
   cap.d = cap.d || preparar(cap);
   selecionado = null; chaveSel = null;
@@ -507,10 +598,10 @@ function abrirCapitulo(n) {
 }
 
 $('#gerado').textContent = `gerado do roteiro em Ink · ${new Date(DADOS.gerado).toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' })}`;
-$('#caps').innerHTML = DADOS.capitulos.map(c => `<button type="button" data-n="${c.n}" class="${c.knots.length ? '' : 'vazio'}" title="${esc(c.titulo)}">Cap. ${c.n}${c.knots.length ? ' · ' + esc(c.titulo) : ''}</button>`).join('');
-for (const b of document.querySelectorAll('#caps button')) b.addEventListener('click', () => abrirCapitulo(+b.dataset.n));
+$('#caps').innerHTML = (DADOS.visao ? `<button type="button" data-n="0">Mapa da história</button>` : '') + DADOS.capitulos.map(c => `<button type="button" data-n="${c.n}" class="${c.knots.length ? '' : 'vazio'}" title="${esc(c.titulo)}">Cap. ${c.n}${c.knots.length ? ' · ' + esc(c.titulo) : ''}</button>`).join('');
+for (const b of document.querySelectorAll('#caps button')) b.addEventListener('click', () => +b.dataset.n ? abrirCapitulo(+b.dataset.n) : abrirVisao());
 TITULOS_FINAIS = DADOS.titulosFinais || {};
-abrirCapitulo(DADOS.capitulos[0].n);
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => cap.knots.length && desenhar(true));
-new MutationObserver(() => cap.knots.length && desenhar(true)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+if (DADOS.visao) abrirVisao(); else abrirCapitulo(DADOS.capitulos[0].n);
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => cap && cap.knots.length && desenhar(true));
+new MutationObserver(() => cap && cap.knots.length && desenhar(true)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 </script>

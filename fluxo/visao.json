@@ -1,0 +1,96 @@
+{
+  "_leia": "Mapa da história (a primeira aba do fluxograma). Texto escrito à mão, em português simples. Os títulos e as porcentagens dos finais vêm do roteiro e das partidas de teste. Se um final novo aparecer no ink e não estiver aqui, o gerar.cjs avisa.",
+  "capitulos": [
+    {
+      "n": 1,
+      "titulo": "O Matusalém Desaparecido",
+      "onde": "Porão do Vincenzo, no Bixiga · das 23h ao amanhecer (05h40)",
+      "etapas": [
+        { "nome": "Escolher o personagem", "texto": "Tomás (Gangrel), Irene (Nosferatu) ou Joana (Ministério). Cada um tem um poder, um jeito de caçar e uma fuga própria se tudo der errado." },
+        { "nome": "Ouvir as testemunhas", "texto": "Cada conversa gasta tempo do relógio. Usar poder dentro do Porão quebra a regra da casa: o Vincenzo conta ao Príncipe.", "itens": [
+          "Rayo, o motoqueiro que levou a carga",
+          "O Cão, o Xerife",
+          "Harumi, que liberou a carga no porto",
+          "Nonna, que chama o fantasma do Biel (3 perguntas, 4 se pagar com sangue)",
+          "Constance, que só chega à 01h30",
+          "Vincenzo, o dono do bar",
+          "Beber na adega para baixar a Fome"
+        ] },
+        { "nome": "Acusar diante do Príncipe", "texto": "Ao amanhecer (ou quando você quiser) a Corte desce. Você aponta um nome e mostra 3 provas do caderno (4 se estiver com muita fome).", "itens": [
+          "o Rayo", "a Harumi", "a Constance (só se você descobriu que ela pagou o desvio)", "o Cão", "admitir que não sabe"
+        ] }
+      ],
+      "grupos": [
+        { "nome": "Acertou: o Cão cai e você segue", "tipo": "certo", "finais": [
+          { "letra": "B", "como": "Acusou o Cão com provas fortes e ficou quieto sobre o carimbo do BOES (ou nunca achou o carimbo).", "segue": "B" },
+          { "letra": "C", "variante": "diante da Corte", "como": "Acusou o Cão e mostrou o carimbo do BOES para a Corte inteira. O Dante perde o comando para a Constance.", "segue": "C_corte" },
+          { "letra": "C", "variante": "pelos Anarquistas", "como": "Acusou o Cão e levou o carimbo do BOES ao motoclube do Rayo.", "segue": "C_anarq" },
+          { "letra": "S", "como": "O final ideal: acertou tudo, nunca usou poder no Porão, a Constance ficou do seu lado e você descobriu o informante e o frasco. Sai com o sangue do Matusalém e um favor do Príncipe.", "segue": "S" }
+        ] },
+        { "nome": "Não acusou ninguém", "tipo": "meio", "finais": [
+          { "letra": "E", "como": "Disse \"não sei\". O Príncipe te prende pelo Laço de Sangue: você vira servo dele.", "segue": "E" },
+          { "letra": "H", "como": "Só a Joana: no \"não sei\", ela engana o Laço de Sangue e vira espiã dentro da Corte.", "segue": "H", "quem": "Joana" }
+        ] },
+        { "nome": "Errou: morre (cada personagem tem uma fuga)", "tipo": "errado", "finais": [
+          { "letra": "A", "como": "Acusou a pessoa errada (Rayo, Harumi ou Constance). Alguém te mata nas noites seguintes." },
+          { "letra": "D", "como": "Acusou o Cão sem provas que se sustentam. Sol no telhado." },
+          { "letra": "F", "como": "Só a Irene: no lugar do final A, some pela Ofuscação e vai morar nos esgotos. A cidade acha que ela morreu.", "segue": "F", "quem": "Irene" },
+          { "letra": "G", "como": "Só o Tomás: no lugar do final D, a Besta quebra a corrente e ele foge do sol. Para o Príncipe, virou cinza.", "segue": "G", "quem": "Tomás" }
+        ] }
+      ]
+    },
+    {
+      "n": 2,
+      "titulo": "O Custo do Esquecimento",
+      "onde": "Elísio do MASP, noite de gala · das 20h ao amanhecer (05h40)",
+      "etapas": [
+        { "nome": "Acordar com uma noite faltando", "texto": "Três noites depois do Porão. A terça sumiu da memória e há um chip na língua. Uma mensagem de voz dá a missão: ao amanhecer a Corte vai perguntar o que você fez na terça. No loft, olhar cada coisa custa 10 minutos (sapatos, celular, bolsos, camisa)." },
+        { "nome": "Caçar e ir ao MASP", "texto": "Até 3 caçadas de 30 minutos para baixar a Fome. Quem chega até as 21h30 fala com o Juiz a sós e ganha duas pistas. A gala abre às 22h30; até lá dá para esperar no vão livre (caçar, vigiar a porta, conversar)." },
+        { "nome": "Investigar dentro e fora do museu", "texto": "Entrar ou sair custa 20 minutos. Dentro, usar poder faz o Dr. Arnaldo te expulsar. Fora, todo poder esquenta o chip; no sinal 5 o BOES vem te buscar.", "itens": [
+          "Dentro: Isadora, a anfitriã",
+          "Dentro: Dr. Arnaldo, o Juiz",
+          "Dentro: o Príncipe Dante, ou a Constance se você fez o final C diante da Corte",
+          "Dentro (a partir da 01h30): Luciana, a Senescal",
+          "Fora: o segurança da porta (Agente Rocha, da Inquisição)",
+          "Fora: Valentina, na Paulista",
+          "Fora: o Rayo, só se você foi para os Anarquistas"
+        ] },
+        { "nome": "Responder à Corte", "texto": "Você diz com quem estava na terça e mostra as provas. Antes de confirmar, o jogo avisa se as suas pistas apontam para outro lado.", "itens": [
+          "a Luciana, a Senescal (a resposta certa)", "a Inquisição e o segurança da porta", "a Isadora", "admitir que não sabe"
+        ] }
+      ],
+      "grupos": [
+        { "nome": "Acertou: a Luciana confessa e alguém te salva", "tipo": "certo", "nota": "Quem te salva na hora depende do final do capítulo 1. Depois você escolhe a quem levar a verdade, e essa pessoa te protege no capítulo 3.", "finais": [
+          { "letra": "2B", "como": "Levou a verdade ao Príncipe Dante. (Não existe se o Dante perdeu o comando no final C diante da Corte.)", "aliado": "Dante" },
+          { "letra": "2C", "como": "Levou a verdade à Constance.", "aliado": "Constance" },
+          { "letra": "2J", "como": "Levou a verdade ao Dr. Arnaldo, o Juiz.", "aliado": "Arnaldo" },
+          { "letra": "2K", "como": "Não contou a ninguém: a Senescal fica te devendo.", "aliado": "ninguém (mas a Capela abre a porta)" }
+        ] },
+        { "nome": "Errou: o fim (cada personagem tem uma fuga)", "tipo": "errado", "finais": [
+          { "letra": "2A", "como": "Culpou a Inquisição (as vans pretas te levam) ou a Isadora (a Luciana apaga você de vez)." },
+          { "letra": "2D", "como": "Culpou a Luciana sem provas. Ela apaga a sua memória inteira na frente de todos." },
+          { "letra": "2E", "como": "Disse \"não sei\". A Inquisição vem buscar a isca." },
+          { "letra": "2X", "como": "Usou poder demais do lado de fora: o chip chegou a 5 e o BOES te achou." },
+          { "letra": "2F", "como": "Só a Irene: no lugar do 2A pela Inquisição, desce ao esgoto, onde o chip perde o sinal.", "quem": "Irene" },
+          { "letra": "2G", "como": "Só o Tomás: no lugar do 2D, a Besta não deixa a Luciana apagá-lo e ele foge pela janela.", "quem": "Tomás" },
+          { "letra": "2H", "como": "Só a Joana: no lugar do 2E, se oferece à Inquisição e vira agente dupla.", "quem": "Joana" }
+        ] }
+      ]
+    }
+  ],
+  "ponte": {
+    "titulo": "Como o capítulo 1 muda o capítulo 2",
+    "nota": "Quem não jogou o capítulo 1 começa o 2 como se tivesse feito o final B. Os finais A e D não continuam.",
+    "colunas": ["Final do cap. 1", "Onde você acorda", "Quem dá a missão", "Como chega ao MASP", "Quem te salva se acertar"],
+    "linhas": [
+      ["B", "Loft nos Jardins (emprestado pelo Príncipe)", "Príncipe Dante", "Táxi, 30 min", "Dante"],
+      ["C diante da Corte", "Loft nos Jardins (arrumado pela Constance)", "Constance, que agora preside a Corte", "Táxi, 30 min", "Constance"],
+      ["C pelos Anarquistas", "Loft nos Jardins", "Rayo", "Garupa da moto do Rayo, 20 min (entra pela cozinha)", "Rayo"],
+      ["S", "Loft nos Jardins, com o frasco do Matusalém (uma gota mostra a noite apagada e zera a Fome)", "Príncipe Dante, que te deve um favor (a Corte pede uma prova a menos)", "Táxi, 30 min", "Dante"],
+      ["E", "Loft nos Jardins, preso ao Príncipe pelo Laço", "Príncipe Dante", "Táxi, 30 min", "Dante"],
+      ["H", "Loft nos Jardins, fingindo o Laço", "Príncipe Dante", "Táxi, 30 min", "Dante"],
+      ["F", "Esgoto do Bixiga, \"morta\" para a cidade", "Dr. Arnaldo, o Juiz", "A pé pelo bueiro, 40 min (entra de garçonete)", "Arnaldo"],
+      ["G", "Terreno baldio da Consolação, de volta da Serra, \"cinza\" para o Príncipe", "Dr. Arnaldo, o Juiz", "A pé, 40 min (sem convite: entra com a Valentina)", "Arnaldo"]
+    ]
+  }
+}
