@@ -119,12 +119,15 @@ VAR a2_isadora = false
 # musica: rua
 { final_cap1:
 - "F": Você acorda num colchão de papelão, embaixo da galeria de esgoto do Bixiga, com a boca ardendo como se tivesse mastigado brasa.
-- "G": Você acorda enterrad{o} até o peito num terreno baldio da Consolação, com a pele ainda repuxada das queimaduras e a boca ardendo como se tivesse mastigado brasa.
+- "G": Você acorda enterrad{o} até o peito num terreno baldio da Consolação, com a pele ainda repuxada das queimaduras e a boca ardendo como se tivesse mastigado brasa. Na Serra não tinha lobisomem nenhum, só neblina. Você desceu de carona de volta para a cidade que acha que você é cinza.
+- "C_corte": Você acorda no chão do loft que a Constance te arrumou nos Jardins, de roupa, de sapato, com a boca ardendo como se tivesse mastigado brasa.
 - else: Você acorda no chão do loft que o Príncipe te emprestou nos Jardins, de roupa, de sapato, com a boca ardendo como se tivesse mastigado brasa.
 }
 { final_cap1:
 - "F": Na primeira noite depois do Porão, um rato do Dígito, o novo dono dos esgotos, te trouxe a notícia: os carniçais do Príncipe acharam o bunker da Linha Amarela sem a sua ajuda. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
 - "G": Na primeira noite depois do Porão, um catador que vendia sangue ao Cão te contou, com medo de você: o Príncipe achou o bunker da Linha Amarela sem ajuda de ninguém. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
+- "E": Na segunda noite do Laço, o Príncipe te contou, como quem conta a um cachorro fiel: os carniçais dele acharam o bunker da Linha Amarela sem ajuda de ninguém. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
+- "H": Na segunda noite do Laço, de joelhos na Corte, você ouviu o Príncipe contar: os carniçais dele acharam o bunker da Linha Amarela sem ajuda de ninguém. O Cão virou cinza no telhado, e o Xerife agora é o Delegado Cavalcanti.
 - else: Na rua, antes de dormir, você ouviu a notícia que já corria entre os carniçais: o Xerife agora é o Delegado Cavalcanti.
 }
 Já passa das oito da noite. Três noites se passaram desde o Porão. Você lembra de duas. A terceira é um buraco liso, sem borda.
@@ -331,7 +334,7 @@ Arnaldo: Até a gala, eu não te vi. Na gala, eu vejo tudo. # expr: neutro
     -> caca_paulista
 + {not p2_vigiou} [Teste: Raciocínio + Prontidão, dif. 2 :: Vigiar a porta do museu de longe. (30 minutos)]
     -> vigiar_porta
-+ {not p2_cedo_falou} [{final_cap1 == "C_anarq":Falar com a Isadora, que acaba de descer do carro|Falar com o Rayo, que fuma atrás de um pilar}. (30 minutos)]
++ {not p2_cedo_falou} [{final_cap1 == "C_anarq" or rayo_morto:Falar com a Isadora, que acaba de descer do carro|Falar com o Rayo, que fuma atrás de um pilar}. (30 minutos)]
     -> conversa_cedo
 + [Esperar a gala abrir, às dez e meia.]
     ~ minutos = 210
@@ -376,7 +379,7 @@ Do outro lado do vão livre, você observa a porta lateral. Um segurança de ter
 === conversa_cedo ===
 ~ passar(30)
 ~ p2_cedo_falou = true
-{ final_cap1 == "C_anarq":
+{ final_cap1 == "C_anarq" or rayo_morto:
     # entra: isadora
     Isadora: Chegou cedo, querid{o}? Que deselegante. Ninguém de bem chega antes da anfitriã. # expr: ofendida
     Isadora: Dica de anfitriã: a Senescal sempre chega tarde, lá pela uma e meia. Se tiver alguma coisa para resolver sem ela, resolva antes. # expr: cochicho # pista isadora: Isadora, no vão livre: a Luciana, a Senescal, sempre chega tarde à gala, lá pela uma e meia.
@@ -446,7 +449,7 @@ Quem você procura no salão?
     -> arnaldo
 + {luciana_chegou} {not luc_fechada} [Luciana, a Senescal, sozinha perto da janela]
     -> luciana
-+ {final_cap1 != "C_anarq"} {final_cap1 != "F"} {not anfitriao_falou} [{final_cap1 == "C_corte":A Constance, que te convidou|O Príncipe Dante, que te convidou}]
++ {final_cap1 != "C_anarq"} {final_cap1 != "F"} {final_cap1 != "G"} {not anfitriao_falou} [{final_cap1 == "C_corte":A Constance, que te convidou|O Príncipe Dante, que te convidou}]
     -> anfitriao
 + {disciplina == "Ofuscação"} {luciana_chegou} {not p2_luciana_slip} [Disciplina: Ofuscação :: Sumir na sombra da janela e ouvir a Luciana. (O Dr. Arnaldo está olhando.)]
     -> ofuscacao_dentro
@@ -690,6 +693,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 { final_cap1 == "C_corte":
     # entra: constance
     Constance: Você veio. Ótimo. A cidade mudou de mãos e ainda tem gente se acostumando.
+    { constance_hostil: Constance: Eu não esqueci o que você tentou comigo no Porão, querid{o}. Mas inimigo útil ainda é útil. }
     Constance: Um conselho de graça: a Senescal anda nervosa desde terça. Uma Tremere nervosa é uma Tremere que perdeu alguma coisa. # pista constance: Constance: a Senescal anda nervosa desde terça, como quem perdeu alguma coisa.
     ~ p2_constance_dica = true
 - else:
@@ -930,6 +934,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     Constance: Terça à noite, querid{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem?
 - else:
     A Corte se reúne no último andar do museu, entre os quadros. O Príncipe Dante fica de pé ao lado de uma cadeira de acrílico, que faz as vezes de trono. # entra: dante
+    { final_cap1 == "F" or final_cap1 == "G": Dante: Eu mandei {o == "a":uma|um} forasteir{o} para o sol três noites atrás. Os mortos andam muito nesta cidade. }
     Dante: Terça à noite, forasteir{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem? Diga à Corte. Agora.
 }
 { expulso:
@@ -1156,7 +1161,7 @@ Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por
 - else:
     ~ aliado_cap2 = "dante"
     Dante: Pare. # entra: dante # expr: ordem
-    Uma palavra só. A Senescal congela com a mão no ar, como no Porão o Cão congelou.
+    Uma palavra só. A Senescal congela com a mão no ar{final_cap1 == "B" or final_cap1 == "S":, como no Porão o Cão congelou}.
     Dante: Quem me serve, ninguém toca. Nem você, Luciana. Pelo menos esta noite.
 }
 O sangue volta para dentro das suas veias. Você respira, sem precisar respirar, só para lembrar que ainda está aqui.
@@ -1176,9 +1181,16 @@ Agora a pergunta é outra: para quem você leva essa verdade?
 # fundo: vao_livre
 Na saída, o segurança da portaria abre a porta para você e passa o leitor perto da sua boca. Bip. # entra: rocha # expr rocha: sorriso
 Rocha: Até a próxima. A gente sabe onde você dorme.
-Na Paulista, uma moto encosta no meio-fio. É o Rayo. # entra: rayo # expr rayo: neutro
-Rayo: A bruxa apagou a sua noite pra esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente, forasteir{o}. E essa gente tem informante no meio da gente. Abre o olho.
-A moto some na Augusta. Você fica sozinh{o} no vão livre, com o chip quieto embaixo da língua. # limpa
+{ rayo_morto:
+    # limpa
+    Na Paulista, um rato sobe pela grade de um bueiro e para no seu sapato. É recado do Dígito, o novo dono dos esgotos.
+    Pela língua dos bichos, ele diz: a bruxa apagou a sua noite para esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente. E essa gente tem informante no meio dos Anarquistas.
+    O rato desce de volta. Você fica sozinha no vão livre, com o chip quieto embaixo da língua.
+- else:
+    Na Paulista, uma moto encosta no meio-fio. É o Rayo. # entra: rayo # expr rayo: neutro
+    Rayo: A bruxa apagou a sua noite pra esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente, forasteir{o}. E essa gente tem informante no meio da gente. Abre o olho.
+    A moto some na Augusta. Você fica sozinh{o} no vão livre, com o chip quieto embaixo da língua. # limpa
+}
 A noite de terça voltou quase inteira. Falta só o pedaço que alguém ainda guarda, e quem guarda sabe que você está procurando. # imagem: amanhecer
 No fim da Paulista, o céu começa a clarear. Você tem o tempo de chegar em casa. Amanhã é outra noite.
 ->->
@@ -1223,7 +1235,7 @@ FINAL 2K · O SEGREDO DA SENESCAL. Você guardou a verdade e a Senescal ficou te
 === final2_rocha ===
 O segurança da porta é trazido ao salão. Ele não tem medo de ninguém ali. # entra: rocha
 Rocha: Eu sou funcionário do cerimonial, senhores. Humano. Vocês querem mesmo que eu explique quem me contratou? # expr: sorriso
-Ninguém quer. O Príncipe faz um gesto pequeno, e o assunto acaba.
+Ninguém quer. {final_cap1 == "C_corte":A Constance|O Príncipe} faz um gesto pequeno, e o assunto acaba.
 # musica: final_triste
 Na saída, o Rocha aperta o ponto no ouvido. O chip na sua língua esquenta até queimar.
 { cla == "Nosferatu": -> irene_some_sinal }

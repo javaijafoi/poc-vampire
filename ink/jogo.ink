@@ -125,6 +125,7 @@ VAR capitulo = 1
 VAR final_cap1 = ""          // B, C_corte, C_anarq, E, F, G, H ou S: de onde você parte no capítulo 2
 VAR tem_frasco = false        // final S: você saiu com o frasco do sangue do Matusalém
 VAR favor_principe = false    // final S: o Príncipe te deve um favor
+VAR rayo_morto = false        // você acusou o Rayo e ele virou cinza (só importa para a Irene, que segue no final F)
 
 -> escolha_personagem(-> prologo)
 
@@ -1099,6 +1100,7 @@ Você leva a mão ao pescoço. Mais um segundo e não sobrava nada para o Prínc
 }
 
 === final_rayo ===
+~ rayo_morto = true
 # entra: rayo
 Rayo: Eu? Eu entreguei aquela carga inteira! # expr: bravo
 Dante: O motoqueiro desviou a rota. Isso basta para mim.
