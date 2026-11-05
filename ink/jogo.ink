@@ -125,6 +125,7 @@ VAR capitulo = 1
 VAR final_cap1 = ""          // B, C_corte, C_anarq, E, F, G, H ou S: de onde você parte no capítulo 2
 VAR tem_frasco = false        // final S: você saiu com o frasco do sangue do Matusalém
 VAR favor_principe = false    // final S: o Príncipe te deve um favor
+VAR constance_tentou = false  // a Constance mandou a sombra matar a Irene (final F pela acusação à Constance)
 VAR rayo_morto = false        // você acusou o Rayo e ele virou cinza (só importa para a Irene, que segue no final F)
 
 -> escolha_personagem(-> prologo)
@@ -1159,6 +1160,7 @@ Ele fareja o ar e vai embora. Ele vai voltar. Mas até lá, você já desceu pel
 -> final_irene_esgoto
 
 === irene_some_constance ===
+~ constance_tentou = true
 Na escada da pensão, a sua sombra se levanta da parede para fechar a sua boca, e não encontra boca nenhuma.
 Você já não estava ali. Uma Nosferatu aprende a sumir antes de aprender a andar. # expr voce: some
 -> final_irene_esgoto

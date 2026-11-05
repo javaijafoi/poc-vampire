@@ -75,6 +75,16 @@ VAR a2_lama = false
 VAR a2_rocha = false
 VAR a2_isadora = false
 
+// Como a Corte te chama: a Joana do final H tem lugar na Corte como devota do Príncipe.
+=== function apelido() ===
+{ final_cap1 == "H":
+    ~ return "devota"
+}
+{ o == "a":
+    ~ return "forasteira"
+}
+~ return "forasteiro"
+
 === function acender(n) ===
 ~ sinal = MIN(sinal + n, 5)
 
@@ -152,7 +162,7 @@ O celular vibra no chão. Uma mensagem de voz, de agora há pouco.
     Arnaldo: Hoje há gala no MASP. Antes do sol, a Corte vai querer saber o que você fez na terça. Recomendo vir com respostas. Quem não lembra, a Corte lembra por ele.
     Arnaldo: Eu abro o museu às nove e meia. Se chegar até lá, eu te ouço a sós. Depois, só na frente da Corte.
 - else:
-    Dante: Forasteir{o}. Na terça eu te mandei fazer um trabalho. Eu sei aonde te mandei. Não sei aonde você foi depois. # entra: dante # expr: calado
+    Dante: {final_cap1 == "H":Minha devota|Forasteir{o}}. Na terça eu te mandei fazer um trabalho. Eu sei aonde te mandei. Não sei aonde você foi depois. # entra: dante # expr: calado
     Dante: Naquela madrugada, uma coisa que pertence à minha Corte sumiu do esgoto da Consolação, e um Nosferatu jura que viu você saindo de um bueiro ali às cinco da manhã. Hoje, na gala, antes do sol, você vai me dizer o que fez na terça. Se não souber, eu decido o que você fez.
     Dante: O Dr. Arnaldo, o meu Juiz, abre o museu às nove e meia para quem tem contas a prestar. Se você chegar antes, ele te ouve a sós.
 }
@@ -409,6 +419,8 @@ Elísio :: Lá dentro vale a lei do Elísio: nada de Disciplina, nada de violên
 }
 { final_cap1 == "F": Você entra atrás de uma bandeja de taças, de avental, com a cara de ninguém. Quem serve não é convidada. Quem serve não é vista. }
 { final_cap1 == "C_anarq": O Rayo te põe para dentro pela porta da cozinha e fica lá fora, encostado na moto. }
+{ final_cap1 == "H": Os carniçais da Corte abrem caminho sem pedir convite. A devota do Príncipe tem lugar no salão. Ninguém aqui sabe que o seu Laço é de mentira. }
+{ final_cap1 == "F" and constance_tentou: No alto da escada, a Constance passa os olhos pelos garçons. Para em você meio segundo, e a sombra dela estremece no chão. Ela sabe que a morta da escada da pensão está viva. E não diz nada. Por enquanto. }
 -> salao2
 
 // ------------------------------------------------------------------ AVISOS (hora, chegada da Luciana)
@@ -481,7 +493,7 @@ Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois qu
 ~ despertar()
 ~ p2_luciana_slip = true
 Você deixa de ser vista no vão da cortina. A Luciana fala baixo ao celular, de costas para o salão.
-Luciana: ...está comigo. A caixa toda. Ninguém abre aquilo enquanto eu existir. E {o == "a":a|o} forasteir{o} não vai lembrar. Eu garanti. # pista luciana: Escondid{o}, você ouviu a Luciana ao telefone: "A caixa toda está comigo. {o == "a":A|O} forasteir{o} não vai lembrar. Eu garanti."
+Luciana: ...está comigo. A caixa toda. Ninguém abre aquilo enquanto eu existir. E {final_cap1 == "H":a devota do Príncipe|{o == "a":a|o} forasteir{o}} não vai lembrar. Eu garanti. # pista luciana: Escondid{o}, você ouviu a Luciana ao telefone: "A caixa toda está comigo. {o == "a":A|O} forasteir{o} não vai lembrar. Eu garanti."
 -> arnaldo_viu
 
 === animalismo_dentro ===
@@ -698,7 +710,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
     ~ p2_constance_dica = true
 - else:
     # entra: dante
-    Dante: Você fez um trabalho para mim na terça, forasteir{o}. A primeira parte, fez bem. Não me pergunte qual. O resto da noite, você me conta antes do sol. # expr: neutro
+    Dante: Você fez um trabalho para mim na terça, {apelido()}. A primeira parte, fez bem. Não me pergunte qual. O resto da noite, você me conta antes do sol. # expr: neutro
     Você: Eu não lembro de terça.
     Dante: Melhor assim. # expr: calado # pista dossie: O Príncipe diz que você fez um trabalho para ele na terça, a noite apagada. Ele não quis dizer qual.
     { constance_aliada:
@@ -898,7 +910,7 @@ Rayo: Fica de olho na Toreador de vermelho, a Valentina. Ela caça na Paulista t
 + {p2_luvas or p2_luvas_cheiro} {p2_luciana_slip} [Encarar: "Era a senhora. De luvas, no esgoto, comigo."]
     ~ passar(20)
     ~ luc_fechada = true
-    Luciana: Cuidado, forasteir{o}. Tem coisa que é melhor não lembrar. Eu estou te fazendo um favor que você nem sabe. # expr: ameaca
+    Luciana: Cuidado, {apelido()}. Tem coisa que é melhor não lembrar. Eu estou te fazendo um favor que você nem sabe. # expr: ameaca
     Ela aperta o seu braço com a mão de luva. Por um segundo, o corte na sua memória arde como uma ferida aberta. Depois ela solta, e vai embora. # pista luciana: A Luciana te ameaçou: "Tem coisa que é melhor não lembrar. Eu estou te fazendo um favor."
     { expulso: -> fora }
     -> salao2
@@ -935,7 +947,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 - else:
     A Corte se reúne no último andar do museu, entre os quadros. O Príncipe Dante fica de pé ao lado de uma cadeira de acrílico, que faz as vezes de trono. # entra: dante
     { final_cap1 == "F" or final_cap1 == "G": Dante: Eu mandei {o == "a":uma|um} forasteir{o} para o sol três noites atrás. Os mortos andam muito nesta cidade. }
-    Dante: Terça à noite, forasteir{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem? Diga à Corte. Agora.
+    Dante: Terça à noite, {apelido()}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem? Diga à Corte. Agora.
 }
 { expulso:
     ~ denunciado = true
@@ -1137,7 +1149,7 @@ O que você mostra à Corte?
 # musica: final_verdade
 Luciana: ...Sim. Fui eu. # entra: luciana # expr: abalada
 Luciana: O Cão guardava os segredos da minha Capela num buraco do esgoto, com ordem de soltar tudo se ele morresse. Ele morreu. Alguém tinha que buscar antes dos ratos.
-Luciana: E você estava lá, forasteir{o}. Drogad{o}, com um chip na boca, seguindo o cheiro do Cão como um cachorro. Eu apaguei a sua noite para você não lembrar do que viu. Foi misericórdia. # expr: fria
+Luciana: E você estava lá, {apelido()}. Drogad{o}, com um chip na boca, seguindo o cheiro do Cão como um cachorro. Eu apaguei a sua noite para você não lembrar do que viu. Foi misericórdia. # expr: fria
 Ela tira uma luva. Os dedos dela estão vermelhos, e o sangue na sua veia começa a ferver. # expr luciana: ritual
 Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por qualquer lugar.
 { final_cap1:
@@ -1170,7 +1182,7 @@ A Luciana calça a luva de novo, devagar. A caixa do Cão continua com ela. Voc�
 Agora a pergunta é outra: para quem você leva essa verdade?
 + {final_cap1 != "C_corte"} [Ao Príncipe Dante]
     -> final2_dante
-+ [À Constance]
++ [{constance_tentou:À Constance, que mandou a sombra te matar|À Constance}]
     -> final2_constance
 + [Ao Dr. Arnaldo, o Juiz]
     -> final2_arnaldo
@@ -1207,8 +1219,14 @@ FINAL 2B · A VERDADE PARA O PRÍNCIPE. Você descobriu quem apagou a sua noite,
 === final2_constance ===
 ~ aliado_cap2 = "constance"
 # imagem: anarquistas
-Você leva a verdade à Constance. Ela sorri como quem recebe um presente esperado.
-Constance: Uma Senescal com segredos e um Príncipe que a protege. Isso é uma corda, querid{o}. E eu sei puxar corda. # entra: constance # expr: seria
+{ constance_tentou:
+    Você leva a verdade à mulher que mandou a sua sombra te matar na escada da pensão. Ela escuta sem piscar.
+    Constance: A morta que me escapou vem me trazer um presente. Muito bem, querida. Uma dívida apaga a outra. Por enquanto. # entra: constance # expr: seria
+    Constance: Uma Senescal com segredos e um Príncipe que a protege. Isso é uma corda. E eu sei puxar corda.
+- else:
+    Você leva a verdade à Constance. Ela sorri como quem recebe um presente esperado.
+    Constance: Uma Senescal com segredos e um Príncipe que a protege. Isso é uma corda, querid{o}. E eu sei puxar corda. # entra: constance # expr: seria
+}
 -> saida2_rayo ->
 FINAL 2C · A VERDADE PARA A CONSTANCE. Você deu à Lasombra uma corda no pescoço da Senescal. Ela te protege no capítulo 3. # final: 2C
 -> END
@@ -1285,7 +1303,7 @@ Você: Eu não sei. Não lembro.
 { final_cap1 == "C_corte":
     Constance: Então você é inútil para mim, querid{o}. # entra: constance # expr: riso
 - else:
-    Dante: Então você é inútil para mim, forasteir{o}. # entra: dante # expr: calado
+    Dante: Então você é inútil para mim, {apelido()}. # entra: dante # expr: calado
 }
 Ninguém te expulsa. Pior: ninguém olha mais para você.
 Na saída, o segurança da porta segura o seu braço com gentileza. # entra: rocha # expr rocha: sorriso
