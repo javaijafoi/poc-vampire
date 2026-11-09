@@ -184,14 +184,14 @@ A cantina de cima está fechada. Uma escada de pedra desce até um bar sem placa
 Vincenzo: Benvenuto. O Príncipe espera você. Regra da casa: aqui embaixo ninguém levanta a mão nem usa Disciplina.
 Vincenzo: E cuidado na volta pra casa. Tem gente de terno e crachá rondando o Bixiga esta semana, e dizem que uma tal de Doutora anda pagando informante na cidade.
 Dante: Sente-se. Eu não gosto de repetir, então escute.
-Dante: Esta noite chegou ao Porto de Santos uma carga minha. Um sarcófago. Dentro dele, um Matusalém em torpor, mais velho que esta cidade.
+Dante: Ontem à noite chegou ao Porto de Santos uma carga minha. Um sarcófago. Dentro dele, um Matusalém em torpor, mais velho que esta cidade.
 Dante: A carga subiu a Serra num caminhão e devia chegar ao meu cofre, pelo túnel da Vila Sônia. Não chegou.
-Dante: Meu Xerife diz que o caminhão apareceu vazio no túnel às três e meia, sem o Biel, o entregador Sangue-Ralo que vinha junto com o Rayo. # pista dossie: O Cão disse ao Príncipe que o caminhão chegou vazio às 03h30, sem o Biel, o Sangue-Ralo que acompanhava a carga.
+Dante: Meu Xerife diz que o caminhão apareceu vazio no túnel às três e meia da madrugada, sem o Biel, o entregador Sangue-Ralo que vinha junto com o Rayo. # pista dossie: O Cão disse ao Príncipe que o caminhão chegou vazio às 03h30, sem o Biel, o Sangue-Ralo que acompanhava a carga.
 Dante: O relatório das concessionárias diz que o caminhão não passou em pedágio nenhum, nem na Anchieta nem na Imigrantes. # pista dossie: O caminhão não passou em pedágio nenhum na subida da Serra.
 Você: Por que eu? A cidade tem um Xerife.
 Dante: Porque o transporte passava pela segurança do Xerife. E porque você não tem amigos aqui. Ninguém vai pedir favor a você.
 Dante: Todos que tocaram na carga estão neste bar. O Rayo dirigiu o caminhão. A Harumi, do Ministério, recebeu o contêiner no porto. É ela quem manda nos estivadores de lá. O Cão recebeu no túnel.
-Dante: E a Nonna Benedetta, lá no fundo, diz que fala com os mortos. O Biel não aparece desde as três. Se ele virou cinza, talvez ainda tenha algo a dizer.
+Dante: E a Nonna Benedetta, lá no fundo, diz que fala com os mortos. O Biel não aparece desde as três da madrugada. Se ele virou cinza, talvez ainda tenha algo a dizer.
 Dante: Você tem até o amanhecer. Quando tiver um nome, mande me chamar. Se o sol estiver para nascer, eu desço com a Corte do mesmo jeito, e você me diz quem me traiu.
 Dante: Acerte, e sua dívida está paga. Erre, e você paga por ela.
 O Príncipe se levanta. Ninguém no bar olha para ele, mas todo mundo para de falar até a porta fechar. # expr dante: pe
@@ -223,7 +223,7 @@ Para onde você vai?
     -> vincenzo
 + {disciplina == "Ofuscação"} {not poder_forte} {p_cao_versao} [Disciplina forte: Ofuscação :: Vestir o rosto do Cão e perguntar ao Vincenzo como foi a limpeza.]
     -> forte_irene
-+ {disciplina == "Animalismo"} {not poder_forte} [Disciplina forte: Animalismo :: Chamar todos os ratos do Porão e perguntar o que viram esta noite.]
++ {disciplina == "Animalismo"} {not poder_forte} [Disciplina forte: Animalismo :: Chamar todos os ratos do Porão e perguntar o que viram na noite passada.]
     -> forte_tomas
 + {fome >= 4} [Fome {fome} :: Descer à adega e beber do rapaz que lava os copos.]
     -> beber_adega
@@ -307,6 +307,10 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
 === rayo ===
 # fundo: balcao
 # entra: rayo
+{ rayo_confessou and biel_morte and not p_olho:
+    Rayo: Já falei o que tinha pra falar. O que foi agora? # expr: fechado
+    -> rayo_depois
+}
 { rayo_confessou:
     Rayo: Já falei o que tinha pra falar. Agora me deixa beber em paz. # expr: fechado
     -> salao
@@ -393,11 +397,7 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
     Rayo esconde a mão no bolso da jaqueta, tarde demais. # expr rayo: mao
     -> rayo_pressionar
 + {biel_morte} {not p_olho} [Prova :: Olho amarelo: o fantasma do Biel diz que uma fera de olho amarelo o pegou.]
-    ~ passar(20)
-    ~ p_olho = true
-    Você: O Biel morreu achando que foi você. Uma fera de olho amarelo, ele disse.
-    Rayo puxa a pálpebra para baixo com o dedão e chega o rosto perto do seu. # expr rayo: olho
-    Rayo: Olha bem. Castanho. Olho amarelo neste bar só tem um, e ele fica fumando embaixo da escada. # pista rayo: Olho amarelo, no Porão, só o Cão tem. Os do Rayo são castanhos.
+    -> rayo_olho ->
     -> rayo_perguntas
 + {p_rayo_versao} {constance_chegou} {not rayo_confessou} {not rayo_fechado} [Teste: Manipulação + Subterfúgio, dif. 3 :: Blefar: "A Constance já me contou tudo."]
     ~ passar(20)
@@ -434,6 +434,22 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
     ~ quebrou_regra += 1
     ~ sentiu_besta_rayo = true
     -> rayo_pressionar
++ [Voltar para o salão]
+    -> salao
+
+// A prova do olho amarelo: vale também depois que o Rayo confessou e parou de falar do resto.
+=== rayo_olho ===
+~ passar(20)
+~ p_olho = true
+Você: O Biel morreu achando que foi você. Uma fera de olho amarelo, ele disse.
+Rayo puxa a pálpebra para baixo com o dedão e chega o rosto perto do seu. # expr rayo: olho
+Rayo: Olha bem. Castanho. Olho amarelo neste bar só tem um, e ele fica fumando embaixo da escada. # pista rayo: Olho amarelo, no Porão, só o Cão tem. Os do Rayo são castanhos.
+->->
+
+=== rayo_depois ===
++ [Prova :: Olho amarelo: o fantasma do Biel diz que uma fera de olho amarelo o pegou.]
+    -> rayo_olho ->
+    -> salao
 + [Voltar para o salão]
     -> salao
 
@@ -697,7 +713,11 @@ Você guarda o carimbo como quem guarda uma arma carregada.
     O fantasma do Biel ainda está ali, por cima da chama da vela, mais fraco a cada minuto.
     -> biel_perguntas_loop
 }
-Nonna: Senta, filh{o}. Você quer falar com o rapaz que morreu hoje, eu sei. Ele está aqui desde as três, andando em volta da minha mesa.
+{ limite - minutos < 80:
+    Nonna: Agora não dá mais, filh{o}. Chamar morto leva uma hora inteira, e o sol não espera nem por mim. Devia ter vindo antes. # expr: severa
+    -> salao
+}
+Nonna: Senta, filh{o}. Você quer falar com o rapaz que morreu de madrugada, eu sei. Ele anda em volta da minha mesa desde que eu acendi a primeira vela.
 Nonna: Mas os mortos não falam de graça. Ou você me fica devendo um favor, que um dia eu cobro, ou me paga agora, com o que corre nas suas veias.
 Nonna: Sangue de vampiro chama morto mais forte. Com ele, o rapaz vem mais inteiro, e fica mais um pouco.
 + [Pagar com sangue :: Deixar a Nonna encher um frasco com o seu sangue. A Fome sobe 1, e o fantasma responde uma pergunta a mais.]
@@ -906,17 +926,17 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
 { not vincenzo_falou: Vincenzo: Um conselho, forasteir{o}? Ou só uma bebida? }
 { vincenzo_falou: Vincenzo: De volta ao balcão, forasteir{o}. }
 ~ vincenzo_falou = true
-+ {not v_neutro} [Alguém usou os seus serviços esta noite?]
++ {not v_neutro} [Alguém usou os seus serviços na noite passada?]
     ~ passar(20)
     ~ v_neutro = true
     Vincenzo: Em São Paulo ninguém fica no meio, forasteir{o}. Eu ando com os Anarquistas porque eles pagam em dia. Mas aqui embaixo o Porão é neutro. Eu não pergunto, e não conto.
     Vincenzo: Aqui embaixo eu sirvo bebida e, quando pagam bem, limpo a sujeira dos outros. Volte quando souber de que sujeira você quer falar. # pista bar: Vincenzo: "Quando pagam bem, eu limpo a sujeira dos outros." Ele sabe de alguma coisa, mas só responde a pergunta certa.
     -> salao
-+ {v_neutro} {p_tunel or p_concreto or p_bunker} {not p_limpeza} [Prova :: Sujeira: alguém morreu embaixo da terra esta noite. Quem pagou a limpeza?]
++ {v_neutro} {p_tunel or p_concreto or p_bunker} {not p_limpeza} [Prova :: Sujeira: alguém morreu embaixo da terra na noite passada. Quem pagou a limpeza?]
     ~ passar(20)
     ~ p_limpeza = true
     Vincenzo: Agora sim, uma pergunta.
-    Vincenzo: Minha equipe de limpeza trabalhou hoje, depois das três. O carro voltou com lama de obra nas rodas e cheiro de esgoto.
+    Vincenzo: Minha equipe de limpeza trabalhou de madrugada, depois das três. O carro voltou com lama de obra nas rodas e cheiro de esgoto.
     Vincenzo: Quem pagou? Alguém que tem a chave dos túneis. Eu não disse nome nenhum. # pista bar: A equipe de limpeza do Vincenzo trabalhou depois das 3h para alguém com a chave dos túneis. O carro voltou com lama de obra e cheiro de esgoto.
     -> salao
 + [Só uma bebida]

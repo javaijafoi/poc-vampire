@@ -172,6 +172,7 @@ body {
 .em-breve { font-family: var(--f-tipo); color: var(--acento); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 .6em; }
 .escolhas .custo { font-family: var(--f-tipo); font-size: .72em; color: var(--tinta-fraca); white-space: nowrap; }
 .escolhas .custo::before { content: "⏱ "; }
+.escolhas .custo.passa { color: var(--vermelho, #a01c28); font-weight: bold; white-space: normal; }
 .escolhas button.feita .porque { opacity: .6; }
 .escolhas button.feita::after { content: "já perguntou"; margin-left: auto; padding-left: 1em; font-family: var(--f-tipo); font-size: .7em; color: #9c8b7a; white-space: nowrap; }
 /* O porquê da opção vem depois dela, no mesmo texto, entre parênteses e na cor do tipo. */
@@ -991,7 +992,7 @@ function fotoHud() { const v = story.variablesState; return { fome: v['fome'], s
 function atualizarHud() {
   const v = story.variablesState, min = v['minutos'];
   const espera = fila.find(e => e.hud), hud = espera ? espera.hud : fotoHud();
-  $('hora').textContent = horaDe(min);
+  $('hora').textContent = horaDe(Math.min(min, v['limite']));
   $('hora').classList.toggle('urgente', min >= v['limite'] - 100);
   $('sol').style.setProperty('--sol', Math.max(0, Math.min(1, (min - (v['limite'] - 160)) / 160)).toFixed(2));
   $('barra').style.width = Math.max(0, Math.min(100, 100 * (v['limite'] - min) / v['limite'])) + '%';
@@ -1288,7 +1289,8 @@ function mostrarEscolhas(pergunta = '') {
     // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
     const custos = custosDasEscolhas();
     c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas${story.currentChoices.length > 6 ? ' muitas' : ''}${story.currentChoices.length > 10 ? ' n11' : story.currentChoices.length > 8 ? ' n9' : ''}">${story.currentChoices.map((ch, i) => {
-      const custo = custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
+      const passa = custos[i] > 10 && story.variablesState['minutos'] + custos[i] >= story.variablesState['limite'];
+      const custo = passa ? ` <span class="custo passa">${textoCusto(custos[i])} · vai até o amanhecer</span>` : custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
       const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : / \(encerra o capítulo\)$/.test(ch.text) ? ' class="sem-volta"' : '';
@@ -1344,7 +1346,14 @@ function mostrarFim() {
     <ul class="escolhas">${ops.map(([a, t], i) => `<li><button type="button" data-a="${a}"><span class="num">${i + 1}</span><span>${t}</span></button></li>`).join('')}</ul>`;
   if (segue) $('conteudo').querySelector('[data-a=cap2]').addEventListener('click', e => { e.stopPropagation(); jogarCapitulo2(true); });
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
-  $('conteudo').querySelector('[data-a=de-novo]').addEventListener('click', e => { e.stopPropagation(); iniciar(); });
+  // trava de clique, como nas outras opções: o clique que avançou a última fala não pode cair num botão.
+  // "Jogar de novo" some com esta tela, então pede um segundo clique.
+  const fimEm = performance.now();
+  const lf = $('conteudo').querySelector('.escolhas'); lf.classList.add('travada'); setTimeout(() => lf.classList.remove('travada'), 900);
+  lf.addEventListener('click', e => { if (performance.now() - fimEm < 900) e.stopPropagation(); }, true);
+  $('conteudo').querySelector('[data-a=de-novo]').addEventListener('click', e => { e.stopPropagation(); const b = e.currentTarget;
+    if (b.dataset.certo) return iniciar();
+    b.dataset.certo = '1'; b.lastElementChild.textContent = 'Recomeçar do zero? ' + CLIQUE + ' de novo para confirmar.'; });
   $('conteudo').querySelector('[data-a=menu]').addEventListener('click', e => { e.stopPropagation(); mostrarCapa(); });
 }
 
@@ -1581,7 +1590,7 @@ const NOITE_ANTERIOR = [
   ['arnaldo', 'Dr. Arnaldo', 'O Juiz do Elísio. Dentro do museu, ninguém usa Disciplina sem ele ver.'],
   ['isadora', 'Isadora', 'Toreador, dona da festa. Sabe de tudo e conta para todos.'],
   ['rayo', 'Rayo', 'Gangrel, o motorista que levava o Matusalém. Anda com os Anarquistas, que não obedecem ao Príncipe.'],
-  ['rocha', 'Agente Rocha', 'Segurança humano da porta. Trabalha para a Inquisição, caçadores de vampiros comandados pela Doutora.'],
+  ['rocha', 'Agente Rocha', 'Segurança humano da porta do museu. Ninguém da Corte sabe dizer quem o contratou.'],
 ];
 function mostrarNoiteAnterior() {
   registrar('abriu', { o_que: 'noite_anterior' });

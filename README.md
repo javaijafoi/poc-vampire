@@ -45,6 +45,8 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 - Relógio: `minutos` conta a partir de `hora_base` (capítulo 1: 23h; capítulo 2: 19h, com `limite` 640, sol às 05h40). O loft custa 10 minutos por coisa olhada. O capítulo 2 começa com Fome 4, e antes de sair dá para caçar até três vezes (`caca`, 30 minutos cada; sucesso baixa 2 de Fome, falha baixa 1). O Juiz recebe a sós até as 22h e a gala abre às 22h30.
 - `# trajeto: origem modo minutos` (origem jardins, bixiga ou consolacao; modo taxi, moto ou pe) mostra o mapa do caminho até o MASP com o relógio correndo. Ponha a tag na linha depois do `passar()` da viagem.
 - Abertura do capítulo 2: `QUADROS_CAP2` no `web/template.html` (versão padrão, do final B). Quem chega ao MASP até as 22h fala com o Juiz a sós (`juiz_cedo`); o loft e a caça avisam antes da escolha que faria perder essa janela. A resposta à Corte pede confirmação (`confirma2`) e cada prova mostra se pegou (`reage2`). O caderno ganha a aba Suspeitos no capítulo 2.
+- A Corte do capítulo 2 só se reúne depois que a Luciana chega (01h30): antes disso, a opção é esperar por ela (`esperar_senescal`). Para a Senescal cair, as provas fortes têm de incluir uma do lado de fora: o sedativo (Rocha) ou a mulher de luvas vista na rua (Valentina, os bichos da Paulista ou o frasco).
+- Opção que custa mais tempo do que resta de noite ganha o aviso "vai até o amanhecer"; a Nonna não começa a sessão com menos de 80 minutos de noite. `node test_revisao.cjs` confere esses casos.
 - `node test_cap2.cjs` joga o capítulo 2 partindo de cada final do 1, confere o caminho neutro (só conversa e provas) com os três personagens e o final S do capítulo 1.
 
 ## Fluxograma das escolhas
