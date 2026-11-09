@@ -37,7 +37,7 @@ VAR p2_isa_capela = false     // Isadora: a Luciana saiu às 3h e voltou com a b
 VAR p2_quem_apaga = false     // Arnaldo: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco
 VAR p2_arquivo = false        // Arnaldo: o Cão tinha um "seguro", um arquivo nos esgotos da Consolação
 VAR p2_rocha_dante = false    // Arnaldo: o segurança humano foi posto ali por ordem de cima
-VAR p2_luvas = false          // Valentina viu você às 4h com uma mulher de luvas
+VAR p2_luvas = false          // Valentina viu você pouco depois das 3h com uma mulher de luvas
 VAR p2_caixa = false          // os bichos da Paulista: a mulher de luvas voltou do esgoto com uma caixa
 VAR p2_luciana_slip = false   // a Luciana falou dos esgotos da Consolação sem ninguém falar
 VAR p2_luvas_cheiro = false   // as luvas da Luciana cheiram ao mesmo esgoto dos seus sapatos
@@ -250,16 +250,19 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
 }
 
 === caca ===
-{ cacadas == 0:
+{ cacadas == 0 and fome < 3:
+    A Fome está quieta. Dá para ir direto para a gala, ou caçar mesmo assim, por garantia.
+}
+{ cacadas == 0 and fome >= 3:
     A Fome arranha a garganta por dentro. A noite apagada te deixou seco, e a gala vai estar cheia de gente viva. Entrar assim é deixar a Besta escolher por você.
 }
 { cacadas > 0 and fome >= 4:
     A Fome continua alta. A Besta anda de um lado para o outro atrás das suas costelas.
 }
-{ cacadas < 3 and fome > 0 and minutos + viagem() <= 150 and minutos + 30 + viagem() > 150:
+{ cacadas < 3 and fome > 1 and minutos + viagem() <= 150 and minutos + 30 + viagem() > 150:
     {hora_falada()}. Se caçar de novo, você não chega ao MASP até as nove e meia, e o Juiz não te recebe a sós.
 }
-+ {cacadas < 3} {fome > 0} [Teste: {teste_caca()}, dif. 2 :: Caçar na rua. (30 minutos)]
++ {cacadas < 3} {fome > 1} [Teste: {teste_caca()}, dif. 2 :: Caçar na rua. (30 minutos)]
     ~ passar(30)
     ~ cacadas += 1
     { nome:
@@ -276,10 +279,10 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
     }
     ~ temp r = rolar(parada_caca, fome, 2)
     { r == 1 or r == 2 or r == 3:
-        ~ fome = MAX(fome - 2, 0)
+        ~ fome = MAX(fome - 2, 1)
         Você bebe devagar, sem matar, e deixa a pessoa encostada num canto, tonta, achando que bebeu demais. A Fome recua dois passos.
     - else:
-        ~ fome = MAX(fome - 1, 0)
+        ~ fome = MAX(fome - 1, 1)
         A pessoa se assusta e você precisa soltar cedo. Deu para tirar o pior, não mais que isso. A Fome recua um passo.
     }
     -> caca
@@ -340,7 +343,7 @@ Arnaldo: Até a gala, eu não te vi. Na gala, eu vejo tudo. # expr: neutro
     -> chegada
 }
 {hora_falada()}. A gala abre às dez e meia. Até lá, o vão livre é seu.
-+ {fome > 0} [Teste: {teste_caca()}, dif. 2 :: Caçar na Paulista, longe da porta. (30 minutos)]
++ {fome > 1} [Teste: {teste_caca()}, dif. 2 :: Caçar na Paulista, longe da porta. (30 minutos)]
     -> caca_paulista
 + {not p2_vigiou} [Teste: Raciocínio + Prontidão, dif. 2 :: Vigiar a porta do museu de longe. (30 minutos)]
     -> vigiar_porta
@@ -363,10 +366,10 @@ Você desce a escadaria para a calçada e anda até a esquina da Augusta, onde n
 }
 ~ temp r = rolar(parada_caca, fome, 2)
 { r == 1 or r == 2 or r == 3:
-    ~ fome = MAX(fome - 2, 0)
+    ~ fome = MAX(fome - 2, 1)
     Um rapaz de fone de ouvido, um beco, dois minutos. Você bebe sem matar e deixa ele sentado no degrau de uma loja fechada. A Fome recua dois passos.
 - else:
-    ~ fome = MAX(fome - 1, 0)
+    ~ fome = MAX(fome - 1, 1)
     ~ acender(1)
     A pessoa grita antes da hora e você precisa soltar. A Besta sobe até os dentes, e o chip esquenta embaixo da sua língua. Lá na porta do museu, o segurança vira a cabeça para o seu lado. A Fome recua um passo. # pista rocha: Você caçou mal na Paulista e o chip esquentou. O segurança da porta virou a cabeça para o seu lado.
 }
@@ -473,8 +476,22 @@ Quem você procura no salão?
     ~ passar(20)
     ~ dentro = false
     -> fora
-+ [Chamar quem preside a Corte e contar o que você fez na terça (encerra o capítulo)]
++ {luciana_chegou} [Chamar quem preside a Corte e contar o que você fez na terça (encerra o capítulo)]
     -> confirmar_acusacao2
++ {not luciana_chegou} [Esperar a Senescal chegar, à uma e meia. A Corte só se reúne com ela presente.]
+    -> esperar_senescal
+
+// A Corte não se reúne sem a Senescal: antes de ela chegar (01h30), só dá para esperar.
+=== esperar_senescal ===
+{ minutos < 390:
+    ~ minutos = 390
+}
+{ dentro and not expulso:
+    Você pega uma taça que não vai beber e deixa a festa girar em volta. As horas passam devagar, de conversa em conversa.
+    -> salao2
+}
+Você se encosta num pilar do vão livre e deixa a Paulista esvaziar. As horas passam devagar.
+-> fora
 
 === confirmar_acusacao2 ===
 Você tem @pistas no caderno. Faltam {tempo_falta()} para o amanhecer. Depois que a Corte ouvir, o capítulo acaba. Não tem volta.
@@ -555,8 +572,10 @@ Para onde você vai?
     ~ c2_pode_entrar = true
     Valentina: Cabeça baixa e sorriso bobo, querid{o}. Você é meu acompanhante. # entra: valentina # expr: rindo
     -> salao2
-+ [Chamar quem preside a Corte e contar o que você fez na terça (encerra o capítulo)]
++ {luciana_chegou} [Chamar quem preside a Corte e contar o que você fez na terça (encerra o capítulo)]
     -> confirmar_acusacao2
++ {not luciana_chegou} [Esperar a Senescal chegar, à uma e meia. A Corte só se reúne com ela presente.]
+    -> esperar_senescal
 
 === boes ===
 # limpa
@@ -566,7 +585,7 @@ Na Paulista, três vans pretas param ao mesmo tempo, uma em cada faixa. Homens d
 # imagem: van
 O BOES não pergunta nada. Ele sabe exatamente onde você está. Ele sempre soube.
 Você corre para o vão livre. A luz te alcança no meio do caminho.
-FINAL 2X · O SINAL. Você usou Disciplina demais com o chip na língua, e a Inquisição veio buscar a isca. # final: 2X
+FINAL 2X · O SINAL. O chip na sua língua esquentou demais, e a Inquisição veio buscar a isca. # final: 2X
 -> END
 
 // ------------------------------------------------------------------ ISADORA (dentro)
@@ -844,8 +863,8 @@ Rocha: Você acordou às duas e saiu andando. O resto da sua noite não é com a
 === valentina_conta ===
 ~ p2_luvas = true
 ~ val_falou = 2
-Valentina: ...Tá. Eu vi. Às quatro, mais ou menos. Você andava como sonâmbul{o}, de braço dado com uma mulher de luvas pretas e casaco escuro. # expr: assustada
-Valentina: Pensei que era encontro. Ela olhou para mim e eu... achei melhor esquecer. Com aquela lá, a gente acha melhor esquecer. # pista valentina: Valentina viu você às 4h da noite apagada, andando como sonâmbul{o}, de braço dado com uma mulher de luvas pretas.
+Valentina: ...Tá. Eu vi. Pouco depois das três. Você andava como sonâmbul{o}, de braço dado com uma mulher de luvas pretas e casaco escuro, na direção da grade do esgoto da Consolação. # expr: assustada
+Valentina: Pensei que era encontro. Ela olhou para mim e eu... achei melhor esquecer. Com aquela lá, a gente acha melhor esquecer. # pista valentina: Valentina viu você pouco depois das 3h da noite apagada, indo para a grade do esgoto da Consolação, andando como sonâmbul{o}, de braço dado com uma mulher de luvas pretas.
 -> valentina_perguntas
 
 // ------------------------------------------------------------------ RAYO (fora, só no caminho dos Anarquistas)
@@ -946,7 +965,8 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     Constance: Terça à noite, querid{o}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem?
 - else:
     A Corte se reúne no último andar do museu, entre os quadros. O Príncipe Dante fica de pé ao lado de uma cadeira de acrílico, que faz as vezes de trono. # entra: dante
-    { final_cap1 == "F" or final_cap1 == "G": Dante: Eu mandei {o == "a":uma|um} forasteir{o} para o sol três noites atrás. Os mortos andam muito nesta cidade. }
+    { final_cap1 == "G": Dante: Eu mandei {o == "a":uma|um} forasteir{o} para o sol três noites atrás. Os mortos andam muito nesta cidade. }
+    { final_cap1 == "F": Dante: Disseram-me que você tinha virado cinza, forasteir{o}. Os mortos andam muito nesta cidade. }
     Dante: Terça à noite, {apelido()}. Você saiu de um bueiro da Consolação às cinco da manhã. O que você fez lá embaixo, e com quem? Diga à Corte. Agora.
 }
 { expulso:
@@ -1004,6 +1024,9 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 { quem != "luciana" and fortes >= 2:
     Atenção :: {fortes} pistas fortes do seu caderno apontam para a Senescal, não para {quem == "nao_sei":o "não sei"|quem você vai acusar}.
 }
+{ quem == "luciana" and not p2_sedativo and not p2_luvas:
+    Atenção :: Tudo o que você tem saiu de dentro do salão. Ninguém viu você com ela naquela noite, e nada separa a Senescal do chip na sua língua. Lá fora, na portaria e na Paulista, tem quem saiba.
+}
 { quem == "nao_sei" and fortes >= 1:
     Atenção :: Você tem pistas no caderno. Quem diz "não sei" diante da Corte fica sem proteção nenhuma.
 }
@@ -1038,6 +1061,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 -> provas2_loop
 
 // Contra a Luciana valem as provas fortes. As outras gastam uma vez e não convencem.
+// E pelo menos uma tem de vir do lado de fora: o sedativo (Rocha) ou a mulher de luvas vista na rua (Valentina, bichos, frasco).
 === provas2_loop ===
 { provas_dadas >= provas_max: -> veredito2 }
 O que você mostra à Corte?
@@ -1073,7 +1097,7 @@ O que você mostra à Corte?
     ~ a2_luvas = true
     ~ provas_dadas += 1
     ~ provas_fortes += 1
-    Você: {p2_luvas:Eu fui vist{o} às quatro, de braço dado com uma mulher de luvas pretas, andando como sonâmbul{o}.|As luvas dela cheiram ao mesmo esgoto dos meus sapatos.} Olhe as mãos da Senescal.
+    Você: {p2_luvas:Eu fui vist{o} pouco depois das três, de braço dado com uma mulher de luvas pretas, andando como sonâmbul{o}.|As luvas dela cheiram ao mesmo esgoto dos meus sapatos.} Olhe as mãos da Senescal.
     -> reage2(true) ->
     -> provas2_loop
 + {p2_arquivo} {not a2_arquivo} [O arquivo do Cão nos esgotos da Consolação]
@@ -1136,7 +1160,12 @@ O que você mostra à Corte?
 - "rocha": -> final2_rocha
 - "isadora": -> final2_isadora
 }
-{ provas_fortes >= provas_max: -> luciana_cai }
+{ provas_fortes >= provas_max and (a2_sedativo or (a2_luvas and p2_luvas)): -> luciana_cai }
+{ provas_fortes >= provas_max:
+    Luciana: Fofoca de salão e um número de telefone. Alguém me viu com {o == "a":ela|ele} naquela noite? Alguém aqui sabe dizer quem pôs esse chip na boca d{o == "a":ela|ele}? # entra: luciana # expr: fria
+    Ninguém responde. Tudo o que você trouxe saiu de dentro do Elísio. Faltou quem viu você na rua, ou quem explica onde a Inquisição termina e a Senescal começa.
+    -> final2_sem_provas
+}
 { provas_fortes > 0:
     Você tem peças, mas não o bastante. Contra a Senescal, meia prova é suicídio.
 - else:
