@@ -988,12 +988,18 @@ Dante: Então, forasteir{o}. Quem me traiu?
 
 // Na Corte, palavra não basta: você apresenta até {provas_max} coisas do caderno.
 // Contra o Cão, só valem as provas que se sustentam (provas_fortes). Pista fraca gasta uma vez e não convence.
+// Só a acusação contra o Xerife pede três (ou quatro) provas. Contra os outros, a Corte ouve uma coisa e decide:
+// o desfecho deles não depende de prova, então o jogador não gasta cliques à toa.
 === provas ===
-Dante: Palavra não basta. Mostre à Corte o que você juntou. {provas_max == 4:Quatro|Três} coisas, as melhores que você tiver.
+{ acusado:
+- "cao": Dante: Palavra não basta contra o meu Xerife. Mostre à Corte o que você juntou. {provas_max == 4:Quatro|Três} coisas, as melhores que você tiver.
+- "constance": Dante: Contra uma Primogênita, palavra não basta. Mostre uma coisa. Se ela se sustentar, eu ouço o resto.
+- else: Dante: Contra quem não é da minha Corte, uma coisa me basta. Mostre a melhor que você tiver.
+}
 -> provas_loop
 
 === provas_loop ===
-{ provas_dadas >= provas_max: -> veredito }
+{ provas_dadas >= provas_max or (acusado != "cao" and provas_dadas >= 1): -> veredito }
 O que você mostra à Corte?
 + {p_cao_selo} {not a_selo} [O selo Tremere queimado que o Cão disse ter visto]
     ~ a_selo = true
