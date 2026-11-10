@@ -794,6 +794,9 @@ const FINAIS = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'S'];
 const FINAIS2 = ['2A', '2B', '2C', '2D', '2E', '2F', '2G', '2H', '2J', '2K', '2L', '2X'];
 // finais do capítulo 1 que seguem para o capítulo 2 (A e D são morte)
 const SEGUEM = new Set(['B', 'C', 'E', 'F', 'G', 'H', 'S']);
+// finais do capítulo 2 que seguem para o capítulo 3 (Peter, 2026-11-10): os cinco acertos e as três fugas. 2A, 2D, 2E e 2X acabam ali.
+const SEGUEM2 = new Set(['2B', '2C', '2J', '2K', '2L', '2F', '2G', '2H']);
+const CAP2 = 'matusalem-cap2';  // o estado do Ink no fim do capítulo 2, para o capítulo 3 começar dali quando existir
 const CAP1 = 'matusalem-cap1';  // o estado do Ink no fim do capítulo 1, para começar o 2 dali
 const MORTE1 = 'matusalem-cap1-morte';  // nome de quem morreu no fim do capítulo 1 (o botão do capítulo 2 avisa)
 let cena;
@@ -1403,7 +1406,8 @@ function mostrarFim() {
   // fim do capítulo 1 com o personagem vivo: guarda onde parou e oferece o capítulo 2
   const segue = cap === 1 && SEGUEM.has(finalLetra);
   if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); localStorage.removeItem(MORTE1); } catch (e) {}
-  else if (cap === 1) try { localStorage.removeItem(CAP1); localStorage.setItem(MORTE1, story.variablesState['nome'] || 'Seu personagem'); } catch (e) {}
+  if (cap === 2) try { if (SEGUEM2.has(finalLetra)) localStorage.setItem(CAP2, story.state.toJson()); else localStorage.removeItem(CAP2); } catch (e) {}
+  if (!segue && cap === 1) try { localStorage.removeItem(CAP1); localStorage.setItem(MORTE1, story.variablesState['nome'] || 'Seu personagem'); } catch (e) {}
   const ops = [...(segue ? [['cap2', 'Seguir para o capítulo 2']] : []), ['caderno', 'Ver o caderno'], ['finais', 'Ver os finais encontrados'], ['de-novo', 'Jogar de novo com outro personagem'], ['menu', 'Voltar ao menu']];
   $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo ${cap}</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
     <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>${cap >= 2 ? `<p class="em-breve">Capítulo 3 · em breve</p>` : ''}

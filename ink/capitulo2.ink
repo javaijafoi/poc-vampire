@@ -818,6 +818,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 ~ p2_sedativo = true
 Rocha: Tá. Sedativo na veia do estivador que você mordeu no porto. Derruba vampiro por duas horas, certinho. A Doutora aproveitou para pôr o brinquedo. # expr: sorriso
 Rocha: Você acordou às duas e saiu andando. O resto da sua noite não é com a gente. A gente também queria saber onde você foi. # pista rocha: Rocha: o sedativo da Inquisição só segurou você até as 2h; o chip foi posto no porto. O resto da noite "não é com a gente".
+{ dante_mandou(): Rocha: E pensa numa coisa, de graça. Quem te mandou sozinh{o} para aquele cais sabia quem frequenta aquele cais. Ou não ligava se você voltasse, ou achava que um problema a menos era lucro. # pista rocha: Rocha: quem te mandou sozinh{o} ao porto sabia quem frequenta aquele cais, e não ligava se você voltasse. }
 -> rocha_perguntas
 
 // ------------------------------------------------------------------ VALENTINA (Paulista, fora)
@@ -1367,6 +1368,7 @@ FINAL 2A · A NOITE INTEIRA. Você acusou a pessoa errada, e a Senescal terminou
 - else:
     { dante_mandou():
         Dante: Mandei você ao porto, {apelido()}. É para isso que serve quem me deve. O que foi fazer lá não é assunto para esta sala. # entra: dante # expr: calado
+        Dante: Eu sabia que aquele cais não era seguro. Mandei assim mesmo. Se você não voltasse, era uma conta a menos para eu fechar.
         Dante: Mas do porto você saiu andando, e eu só soube de você de novo no bueiro, às cinco. Essa parte da noite não é minha.
         Ninguém na Corte pergunta o que o Príncipe queria no porto. Ninguém ali é tão nov{o == "a":a|o} assim.
     - else:
