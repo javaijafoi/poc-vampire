@@ -21,7 +21,7 @@ VAR luciana_chegou = false
 VAR c2_pode_entrar = true     // o Tomás, queimado e fugitivo, começa do lado de fora
 VAR c2_bebeu_frasco = false
 VAR cacadas = 0              // quantas vezes você caçou antes da gala (até 3)
-VAR aliado_cap2 = ""          // quem te protege no capítulo 3
+VAR aliado_cap2 = ""          // quem te protege no capítulo 3: dante, constance, arnaldo, rayo, ninguem (2K), digito (2F), doutora (2H)
 
 // Pistas do capítulo 2
 VAR p2_lama = false           // lama de esgoto nos seus sapatos
@@ -399,12 +399,14 @@ Do outro lado do vão livre, você observa a porta lateral. Um segurança de ter
 { final_cap1 == "C_anarq" or rayo_morto:
     # entra: isadora
     Isadora: Chegou cedo, querid{o}? Que deselegante. Ninguém de bem chega antes da anfitriã. # expr: ofendida
+    Isadora: E olhe que a rua anda perigosa. Os Anarquistas estão nervosos: o tal do Guga, o Barão dos motoqueiros, e aquele Nego da ocupação do Centro quase se pegaram esta semana. Gente sem modos.
     Isadora: Dica de anfitriã: a Senescal sempre chega tarde, lá pela uma e meia. Se tiver alguma coisa para resolver sem ela, resolva antes. # expr: cochicho # pista isadora: Isadora, no vão livre: a Luciana, a Senescal, sempre chega tarde à gala, lá pela uma e meia.
     # limpa
 - else:
     ~ rayo2_falou = true
     # entra: rayo
     Rayo: Olha só quem foi convidad{o} para a festa dos engravatados. Eu vim só ver quem entra. # expr: sorriso
+    Rayo: Ordem do Guga, o Barão dos motoqueiros. Ele quer saber quem a Corte chama. O Nego, da ocupação do Centro, acha que eu nem devia estar aqui. Diz que festa de engravatado só serve pra marcar a gente.
     Rayo: Fica de olho na Toreador de vermelho, a Valentina. Ela caça na Paulista toda noite. Se alguém te viu, foi ela. E ela finge que não lembra de nada. # pista dossie: Rayo: a Valentina caça na Paulista toda noite. Se alguém te viu, foi ela, e ela finge que não lembra.
     # limpa
 }
@@ -878,6 +880,7 @@ Valentina: Pensei que era encontro. Ela olhou para mim e eu... achei melhor esqu
 # fundo: vao_livre
 # entra: rayo
 Rayo: E aí, descobriu quem mexeu na sua cabeça? # expr: sorriso
+{ not p2_cedo_falou or final_cap1 == "C_anarq": Rayo: Eu tô aqui de vigia, a mando do Guga, o Barão dos motoqueiros. O Nego, da ocupação do Centro, acha que festa de engravatado só serve pra marcar a gente. Os dois quase se pegaram por causa disso. }
 Rayo: Fica de olho na Toreador de vermelho, a Valentina. Ela caça na Paulista toda noite. Se alguém te viu, foi ela. E ela finge que não lembra de nada. # pista dossie: Rayo: a Valentina caça na Paulista toda noite. Se alguém te viu, foi ela, e ela finge que não lembra.
 -> fora
 
@@ -1243,6 +1246,8 @@ Agora a pergunta é outra: para quem você leva essa verdade?
     -> final2_constance
 + [Ao Dr. Arnaldo, o Juiz]
     -> final2_arnaldo
++ {final_cap1 == "C_anarq"} [Ao Rayo, que acabou de quebrar a janela por você]
+    -> final2_rua
 + [A ninguém. Guardar o segredo da Luciana para usar depois.]
     -> final2_guardar
 
@@ -1253,16 +1258,29 @@ Rocha: Até a próxima. A gente sabe onde você dorme.
 { rayo_morto:
     # limpa
     Na Paulista, um rato sobe pela grade de um bueiro e para no seu sapato. É recado do Dígito, o novo dono dos esgotos.
-    Pela língua dos bichos, ele diz: a bruxa apagou a sua noite para esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente. E essa gente tem informante no meio dos Anarquistas.
+    Pela língua dos bichos, ele diz: a bruxa apagou a sua noite para esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente. E essa gente tem informante no meio dos Anarquistas. Nem o Guga nem o Nego querem ouvir falar nisso.
     O rato desce de volta. Você fica sozinha no vão livre, com o chip quieto embaixo da língua.
 - else:
     Na Paulista, uma moto encosta no meio-fio. É o Rayo. # entra: rayo # expr rayo: neutro
-    Rayo: A bruxa apagou a sua noite pra esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente, forasteir{o}. E essa gente tem informante no meio da gente. Abre o olho.
+    Rayo: A bruxa apagou a sua noite pra esconder os segredos dela. Mas quem pôs o chip na sua boca foi outra gente, forasteir{o}. E essa gente tem informante no meio da gente. O Guga não quer nem ouvir falar nisso, e o Nego jura que é invenção da Corte. Abre o olho.
     A moto some na Augusta. Você fica sozinh{o} no vão livre, com o chip quieto embaixo da língua. # limpa
 }
 A noite de terça voltou quase inteira. Falta só o pedaço que alguém ainda guarda, e quem guarda sabe que você está procurando. # imagem: amanhecer
 No fim da Paulista, o céu começa a clarear. Você tem o tempo de chegar em casa. Amanhã é outra noite.
 ->->
+
+// Só no caminho dos Anarquistas (final C do capítulo 1 pelo motoclube): a verdade vai para a rua, e o Rayo protege no capítulo 3.
+=== final2_rua ===
+~ aliado_cap2 = "rayo"
+# fundo: vao_livre
+# imagem: anarquistas
+Você desce a escada de incêndio atrás do Rayo e conta tudo na garupa, gritando por cima do motor, enquanto a Paulista passa. # entra: rayo # expr rayo: neutro
+Rayo: Uma Senescal com a caixa do Cão debaixo do braço, e um Príncipe que não sabe. Isso vale mais que bala, forasteir{o}.
+Rayo: Mas ó: a bruxa só apagou a sua noite. Quem pôs o chip na sua boca foi outra gente, e essa gente tem informante no meio da gente. O Guga não quer ouvir, o Nego diz que é invenção da Corte.
+Rayo: Então, até eu saber quem é, você conta essa história só pra mim. # expr: bravo
+A moto corta a Augusta. O chip continua quieto embaixo da sua língua, e pela primeira vez desde terça você não está sozinh{o}.
+FINAL 2L · A VERDADE PARA A RUA. Você levou o segredo da Senescal aos Anarquistas. O Rayo te protege no capítulo 3. # final: 2L
+-> END
 
 === final2_dante ===
 ~ aliado_cap2 = "dante"
@@ -1323,6 +1341,9 @@ FINAL 2A · A ISCA QUE FALOU. Você acusou a Inquisição diante da Corte e ela 
 Você desce pela primeira grade de esgoto que vê. Embaixo da terra, o chip perde o sinal, como perdeu na terça.
 # imagem: tunel
 Lá em cima, as vans pretas rodam a Paulista inteira procurando uma morta que já estava morta.
+~ aliado_cap2 = "digito"
+Na primeira curva do túnel, um rato de olho vivo espera por você, sentado como gente. É recado do Dígito, o novo dono dos esgotos.
+Pela língua dos bichos, ele diz: aqui embaixo você é hóspede dele. E quem pôs esse chip na sua boca tem informante no meio dos Anarquistas. Nem o Guga nem o Nego querem ouvir falar nisso.
 FINAL 2F · A RATA SEM SINAL. Irene acusou a pessoa errada, mas embaixo da terra o chip não alcança. # final: 2F
 -> END
 
@@ -1379,6 +1400,9 @@ A Besta não aceita ordem de ninguém. Ela morde a ordem no meio, como morde cor
 Você empurra a Senescal, quebra a janela de vidro do museu e cai no vão livre, dois andares abaixo, rolando. # musica: final_triste
 # imagem: serra
 Atrás de você, o Elísio grita. Na sua frente, a Paulista inteira. O chip ferve na sua boca. Você corre para o mato, para longe do sinal.
+~ aliado_cap2 = "rayo"
+Na descida da Rebouças, uma moto emparelha com você e freia atravessada. É o Rayo. # entra: rayo # expr rayo: bravo
+Rayo: Sobe, bicho do mato. A pé você não chega nem na Marginal. E escuta: quem pôs esse chip na sua boca tem informante no meio da gente. O Guga não quer ouvir, o Nego diz que é invenção da Corte. Eu quero ouvir.
 FINAL 2G · O BICHO NÃO ESQUECE. Tomás acusou sem provas, mas a Besta não deixou a Senescal apagar ele. Agora ele é procurado também pela Capela. # final: 2G
 -> END
 
@@ -1405,5 +1429,8 @@ Você: Por bem, irmão. Eu sempre vou por bem. Diga à Doutora que eu tenho muit
 Ele hesita. Ninguém nunca ofereceu antes.
 # imagem: van
 Na van preta, você conta à Inquisição três mentiras e uma verdade, e volta para casa antes do sol com um número de telefone novo.
+~ aliado_cap2 = "doutora"
+Antes de abrir a porta, o humano ri baixo. # entra: rocha # expr rocha: sorriso
+Rocha: Não se ache, pastora. A Doutora já tem gente melhor que você no meio dos Anarquistas. Faz tempo.
 FINAL 2H · A AGENTE DUPLA. Joana não soube responder, mas se ofereceu à Inquisição antes que a levassem. Agora ela espiona os dois lados. # final: 2H
 -> END
