@@ -152,6 +152,9 @@ body {
 .escolhas, .cartas { transition: opacity .25s; }
 .escolhas button.sem-volta { color: #8e1c14; font-weight: 600; }
 .escolhas button.sem-volta::before { content: "⚠"; order: 2; margin-left: .3em; }
+/* opção que pede um segundo toque: fica marcada e avisa */
+.escolhas button.armada { background: color-mix(in srgb, var(--acento) 16%, var(--folha)); border-color: var(--acento); flex-wrap: wrap; }
+.escolhas button[data-conf].armada::after { content: "Toque de novo para confirmar"; flex-basis: 100%; padding-left: 1.9em; font-family: var(--f-tipo); font-size: .72em; color: var(--acento); font-weight: bold; text-align: left; }
 /* menu comprido (as provas na Corte): duas colunas no computador; no celular, uma coluna com rolagem */
 .escolhas.muitas { grid-template-columns: 1fr 1fr; column-gap: 1.2cqw; }
 /* no computador, quanto mais provas, menor a letra, para caber tudo sem cobrir a arte */
@@ -886,7 +889,7 @@ const CLIQUE = TOQUE ? 'Toque' : 'Clique';
 const RESULTADOS = ['Falha', 'Sucesso', 'Crítico', 'Crítico bagunçado', 'Falha bestial'];
 let ultimoSinal = null, despertando = false;
 let story, fila, pistas, digitando, alvoTexto, fimTimer, exprPendente, exprAlvo, euPendente, finalTexto, finalLetra, fundoAtual, ilustracaoAtual;
-let feitas = new Set(), historico = [], ultimaFome = null, ultimasPistas = 0, mostradoEm = 0, digitandoAgora = false;
+let feitas = new Set(), historico = [], ultimaFome = null, ultimaRegra = null, ultimasPistas = 0, mostradoEm = 0, digitandoAgora = false;
 
 function tipoBadge(g) {
   if (/^(Gangrel|Ventrue|Nosferatu|Brujah|Toreador|Tremere|Malkaviano|Lasombra|Ministério)/.test(g)) return 'cla';
@@ -927,7 +930,7 @@ function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
   esconderElencoEscolha();
   fila = []; proxima = null; pistas = []; finalTexto = finalLetra = null; cena = null;
-  feitas = new Set(); historico = []; ultimaFome = null; ultimoSinal = null; ultimasPistas = 0;
+  feitas = new Set(); historico = []; ultimaFome = null; ultimaRegra = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     if (simulando) return 0;
     const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r, hud: fotoHud() }); return r.resultado;
@@ -1010,7 +1013,7 @@ function continuar() {
 
 // Fome e Sinal como estavam na hora de um teste. O Ink já muda a Fome na mesma linha em que rola os dados
 // (caça: "rolar" e logo "fome - 2"); o HUD só pode mostrar o novo valor depois que os dados aparecem.
-function fotoHud() { const v = story.variablesState; return { fome: v['fome'], sinal: v['sinal'] || 0 }; }
+function fotoHud() { const v = story.variablesState; return { fome: v['fome'], sinal: v['sinal'] || 0, regra: v['quebrou_regra'] || 0 }; }
 function atualizarHud() {
   const v = story.variablesState, min = v['minutos'];
   const espera = fila.find(e => e.hud), hud = espera ? espera.hud : fotoHud();
@@ -1031,6 +1034,13 @@ function atualizarHud() {
     // o teste de Despertar tem o aviso dele; os outros (Disciplina forte, sangue da Nonna, beber, caça) avisam aqui
     if (!despertando) toast(f > ultimaFome ? `A Fome subiu para ${f}` : `A Fome baixou para ${f}`);
   }
+  // a paciência do Vincenzo (capítulo 1): o jogador vê quando a regra da casa foi quebrada e quanto falta para a denúncia
+  const rg = hud.regra || 0;
+  if (v['capitulo'] < 2 && ultimaRegra != null && rg > ultimaRegra) {
+    const aviso = rg >= 2 ? 'Regra da casa quebrada. O Vincenzo vai contar ao Príncipe' : 'Regra da casa quebrada. Na próxima, o Vincenzo conta ao Príncipe';
+    if (ultimaFome != null && f !== ultimaFome) setTimeout(() => toast(aviso), 2700); else toast(aviso);
+  }
+  ultimaRegra = rg;
   ultimaFome = f;
   if (pistas.length > ultimasPistas) pulsar($('n-pistas'));
   ultimasPistas = pistas.length;
@@ -1298,6 +1308,7 @@ function ajustarElenco() {
 }
 addEventListener('resize', ajustarElenco);
 function esconderElencoEscolha() { const el = $('elenco-escolha'); el.hidden = true; el.innerHTML = ''; }
+let armadaTimer;
 function mostrarEscolhas(pergunta = '') {
   esconderDica();
   falando(null); mostrarEu(null); $('nome').hidden = true; const c = $('conteudo');
@@ -1315,14 +1326,21 @@ function mostrarEscolhas(pergunta = '') {
       const custo = passa ? ` <span class="custo passa">${textoCusto(custos[i])} · vai até o amanhecer</span>` : custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
       const porque = p ? ` <span class="porque ${tipoBadge(p[1])}" data-dica="${esc(dicaDe(p[1], p[2]))}">(${esc(p[1])})</span>` : '';
-      const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : / \(encerra o capítulo\)$/.test(ch.text) ? ' class="sem-volta"' : '';
-      return `<li><button data-i="${i}" type="button"${feita}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}${custo}</span></button></li>`; }).join('')}</ul>`;
+      const semVolta = / \(encerra o capítulo\)$/.test(ch.text);
+      const feita = feitas.has(chaveEscolha(ch)) ? ' class="feita"' : semVolta ? ' class="sem-volta"' : '';
+      // opção cara (uma hora ou mais), que leva até o amanhecer ou que encerra o capítulo: pede um segundo toque
+      const conf = semVolta || passa || custos[i] >= 60 ? ' data-conf="1"' : '';
+      return `<li><button data-i="${i}" type="button"${feita}${conf}><span class="num">${i + 1}</span><span>${esc(p ? p[2] : ch.text)}${porque}${custo}</span></button></li>`; }).join('')}</ul>`;
   }
   const ficha = story.variablesState['nome'] === '';
   // trava de clique: o clique que avançou o texto não pode cair numa opção que acabou de aparecer embaixo do dedo
   const abertoEm = performance.now(); const lista = c.querySelector('.escolhas, .cartas');
   if (lista) { lista.classList.add('travada'); setTimeout(() => lista.classList.remove('travada'), TRAVA_MS); }
-  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); if (performance.now() - abertoEm < TRAVA_MS) return; ficha ? abrirFicha(+b.dataset.i) : escolher(+b.dataset.i); }));
+  c.querySelectorAll('[data-i]').forEach(b => b.addEventListener('click', e => { e.stopPropagation(); if (performance.now() - abertoEm < TRAVA_MS) return;
+    if (b.dataset.conf && !b.classList.contains('armada')) {
+      c.querySelectorAll('.armada').forEach(o => o.classList.remove('armada')); b.classList.add('armada');
+      clearTimeout(armadaTimer); armadaTimer = setTimeout(() => b.classList.remove('armada'), 5000); return; }
+    ficha ? abrirFicha(+b.dataset.i) : escolher(+b.dataset.i); }));
   // o mesmo menu (salão, vão livre, conversa) não encolhe quando uma opção some: as outras ficam no mesmo lugar
   const ul = c.querySelector('.escolhas');
   if (ul) { const k = String(story.currentChoices[0]?.sourcePath || '').split('.')[0] + '|' + (pergunta || '');
