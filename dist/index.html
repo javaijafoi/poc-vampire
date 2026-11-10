@@ -170,7 +170,7 @@ body {
 .quem-e-quem p { display: flex; gap: .6em; align-items: center; margin: .35em 0; }
 .quem-e-quem img { width: 3.2em; height: 3.2em; object-fit: cover; object-position: top; border-radius: 50%; background: #2a1219; flex: none; }
 .em-breve { font-family: var(--f-tipo); color: var(--acento); letter-spacing: .12em; text-transform: uppercase; margin: 0 0 .6em; }
-.escolhas .custo { font-family: var(--f-tipo); font-size: .72em; color: var(--tinta-fraca); white-space: nowrap; }
+.escolhas .custo { font-family: var(--f-tipo); font-size: .78em; color: #5d4a3a; white-space: nowrap; }
 .escolhas .custo::before { content: "⏱ "; }
 .escolhas .custo.passa { color: var(--vermelho, #a01c28); font-weight: bold; white-space: normal; }
 .escolhas button.feita .porque { opacity: .6; }
@@ -662,7 +662,29 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .escolhas button { min-height: 30px; padding: 3px 8px; }
   .caderno .bloco-folhas, .caderno .bloco-folhas:has(.folha.longa) { width: 94%; max-height: 96%; }
   .caderno .folha { padding: 12px 18px; }
+  /* cinco opções ou mais: duas colunas, para a cena não sumir atrás da caixa */
+  .escolhas.longa, .escolhas.muitas { grid-template-columns: 1fr 1fr; column-gap: 10px; }
+  .escolhas.longa button, .escolhas.muitas button { font-size: 15px; line-height: 1.25; }
+  /* o "?" vai para o canto esquerdo: no direito ele cobria o botão do Caderno quando a caixa crescia */
+  .ajuda-btn { right: auto; left: 2.2cqw; }
+  .legenda, .lado[data-p="Harumi"] .legenda { bottom: 54%; }
+  /* escolha de personagem: as três cartas cabem lado a lado, sem cortar a última */
+  .cartas.tres { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+  .cartas.tres .carta { padding: 8px; column-gap: 8px; min-width: 0; }
+  .cartas.tres .carta .emblema.foto { width: 46px; }
+  .cartas.tres .carta b { font-size: 15px; } .cartas.tres .carta span { font-size: 12.5px; line-height: 1.25; } .cartas.tres .carta small { font-size: 10.5px; }
 }
+/* Em pé: a caixa encosta na cena (o nome de quem fala fica sobre a borda dela), o rodapé cabe numa linha e,
+   nos menus compridos, a cena encolhe para todas as opções aparecerem sem rolar. */
+@media (max-aspect-ratio: 1/1) {
+  .palco { transition: height .25s; }
+  .jogo:has(#conteudo .escolhas.longa) .palco { height: min(38%, 95vw); }
+  .dialogo { margin-top: 10px; }
+  .dialogo:has(#nome:not([hidden])) { margin-top: 22px; }
+  .rodape .acoes { gap: 4px; }
+  .rodape button { padding: 5px 5px; font-size: 10.5px; white-space: nowrap; }
+}
+@media (max-aspect-ratio: 1/1) and (prefers-reduced-motion: reduce) { .palco { transition: none; } }
 </style>
 
 <div class="jogo">
@@ -720,7 +742,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </section>
   <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
-<div class="rodape"><span>Primeira versão jogável · roteiro em Ink · imagens provisórias</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
+<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="https://cdn.jsdelivr.net/npm/inkjs@2.2.3/dist/ink.js"></script>
 <script>// Regras de dados de Vampiro V5, usadas pelo jogo web e pelos testes.
@@ -1313,7 +1335,7 @@ function mostrarEscolhas(pergunta = '') {
   } else {
     // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
     const custos = custosDasEscolhas();
-    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas${story.currentChoices.length > 6 ? ' muitas' : ''}${story.currentChoices.length > 10 ? ' n11' : story.currentChoices.length > 8 ? ' n9' : ''}">${story.currentChoices.map((ch, i) => {
+    c.innerHTML = `${pergunta ? `<div class="titulo">${esc(pergunta)}</div>` : ''}<ul class="escolhas${story.currentChoices.length > 6 ? ' muitas' : ''}${story.currentChoices.length > 4 ? ' longa' : ''}${story.currentChoices.length > 10 ? ' n11' : story.currentChoices.length > 8 ? ' n9' : ''}">${story.currentChoices.map((ch, i) => {
       const passa = custos[i] > 10 && story.variablesState['minutos'] + custos[i] >= story.variablesState['limite'];
       const custo = passa ? ` <span class="custo passa">${textoCusto(custos[i])} · vai até o amanhecer</span>` : custos[i] > 10 && !/minuto/.test(ch.text) ? ` <span class="custo">${textoCusto(custos[i])}</span>` : '';
       const p = ch.text.match(/^(.+?) :: (.*)$/);
@@ -1960,9 +1982,11 @@ jogoEl.addEventListener('contextmenu', e => { if (tocouAgora()) e.preventDefault
 // Manda para o PostHog só o caminho da partida: cenas, escolhas, finais, quando a pessoa fica parada e onde sai.
 // Nada de nome, e-mail, IP guardado ou anotações do caderno. O jogador é um número sorteado, guardado neste navegador.
 // Sem chave, ou rodando no próprio computador (file:, localhost) ou com ?semregistro=1, não manda nada.
-const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: '97881d4' };
+const REGISTRO = { chave: 'phc_yjz43fGQScTjBvo3konPN6zGF6kLy2BgjDJVgShDT3WB', host: 'https://us.i.posthog.com', versao: '0ebf3a4' };
 const registroLigado = /^phc_/.test(REGISTRO.chave) && /^https?:$/.test(location.protocol)
-  && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search);
+  && !/^(localhost|127\.|0\.0\.0\.0|\[::1\])/.test(location.hostname) && !/semregistro=1|pular=1/.test(location.search)
+  // robôs (o da Vercel abre a página duas vezes a cada publicação) e navegadores automáticos não contam como visita
+  && !navigator.webdriver && !/bot|headless|vercel|lighthouse|crawl|spider|preview/i.test(navigator.userAgent);
 const sorteio = () => (crypto.randomUUID ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2));
 let jogadorId; try { jogadorId = localStorage.getItem('matusalem-jogador') || sorteio(); localStorage.setItem('matusalem-jogador', jogadorId); } catch (e) { jogadorId = sorteio(); }
 const sessaoId = sorteio();
