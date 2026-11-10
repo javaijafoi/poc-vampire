@@ -370,7 +370,16 @@ body {
 .capa .salvo:empty { display: none; }
 .capa .menu button.sec { background: #ece4d2; color: #2a1d16; font-size: max(13px, 1.6cqw); transform: rotate(.8deg); }
 .capa .menu button:hover, .capa .menu button:focus-visible { outline: 2px solid #ece4d2; outline-offset: 3px; }
-.capa .finais { position: absolute; right: 2.4cqw; bottom: 2cqw; margin: 0; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #c9b998; }
+.capa .finais { position: absolute; right: 2.4cqw; bottom: 2cqw; margin: 0; font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: #c9b998; background: none; border: 0; border-bottom: 1px dotted #c9b998; padding: 2px 0; cursor: pointer; }
+.capa .finais:hover, .capa .finais:focus-visible { color: #fff; outline: none; }
+.galeria { list-style: none; margin: 0; padding: 0; display: grid; gap: .8cqw; }
+.galeria li { display: flex; gap: 1.2cqw; align-items: baseline; font-size: max(14px, 1.7cqw); line-height: 1.4; color: #8a7462; }
+.galeria li b { font-family: var(--f-tipo); min-width: 2.2em; font-size: 1.1em; }
+.galeria li.visto { color: var(--tinta); } .galeria li.visto b { color: var(--acento); }
+.galeria strong { font-family: var(--f-tipo); font-size: .86em; letter-spacing: .04em; }
+.horarios { list-style: none; padding-left: 0 !important; }
+.horarios li { display: flex; gap: 1.2cqw; align-items: baseline; }
+.horarios li b { font-family: var(--f-tipo); color: var(--acento); min-width: 6.2em; flex: none; font-size: .86em; }
 /* Carrossel de capítulos: cada painel ocupa a capa inteira; o trilho anda de lado (arrastando, nas setas ou nas teclas ← →) */
 .capa { touch-action: pan-y; user-select: none; -webkit-user-select: none; }
 .capa .trilho { position: absolute; inset: 0; transition: transform .45s cubic-bezier(.2, .7, .2, 1); will-change: transform; }
@@ -745,7 +754,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </section>
   <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
-<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
+<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música e os efeitos (tecla M)">♪ Som</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="{{INKJS}}"></script>
 <script>{{V5}}</script>
@@ -1030,7 +1039,7 @@ function atualizarHud() {
   ultimoSinal = sn;
   const f = hud.fome;
   if (ultimaFome != null && f !== ultimaFome) {
-    pulsar($('fome'));
+    pulsar($('fome')); if (f > ultimaFome) efeito('fome');
     // o teste de Despertar tem o aviso dele; os outros (Disciplina forte, sangue da Nonna, beber, caça) avisam aqui
     if (!despertando) toast(f > ultimaFome ? `A Fome subiu para ${f}` : `A Fome baixou para ${f}`);
   }
@@ -1042,7 +1051,7 @@ function atualizarHud() {
   }
   ultimaRegra = rg;
   ultimaFome = f;
-  if (pistas.length > ultimasPistas) pulsar($('n-pistas'));
+  if (pistas.length > ultimasPistas) { pulsar($('n-pistas')); if (ultimasPistas || pistas.length < 3) efeito('pista'); }
   ultimasPistas = pistas.length;
 }
 function pulsar(el) { el.classList.remove('pulso'); void el.offsetWidth; el.classList.add('pulso'); }
@@ -1127,6 +1136,7 @@ function mostrarEvento(ev) {
 // Os dados caem na mesa, giram mostrando números ao acaso e param um a um no valor tirado; depois vem o carimbo do resultado.
 // Clicar durante a rolagem pula a animação; clicar de novo (ou Enter/Espaço) fecha e segue a história.
 function mostrarDados(r) {
+  efeito('dados');
   const mesa = document.createElement('div'); mesa.className = 'mesa-dados';
   mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
     <div class="linha">${r.dados.map((d, i) => `<span class="dado rolando ${d.fome ? 'fomed' : ''}" style="--atraso:${(i * 0.09).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}%;--giro0:${(Math.random() * 360 - 540).toFixed(0)}deg"><span class="face">${1 + Math.floor(Math.random() * 10)}</span></span>`).join('')}</div>
@@ -1354,7 +1364,7 @@ function mostrarEscolhas(pergunta = '') {
 const CONVERSAS = /^(rayo_perguntas|cao_perguntas|harumi_perguntas|constance_perguntas|biel_perguntas_loop|vincenzo)\b/;
 function chaveEscolha(ch) { const p = String(ch.sourcePath || ''); return CONVERSAS.test(p) && !/Voltar|descansar/.test(ch.text) ? p.split('.')[0] + '|' + ch.text : null; }
 function escolher(i) {
-  esconderDica(); const ch = story.currentChoices[i], k = chaveEscolha(ch); if (k) feitas.add(k);
+  esconderDica(); efeito('escolha'); const ch = story.currentChoices[i], k = chaveEscolha(ch); if (k) feitas.add(k);
   const txt = ch.text.split(' ;; ')[0], p = txt.match(/^(.+?) :: (.*)$/), origem = String(ch.sourcePath || '').split('.')[0];
   const lugar = /^[a-z_]/i.test(origem) ? origem : partida.lugar;
   if (story.variablesState['nome'] === '') registrar('personagem_escolhido', { escolhido: txt.split(' · ')[0] });
@@ -1365,27 +1375,42 @@ function escolher(i) {
 }
 
 function finaisVistos() { try { return JSON.parse(localStorage.getItem('matusalem-finais') || '[]'); } catch (e) { return []; } }
+function titulosDeFinais() { try { return JSON.parse(localStorage.getItem('matusalem-finais-titulos') || '{}') || {}; } catch (e) { return {}; } }
+// Galeria de finais: o que o jogador já encontrou em cada capítulo; os outros aparecem como "?" (sem entregar nada)
+function abrirFinais(cap = 1) {
+  const abas = ['Capítulo 1', 'Capítulo 2'];
+  abrirJanela('Finais encontrados', abas, abas[cap >= 2 ? 1 : 0], (aba, mostrar, fechar) => {
+    const lista = aba === 'Capítulo 2' ? FINAIS2 : FINAIS, vistos = new Set(finaisVistos()), t = titulosDeFinais();
+    const n = lista.filter(f => vistos.has(f)).length;
+    return { html: `<h2>Finais encontrados: ${n} de ${lista.length}</h2><ul class="galeria">${lista.map(f => vistos.has(f)
+      ? `<li class="visto"><b>${esc(f)}</b><span>${(t[f] || []).length ? t[f].map(([ti, fr]) => `<strong>${esc(ti)}</strong> ${esc(fr)}`).join('<br>') : 'Encontrado.'}</span></li>`
+      : `<li><b>?</b><span>Ainda não encontrado.</span></li>`).join('')}</ul>`, botoes: [['Fechar', 'principal', fechar]] }; });
+}
 function mostrarFim() {
   $('nome').hidden = true; limparCena(); apagarSave();
   if (partida.ativa) { registrar('final', { final: finalLetra || 'sem letra' }); partida.ativa = false; }
   if (finalLetra) {
     const titulo = (finalTexto || '').split('.')[0].replace(/^FINAL\s+\w+\s*·\s*/, '');
     $('carimbo-final').innerHTML = `<b>FINAL ${esc(finalLetra)}</b><span>${esc(titulo)}</span>`;
-    requestAnimationFrame(() => $('carimbo-final').classList.add('on'));
+    requestAnimationFrame(() => $('carimbo-final').classList.add('on')); efeito('final');
   }
-  if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {} }
+  if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {}
+    // a galeria guarda também o título e a frase de cada desfecho (a mesma letra pode ter mais de um)
+    const m = (finalTexto || '').match(/^FINAL\s+\w+\s*·\s*([^.]+)\.\s*(.*)$/); if (m) { const t = titulosDeFinais(); const l = t[finalLetra] || (t[finalLetra] = []);
+      if (!l.some(x => x[0] === m[1])) l.push([m[1], m[2]]); try { localStorage.setItem('matusalem-finais-titulos', JSON.stringify(t)); } catch (e) {} } }
   const cap = story.variablesState['capitulo'] || 1, lista = cap >= 2 ? FINAIS2 : FINAIS;
   const vistos = finaisVistos().filter(f => lista.includes(f)).length;
   // fim do capítulo 1 com o personagem vivo: guarda onde parou e oferece o capítulo 2
   const segue = cap === 1 && SEGUEM.has(finalLetra);
   if (segue) try { localStorage.setItem(CAP1, story.state.toJson()); localStorage.removeItem(MORTE1); } catch (e) {}
   else if (cap === 1) try { localStorage.removeItem(CAP1); localStorage.setItem(MORTE1, story.variablesState['nome'] || 'Seu personagem'); } catch (e) {}
-  const ops = [...(segue ? [['cap2', 'Seguir para o capítulo 2']] : []), ['caderno', 'Ver o caderno'], ['de-novo', 'Jogar de novo com outro personagem'], ['menu', 'Voltar ao menu']];
+  const ops = [...(segue ? [['cap2', 'Seguir para o capítulo 2']] : []), ['caderno', 'Ver o caderno'], ['finais', 'Ver os finais encontrados'], ['de-novo', 'Jogar de novo com outro personagem'], ['menu', 'Voltar ao menu']];
   $('conteudo').innerHTML = `<div class="titulo">Fim do capítulo ${cap}</div><div class="fala">${esc(finalTexto || 'Fim')}</div>
     <p class="det" style="margin:.4em 0 .6em;font-family:var(--f-tipo);color:var(--tinta-fraca)">Você saiu com ${pistas.length} pista${pistas.length === 1 ? '' : 's'}. Finais encontrados no capítulo ${cap}: ${vistos} de ${lista.length}.</p>${cap >= 2 ? `<p class="em-breve">Capítulo 3 · em breve</p>` : ''}
     <ul class="escolhas">${ops.map(([a, t], i) => `<li><button type="button" data-a="${a}"><span class="num">${i + 1}</span><span>${t}</span></button></li>`).join('')}</ul>`;
   if (segue) $('conteudo').querySelector('[data-a=cap2]').addEventListener('click', e => { e.stopPropagation(); jogarCapitulo2(true); });
   $('conteudo').querySelector('[data-a=caderno]').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
+  $('conteudo').querySelector('[data-a=finais]').addEventListener('click', e => { e.stopPropagation(); abrirFinais(cap); });
   // trava de clique, como nas outras opções: o clique que avançou a última fala não pode cair num botão.
   // "Jogar de novo" some com esta tela, então pede um segundo clique.
   const fimEm = performance.now();
@@ -1405,10 +1430,26 @@ try { anotacoes = localStorage.getItem('porao-anotacoes') || ''; } catch (e) {}
 // Aba "Suspeitos" do caderno: junta as pistas que citam cada pessoa (capítulo 2)
 const SUSPEITOS = [['Luciana, a Senescal', /Luciana|Senescal|luvas pretas|Capela/i], ['Agente Rocha e a Inquisição', /Rocha|Inquisição|segurança da porta|leitor|sedativo/i],
   ['Isadora, a anfitriã', /Isadora/i], ['O Príncipe Dante', /Príncipe|Dante/i]];
+const SUSPEITOS1 = [['Rayo, o motoqueiro', /Rayo|motoqueiro/i], ['O Cão, o Xerife', /Cão|Xerife|olho amarelo/i], ['Harumi, do porto', /Harumi/i], ['Constance, a Primogênita', /Constance/i]];
+// Quadro de horários: as pistas que citam uma hora, em ordem da noite. Lê "03h12", "às 3h", "às três e meia", "depois das três".
+const NUM_HORA = { uma: 1, duas: 2, 'três': 3, quatro: 4, cinco: 5, seis: 6 }, NUM_MIN = { meia: 30, dez: 10, doze: 12, quinze: 15, vinte: 20, quarenta: 40, cinquenta: 50 };
+function horaDaPista(texto) {
+  const re = /(\d{1,2})h(\d{2})?|\b(?:[àa]s|das|pela)\s+(uma|duas|três|quatro|cinco|seis)\b(?:\s+e\s+(meia|dez|doze|quinze|vinte|quarenta|cinquenta))?/i;
+  const m = texto.match(re); if (!m) return null;
+  const h = m[1] != null ? +m[1] : NUM_HORA[m[3].toLowerCase()], min = m[1] != null ? +(m[2] || 0) : (NUM_MIN[(m[4] || '').toLowerCase()] || 0);
+  const antes = texto.slice(Math.max(0, m.index - 12), m.index + 4).toLowerCase();
+  const pre = /depois d/.test(antes) ? 'depois de ' : /antes d/.test(antes) ? 'antes de ' : /até/.test(antes) ? 'até ' : '';
+  // a noite começa ao meio-dia: 22h40 vem antes de 02h40
+  return { ordem: ((h + 12) % 24) * 60 + min + (pre === 'depois de ' ? .5 : 0), rotulo: `${pre}${String(h).padStart(2, '0')}h${String(min).padStart(2, '0')}` };
+}
+function pistasComHora() {
+  return pistas.filter(p => !/gala|recebe a sós|chega tarde/i.test(p.texto)).map(p => ({ p, h: horaDaPista(p.texto) })).filter(x => x.h).sort((a, b) => a.h.ordem - b.h.ordem);
+}
 function abrirCaderno() {
   registrar('abriu', { o_que: 'caderno' });
-  const suspeitos = (story?.variablesState['capitulo'] || 1) < 2 ? [] : SUSPEITOS.filter(([, re]) => pistas.some(p => re.test(p.texto)));
-  const abas = ['Dossiê', ...(suspeitos.length ? ['Suspeitos'] : []), ...Object.values(ABAS_PISTA).filter(a => a !== 'Dossiê' && pistas.some(p => p.aba === a)), 'Anotações'];
+  const suspeitos = ((story?.variablesState['capitulo'] || 1) < 2 ? SUSPEITOS1 : SUSPEITOS).filter(([, re]) => pistas.some(p => re.test(p.texto)));
+  const comHora = pistasComHora();
+  const abas = ['Dossiê', ...(suspeitos.length ? ['Suspeitos'] : []), ...(comHora.length >= 2 ? ['Horários'] : []), ...Object.values(ABAS_PISTA).filter(a => a !== 'Dossiê' && pistas.some(p => p.aba === a)), 'Anotações'];
   if (!abas.includes(abaAtual)) abaAtual = 'Dossiê';
   const el = document.createElement('div'); el.className = 'caderno';
   el.innerHTML = `<div class="bloco-folhas"><div class="abas" role="tablist">${abas.map(a =>
@@ -1422,6 +1463,8 @@ function abrirCaderno() {
       folha.innerHTML = `<h2>Minhas anotações</h2><textarea aria-label="Minhas anotações" placeholder="Escreva aqui o que quiser lembrar."></textarea>`;
       const t = folha.querySelector('textarea'); t.value = anotacoes;
       t.addEventListener('input', () => { anotacoes = t.value; try { localStorage.setItem('porao-anotacoes', anotacoes); } catch (e) {} });
+    } else if (aba === 'Horários') {
+      folha.innerHTML = `<h2>Horários: a noite em ordem</h2><ol class="horarios">${comHora.map(({ p, h }) => `<li><b>${esc(h.rotulo)}</b><span>${esc(p.texto)} <small class="de">(${esc(p.aba)})</small></span></li>`).join('')}</ol>`;
     } else if (aba === 'Suspeitos') {
       // resumo: cada pessoa com as pistas que falam dela, de todas as abas
       folha.innerHTML = `<h2>Suspeitos: o que aponta para cada um</h2>${suspeitos.map(([nome, re]) => { const ps = pistas.filter(p => re.test(p.texto));
@@ -1475,7 +1518,7 @@ CAPITULOS.forEach((c, i) => {
   el.innerHTML = `<img class="capa-fundo" alt="${esc(c.alt)}"><div class="elenco"></div>
     <p class="num-cap">CAPÍTULO ${c.n}</p>
     <h1 class="logo" aria-label="${esc(c.titulo.charAt(0) + c.titulo.slice(1).toLowerCase())}"><span aria-hidden="true">${letrasDeRecorte(c.titulo)}</span></h1>
-    <p class="sub">${esc(c.sub)}</p><div class="menu"></div><p class="salvo"></p><p class="finais"></p>`;
+    <p class="sub">${esc(c.sub)}</p><div class="menu"></div><p class="salvo"></p><button type="button" class="finais" title="Ver os finais encontrados"></button>`;
   el.querySelector('.capa-fundo').src = ARTE.fundos[c.fundo];
   c.elenco.forEach(([k, x, giro, alt]) => {
     const src = ARTE.personagens[k]?.neutro; if (!src) return;
@@ -1511,7 +1554,8 @@ function montarMenu(c, s) {
   menu.querySelectorAll('button').forEach(b => b.addEventListener('click', () => acaoCapa(b.dataset.a)));
   p.querySelector('.salvo').textContent = comSave ? `Jogo salvo${s.nome ? ': ' + s.nome : ''}${s.minutos != null ? ', ' + horaDe(s.minutos, s.base ?? 23) : ''}` : '';
   const lista = c.finais(), fv = finaisVistos().filter(f => lista.includes(f)).length;
-  p.querySelector('.finais').textContent = fv ? `Finais encontrados: ${fv} de ${lista.length}` : '';
+  const bf = p.querySelector('.finais'); bf.textContent = fv ? `Finais encontrados: ${fv} de ${lista.length} ›` : ''; bf.hidden = !fv;
+  bf.onclick = () => { if (!$('capa').classList.contains('arrastou')) abrirFinais(c.n); };
 }
 function acaoCapa(a) {
   if ($('capa').classList.contains('arrastou')) return;  // o clique que vem no fim de um arrasto não aperta botão
@@ -1723,6 +1767,32 @@ function liberarSom() {
   if (som.el) entrar(som.el);
 }
 addEventListener('pointerdown', liberarSom, true); addEventListener('keydown', liberarSom, true);
+// Efeitos sonoros feitos na hora (sem arquivo): papel na escolha, lápis na pista nova, coração na Fome, dados e carimbo no final.
+// Seguem o botão de música e o volume. Volumes e tons medidos com contexto de áudio offline (pico entre 0,25 e 0,45;
+// batidas acima de 100 Hz, porque alto-falante de celular não toca grave de 60 Hz).
+let ctxSom = null, ruidoBuf = null;
+function efeito(tipo) {
+  const vol = volumeAlvo(); if (!som.liberado || !vol || document.hidden) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ctxSom = ctxSom || new AC(); if (ctxSom.state === 'suspended') ctxSom.resume();
+    const c = ctxSom, t0 = c.currentTime + .01;
+    if (!ruidoBuf) { ruidoBuf = c.createBuffer(1, c.sampleRate * .5, c.sampleRate); const d = ruidoBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const saida = c.createGain(); saida.gain.value = vol * .5; saida.connect(c.destination);
+    // um sopro de ruído filtrado: papel, lápis, dado batendo
+    const ruido = (t, dur, freq, q, g) => { const n = c.createBufferSource(); n.buffer = ruidoBuf; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+      const e = c.createGain(); e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g * 7, t + .008); e.gain.exponentialRampToValueAtTime(.001, t + dur);
+      n.connect(f); f.connect(e); e.connect(saida); n.start(t, Math.random() * .3, dur + .05); };
+    // uma batida grave: coração, carimbo
+    const batida = (t, freq, dur, g) => { const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.frequency.exponentialRampToValueAtTime(freq * .5, t + dur);
+      const e = c.createGain(); e.gain.setValueAtTime(g, t); e.gain.exponentialRampToValueAtTime(.001, t + dur); o.connect(e); e.connect(saida); o.start(t); o.stop(t + dur + .02); };
+    if (tipo === 'escolha') ruido(t0, .06, 2600, .8, .35);
+    else if (tipo === 'pista') { ruido(t0, .09, 3400, 2.5, .3); ruido(t0 + .11, .12, 2900, 2.5, .28); }
+    else if (tipo === 'fome') { batida(t0, 150, .16, .9); batida(t0 + .24, 130, .2, .7); }
+    else if (tipo === 'dados') for (let i = 0; i < 7; i++) ruido(t0 + i * .09 + Math.random() * .03, .04, 1500 + Math.random() * 1500, 3, .4);
+    else if (tipo === 'final') { batida(t0, 170, .28, 1); ruido(t0, .12, 900, .7, .2); }
+  } catch (e) {}
+}
 document.addEventListener('visibilitychange', () => { if (!som.el || !som.liberado) return; if (document.hidden) som.el.pause(); else som.el.play().catch(() => {}); });
 $('som').addEventListener('click', () => { som.ligado = !som.ligado; if (som.ligado && !som.vol) som.vol = .6; ajustarSom(); });
 $('volume').addEventListener('input', e => { som.vol = e.target.value / 100; som.ligado = som.vol > 0; ajustarSom(); });
@@ -2071,6 +2141,14 @@ document.addEventListener('keydown', e => {
   const n = parseInt(e.key, 10); const b = document.querySelector(`#conteudo [data-i="${n - 1}"]`);
   if (b && !$('txt')) b.click();
 });
+// Na versão publicada as imagens são arquivos separados (a página abre rápido). Depois que a capa aparece,
+// o resto vai sendo baixado em segundo plano, três por vez, para nenhuma cena esperar imagem.
+function preCarregarArte() {
+  const urls = [...Object.values(ARTE.fundos), ...Object.values(ARTE.personagens).flatMap(p => Object.values(p))].filter(u => !/^data:/.test(u));
+  let i = 0; const prox = () => { if (i >= urls.length) return; const im = new Image(); im.onload = im.onerror = prox; im.src = urls[i++]; };
+  for (let k = 0; k < 3; k++) prox();
+}
+setTimeout(preCarregarArte, 1200);
 // ?pular=1 vai direto para o jogo (testes)
 if (/pular=1/.test(location.search)) { $('capa').hidden = true; iniciar(); } else mostrarCapa();
 </script>

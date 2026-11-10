@@ -713,13 +713,10 @@ Você guarda o carimbo como quem guarda uma arma carregada.
     O fantasma do Biel ainda está ali, por cima da chama da vela, mais fraco a cada minuto.
     -> biel_perguntas_loop
 }
-{ limite - minutos < 80:
-    Nonna: Agora não dá mais, filh{o}. Chamar morto leva uma hora inteira, e o sol não espera nem por mim. Devia ter vindo antes. # expr: severa
-    -> salao
-}
 Nonna: Senta, filh{o}. Você quer falar com o rapaz que morreu de madrugada, eu sei. Ele anda em volta da minha mesa desde que eu acendi a primeira vela.
 Nonna: Mas os mortos não falam de graça. Ou você me fica devendo um favor, que um dia eu cobro, ou me paga agora, com o que corre nas suas veias.
 Nonna: Sangue de vampiro chama morto mais forte. Com ele, o rapaz vem mais inteiro, e fica mais um pouco.
+{ limite - minutos < 80: Nonna: Mas olha a hora, filh{o}. Chamar morto leva uma hora inteira. Pode ser que o Príncipe desça essa escada antes do rapaz subir. Você que sabe. # expr: severa }
 + [Pagar com sangue :: Deixar a Nonna encher um frasco com o seu sangue. A Fome sobe 1, e o fantasma responde uma pergunta a mais.]
     ~ nonna_sangue = true
     ~ biel_max = 4
@@ -733,7 +730,17 @@ Nonna: Sangue de vampiro chama morto mais forte. Com ele, o rapaz vem mais intei
 + [Agora não]
     -> salao
 
+// Regra do Peter (2026-11-10): nenhuma conversa é proibida por falta de tempo. Se o Príncipe chega no meio, ela para ali
+// e você fica com o que conseguiu. Aqui, se falta menos de uma hora, a sessão é interrompida antes do fantasma falar.
 === sessao ===
+{ limite - minutos < 60:
+    ~ minutos = limite
+    ~ sessao_feita = true
+    A Nonna acende a primeira vela e começa a rezar baixinho em italiano. A segunda. A terceira. # expr nonna: velas
+    O ar mal começa a esfriar quando os passos descem a escada. A Nonna apaga as velas com os dedos, uma por uma, sem pressa.
+    Nonna: Tarde demais, filh{o}. Morto não fala na frente de Príncipe. {nonna_sangue:O seu sangue fica comigo assim mesmo.|O favor você me deve assim mesmo.} # expr: severa
+    -> amanhecer
+}
 ~ passar(60)
 ~ sessao_feita = true
 A Nonna acende sete velas e reza baixinho em italiano. A sessão demora. Os ponteiros do relógio andam uma hora inteira. # expr nonna: velas

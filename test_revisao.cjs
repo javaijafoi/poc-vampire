@@ -23,10 +23,13 @@ const checar = (ok, nome) => { console.log(`${ok ? 'ok ' : 'FALHOU'} ${nome}`); 
   for (const p of [/^Sim. É isso/, /03h12/, /saiu da Capela/, /arquivo do Cão/]) j.ir(p);
   checar(j.final() === '2F' || j.final() === '2D', `três provas só de dentro não derrubam a Senescal (final ${j.final()})`); }
 
-// Capítulo 1: com menos de 80 minutos de noite, a Nonna não começa a sessão.
+// Capítulo 1: a Nonna não recusa mais por falta de tempo. Com menos de uma hora, ela avisa e o Príncipe interrompe a sessão.
 { const j = nova(); j.correr(); j.s.ChooseChoiceIndex(0); j.correr();
-  j.s.variablesState['minutos'] = 350; j.ir(/Nonna/);
-  checar(!j.tem(/Pagar com sangue/) && j.tem(/Rayo, debruçado/), 'Nonna recusa a sessão quando não dá mais tempo');
+  j.s.variablesState['minutos'] = j.s.variablesState['limite'] - 30; j.ir(/Nonna/);
+  checar(j.tem(/Pagar com sangue/) && j.falas.some(f => /olha a hora/.test(f)), 'Nonna aceita a sessão no fim da noite, com aviso');
+  j.ir(/Ficar devendo/);
+  checar(j.falas.some(f => /Morto não fala na frente de Príncipe/.test(f)) && j.tem(/Rayo, o motoqueiro/) && j.s.variablesState['minutos'] === j.s.variablesState['limite'], 'o Príncipe interrompe a sessão e a acusação começa'); }
+{ const j = nova(); j.correr(); j.s.ChooseChoiceIndex(0); j.correr();
   j.s.variablesState['minutos'] = 300; j.ir(/Nonna/); j.ir(/Ficar devendo/);
   checar(j.tem(/Como você morreu/), 'com 1h40 de noite, a sessão ainda rende pergunta'); }
 
@@ -35,3 +38,13 @@ const checar = (ok, nome) => { console.log(`${ok ? 'ok ' : 'FALHOU'} ${nome}`); 
   j.s.variablesState['rayo_confessou'] = true; j.s.variablesState['biel_morte'] = true;
   j.ir(/Rayo, debruçado/);
   checar(j.ir(/Olho amarelo/) && j.s.variablesState['p_olho'] === true, 'olho amarelo depois da confissão do Rayo'); }
+
+// Capítulo 2: o Príncipe é acusável. Ele admite o porto só nos finais em que foi ele quem mandou; pede uma prova só; final 2A (Tomás escapa, 2G).
+for (const [fc, pers, admite] of [['B', 1, true], ['F', 1, false], ['C_corte', 2, false], ['B', 0, true]]) {
+  const j = nova(); j.s.ChoosePathString('capitulo_2_novo'); j.correr(); j.s.ChooseChoiceIndex(pers); j.correr();
+  j.s.variablesState['final_cap1'] = fc; j.s.ChoosePathString('acusacao2'); j.correr();
+  const ok1 = j.ir(/Foi o (senhor, Príncipe|Príncipe Dante)/) && j.ir(/^Sim. É isso/);
+  let n = 0; while (!j.final() && j.s.currentChoices.length && n < 3) { j.s.ChooseChoiceIndex(0); j.correr(); n++; }
+  const txt = j.falas.join(' ');
+  checar(ok1 && n <= 1 && j.final() === (pers === 0 ? '2G' : '2A') && /Mandei você ao porto/.test(txt) === admite && !/undefined/.test(txt), `acusar o Príncipe (cap 1 = ${fc}, personagem ${pers}): final ${j.final()}, ${n} prova`);
+}

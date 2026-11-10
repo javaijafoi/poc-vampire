@@ -85,6 +85,10 @@ VAR a2_isadora = false
 }
 ~ return "forasteiro"
 
+// Nos finais em que o recado da abertura é do próprio Dante, ele admite que mandou você fazer um trabalho na terça.
+=== function dante_mandou() ===
+~ return final_cap1 != "C_corte" and final_cap1 != "C_anarq" and final_cap1 != "F" and final_cap1 != "G"
+
 === function acender(n) ===
 ~ sinal = MIN(sinal + n, 5)
 
@@ -991,6 +995,8 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
     -> confirma2("rocha")
 + [Eu estava com a Isadora, a anfitriã. Ela apagou a minha noite.]
     -> confirma2("isadora")
++ [{final_cap1 == "C_corte":Foi o Príncipe Dante. Ele apagou a minha noite.|Foi o senhor, Príncipe. O senhor {dante_mandou():me mandou ao porto e }apagou a minha noite.}]
+    -> confirma2("dante")
 + [Admitir que não sabe]
     -> confirma2("nao_sei")
 
@@ -1019,6 +1025,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 - "luciana": Você vai dizer à Corte que estava com a Senescal e que ela apagou a sua noite. Depois disso, ela é sua inimiga, com ou sem prova.
 - "rocha": Você vai dizer à Corte que a Inquisição apagou a sua noite e que o segurança da porta é deles.
 - "isadora": Você vai dizer à Corte que estava com a Isadora e que ela apagou a sua noite.
+- "dante": Você vai dizer à Corte, {final_cap1 == "C_corte":com a Senescal dele na sala|na cara dele}, que o Príncipe apagou a sua noite. Ninguém acusa um Príncipe e sai igual.
 - else: Você vai dizer à Corte que não sabe o que fez na terça.
 }
 { quem != "luciana" and fortes >= 2:
@@ -1041,6 +1048,16 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
         ~ acusado = "rocha"
         Você: O segurança da porta é da Inquisição. Eles me drogaram no porto e apagaram a minha noite.
         -> provas2
+    - "dante":
+        ~ acusado = "dante"
+        { final_cap1 == "C_corte":
+            Você: Foi o Príncipe Dante. Só ele e a Senescal cortam uma noite sem deixar buraco, e era a carga dele que estava no porto.
+            A cadeira do Príncipe está vazia esta noite. A Constance sorri devagar, como quem ganhou um presente e ainda não sabe se presta.
+        - else:
+            Você: Foi o senhor, Príncipe. {dante_mandou():O senhor me mandou ao porto na terça, e só|Só} o senhor e a Senescal cortam uma noite sem deixar buraco.
+            O salão para de respirar, o que para um salão de mortos não é pouco. O Dante não se mexe. # expr dante: calado
+        }
+        -> provas2
     - "isadora":
         ~ acusado = "isadora"
         Você: Foi a Isadora. Ela esteve na Capela, ela mentiu sobre isso.
@@ -1052,7 +1069,16 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 + [Não. Pensar de novo.]
     -> acusacao2_escolha
 
+// Só a acusação contra a Senescal pede duas, três ou quatro provas. Contra os outros, a Corte ouve uma coisa e decide.
 === provas2 ===
+{ acusado != "luciana":
+    { final_cap1 == "C_corte":
+        Constance: Palavra não basta, querid{o}. Uma coisa. A melhor que você tiver.
+    - else:
+        Dante: Palavra não basta{acusado == "dante": contra mim}. Uma coisa. A melhor que você tiver.
+    }
+    -> provas2_loop
+}
 { final_cap1 == "C_corte":
     Constance: Palavra não basta. {provas_max == 4:Quatro|{provas_max == 2:Duas|Três}} coisas, as melhores que você tiver.
 - else:
@@ -1063,7 +1089,7 @@ O céu atrás do MASP fica azul-escuro. O Elísio vai fechar. A Corte manda te c
 // Contra a Luciana valem as provas fortes. As outras gastam uma vez e não convencem.
 // E pelo menos uma tem de vir do lado de fora: o sedativo (Rocha) ou a mulher de luvas vista na rua (Valentina, bichos, frasco).
 === provas2_loop ===
-{ provas_dadas >= provas_max: -> veredito2 }
+{ provas_dadas >= provas_max or (acusado != "luciana" and provas_dadas >= 1): -> veredito2 }
 O que você mostra à Corte?
 + {p2_sedativo} {not a2_sedativo} [O sedativo da Inquisição só me segurou até as duas]
     ~ a2_sedativo = true
@@ -1159,6 +1185,7 @@ O que você mostra à Corte?
 { acusado:
 - "rocha": -> final2_rocha
 - "isadora": -> final2_isadora
+- "dante": -> final2_principe
 }
 { provas_fortes >= provas_max and (a2_sedativo or (a2_luvas and p2_luvas)): -> luciana_cai }
 { provas_fortes >= provas_max:
@@ -1179,6 +1206,7 @@ O que você mostra à Corte?
 Luciana: ...Sim. Fui eu. # entra: luciana # expr: abalada
 Luciana: O Cão guardava os segredos da minha Capela num buraco do esgoto, com ordem de soltar tudo se ele morresse. Ele morreu. Alguém tinha que buscar antes dos ratos.
 Luciana: E você estava lá, {apelido()}. Drogad{o}, com um chip na boca, seguindo o cheiro do Cão como um cachorro. Eu apaguei a sua noite para você não lembrar do que viu. Foi misericórdia. # expr: fria
+{ p2_ligacao: Luciana: A ligação das três e doze fui eu que fiz, do seu celular. Mandei a Capela trancar as portas até eu voltar. O meu número não podia aparecer naquela noite. }
 Ela tira uma luva. Os dedos dela estão vermelhos, e o sangue na sua veia começa a ferver. # expr luciana: ritual
 Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por qualquer lugar.
 { final_cap1:
@@ -1306,6 +1334,33 @@ A única pessoa que não ri é a Luciana. Ela olha para você como quem anota um
 # imagem: amanhecer
 Na noite seguinte, você acorda no loft e não lembra do seu próprio nome. Desta vez, o corte foi até o fim.
 FINAL 2A · A NOITE INTEIRA. Você acusou a pessoa errada, e a Senescal terminou o serviço. # final: 2A
+-> END
+
+// Acusar o Príncipe: metade é verdade (foi ele quem mandou você ao porto), mas a noite quem apagou foi a Senescal.
+// Ele admite a parte dele sem explicar, e entrega você justamente a ela. Quem trabalha com a Inquisição fica para o capítulo 3.
+=== final2_principe ===
+{ final_cap1 == "C_corte":
+    Constance: Eu adoraria que fosse verdade, querid{o}. Mas quem acusa um Príncipe ausente diante da Senescal dele precisa de mais do que isso. # entra: constance # expr: seria
+    Constance: Que ele tem negócios no porto, eu acredito, e vou guardar. Mas a sua noite não tem a letra dele.
+    A Constance vira o rosto. É o jeito dela de dizer que não viu nada do que vem agora.
+- else:
+    { dante_mandou():
+        Dante: Mandei você ao porto, {apelido()}. É para isso que serve quem me deve. O que foi fazer lá não é assunto para esta sala. # entra: dante # expr: calado
+        Dante: Mas do porto você saiu andando, e eu só soube de você de novo no bueiro, às cinco. Essa parte da noite não é minha.
+        Ninguém na Corte pergunta o que o Príncipe queria no porto. Ninguém ali é tão nov{o == "a":a|o} assim.
+    - else:
+        Dante: Eu? Até esta noite eu nem contava com você na minha cidade, {apelido()}. # entra: dante # expr: calado
+        Dante: Se eu quisesse a sua noite, eu ficava com todas. Não ia deixar você solt{o} num bueiro para um rato ver.
+        Ninguém na Corte ri. Mas ninguém acredita em você.
+    }
+    Dante: Senescal. {o == "a":A nossa convidada está confusa|O nosso convidado está confuso}. Ajude. # expr: ordem
+}
+A Luciana atravessa o salão sem pressa, tirando a luva. Ela não sorri. Parece quase agradecida. # entra: luciana # expr luciana: ritual
+{ cla == "Gangrel": -> tomas_resiste }
+# musica: final_triste
+# imagem: amanhecer
+Na noite seguinte, você acorda no loft e não lembra do seu próprio nome. Desta vez, o corte foi até o fim.
+FINAL 2A · A PALAVRA CONTRA O TRONO. Você acusou o Príncipe. {dante_mandou():Ele te mandou ao porto, mas quem|Quem} apagou a sua noite foi a mulher {final_cap1 == "C_corte":que estava na sala, ouvindo|a quem ele te entregou}. # final: 2A
 -> END
 
 === final2_sem_provas ===

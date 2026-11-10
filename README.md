@@ -10,7 +10,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 | `ink/capitulo2.ink` | Capítulo 2, O Custo do Esquecimento: a gala da Corte no Elísio do MASP |
 | `ink/rayo.ink` | A cena de teste antiga (só o Rayo), mantida para comparação com o Ren'Py |
 | `web/` | Interface web que roda o roteiro |
-| `dist/index.html` | Jogo web pronto, num arquivo só, com a música ao lado em `dist/musica/`. Abra no navegador (precisa de internet para o motor Ink e as fontes) |
+| `dist/index.html` | Jogo web pronto, com as imagens ao lado em `dist/arte/` e a música em `dist/musica/` (para um arquivo só, use `dist/local.html`). Abra no navegador (precisa de internet para o motor Ink e as fontes) |
 | `art/` | Arte: `recortar_personagens.py` tira o fundo das artes do Trello, `gerar_fundos.py` gera os fundos com sdxl-turbo, `montar_cena.py` faz o recorte de revista e os fundos finais (`npm run arte`) |
 | `musica/` | Trilha sonora: uma faixa por cena, todas CC0 (`CREDITOS.md` diz qual toca onde; `bash musica/preparar.sh` refaz os MP3) |
 | `video/` | A abertura como vídeo MP4, feita com HyperFrames (`bash video/renderizar.sh`) |
@@ -82,9 +82,19 @@ RENPY_SDK=~/renpy-8.5.3-sdk bench/renpy/medir_web.sh 5  # build web e carregamen
 
 Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `bench/renpy/zz_bench.rpy`, que nunca entra no jogo.
 
+## Revisão geral (novembro de 2026)
+
+- **Imagens fora do HTML na versão publicada**: `build_web.cjs cdn` copia `art/cena/` para `dist/arte/` e o `index.html` fica com cerca de 400 KB (antes, 10 MB). As imagens baixam em segundo plano depois da capa. `dist/local.html` continua com tudo dentro, para abrir sem servidor.
+- **Efeitos sonoros** feitos na hora pelo navegador (`efeito()` em `web/template.html`): escolha, pista nova, Fome, dados e carimbo do final. Seguem o botão Som e o volume.
+- **Caderno**: aba Horários (pistas que citam hora, em ordem da noite) e aba Suspeitos também no capítulo 1.
+- **Galeria de finais** na capa e na tela de fim: mostra o que já foi encontrado e esconde o resto.
+- **Segundo toque** em opção que custa uma hora ou mais, que vai até o amanhecer ou que encerra o capítulo.
+- **Acusação errada pede uma prova só**; a certa (Cão no capítulo 1, Senescal no 2) continua pedindo duas a quatro.
+- **Capítulo 2**: o Príncipe é acusável (final 2A, "A palavra contra o trono"). Ele só admite o porto nos finais do capítulo 1 em que o recado da abertura é dele (`dante_mandou()`), e o que ele queria no porto fica para os capítulos 3 e 4.
+
 ## Publicar na Vercel
 
-O jogo web é um site estático: `dist/index.html` mais as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.
+O jogo web é um site estático: `dist/index.html` mais as imagens em `dist/arte/` e as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.
 
 ## Registro anônimo das partidas (PostHog)
 

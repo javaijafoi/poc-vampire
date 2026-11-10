@@ -2,7 +2,14 @@
 const fs = require('fs');
 const mode = process.argv[2] || 'cdn';
 const MIME = { png: 'image/png', webp: 'image/webp', jpg: 'image/jpeg' };
-const b64 = f => `data:${MIME[f.split('.').pop()]};base64,` + fs.readFileSync(f).toString('base64');
+const emLinha = f => `data:${MIME[f.split('.').pop()]};base64,` + fs.readFileSync(f).toString('base64');
+// Versão publicada: as imagens ficam em dist/arte/, fora do HTML, e a página abre em menos de 1 MB em vez de 10.
+// O "?h=" muda quando a imagem muda, então o navegador pode guardar cada arquivo para sempre (vercel.json).
+// Versão local: tudo dentro do HTML, para abrir com dois cliques, sem servidor.
+const arquivo = f => { const dados = fs.readFileSync(f), nome = f.split('/').pop();
+  fs.mkdirSync('dist/arte', { recursive: true }); fs.writeFileSync('dist/arte/' + nome, dados);
+  return `arte/${nome}?h=${require('crypto').createHash('md5').update(dados).digest('hex').slice(0, 8)}`; };
+const b64 = f => mode === 'cdn' ? arquivo(f) : emLinha(f);
 // uma imagem por personagem e expressão: art/cena/<personagem>_<expressao>.webp
 const personagens = {}, fundos = {};
 for (const f of fs.readdirSync('art/cena')) {
