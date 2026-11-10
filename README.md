@@ -82,6 +82,16 @@ RENPY_SDK=~/renpy-8.5.3-sdk bench/renpy/medir_web.sh 5  # build web e carregamen
 
 Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `bench/renpy/zz_bench.rpy`, que nunca entra no jogo.
 
+## Revisão geral (novembro de 2026)
+
+- **Imagens fora do HTML na versão publicada**: `build_web.cjs cdn` copia `art/cena/` para `dist/arte/` e o `index.html` fica com cerca de 400 KB (antes, 10 MB). As imagens baixam em segundo plano depois da capa. `dist/local.html` continua com tudo dentro, para abrir sem servidor.
+- **Efeitos sonoros** feitos na hora pelo navegador (`efeito()` em `web/template.html`): escolha, pista nova, Fome, dados e carimbo do final. Seguem o botão Som e o volume.
+- **Caderno**: aba Horários (pistas que citam hora, em ordem da noite) e aba Suspeitos também no capítulo 1.
+- **Galeria de finais** na capa e na tela de fim: mostra o que já foi encontrado e esconde o resto.
+- **Segundo toque** em opção que custa uma hora ou mais, que vai até o amanhecer ou que encerra o capítulo.
+- **Acusação errada pede uma prova só**; a certa (Cão no capítulo 1, Senescal no 2) continua pedindo duas a quatro.
+- **Capítulo 2**: o Príncipe é acusável (final 2A, "A palavra contra o trono"). Ele só admite o porto nos finais do capítulo 1 em que o recado da abertura é dele (`dante_mandou()`), e o que ele queria no porto fica para os capítulos 3 e 4.
+
 ## Publicar na Vercel
 
 O jogo web é um site estático: `dist/index.html` mais as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.

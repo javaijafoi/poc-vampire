@@ -754,7 +754,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </section>
   <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
-<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música (tecla M)">♪ Música</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
+<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música e os efeitos (tecla M)">♪ Som</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="{{INKJS}}"></script>
 <script>{{V5}}</script>
@@ -1039,7 +1039,7 @@ function atualizarHud() {
   ultimoSinal = sn;
   const f = hud.fome;
   if (ultimaFome != null && f !== ultimaFome) {
-    pulsar($('fome'));
+    pulsar($('fome')); if (f > ultimaFome) efeito('fome');
     // o teste de Despertar tem o aviso dele; os outros (Disciplina forte, sangue da Nonna, beber, caça) avisam aqui
     if (!despertando) toast(f > ultimaFome ? `A Fome subiu para ${f}` : `A Fome baixou para ${f}`);
   }
@@ -1051,7 +1051,7 @@ function atualizarHud() {
   }
   ultimaRegra = rg;
   ultimaFome = f;
-  if (pistas.length > ultimasPistas) pulsar($('n-pistas'));
+  if (pistas.length > ultimasPistas) { pulsar($('n-pistas')); if (ultimasPistas || pistas.length < 3) efeito('pista'); }
   ultimasPistas = pistas.length;
 }
 function pulsar(el) { el.classList.remove('pulso'); void el.offsetWidth; el.classList.add('pulso'); }
@@ -1136,6 +1136,7 @@ function mostrarEvento(ev) {
 // Os dados caem na mesa, giram mostrando números ao acaso e param um a um no valor tirado; depois vem o carimbo do resultado.
 // Clicar durante a rolagem pula a animação; clicar de novo (ou Enter/Espaço) fecha e segue a história.
 function mostrarDados(r) {
+  efeito('dados');
   const mesa = document.createElement('div'); mesa.className = 'mesa-dados';
   mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
     <div class="linha">${r.dados.map((d, i) => `<span class="dado rolando ${d.fome ? 'fomed' : ''}" style="--atraso:${(i * 0.09).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}%;--giro0:${(Math.random() * 360 - 540).toFixed(0)}deg"><span class="face">${1 + Math.floor(Math.random() * 10)}</span></span>`).join('')}</div>
@@ -1363,7 +1364,7 @@ function mostrarEscolhas(pergunta = '') {
 const CONVERSAS = /^(rayo_perguntas|cao_perguntas|harumi_perguntas|constance_perguntas|biel_perguntas_loop|vincenzo)\b/;
 function chaveEscolha(ch) { const p = String(ch.sourcePath || ''); return CONVERSAS.test(p) && !/Voltar|descansar/.test(ch.text) ? p.split('.')[0] + '|' + ch.text : null; }
 function escolher(i) {
-  esconderDica(); const ch = story.currentChoices[i], k = chaveEscolha(ch); if (k) feitas.add(k);
+  esconderDica(); efeito('escolha'); const ch = story.currentChoices[i], k = chaveEscolha(ch); if (k) feitas.add(k);
   const txt = ch.text.split(' ;; ')[0], p = txt.match(/^(.+?) :: (.*)$/), origem = String(ch.sourcePath || '').split('.')[0];
   const lugar = /^[a-z_]/i.test(origem) ? origem : partida.lugar;
   if (story.variablesState['nome'] === '') registrar('personagem_escolhido', { escolhido: txt.split(' · ')[0] });
@@ -1391,7 +1392,7 @@ function mostrarFim() {
   if (finalLetra) {
     const titulo = (finalTexto || '').split('.')[0].replace(/^FINAL\s+\w+\s*·\s*/, '');
     $('carimbo-final').innerHTML = `<b>FINAL ${esc(finalLetra)}</b><span>${esc(titulo)}</span>`;
-    requestAnimationFrame(() => $('carimbo-final').classList.add('on'));
+    requestAnimationFrame(() => $('carimbo-final').classList.add('on')); efeito('final');
   }
   if (finalLetra) { const f = new Set(finaisVistos()); f.add(finalLetra); try { localStorage.setItem('matusalem-finais', JSON.stringify([...f])); } catch (e) {}
     // a galeria guarda também o título e a frase de cada desfecho (a mesma letra pode ter mais de um)
@@ -1766,6 +1767,31 @@ function liberarSom() {
   if (som.el) entrar(som.el);
 }
 addEventListener('pointerdown', liberarSom, true); addEventListener('keydown', liberarSom, true);
+// Efeitos sonoros feitos na hora (sem arquivo): papel na escolha, lápis na pista nova, coração na Fome, dados e carimbo no final.
+// Seguem o botão de música e o volume.
+let ctxSom = null, ruidoBuf = null;
+function efeito(tipo) {
+  const vol = volumeAlvo(); if (!som.liberado || !vol || document.hidden) return;
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ctxSom = ctxSom || new AC(); if (ctxSom.state === 'suspended') ctxSom.resume();
+    const c = ctxSom, t0 = c.currentTime + .01;
+    if (!ruidoBuf) { ruidoBuf = c.createBuffer(1, c.sampleRate * .5, c.sampleRate); const d = ruidoBuf.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; }
+    const saida = c.createGain(); saida.gain.value = vol * .5; saida.connect(c.destination);
+    // um sopro de ruído filtrado: papel, lápis, dado batendo
+    const ruido = (t, dur, freq, q, g) => { const n = c.createBufferSource(); n.buffer = ruidoBuf; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
+      const e = c.createGain(); e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .008); e.gain.exponentialRampToValueAtTime(.001, t + dur);
+      n.connect(f); f.connect(e); e.connect(saida); n.start(t, Math.random() * .3, dur + .05); };
+    // uma batida grave: coração, carimbo
+    const batida = (t, freq, dur, g) => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.frequency.exponentialRampToValueAtTime(freq * .5, t + dur);
+      const e = c.createGain(); e.gain.setValueAtTime(g, t); e.gain.exponentialRampToValueAtTime(.001, t + dur); o.connect(e); e.connect(saida); o.start(t); o.stop(t + dur + .02); };
+    if (tipo === 'escolha') ruido(t0, .06, 2600, .8, .35);
+    else if (tipo === 'pista') { ruido(t0, .09, 3400, 2.5, .3); ruido(t0 + .11, .12, 2900, 2.5, .28); }
+    else if (tipo === 'fome') { batida(t0, 70, .16, .9); batida(t0 + .24, 62, .2, .7); }
+    else if (tipo === 'dados') for (let i = 0; i < 7; i++) ruido(t0 + i * .09 + Math.random() * .03, .04, 1500 + Math.random() * 1500, 3, .4);
+    else if (tipo === 'final') { batida(t0, 110, .28, 1); ruido(t0, .12, 900, .7, .5); }
+  } catch (e) {}
+}
 document.addEventListener('visibilitychange', () => { if (!som.el || !som.liberado) return; if (document.hidden) som.el.pause(); else som.el.play().catch(() => {}); });
 $('som').addEventListener('click', () => { som.ligado = !som.ligado; if (som.ligado && !som.vol) som.vol = .6; ajustarSom(); });
 $('volume').addEventListener('input', e => { som.vol = e.target.value / 100; som.ligado = som.vol > 0; ajustarSom(); });
@@ -2114,6 +2140,14 @@ document.addEventListener('keydown', e => {
   const n = parseInt(e.key, 10); const b = document.querySelector(`#conteudo [data-i="${n - 1}"]`);
   if (b && !$('txt')) b.click();
 });
+// Na versão publicada as imagens são arquivos separados (a página abre rápido). Depois que a capa aparece,
+// o resto vai sendo baixado em segundo plano, três por vez, para nenhuma cena esperar imagem.
+function preCarregarArte() {
+  const urls = [...Object.values(ARTE.fundos), ...Object.values(ARTE.personagens).flatMap(p => Object.values(p))].filter(u => !/^data:/.test(u));
+  let i = 0; const prox = () => { if (i >= urls.length) return; const im = new Image(); im.onload = im.onerror = prox; im.src = urls[i++]; };
+  for (let k = 0; k < 3; k++) prox();
+}
+setTimeout(preCarregarArte, 1200);
 // ?pular=1 vai direto para o jogo (testes)
 if (/pular=1/.test(location.search)) { $('capa').hidden = true; iniciar(); } else mostrarCapa();
 </script>
