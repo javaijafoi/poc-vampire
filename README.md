@@ -10,7 +10,7 @@ Primeira versão jogável: tela inicial, abertura animada, escolha entre 3 perso
 | `ink/capitulo2.ink` | Capítulo 2, O Custo do Esquecimento: a gala da Corte no Elísio do MASP |
 | `ink/rayo.ink` | A cena de teste antiga (só o Rayo), mantida para comparação com o Ren'Py |
 | `web/` | Interface web que roda o roteiro |
-| `dist/index.html` | Jogo web pronto, num arquivo só, com a música ao lado em `dist/musica/`. Abra no navegador (precisa de internet para o motor Ink e as fontes) |
+| `dist/index.html` | Jogo web pronto, com as imagens ao lado em `dist/arte/` e a música em `dist/musica/` (para um arquivo só, use `dist/local.html`). Abra no navegador (precisa de internet para o motor Ink e as fontes) |
 | `art/` | Arte: `recortar_personagens.py` tira o fundo das artes do Trello, `gerar_fundos.py` gera os fundos com sdxl-turbo, `montar_cena.py` faz o recorte de revista e os fundos finais (`npm run arte`) |
 | `musica/` | Trilha sonora: uma faixa por cena, todas CC0 (`CREDITOS.md` diz qual toca onde; `bash musica/preparar.sh` refaz os MP3) |
 | `video/` | A abertura como vídeo MP4, feita com HyperFrames (`bash video/renderizar.sh`) |
@@ -94,7 +94,7 @@ Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `benc
 
 ## Publicar na Vercel
 
-O jogo web é um site estático: `dist/index.html` mais as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.
+O jogo web é um site estático: `dist/index.html` mais as imagens em `dist/arte/` e as músicas em `dist/musica/`. O `vercel.json` já diz à Vercel para compilar o roteiro (`npm run compilar && node build_web.cjs cdn`) e publicar a pasta `dist/`. É só importar o repositório na Vercel, sem mudar nenhuma configuração. A arte já está pronta em `art/cena/`, então o build não precisa de Python.
 
 ## Registro anônimo das partidas (PostHog)
 
