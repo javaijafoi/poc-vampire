@@ -48,3 +48,16 @@ for (const [fc, pers, admite] of [['B', 1, true], ['F', 1, false], ['C_corte', 2
   const txt = j.falas.join(' ');
   checar(ok1 && n <= 1 && j.final() === (pers === 0 ? '2G' : '2A') && /Mandei você ao porto/.test(txt) === admite && !/undefined/.test(txt), `acusar o Príncipe (cap 1 = ${fc}, personagem ${pers}): final ${j.final()}, ${n} prova`);
 }
+
+// Capítulo 2: quem veio pelos Anarquistas pode levar a verdade ao Rayo (final 2L); as fugas saem com alguém e com a dica do informante.
+{ const j = nova(); j.s.ChoosePathString('capitulo_2_novo'); j.correr(); j.s.ChooseChoiceIndex(2); j.correr();
+  j.s.variablesState['final_cap1'] = 'C_anarq'; j.s.ChoosePathString('luciana_cai'); j.correr();
+  const ok = j.ir(/Ao Rayo/);
+  checar(ok && j.final() === '2L' && j.s.variablesState['aliado_cap2'] === 'rayo' && j.falas.some(f => /Guga/.test(f)), 'verdade para o Rayo: final 2L, aliado rayo, Guga citado'); }
+{ const j = nova(); j.s.ChoosePathString('capitulo_2_novo'); j.correr(); j.s.ChooseChoiceIndex(0); j.correr();
+  j.s.ChoosePathString('luciana_cai'); j.correr();
+  checar(!j.tem(/Ao Rayo/), 'fora do caminho dos Anarquistas, a opção do Rayo não aparece'); }
+for (const [pers, knot, letra, aliado] of [[1, 'irene_some_sinal', '2F', 'digito'], [0, 'tomas_resiste', '2G', 'rayo'], [2, 'joana_dupla', '2H', 'doutora']]) {
+  const j = nova(); j.s.ChoosePathString('capitulo_2_novo'); j.correr(); j.s.ChooseChoiceIndex(pers); j.correr();
+  j.s.ChoosePathString(knot); j.correr();
+  checar(j.final() === letra && j.s.variablesState['aliado_cap2'] === aliado && j.falas.some(f => /Anarquistas|no meio da gente/.test(f)), `fuga ${letra}: sai com ${aliado} e com a dica do informante`); }

@@ -91,6 +91,8 @@ Os dois scripts trabalham numa cópia temporária do projeto e acrescentam `benc
 - **Segundo toque** em opção que custa uma hora ou mais, que vai até o amanhecer ou que encerra o capítulo.
 - **Acusação errada pede uma prova só**; a certa (Cão no capítulo 1, Senescal no 2) continua pedindo duas a quatro.
 - **Capítulo 2**: o Príncipe é acusável (final 2A, "A palavra contra o trono"). Ele só admite o porto nos finais do capítulo 1 em que o recado da abertura é dele (`dante_mandou()`), e o que ele queria no porto fica para os capítulos 3 e 4.
+- **Ganchos para o capítulo 3** (capítulo 2): o Guga e o Nego são citados pelo nome (Rayo, Isadora, saída do capítulo); as fugas 2F, 2G e 2H saem com a dica do informante e com alguém (`aliado_cap2` = `digito`, `rayo`, `doutora`); quem veio pelos Anarquistas pode levar a verdade ao Rayo (final 2L).
+- **Nenhuma conversa é proibida por falta de tempo**: se o Príncipe chega no meio, ela para ali. A sessão da Nonna segue essa regra.
 
 ## Publicar na Vercel
 
