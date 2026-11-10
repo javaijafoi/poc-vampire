@@ -1768,7 +1768,8 @@ function liberarSom() {
 }
 addEventListener('pointerdown', liberarSom, true); addEventListener('keydown', liberarSom, true);
 // Efeitos sonoros feitos na hora (sem arquivo): papel na escolha, lápis na pista nova, coração na Fome, dados e carimbo no final.
-// Seguem o botão de música e o volume.
+// Seguem o botão de música e o volume. Volumes e tons medidos com contexto de áudio offline (pico entre 0,25 e 0,45;
+// batidas acima de 100 Hz, porque alto-falante de celular não toca grave de 60 Hz).
 let ctxSom = null, ruidoBuf = null;
 function efeito(tipo) {
   const vol = volumeAlvo(); if (!som.liberado || !vol || document.hidden) return;
@@ -1780,16 +1781,16 @@ function efeito(tipo) {
     const saida = c.createGain(); saida.gain.value = vol * .5; saida.connect(c.destination);
     // um sopro de ruído filtrado: papel, lápis, dado batendo
     const ruido = (t, dur, freq, q, g) => { const n = c.createBufferSource(); n.buffer = ruidoBuf; const f = c.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = q;
-      const e = c.createGain(); e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g, t + .008); e.gain.exponentialRampToValueAtTime(.001, t + dur);
+      const e = c.createGain(); e.gain.setValueAtTime(0, t); e.gain.linearRampToValueAtTime(g * 7, t + .008); e.gain.exponentialRampToValueAtTime(.001, t + dur);
       n.connect(f); f.connect(e); e.connect(saida); n.start(t, Math.random() * .3, dur + .05); };
     // uma batida grave: coração, carimbo
-    const batida = (t, freq, dur, g) => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.setValueAtTime(freq, t); o.frequency.exponentialRampToValueAtTime(freq * .5, t + dur);
+    const batida = (t, freq, dur, g) => { const o = c.createOscillator(); o.type = 'triangle'; o.frequency.setValueAtTime(freq, t); o.frequency.exponentialRampToValueAtTime(freq * .5, t + dur);
       const e = c.createGain(); e.gain.setValueAtTime(g, t); e.gain.exponentialRampToValueAtTime(.001, t + dur); o.connect(e); e.connect(saida); o.start(t); o.stop(t + dur + .02); };
     if (tipo === 'escolha') ruido(t0, .06, 2600, .8, .35);
     else if (tipo === 'pista') { ruido(t0, .09, 3400, 2.5, .3); ruido(t0 + .11, .12, 2900, 2.5, .28); }
-    else if (tipo === 'fome') { batida(t0, 70, .16, .9); batida(t0 + .24, 62, .2, .7); }
+    else if (tipo === 'fome') { batida(t0, 150, .16, .9); batida(t0 + .24, 130, .2, .7); }
     else if (tipo === 'dados') for (let i = 0; i < 7; i++) ruido(t0 + i * .09 + Math.random() * .03, .04, 1500 + Math.random() * 1500, 3, .4);
-    else if (tipo === 'final') { batida(t0, 110, .28, 1); ruido(t0, .12, 900, .7, .5); }
+    else if (tipo === 'final') { batida(t0, 170, .28, 1); ruido(t0, .12, 900, .7, .2); }
   } catch (e) {}
 }
 document.addEventListener('visibilitychange', () => { if (!som.el || !som.liberado) return; if (document.hidden) som.el.pause(); else som.el.play().catch(() => {}); });

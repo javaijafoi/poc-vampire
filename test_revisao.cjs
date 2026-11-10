@@ -23,10 +23,13 @@ const checar = (ok, nome) => { console.log(`${ok ? 'ok ' : 'FALHOU'} ${nome}`); 
   for (const p of [/^Sim. É isso/, /03h12/, /saiu da Capela/, /arquivo do Cão/]) j.ir(p);
   checar(j.final() === '2F' || j.final() === '2D', `três provas só de dentro não derrubam a Senescal (final ${j.final()})`); }
 
-// Capítulo 1: com menos de 80 minutos de noite, a Nonna não começa a sessão.
+// Capítulo 1: a Nonna não recusa mais por falta de tempo. Com menos de uma hora, ela avisa e o Príncipe interrompe a sessão.
 { const j = nova(); j.correr(); j.s.ChooseChoiceIndex(0); j.correr();
-  j.s.variablesState['minutos'] = 350; j.ir(/Nonna/);
-  checar(!j.tem(/Pagar com sangue/) && j.tem(/Rayo, debruçado/), 'Nonna recusa a sessão quando não dá mais tempo');
+  j.s.variablesState['minutos'] = j.s.variablesState['limite'] - 30; j.ir(/Nonna/);
+  checar(j.tem(/Pagar com sangue/) && j.falas.some(f => /olha a hora/.test(f)), 'Nonna aceita a sessão no fim da noite, com aviso');
+  j.ir(/Ficar devendo/);
+  checar(j.falas.some(f => /Morto não fala na frente de Príncipe/.test(f)) && j.tem(/Rayo, o motoqueiro/) && j.s.variablesState['minutos'] === j.s.variablesState['limite'], 'o Príncipe interrompe a sessão e a acusação começa'); }
+{ const j = nova(); j.correr(); j.s.ChooseChoiceIndex(0); j.correr();
   j.s.variablesState['minutos'] = 300; j.ir(/Nonna/); j.ir(/Ficar devendo/);
   checar(j.tem(/Como você morreu/), 'com 1h40 de noite, a sessão ainda rende pergunta'); }
 
