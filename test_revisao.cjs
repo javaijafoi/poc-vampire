@@ -35,3 +35,13 @@ const checar = (ok, nome) => { console.log(`${ok ? 'ok ' : 'FALHOU'} ${nome}`); 
   j.s.variablesState['rayo_confessou'] = true; j.s.variablesState['biel_morte'] = true;
   j.ir(/Rayo, debruçado/);
   checar(j.ir(/Olho amarelo/) && j.s.variablesState['p_olho'] === true, 'olho amarelo depois da confissão do Rayo'); }
+
+// Capítulo 2: o Príncipe é acusável. Ele admite o porto só nos finais em que foi ele quem mandou; pede uma prova só; final 2A (Tomás escapa, 2G).
+for (const [fc, pers, admite] of [['B', 1, true], ['F', 1, false], ['C_corte', 2, false], ['B', 0, true]]) {
+  const j = nova(); j.s.ChoosePathString('capitulo_2_novo'); j.correr(); j.s.ChooseChoiceIndex(pers); j.correr();
+  j.s.variablesState['final_cap1'] = fc; j.s.ChoosePathString('acusacao2'); j.correr();
+  const ok1 = j.ir(/Foi o (senhor, Príncipe|Príncipe Dante)/) && j.ir(/^Sim. É isso/);
+  let n = 0; while (!j.final() && j.s.currentChoices.length && n < 3) { j.s.ChooseChoiceIndex(0); j.correr(); n++; }
+  const txt = j.falas.join(' ');
+  checar(ok1 && n <= 1 && j.final() === (pers === 0 ? '2G' : '2A') && /Mandei você ao porto/.test(txt) === admite && !/undefined/.test(txt), `acusar o Príncipe (cap 1 = ${fc}, personagem ${pers}): final ${j.final()}, ${n} prova`);
+}
