@@ -28,6 +28,7 @@ VAR manipulacao = 0
 VAR subterfugio = 0
 VAR intimidacao = 0   // parada de Força + Intimidação
 VAR ocultismo = 0
+VAR rotulo_dados = ""   // nome da parada do teste atual, mostrado na mesa de dados ("Carisma 2 + Persuasão 1")
 VAR parada_caca = 0        // parada do teste de caça, pelo tipo de predador (Módulo Básico, pág. 175)
 VAR predador = ""
 VAR disciplina = ""
@@ -342,6 +343,7 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
 + {not p_rayo_versao} {rayo_serra >= 1} {not rayo_fechado} {fome < 5} [Teste: Carisma + Persuasão, dif. 2 :: Pagar uma dose e deixar ele falar.]
     ~ passar(20)
     Você empurra um copo para o lado dele do balcão.
+    ~ rotulo_dados = "Carisma {carisma} + Persuasão 1"
     ~ temp dose = rolar(carisma + 1, fome, 2)
     { dose == 1 or dose == 2 or dose == 3:
         Rayo: ...Valeu. Olha, eu não conto isso pra ninguém, porque ninguém acredita. # expr: medo
@@ -402,6 +404,7 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
 + {p_rayo_versao} {constance_chegou} {not rayo_confessou} {not rayo_fechado} [Teste: Manipulação + Subterfúgio, dif. 3 :: Blefar: "A Constance já me contou tudo."]
     ~ passar(20)
     Você: A Constance já me contou tudo, Rayo. Só quero ouvir a sua parte.
+    ~ rotulo_dados = "Manipulação {manipulacao} + Subterfúgio {subterfugio}"
     ~ temp r = rolar(manipulacao + subterfugio, fome, 3)
     { r:
     - 4:
@@ -575,6 +578,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
 + {p_cao_versao} {not cao_irritado} [Teste: Força + Intimidação, dif. 5 :: Encostar o Xerife na parede.]
     ~ passar(20)
     Você: Você recebeu a carga e está mentindo para o seu Príncipe. # expr voce: ameaca
+    ~ rotulo_dados = "Força + Intimidação {intimidacao}"
     ~ temp r = rolar(intimidacao, fome, 5)
     { r == 1 or r == 2 or r == 3:
         O Cão recua um passo, sem perceber. Por um instante o Xerife parece um bicho encurralado. # expr cao: encurralado
@@ -650,6 +654,7 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão ficou sem re
 + {not harumi_fechado} {not harumi_confessou} [Teste: Força + Intimidação, dif. 4 :: Segurar o taco dela e falar baixo.]
     ~ passar(20)
     Você segura o taco de sinuca no meio da tacada dela. # expr voce: ameaca
+    ~ rotulo_dados = "Força + Intimidação {intimidacao}"
     ~ temp r = rolar(intimidacao, fome, 4)
     {
     - r == 1 or r == 2 or r == 3:
@@ -875,6 +880,7 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
 + {not p_constance_cao} {not constance_hostil} [Teste: Manipulação + Subterfúgio, dif. 4 :: Insinuar que o Príncipe já desconfia dela.]
     ~ passar(20)
     Você: O Príncipe sabe que a senhora tem interesse nessa carga.
+    ~ rotulo_dados = "Manipulação {manipulacao} + Subterfúgio {subterfugio}"
     ~ temp r = rolar(manipulacao + subterfugio, fome, 4)
     { r:
     - 4:

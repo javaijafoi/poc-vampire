@@ -258,6 +258,13 @@ body {
 .rodape button { font: inherit; color: var(--papel-fraco); background: none; border: 1px solid var(--borda); padding: 2px 8px; cursor: pointer; }
 .rodape .acoes { display: flex; align-items: center; gap: 10px; }
 .rodape .som { display: flex; align-items: center; gap: 6px; }
+.rodape #historico { color: var(--papel); border-color: var(--sangue); font-weight: 700; }
+.rodape #historico::before { content: "\2630\00a0"; }
+.rodape #historico.chamar { animation: chamar-hist 1.4s ease-in-out infinite; }
+@keyframes chamar-hist { 0%, 100% { box-shadow: 0 0 0 0 rgb(200 49 63 / 0); } 50% { box-shadow: 0 0 0 4px rgb(200 49 63 / .65); } }
+@media (prefers-reduced-motion: reduce) { .rodape #historico.chamar { animation: none; box-shadow: 0 0 0 3px rgb(200 49 63 / .65); } }
+.dados .conta { font-size: max(13px, 1.7cqw); color: var(--tinta); text-align: center; }
+.dados .conta b { font-weight: 400; color: var(--acento); }
 .rodape button[aria-pressed="true"].opcao { color: var(--papel); border-color: var(--sangue); }
 .historico p { margin: 0 0 .5cqw; }
 .historico b { font-family: var(--f-tipo); font-weight: 400; color: var(--acento); }
@@ -586,6 +593,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .dados .linha { gap: 8px; }
   .dados .res { font-size: 18px; }
   .dados .det { font-size: 12px; }
+  .dados .conta { font-size: 14px; }
   .dados .seguir { font-size: 15px; padding: 8px 18px; }
   /* capa */
   .letra { font-size: 6.6cqw; }
@@ -760,7 +768,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   </section>
   <div class="dica-pop" id="dica-pop" role="tooltip"></div>
 </div>
-<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="As últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música e os efeitos (tecla M)">♪ Som</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
+<div class="rodape"><span>Capítulos 1 e 2 de 4 · versão de teste</span><span class="acoes"><button type="button" id="historico" title="Reler as últimas falas (tecla H)">Histórico</button><button type="button" class="opcao" id="instantaneo" aria-pressed="false" title="Mostrar cada fala inteira de uma vez. Segure Ctrl para passar rápido pelas falas.">Texto instantâneo</button><span class="som"><button type="button" id="som" aria-pressed="true" title="Ligar ou desligar a música e os efeitos (tecla M)">♪ Som</button><input type="range" id="volume" min="0" max="100" step="5" aria-label="Volume da música"></span><button type="button" class="tela-cheia" id="tela-cheia" hidden>Tela cheia</button><button type="button" id="reiniciar">Menu inicial</button></span></div>
 
 <script src="{{INKJS}}"></script>
 <script>{{V5}}</script>
@@ -947,6 +955,13 @@ function atualizarRolagem() {
   if (window.ResizeObserver) new ResizeObserver(() => atualizarRolagem()).observe(c); }
 const textoCusto = m => m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ' ' + (m % 60) + ' min' : ''}` : `${m} min`;
 
+const HIST = 'matusalem-historico-visto';
+function histVisto() { $('historico').classList.remove('chamar'); try { localStorage.setItem(HIST, '1'); } catch (e) {} }
+// A primeira vez que já há bastante conversa para reler, o botão Histórico pulsa até ser clicado.
+function chamarHistorico() {
+  let visto = true; try { visto = !!localStorage.getItem(HIST); } catch (e) {}
+  if (!visto && historico.length >= 8 && $('capa').hidden) $('historico').classList.add('chamar');
+}
 function novaHistoria() {
   story = new inkjs.Story(HISTORIA);
   esconderElencoEscolha();
@@ -954,7 +969,7 @@ function novaHistoria() {
   feitas = new Set(); historico = []; ultimaFome = null; ultimaRegra = null; ultimoSinal = null; ultimasPistas = 0;
   story.BindExternalFunction('rolar', (parada, fome, dif) => {
     if (simulando) return 0;
-    const r = V5.rolarV5(parada, fome, dif); fila.push({ tipo: 'dados', r, hud: fotoHud() }); return r.resultado;
+    const r = V5.rolarV5(parada, fome, dif); r.rotulo = String(story.variablesState['rotulo_dados'] || ''); fila.push({ tipo: 'dados', r, hud: fotoHud() }); return r.resultado;
   }, false);
   story.BindExternalFunction('despertar', () => {
     if (simulando) return;
@@ -1147,10 +1162,15 @@ function mostrarEvento(ev) {
 
 // Os dados caem na mesa, giram mostrando números ao acaso e param um a um no valor tirado; depois vem o carimbo do resultado.
 // Clicar durante a rolagem pula a animação; clicar de novo (ou Enter/Espaço) fecha e segue a história.
+function contaDados(r) {
+  const n = r.dados.length, nf = r.dados.filter(d => d.fome).length;
+  const base = r.rotulo ? esc(r.rotulo).replace(/(\d+)/g, '<b>$1</b>') + ' = ' : '';
+  return `${base}<b>${n}</b> dado${n === 1 ? '' : 's'}${nf ? ` (<b>${nf}</b> de Fome)` : ''} · dificuldade <b>${r.dificuldade}</b>`;
+}
 function mostrarDados(r) {
   efeito('dados');
   const mesa = document.createElement('div'); mesa.className = 'mesa-dados';
-  mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="det">Parada de ${r.dados.length} dados · dificuldade ${r.dificuldade}</div>
+  mesa.innerHTML = `<div class="dados" role="dialog" aria-label="Rolagem de dados"><div class="conta">${contaDados(r)}</div>
     <div class="linha">${r.dados.map((d, i) => `<span class="dado rolando ${d.fome ? 'fomed' : ''}" style="--atraso:${(i * 0.09).toFixed(2)}s;--dx:${(Math.random() * 120 - 60).toFixed(0)}%;--giro0:${(Math.random() * 360 - 540).toFixed(0)}deg"><span class="face">${1 + Math.floor(Math.random() * 10)}</span></span>`).join('')}</div>
     <div class="res ${r.resultado === 1 || r.resultado === 2 ? 'bom' : ''}" aria-live="polite"></div>
     <div class="det">Dados vermelhos são de Fome. ${CLIQUE} em qualquer lugar para continuar.</div>
@@ -1244,6 +1264,7 @@ function mostrarLinha(texto, extras = []) {
   $('nome').hidden = !nome || comArte; if (nome) $('nome').textContent = nome;
   historico.push({ nome, texto: (passiva ? passiva + ': ' : '') + corpo });
   extras.forEach(x => historico.push({ nome: x.narracao ? null : nome, texto: x.corpo })); while (historico.length > 200) historico.shift();
+  chamarHistorico();
   const c = $('conteudo');
   c.innerHTML = `<div class="fala ${classe}">${passiva ? `<span class="passiva" data-dica="${esc(dicaDe(passiva, corpo, true))}">${esc(passiva)}</span> ` : ''}<span id="txt"></span></div>${extras.map(x => `<div class="fala extra ${x.narracao ? 'narracao' : classe}" hidden>${esc(x.corpo)}</div>`).join('')}<span class="seta" aria-hidden="true">▼</span>`;
   c.scrollTop = 0;
@@ -1944,7 +1965,8 @@ const TUTORIAL = [
   `<h2>Uma noite para achar o culpado</h2><p>Você é um vampiro recém-chegado a São Paulo e deve um favor ao Príncipe. Esta noite ele cobra: alguém sumiu com uma carga preciosa dele, e você tem até o amanhecer para descobrir quem foi.</p>
     <p>Este é um jogo de conversa. Você escolhe com quem falar e o que perguntar. Não precisa saber nada de Vampiro: A Máscara.</p>`,
   `<h2>Converse e anote</h2><p>As testemunhas estão espalhadas pelo bar, uma em cada canto. Cada uma conta a sua versão, e ninguém conta a verdade inteira.</p>
-    <p>O que você descobre vai sozinho para o <b>Caderno</b>, no canto da caixa de texto. Uma pista de uma testemunha pode abrir uma pergunta nova com outra.</p>`,
+    <p>O que você descobre vai sozinho para o <b>Caderno</b>, no canto da caixa de texto. Uma pista de uma testemunha pode abrir uma pergunta nova com outra.</p>
+    <p>Perdeu o fio da conversa? O botão <b>Histórico</b>, na barra de baixo, mostra de novo as últimas falas.</p>`,
   `<h2>O relógio corre</h2><p>Cada pergunta custa minutos, mesmo repetida: uns 20 com as testemunhas. O sol nasce às 05h40 e você não vai conseguir falar de tudo com todos. Quando achar que sabe, chame o Príncipe e mostre a ele três provas do seu caderno.</p>`,
   `<h2>Opções especiais</h2><p>Algumas respostas têm uma etiqueta colorida no fim, como <span class="porque prova">(Prova)</span> ou <span class="porque disc">(Disciplina: Presença)</span>. Elas aparecem por causa do seu clã, das suas notas, das pistas que você achou ou dos seus poderes.</p>
     <p>${TOQUE ? 'Toque na etiqueta (ou segure o dedo na opção)' : 'Passe o mouse em cima da etiqueta'} e o jogo explica, em uma linha, o que ela faz. O mesmo vale para a hora e a Fome.</p>`,
@@ -2140,7 +2162,7 @@ document.addEventListener('fullscreenchange', () => { $('tela-cheia').textConten
 $('abrir-caderno').addEventListener('click', e => { e.stopPropagation(); abrirCaderno(); });
 $('ajuda-btn').addEventListener('click', e => { e.stopPropagation(); abrirAjuda(); });
 $('reiniciar').addEventListener('click', mostrarCapa);
-$('historico').addEventListener('click', e => { e.stopPropagation(); if (story && $('capa').hidden) abrirHistorico(); });
+$('historico').addEventListener('click', e => { e.stopPropagation(); histVisto(); if (story && $('capa').hidden) abrirHistorico(); });
 $('instantaneo').addEventListener('click', () => { opcoes.instantaneo = !opcoes.instantaneo; ajustarOpcoes(); });
 ajustarOpcoes();
 document.addEventListener('keydown', e => {

@@ -281,6 +281,7 @@ Quem apagou a sua noite vai estar lá. Todo mundo que importa vai estar lá.
             ~ parada_caca = 6
         }
     }
+    ~ rotulo_dados = "{teste_caca()} {parada_caca}"
     ~ temp r = rolar(parada_caca, fome, 2)
     { r == 1 or r == 2 or r == 3:
         ~ fome = MAX(fome - 2, 1)
@@ -368,6 +369,7 @@ Você desce a escadaria para a calçada e anda até a esquina da Augusta, onde n
         ~ parada_caca = 6
     }
 }
+~ rotulo_dados = "{teste_caca()} {parada_caca}"
 ~ temp r = rolar(parada_caca, fome, 2)
 { r == 1 or r == 2 or r == 3:
     ~ fome = MAX(fome - 2, 1)
@@ -384,6 +386,7 @@ Você desce a escadaria para a calçada e anda até a esquina da Augusta, onde n
 ~ p2_vigiou = true
 # entra: rocha
 Do outro lado do vão livre, você observa a porta lateral. Um segurança de terno preto confere os primeiros garçons com um leitor na mão. Ninguém da Corte passa por ele: só gente viva.
+~ rotulo_dados = "Raciocínio {raciocinio} + Prontidão 2"
 ~ temp r = rolar(raciocinio + 2, fome, 2)
 { r == 1 or r == 2 or r == 3:
     Entre um garçom e outro, ele leva a mão ao ponto no ouvido e fala baixo. Você lê os lábios: "A isca ainda não subiu." # expr rocha: radio # pista rocha: De longe, você viu o segurança da porta falar no ponto: "A isca ainda não subiu." Ele só confere os humanos, com um leitor na mão.
@@ -628,6 +631,7 @@ FINAL 2X · O SINAL. O chip na sua língua esquentou demais, e a Inquisição ve
 + {not p2_isa_capela} {not isa_fechada} {fome < 5} [Teste: Carisma + Persuasão, dif. 3 :: Elogiar a festa como ela gosta.]
     ~ passar(20)
     Você: Eu já fui a festas em três cidades. Nenhuma tinha uma anfitriã como esta.
+    ~ rotulo_dados = "Carisma {carisma} + Persuasão 1"
     ~ temp r = rolar(carisma + 1, fome, 3)
     { r == 1 or r == 2 or r == 3:
         ~ p2_isa_capela = true
@@ -660,6 +664,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 + {not p2_isa_capela} [Teste: Força + Intimidação, dif. 3 :: Encostar ela no parapeito.]
     ~ passar(10)
     ~ acender(1)
+    ~ rotulo_dados = "Força + Intimidação {intimidacao}"
     ~ temp r = rolar(intimidacao, fome, 3)
     { r == 1 or r == 2 or r == 3:
         ~ p2_isa_capela = true
@@ -769,6 +774,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
     -> rocha_perguntas
 + {not p2_sedativo} {not rocha_fechado} {fome < 5} [Teste: Manipulação + Subterfúgio, dif. 3 :: Blefar: "A Doutora já me contou. Só quero ouvir de você."]
     ~ passar(20)
+    ~ rotulo_dados = "Manipulação {manipulacao} + Subterfúgio {subterfugio}"
     ~ temp r = rolar(manipulacao + subterfugio, fome, 3)
     {
     - r == 1 or r == 2 or r == 3:
@@ -787,6 +793,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 + {not p2_sedativo} [Teste: Força + Intimidação, dif. 4 :: Prensar o humano na pilastra.]
     ~ passar(20)
     ~ acender(1)
+    ~ rotulo_dados = "Força + Intimidação {intimidacao}"
     ~ temp ri = rolar(intimidacao, fome, 4)
     { ri == 1 or ri == 2 or ri == 3:
         -> rocha_conta
