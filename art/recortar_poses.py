@@ -148,7 +148,7 @@ APAGAR = {
 CORTE_ALTURA = {"arnaldo_vigia": 0.5, "arnaldo_aponta": 0.5, "arnaldo_neutro": 0.5, "luciana_fria": 0.5, "luciana_ritual": 0.5, "luciana_ameaca": 0.5, "luciana_abalada": 0.5, "valentina_assustada": 0.5, "valentina_rindo": 0.5, "nonna_neutro": 0.6, "isadora_cochicho": 0.5, "isadora_ofendida": 0.42, "isadora_aponta": 0.5, "isadora_medo": 0.5, "isadora_vaidosa": 0.5, "nonna_severa": 0.6, "nonna_frasco": 0.6, "dante_neutro": 0.5}
 # arte que olha para o lado errado: espelha (a Nonna fica à esquerda e precisa olhar para a direita)
 # (severa já olha para a direita; frasco e velas olham para a esquerda)
-ESPELHAR = {"nonna", "nonna_frasco", "nonna_velas"}
+ESPELHAR = {"nonna", "nonna_frasco", "nonna_velas", "harumi"}  # a Harumi fica à direita e precisa olhar para a esquerda (a arte original olha para a direita)
 # poses em que o modelo de ilustração leva junto um objeto do cenário (a mesa de sinuca): fica só o que os dois modelos acham
 INTERSECAO = {"harumi_taco"}
 

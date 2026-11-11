@@ -72,7 +72,7 @@ body {
 .lado.calado { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.5) saturate(.6); }
 .palco .lado img { position: static; display: block; height: 100%; width: auto; }
 /* nome embaixo do rosto, como legenda de revista */
-.legenda { position: absolute; left: 50%; bottom: 36%; transform: translateX(-50%) rotate(calc(var(--giro) * -1.4)); white-space: nowrap;
+.legenda { position: absolute; left: var(--leg-x, 50%); bottom: 36%; transform: translateX(-50%) rotate(calc(var(--giro) * -1.4)); white-space: nowrap;
   font-family: var(--f-nome); font-size: max(12px, 1.7cqw); background: var(--acento); color: #f4e7d2; padding: .2cqw 1.1cqw; box-shadow: .1cqw .3cqw .5cqw rgb(0 0 0 / .5); }
 .lado.calado .legenda { background: #3a2a26; color: #c9b998; }
 .moldura { inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
@@ -303,7 +303,8 @@ body {
 .lado[data-p="Dr. Arnaldo"], .lado[data-p="Luciana"] { height: 90%; bottom: 2%; }
 .sinal i { border-color: #b8860b; }
 .sinal i.cheio { background: #e0a020; box-shadow: 0 0 .4em #e0a020; }
-.lado[data-p="Harumi"] .legenda { bottom: 34%; }
+/* a caixa de texto cobre a parte de baixo da cena (e cresce com o texto): o nome da Harumi fica no peito, acima dela */
+.lado[data-p="Harumi"] .legenda { bottom: 52%; }
 /* o Biel é um fantasma: azul, flutuando, com brilho frio */
 .lado[data-p="Biel"] img { animation: flutua 4.5s ease-in-out infinite; filter: drop-shadow(0 0 1.6cqw rgb(150 200 255 / .75)); opacity: .9; }
 @keyframes flutua { 50% { transform: translateY(-2.5%); } }
@@ -807,6 +808,8 @@ const MORTE1 = 'matusalem-cap1-morte';  // nome de quem morreu no fim do capítu
 let cena;
 
 // Poses em close (o rosto fica maior que nas outras) ou muito largas: encolhem para o rosto ficar do tamanho de sempre
+// poses em que o nome sai do meio da figura (para não cobrir o rosto): fração da largura
+const LEGENDA_X = { harumi_taco: '80%' };
 const ESCALA = { cao_arrebatado: .72, cao_ataque: .82, rayo_olho: .78, biel_encolhido: .85, vincenzo_aponta: .92 };
 // Põe o personagem no lado dele (troca quem estava lá). Devolve false se ele não tem arte.
 function mostrarPersonagem(chave, expr) {
@@ -819,6 +822,7 @@ function mostrarPersonagem(chave, expr) {
     el.querySelector('.legenda').textContent = p.nome; img.alt = p.desc + ', recortado como foto de revista.';
   }
   if (expr) cena.expr[chave] = expr;
+  el.style.setProperty('--leg-x', LEGENDA_X[chave + '_' + (expr || cena.expr[chave] || 'neutro')] || '50%');
   el.style.setProperty('--esc', ESCALA[chave + '_' + (expr || cena.expr[chave] || 'neutro')] || 1);
   if (img.getAttribute('src') !== src) {
     const trocou = img.getAttribute('src'); img.src = src;
