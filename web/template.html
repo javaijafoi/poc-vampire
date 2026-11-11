@@ -460,22 +460,27 @@ body {
 [data-dica] { cursor: help; }
 .porque[data-dica], .passiva[data-dica] { text-decoration: underline dotted; text-underline-offset: .2em; }
 .carta .emblema.foto { width: max(64px, 8cqw); border-width: 2px; overflow: hidden; background: #1b1714; }
-.carta .emblema.foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 8%; transform: scale(1.35); transform-origin: 50% 0; }
+.carta .emblema.foto { position: relative; }
+/* o rosto fica no centro do círculo, do mesmo tamanho nos três (--cw, --cx, --cy, --hh vêm de ELENCO_ESCALA) */
+.carta .emblema.foto img { position: absolute; width: calc(var(--cw, 100%)); height: auto; max-width: none; left: calc(50% - var(--cx, .5) * var(--cw, 100%)); top: calc(50% - var(--cy, .2) * var(--hh, 1.3) * var(--cw, 100%)); }
 .ficha-foto { float: right; width: min(34%, 220px); margin: 0 0 1cqw 1.5cqw; filter: drop-shadow(0 2px 3px rgba(0,0,0,.35)); }
 .carta .ver { font-family: var(--f-tipo); font-size: max(11px, 1.2cqw); color: var(--acento); }
 /* escolha de personagem: os três protagonistas grandes no palco, um em cima de cada carta; o da carta apontada acende */
-.elenco-escolha { position: absolute; inset: 0 0 var(--sob-caixa, 0px); z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); align-items: end; padding: 0 4%; pointer-events: none; }
+.elenco-escolha { position: absolute; inset: 0 0 var(--sob-caixa, 0px); z-index: 3; display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 100%; align-items: end; padding: 0 4%; pointer-events: none; }
 .elenco-escolha[hidden] { display: none; }
+/* os três ficam na MESMA escala (cabeça do mesmo tamanho): --r vem de ELENCO_ESCALA; --k aumenta tudo quando o palco é baixo */
 .elenco-escolha figure { margin: 0; height: 92%; position: relative; display: flex; justify-content: center; align-items: flex-end; cursor: pointer; pointer-events: auto;
   opacity: 0; transform: translateY(8%) rotate(var(--giro, 0deg)); animation: elenco-entra .6s cubic-bezier(.2, .8, .3, 1) forwards; animation-delay: var(--atraso, 0s);
   filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); transition: filter .25s, scale .25s; }
-.elenco-escolha img { position: static; height: 100%; width: auto; max-width: 100%; object-fit: contain; object-position: 50% 100%; display: block; }
+.elenco-escolha img { position: static; height: calc(100% * var(--k, 1) * var(--r, 1)); width: auto; max-width: none; flex: none; display: block; }
 .elenco-escolha figcaption { position: absolute; left: 50%; bottom: 14%; transform: translateX(-50%) rotate(-1.5deg); white-space: nowrap; font-family: var(--f-nome);
   font-size: max(13px, 1.8cqw); background: var(--acento); color: #f4e7d2; padding: .2cqw 1.1cqw; box-shadow: .1cqw .3cqw .5cqw rgb(0 0 0 / .5); }
 .elenco-escolha.apontando figure { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)) brightness(.45) saturate(.5); }
 .elenco-escolha.apontando figure.on { filter: drop-shadow(.3cqw .8cqw .9cqw rgb(0 0 0 / .65)); scale: 1.04; }
 @keyframes elenco-entra { to { opacity: 1; transform: rotate(var(--giro, 0deg)); } }
 .carta.acesa { border-color: var(--acento); }
+/* celular deitado: só cabeça e ombros aparecem, todos alinhados pelo topo, o resto some atrás do papel */
+@media (max-height: 500px) and (min-aspect-ratio: 1/1) { .elenco-escolha { overflow: hidden; align-items: start; --k: 2.4; } .elenco-escolha figure { height: 100%; align-items: flex-start; } .elenco-escolha figcaption { bottom: 4px; font-size: 11px; padding: 1px 8px; } }
 @media (prefers-reduced-motion: reduce) { .elenco-escolha figure { animation: none; opacity: 1; transform: none; } }
 /* ficha, ajuda e tutorial usam a mesma folha do caderno */
 .caderno .folha.longa { min-height: 0; }
@@ -541,7 +546,7 @@ body { touch-action: manipulation; -webkit-tap-highlight-color: transparent; }
   .eu { height: 104px; left: 8px; top: calc(50% + 16px); bottom: auto; translate: 0 -50%; }
   .eu img { max-width: 120px; }
   .eu figcaption { font-size: 10px; }
-  .elenco-escolha { padding: 0; }
+  .elenco-escolha { padding: 0; --k: .5; }
   .elenco-escolha figure { height: 84%; }
   .elenco-escolha figcaption { font-size: 14px; bottom: 6%; padding: 2px 10px; }
   .dialogo.com-eu { padding-left: calc(16px + var(--eu-larg, 84px)); }
@@ -1297,11 +1302,15 @@ const TRAVA_MS = 450; let menuFixo = { k: '', h: 0 };
 // Na escolha de personagem, os três aparecem de corpo inteiro no palco, cada um em cima da sua carta.
 // Apontar (ou focar) uma carta acende o retrato dela; tocar no retrato abre a ficha, como a carta.
 const GIRO_ELENCO = ['-2deg', '1deg', '2.5deg'];
+// Escala de cada protagonista (as três artes têm recortes diferentes: corpo, busto, meio corpo). r = altura relativa à do Tomás para a cabeça ficar do mesmo tamanho;
+// cw = largura da arte dentro do círculo da carta, cx/cy = centro do rosto na arte (fração da largura/altura), hh = altura/largura da arte.
+const ELENCO_ESCALA = { 'Tomás': { r: 1, cw: '164%', cx: .57, cy: .17, hh: 1.517 }, 'Irene': { r: .79, cw: '176%', cx: .54, cy: .2, hh: 1.048 }, 'Joana': { r: .72, cw: '176%', cx: .48, cy: .23, hh: 1.218 } };
+const estiloElenco = nome => { const e = ELENCO_ESCALA[nome]; return e ? `--r:${e.r};--cw:${e.cw};--cx:${e.cx};--cy:${e.cy};--hh:${e.hh}` : ''; };
 function mostrarElencoEscolha() {
   const el = $('elenco-escolha');
   el.innerHTML = story.currentChoices.map((ch, i) => {
     const nome = ch.text.split(' ;; ')[0].split(' · ')[0], foto = retratoDe(nome);
-    return foto ? `<figure data-i="${i}" style="--giro:${GIRO_ELENCO[i % 3]};--atraso:${i * .12}s"><img src="${foto}" alt="${esc(nome)}"><figcaption>${esc(nome)}</figcaption></figure>` : '<figure></figure>';
+    return foto ? `<figure data-i="${i}" style="--giro:${GIRO_ELENCO[i % 3]};--atraso:${i * .12}s;${estiloElenco(nome)}"><img src="${foto}" alt="${esc(nome)}"><figcaption>${esc(nome)}</figcaption></figure>` : '<figure></figure>';
   }).join('');
   el.hidden = false; ajustarElenco();
   const acender = i => { el.classList.toggle('apontando', i != null); el.querySelectorAll('figure').forEach(f => f.classList.toggle('on', f.dataset.i === String(i)));
@@ -1329,7 +1338,7 @@ function mostrarEscolhas(pergunta = '') {
     // escolha de personagem: "Nome · Clã ;; descrição ;; ficha"
     c.innerHTML = `<div class="titulo">${esc(pergunta || 'Quem é você?')}</div><div class="cartas tres">${story.currentChoices.map((ch, i) => {
       const [titulo, desc, ficha] = ch.text.split(' ;; '); const cla = titulo.split(' · ')[1] || ''; const foto = retratoDe(titulo.split(' · ')[0]);
-      return `<button class="carta" data-i="${i}" type="button">${foto ? `<span class="emblema foto" aria-hidden="true"><img src="${foto}" alt=""></span>` : `<span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span>`}<b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
+      return `<button class="carta" data-i="${i}" type="button">${foto ? `<span class="emblema foto" aria-hidden="true" style="${estiloElenco(titulo.split(' · ')[0])}"><img src="${foto}" alt=""></span>` : `<span class="emblema" aria-hidden="true">${EMBLEMA[cla] || '?'}</span>`}<b>${esc(titulo)}</b><span>${esc(desc || '')}</span><small>${esc(ficha || '')}</small><span class="ver">Ver a ficha ›</span></button>`; }).join('')}</div>`;
     mostrarElencoEscolha();
   } else {
     // o custo aparece quando passa do padrão de 10 minutos e a opção ainda não diz quanto custa
