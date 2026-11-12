@@ -7,7 +7,7 @@ const PARTIDAS = ['B', 'C_corte', 'C_anarq', 'E', 'F', 'G', 'H', 'S'];
 const finais = {}, porPersonagem = {}, porPartida = {};
 let semFinal = 0, erros = 0, maxPassos = 0, sinalMax = 0;
 // palavras no masculino que não podem aparecer para a Irene e a Joana
-const MASC = /\b(forasteiro|querido|cansado|drogado|sozinho|enterrado|sonâmbulo|satisfeito|perigoso|convidado|aliviado|surdo|louco|este aí)\b/;
+const MASC = /\b(forasteiro|querido|cansado|drogado|sozinho|enterrado|sonâmbulo|satisfeito|perigoso|convidado|aliviado|surdo|louco|este aí|esperto|amigo|pronto|obrigado|curioso|desarmado|ferido|calmo|nervoso|preso|bêbado|sóbrio|sedado|acordado|inocente)\b/;
 const achados = new Map();
 for (let run = 0; run < N; run++) {
   const s = new Story(json);
@@ -25,7 +25,7 @@ for (let run = 0; run < N; run++) {
     while (s.canContinue) {
       const txt = s.Continue();
       for (const t of s.currentTags) if (t.startsWith('final:')) final = t.split(':')[1].trim();
-      if (s.variablesState['o'] === 'a') { const m = (txt + ' ' + s.currentTags.join(' ')).match(MASC); if (m && !/convidado (do|meu)|uma pessoa que eu convidei/.test(txt)) achados.set(txt, m[0]); }
+      if (s.variablesState['o'] === 'a') { const m = (txt + ' ' + s.currentTags.join(' ')).match(MASC); if (m) achados.set(txt, m[0]); }
     }
     if (!s.currentChoices.length) break;
     let ops = s.currentChoices.map((c, i) => i);

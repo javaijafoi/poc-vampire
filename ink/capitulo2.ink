@@ -330,7 +330,7 @@ Você conta o que tem: o chip, a noite que falta, a mensagem.
 ~ p2_quem_apaga = true
 ~ p2_rocha_dante = true
 ~ arn_falou = true
-Arnaldo: Apagar a noite de um convidado do Príncipe é crime contra a hospitalidade. E poucos sabem fazer sem deixar buraco. O Príncipe. A Senescal. # pista arnaldo: Arnaldo, a sós: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco.
+Arnaldo: Apagar a noite {o == "a":de uma convidada|de um convidado} do Príncipe é crime contra a hospitalidade. E poucos sabem fazer sem deixar buraco. O Príncipe. A Senescal. # pista arnaldo: Arnaldo, a sós: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco.
 Arnaldo: Mais uma coisa. Hoje vai ter um segurança humano na porta, posto ali por ordem de cima. Eu não gosto disso. Fique de olho nele. # expr: aponta # pista arnaldo: Arnaldo, a sós: o segurança humano da porta foi posto ali "por ordem de cima". Ele não gosta disso.
 Arnaldo: Até a gala, eu não te vi. Na gala, eu vejo tudo. # expr: neutro
 # limpa
@@ -703,7 +703,7 @@ Isadora: Aqui fora não é Elísio, querid{o}. O que você quer? # expr: medo
 + {not p2_quem_apaga} [Quem nesta cidade consegue apagar uma noite inteira de alguém?]
     ~ passar(20)
     ~ p2_quem_apaga = true
-    Arnaldo: Apagar uma noite de um convidado do Príncipe é crime contra a hospitalidade. Eu enforco gente por menos.
+    Arnaldo: Apagar uma noite {o == "a":de uma convidada|de um convidado} do Príncipe é crime contra a hospitalidade. Eu enforco gente por menos.
     Arnaldo: E poucos sabem fazer sem deixar buraco. O Príncipe. A Senescal. Nenhum dos dois vai admitir. # pista arnaldo: Arnaldo: só o Príncipe e a Senescal apagam uma noite inteira sem deixar buraco.
     -> arnaldo_perguntas
 + {p2_lama} {not p2_arquivo} [Prova :: Lama: eu estive no esgoto naquela noite. O que tem lá embaixo?]
@@ -1225,7 +1225,7 @@ Você cai de joelhos. O seu sangue sobe pela garganta, quente, querendo sair por
     ~ aliado_cap2 = "constance"
     Constance: Basta. # entra: constance
     As sombras do salão inteiro se levantam e amarram as mãos da Senescal antes que ela feche o punho.
-    Constance: Na minha Corte, ninguém mata convidado meu. Nem você, Luciana.
+    Constance: Na minha Corte, ninguém mata {o == "a":convidada minha|convidado meu}. Nem você, Luciana.
 - "C_anarq":
     ~ aliado_cap2 = "rayo"
     O vidro da janela estoura. O Rayo entra pela escada de incêndio, capacete na mão, e acerta o capacete na mão nua da Senescal. # entra: rayo # expr rayo: bravo

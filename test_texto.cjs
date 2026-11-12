@@ -5,7 +5,7 @@ require('./web/v5.js');
 const json = require('fs').readFileSync('ink/jogo.json', 'utf8');
 const N = +process.argv[2] || 1500;
 // palavras que só podem aparecer para o Tomás (ou falando de outro homem: ajuste a lista se for o caso)
-const MASC = /\b(moço|forasteiro|querido|filho|louco|surdo|mesmo aí|este aí|o forasteira)\b/;
+const MASC = /\b(moço|forasteiro|querido|filho|louco|surdo|mesmo aí|este aí|o forasteira|convidado|esperto|amigo|pronto|obrigado|curioso|ferido|calmo|nervoso|sedado|acordado|cansado|drogado)\b/;
 const achados = new Map(); let biel_repetida = 0;
 for (let run = 0; run < N; run++) {
   const s = new Story(json);

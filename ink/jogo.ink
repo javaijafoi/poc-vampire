@@ -422,7 +422,7 @@ Vincenzo: Isso aqui não é o seu açougue, forasteir{o}. Eu vou lembrar disso. 
         Rayo: ...Ela te contou? Então você sabe que eu não toquei no caixão. # expr: medo
         -> rayo_confissao
     }
-+ {p_rayo_versao} {not rayo_confessou} {disciplina == "Presença"} [Disciplina: Presença :: Sorrir como quem já é amigo dele há cem anos.]
++ {p_rayo_versao} {not rayo_confessou} {disciplina == "Presença"} [Disciplina: Presença :: Sorrir como quem já é amig{o} dele há cem anos.]
     ~ passar(20)
     ~ despertar()
     Você deixa o calor da Presença escorrer pela voz. O Rayo relaxa os ombros sem saber por quê. # expr voce: encanta
@@ -584,7 +584,7 @@ Você guarda o detalhe do selo preto. Ele queimou no meio do mato, longe de qual
         O Cão recua um passo, sem perceber. Por um instante o Xerife parece um bicho encurralado. # expr cao: encurralado
         Cão: Eu protejo o que é meu. Só isso. E agora sai da minha frente. # pista cao: Encurralado, o Cão disse: "Eu protejo o que é meu."
     - else:
-        Cão: Você não sabe com quem está falando, forasteir{o}. Fica esperto na volta pra casa. # expr: sorriso
+        Cão: Você não sabe com quem está falando, forasteir{o}. Fica espert{o} na volta pra casa. # expr: sorriso
     }
     ~ cao_irritado = true
     -> cao_perguntas
@@ -664,7 +664,7 @@ Cão: Pensa bem no que vai dizer pro Príncipe. # pista cao: O Cão ficou sem re
         A Besta empurra e você quebra o taco ao meio. O bar inteiro fica quieto. O Vincenzo pousa o copo devagar. # expr voce: ameaca
         ~ quebrou_regra += 1
         ~ harumi_fechado = true
-        Harumi: Vincenzo! Seu convidado está quebrando a regra da casa. # expr: brava
+        Harumi: Vincenzo! {o == "a":Sua convidada está|Seu convidado está} quebrando a regra da casa. # expr: brava
         -> salao
     - else:
         Harumi: Que gracinha. Você acha que me assusta? Eu tenho cem anos de gente mais feia que você. # expr: desdem
@@ -885,7 +885,7 @@ Nonna: Ele tem pouco tempo, filh{o}. {biel_max} perguntas, talvez. Escolhe bem.
     { r:
     - 4:
         A Besta escapa e você bate a mão na mesa dela. A taça cai. As sombras da sala inteira se levantam do chão, e os carniçais dela dão um passo à frente. # expr constance: furia
-        Constance: Vincenzo. O seu convidado esqueceu onde está.
+        Constance: Vincenzo. {o == "a":A sua convidada esqueceu|O seu convidado esqueceu} onde está.
         ~ quebrou_regra += 1
         ~ constance_hostil = true
         ~ constance_fechada = true
